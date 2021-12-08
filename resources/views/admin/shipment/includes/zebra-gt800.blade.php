@@ -4,8 +4,14 @@
 
         <center id="top">
             <div class="info">
-                <?php echo DNS1D::getBarcodeHTML($shipment->tracking_code, 'QRCODE'); ?>
-                Tracking-code: {{ $shipment->tracking_code }}
+                <div class="row">
+                    {{QrCode::size(150)->generate($shipment->tracking_code)}}
+                </div>
+                <div class="row">
+                    Tracking-code: {{ $shipment->tracking_code }}
+                </div>
+                {{-- <img src="data:image/png;base64,{{DNS2D::getBarcodeSVG('12', 'QRCODE')}}" alt="barcode" /> --}}
+                <h2>Consignment Note</h2>
             </div>
             <!--End Info-->
         </center>
@@ -13,9 +19,9 @@
 
         <div id="mid">
             <div class="info">
-                <h2>Consignment Note</h2>
+                
                 <p> Reciepient : {{ $shipment->name}} <br/>
-                    Name : {{ $shipment->user->first_name }} {{ $shipment->user->last_name }} <br>
+                    Merchant Name : {{ $shipment->user->first_name }} {{ $shipment->user->last_name }} <br>
                     Email : {{ $shipment->user->email }} </br>
                     Phone : {{ $shipment->user->phone }} </br>
                     Date : {{ date('F m, Y', strtotime($shipment->created_at)) }} <br>

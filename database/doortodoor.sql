@@ -105,7 +105,7 @@ CREATE TABLE `basic_information` (
 --
 
 INSERT INTO `basic_information` (`id`, `website_title`, `company_name`, `meet_time`, `phone_number_one`, `phone_number_two`, `email`, `website_link`, `facebook_link`, `twiter_link`, `google_plus_link`, `linkedin_link`, `footer_text`, `address`, `company_logo`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'Door to Door Express Delivery', 'Door to Door Express Delivery', 'MON-SAT,9AM-6PM', '8801971335588', '8801902137956', 'doortodoor@gmail.com', 'http://doortodoorexpressdelivery.com', 'https://www.facebook.com/doortodoorexpressedelivery', 'http://fe.ki', 'http://du.cf', 'https://www.linkedin.com/company/69354321/admin/', 'Copyright © 2019 Door to Door Express. All Rights Reserved by', 'Mirpur 6, road no- 8,block- d,house no- 18,postal code - 1216,Dhaka', '951605127025.png', 0, '2020-11-10 15:29:49', '2020-11-11 14:37:05');
+(1, 'Express-onebd', 'Express-onebd', 'MON-SAT,9AM-6PM', '8801971335588', '8801902137956', 'Express-onebd@gmail.com', 'https://express-onebd.com', 'https://www.facebook.com/express-onebd', 'http://fe.ki', 'http://du.cf', 'https://www.linkedin.com/company/69354321/admin/', 'Copyright © 2019 Express-onebd. All Rights Reserved by', 'Mirpur 6, road no- 8,block- d,house no- 18,postal code - 1216,Dhaka', 'express-one.png', 0, '2020-11-10 15:29:49', '2020-11-11 14:37:05');
 
 -- --------------------------------------------------------
 
