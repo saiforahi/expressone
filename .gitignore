@@ -2,5 +2,6 @@
 vendor
 vendors
 public/csv-file
-demo
 /csv-file
+demo/vendor
+*.zip
