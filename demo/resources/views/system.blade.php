@@ -15,8 +15,8 @@
   <div class="panel-group">
 
     <div class="panel panel-primary" style="height: 100vh;">
-      <div class="panel-heading">DoorToDoorExpressDelivery.com</div>
-      <div class="panel-body">The system developed by <a href="https://zeroinfosys.com/" target="_blank">zero infosys</a></div>
+      <div class="panel-heading">express-onebd.com</div>
+      <div class="panel-body">The system developed by <a href="https://unitedit.com/" target="_blank">United IT</a></div>
     </div>
   </div>
 </div>
