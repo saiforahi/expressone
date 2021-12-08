@@ -16,7 +16,7 @@ class CreateShipmentsTable extends Migration
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('zone_id');
+            $table->unsignedBigInteger('zone_id')->nullable();
             $table->unsignedBigInteger('area_id')->nullable();
             $table->string('added_by')->default('merchant');
             $table->string('name')->nullable();
@@ -26,13 +26,15 @@ class CreateShipmentsTable extends Migration
             $table->string('parcel_value')->nullable();
             $table->string('invoice_id')->unique();
             $table->string('merchant_note')->nullable();
-            $table->string('weight');
-            $table->string('delivery_type');
-            $table->string('cod');
-            $table->string('cod_amount');
-            $table->string('price');
+            $table->string('weight')->nullable();
+            $table->string('delivery_type')->nullable();
+            $table->string('cod')->nullable();
+            $table->string('cod_amount')->nullable();
+            $table->string('delivery_charge')->nullable();
+            $table->string('weight_charge')->nullable();
+            $table->string('price')->nullable();
             $table->string('tracking_code')->nullable();
-            $table->string('total_price');
+            $table->string('total_price')->nullable();
             $table->string('shipping_status')->default(0);
             $table->string('status')->default(1);
             $table->timestamp('time_starts')->useCurrent();

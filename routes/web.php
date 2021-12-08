@@ -129,7 +129,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
 
 
     Route::get('/all-shipments', 'ShipmentController@all_shipments')->name('all-shipments');
-    Route::get('/shipment-details/{shipment}', 'ShipmentController@shipment_detail')->name('shipment-details');
+    Route::get('/shipment-details/{shipment}', 'ShipmentController@new_shipment_detail')->name('shipment-details');
     Route::get('/shipment-print/{shipment}', 'ShipmentController@shipment_print')->name('shipment-print');
     Route::post('/reset-shipment', 'ShipmentController@reset_shipment')->name('reset-shipment');
 

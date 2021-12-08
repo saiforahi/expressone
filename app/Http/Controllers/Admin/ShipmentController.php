@@ -47,7 +47,26 @@ class ShipmentController extends Controller
         $shipments = $shipment->paginate(30);
         return view('admin.shipment.all-shipments',compact('shipments'));
     }
+    function new_shipment_detail(Shipment $shipment){
+        $zone = Area::find($shipment->area_id);
+        // $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
+        // if ($shipping ==null) { dd('ShippingPrice missing');}
 
+        // $weight = (float)$shipment->weight;
+        // if ($weight > $shipping->max_weight) {
+        //     $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
+        //     if ((int)$ExtraWeight < $ExtraWeight) {
+        //         $ExtraWeight = (int)$ExtraWeight + 1;
+        //     }
+        //     $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
+        // } else {
+        //     $price = (int)$shipping->max_price;
+        // }
+        $price = $shipment->delivery_charge;
+        $total_price = $shipment->cod_amount;
+
+        return view('admin.shipment.includes.shipment-view', compact('shipment','price','total_price'));
+    }
     function shipment_detail(Shipment $shipment){
         $zone = Area::find($shipment->area_id);
         $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
