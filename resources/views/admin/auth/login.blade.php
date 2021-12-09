@@ -10,13 +10,13 @@
     <title>Login  </title>
 
     <!-- Bootstrap -->
-    <link href="{{url('vendors/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{url('back_vendors/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
     <!-- Font Awesome -->
-    <link href="{{asset('vendors/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+    <link href="{{asset('back_vendors/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
     <!-- NProgress -->
-    <link href="{{asset('vendors/nprogress/nprogress.css')}}" rel="stylesheet">
+    <link href="{{asset('back_vendors/nprogress/nprogress.css')}}" rel="stylesheet">
     <!-- Animate.css -->
-    <link href="{{asset('vendors/animate.css/animate.min.css')}}" rel="stylesheet">
+    <link href="{{asset('back_vendors/animate.css/animate.min.css')}}" rel="stylesheet">
 
     <!-- Custom Theme Style -->
     <link href="{{asset('build/css/custom.min.css')}}" rel="stylesheet">
