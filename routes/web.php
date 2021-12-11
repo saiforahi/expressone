@@ -1,16 +1,6 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
-//To clear all cache
-Route::get('clear', function () {
-    Artisan::call('cache:clear');
-    Artisan::call('config:clear');
-    Artisan::call('config:cache');
-    Artisan::call('view:clear');
-    Artisan::call('optimize:clear');
-    Artisan::call('route:cache');
-    return "Cleared!";
-});
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/about', 'HomeController@about')->name('about');
@@ -367,8 +357,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('user.dashboard');
     Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
     Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
-    Route::delete('/shipment-delete/{id}', '\App\Http\Controllers\User\ShipmentController@shipmentDelete')->name('shipmentDelete');
-    //Profile
+
     Route::get('/profile', 'DashboardController@profile')->name('profile');
     Route::get('/profile-edit', 'DashboardController@ProfileEdit')->name('ProfileEdit');
     Route::post('/profile-update', 'DashboardController@ProfileUpdate')->name('ProfileUpdate');
