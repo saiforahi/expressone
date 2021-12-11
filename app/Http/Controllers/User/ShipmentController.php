@@ -8,8 +8,10 @@ use App\Shipment;
 use App\ShippingPrice;
 use App\Shipment_delivery_payment;
 use Illuminate\Http\Request;
-use Auth; use PDF;
+use Auth;
+use PDF;
 use DataTables;
+
 class ShipmentController extends Controller
 {
     public function index()
@@ -147,7 +149,7 @@ class ShipmentController extends Controller
         );
 
         // return json_encode($output);
-        return back()->with('message','Shipment has been saved successfully!');
+        return back()->with('message', 'Shipment has been saved successfully!');
     }
 
     public function PrepareShipmentEdit($id)
@@ -163,11 +165,12 @@ class ShipmentController extends Controller
     }
 
 
-    function show(Shipment $shipment){
+    function show(Shipment $shipment)
+    {
         $zone = Area::find($shipment->area_id);
         $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
-        
-        if ($shipping ==null) {
+
+        if ($shipping == null) {
             dd('ShippingPrice missing');
         }
 
@@ -185,10 +188,11 @@ class ShipmentController extends Controller
         $total_price = $price + (int)$shipment->parcel_value;
 
 
-        return view('dashboard.shipment-view', compact('shipment','price','total_price','shipping'));
+        return view('dashboard.shipment-view', compact('shipment', 'price', 'total_price', 'shipping'));
     }
 
-    function shipment_pdf(Shipment $shipment){
+    function shipment_pdf(Shipment $shipment)
+    {
         $zone = Area::find($shipment->area_id);
         $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
 
@@ -205,83 +209,88 @@ class ShipmentController extends Controller
 
         $total_price = $price + (int)$shipment->parcel_value;
         // return view('dashboard.shipment-pdf', compact('shipment','price','total_price','shipping'));
-        $pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment','price','total_price','shipping'));
-        return $pdf->download('Invoice-'.$shipment->invoice_id.'.pdf');
+        $pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping'));
+        return $pdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
     }
 
-    function payments(){  
+    function payments()
+    {
         // $shipment = Shipment::orderBy('id','DESC')->where('user_id', Auth::guard('user')->user()->id)->get();
         return view('dashboard.shipment-payment');
     }
 
-    function payments_loading(){  
+    function payments_loading()
+    {
         return DataTables::of(Shipment::orderBy('id', 'DESC'))
-        ->addColumn('action', function ($shipment) {  
-            return '<a href="/shipment-info/'.$shipment->id.'">View</a> | 
-            <button type="button" class="btnNew" id="'.$shipment->id.'">Payment</button>';
-        })
-        ->addColumn('id', function ($shipment) {  
-            return $shipment->id;
-        })
-        ->addColumn('tracking_code', function ($shipment) {  
-            return $shipment->tracking_code;
-        })
-        ->addColumn('invoice_no', function ($shipment) {
-           return $shipment->invoice_id;
-        })
-        ->addColumn('payment_by', function ($shipment) {
-            if ($shipment->price==0) {
-                $price = 'Merchant will pay';
-            }else $price = 'User will pay';
-            return $price;
-        })
-        ->addColumn('amount', function ($shipment) {
-            $price = 0;
-            $zone = Area::find($shipment->area_id);
-            $shipping = ShippingPrice::where('zone_id', $zone->id)->first();
-            if($shipping !=''){
-                if ($shipping->cod == 1 && $shipping !=null) {
-                    $cod_type = 1;
-                    if (!$shipment->parcel_value) {
-                        $cod_amount = 0;
+            ->addColumn('action', function ($shipment) {
+                return '<a href="/shipment-info/' . $shipment->id . '">View</a> |
+            <button type="button" class="btnNew" id="' . $shipment->id . '">Payment</button>';
+            })
+            ->addColumn('id', function ($shipment) {
+                return $shipment->id;
+            })
+            ->addColumn('tracking_code', function ($shipment) {
+                return $shipment->tracking_code;
+            })
+            ->addColumn('invoice_no', function ($shipment) {
+                return $shipment->invoice_id;
+            })
+            ->addColumn('payment_by', function ($shipment) {
+                if ($shipment->price == 0) {
+                    $price = 'Merchant will pay';
+                } else $price = 'User will pay';
+                return $price;
+            })
+            ->addColumn('amount', function ($shipment) {
+                $price = 0;
+                $zone = Area::find($shipment->area_id);
+                $shipping = ShippingPrice::where('zone_id', $zone->id)->first();
+                if ($shipping != '') {
+                    if ($shipping->cod == 1 && $shipping != null) {
+                        $cod_type = 1;
+                        if (!$shipment->parcel_value) {
+                            $cod_amount = 0;
+                        } else {
+                            $cod_amount = ((int)$shipment->parcel_value / 100) * $shipping->cod_value;
+                        }
+                    }
+
+
+                    $weight = (float)$shipment->weight;
+                    if ($weight > $shipping->max_weight) {
+                        $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
+                        if ((int)$ExtraWeight < $ExtraWeight) {
+                            $ExtraWeight = (int)$ExtraWeight + 1;
+                        }
+                        $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
                     } else {
-                        $cod_amount = ((int)$shipment->parcel_value / 100) * $shipping->cod_value;
+                        $price = (int)$shipping->max_price;
                     }
-                }
-
-
-                $weight = (float)$shipment->weight;
-                if ($weight > $shipping->max_weight) {
-                    $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-                    if ((int)$ExtraWeight < $ExtraWeight) {
-                        $ExtraWeight = (int)$ExtraWeight + 1;
-                    }
-                    $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
+                    $total_price = $price + (int)$shipment->parcel_value;
+                    if ($shipment->price == 0) return $price . ' Tk';
+                    else return $total_price . ' Tk';
                 } else {
-                    $price = (int)$shipping->max_price;
+                    return '<span class="text-danger">' . $shipment->price . ' Tk</span>';
                 }
-                $total_price = $price + (int)$shipment->parcel_value;
-                if($shipment->price==0) return $price.' Tk';
-                else return $total_price.' Tk';
-            }else{ return '<span class="text-danger">'.$shipment->price.' Tk</span>';}
-            
-           
-        })
-        ->rawColumns(['id','tracking_code','invoice_no','payment_by','amount','action'])->make(true);
+            })
+            ->rawColumns(['id', 'tracking_code', 'invoice_no', 'payment_by', 'amount', 'action'])->make(true);
     }
 
-    function show_payment(Shipment $shipment){
-        $payments =  Shipment_delivery_payment::where('shipment_id',$shipment->id)->get();
-        return view('dashboard.include.shipment-delivery-payment',compact('payments'));
+    function show_payment(Shipment $shipment)
+    {
+        $payments =  Shipment_delivery_payment::where('shipment_id', $shipment->id)->get();
+        return view('dashboard.include.shipment-delivery-payment', compact('payments'));
     }
 
 
-    function edit(Shipment $shipment){
+    function edit(Shipment $shipment)
+    {
         $area = Area::where('status', 1)->get();
-        return view('dashboard.edit-shipment', compact('area','shipment'));
+        return view('dashboard.edit-shipment', compact('area', 'shipment'));
     }
 
-    function update(Shipment $shipment,Request $request){
+    function update(Shipment $shipment, Request $request)
+    {
         $messages = [
             "name.required" => "Please enter customer name.",
             "phone.required" => "Please enter customer phone number.",
@@ -323,39 +332,44 @@ class ShipmentController extends Controller
         }
         $total_price = $price + $cod_amount + (int)$request->parcel_value;
 
-        $checkInvoice = Shipment::where('invoice_id',$request->invoice_id)->count();
-        if($checkInvoice >0){
-            $invoice_id = $request->invoice_id.rand(222,22);
-        }else $invoice_id = $request->invoice_id;
+        $checkInvoice = Shipment::where('invoice_id', $request->invoice_id)->count();
+        if ($checkInvoice > 0) {
+            $invoice_id = $request->invoice_id . rand(222, 22);
+        } else $invoice_id = $request->invoice_id;
 
         $data = [
-            'user_id'=>Auth::guard('user')->user()->id,
-            'zone_id'=>$zone->zone_id,
-            'area_id'=> $request->area,
-            'name'=>$request->name,
-            'phone'=>$request->phone,
-            'address'=>$request->address,
-            'zip_code'=>$request->zip_code,
-            'parcel_value'=>$request->parcel_value,
-            'invoice_id'=>$invoice_id,
-            'merchant_note'=>$request->merchant_note,
-            'weight'=>$request->weight,
-            'delivery_type'=>$request->delivery_type,
-            'cod'=> $cod_type,
-            'cod_amount'=>$cod_amount,
-            'price'=>$price,
-            'tracking_code'=>rand(),
-            'total_price'=>$total_price,
+            'user_id' => Auth::guard('user')->user()->id,
+            'zone_id' => $zone->zone_id,
+            'area_id' => $request->area,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'zip_code' => $request->zip_code,
+            'parcel_value' => $request->parcel_value,
+            'invoice_id' => $invoice_id,
+            'merchant_note' => $request->merchant_note,
+            'weight' => $request->weight,
+            'delivery_type' => $request->delivery_type,
+            'cod' => $cod_type,
+            'cod_amount' => $cod_amount,
+            'price' => $price,
+            'tracking_code' => rand(),
+            'total_price' => $total_price,
         ];
         $shipment->update($data);
         $output = array('done' => 'done',);
 
         // return json_encode($output);
-        return back()->with('message','Shipment has been udated successfully!');
+        return back()->with('message', 'Shipment has been udated successfully!');
     }
 
     public function destroy($id)
     {
         //
+    }
+    public function shipmentDelete($id)
+    {
+        Shipment::find($id)->delete();
+        return back()->with('message', 'Shipment has been deleted successfully!');
     }
 }

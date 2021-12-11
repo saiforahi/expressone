@@ -29,7 +29,6 @@ class CreateUsersTable extends Migration
             $table->enum('status',['0','1'])->default(1);
             $table->enum('is_verified',['0','1'])->default(0);
             $table->rememberToken();
-
             $table->foreign('area_id')->references('id')->on('areas');
             $table->timestamps();
         });
