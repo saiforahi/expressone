@@ -166,7 +166,7 @@ class ShipmentController extends Controller
     function show(Shipment $shipment){
         $zone = Area::find($shipment->area_id);
         $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
-        
+
         if ($shipping ==null) {
             dd('ShippingPrice missing');
         }
@@ -209,21 +209,21 @@ class ShipmentController extends Controller
         return $pdf->download('Invoice-'.$shipment->invoice_id.'.pdf');
     }
 
-    function payments(){  
+    function payments(){
         // $shipment = Shipment::orderBy('id','DESC')->where('user_id', Auth::guard('user')->user()->id)->get();
         return view('dashboard.shipment-payment');
     }
 
-    function payments_loading(){  
+    function payments_loading(){
         return DataTables::of(Shipment::orderBy('id', 'DESC'))
-        ->addColumn('action', function ($shipment) {  
-            return '<a href="/shipment-info/'.$shipment->id.'">View</a> | 
+        ->addColumn('action', function ($shipment) {
+            return '<a href="/shipment-info/'.$shipment->id.'">View</a> |
             <button type="button" class="btnNew" id="'.$shipment->id.'">Payment</button>';
         })
-        ->addColumn('id', function ($shipment) {  
+        ->addColumn('id', function ($shipment) {
             return $shipment->id;
         })
-        ->addColumn('tracking_code', function ($shipment) {  
+        ->addColumn('tracking_code', function ($shipment) {
             return $shipment->tracking_code;
         })
         ->addColumn('invoice_no', function ($shipment) {
@@ -264,8 +264,8 @@ class ShipmentController extends Controller
                 if($shipment->price==0) return $price.' Tk';
                 else return $total_price.' Tk';
             }else{ return '<span class="text-danger">'.$shipment->price.' Tk</span>';}
-            
-           
+
+
         })
         ->rawColumns(['id','tracking_code','invoice_no','payment_by','amount','action'])->make(true);
     }
