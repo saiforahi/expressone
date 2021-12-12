@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Driver;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateDriversTable extends Migration
 {
@@ -27,7 +29,7 @@ class CreateDriversTable extends Migration
             $table->timestamps();
         });
 
-        \App\Driver::create([
+        Driver::create([
             'driver_id' => rand(),
             'first_name' => 'driver',
             'last_name' => 'one',

@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Admin;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateAdminsTable extends Migration
 {
@@ -31,14 +32,14 @@ class CreateAdminsTable extends Migration
             $table->timestamps();
         });
 
-        \App\Admin::create([
+        Admin::create([
             'role_id' => '1', 'first_name' => 'admin',
             'last_name' => 'name','email' => 'admin@email.com',
             'phone' => '01749015457', 'password' => Hash::make('12345678'),
             'address' => 'savar'
         ]);
 
-        \App\Admin::create([
+        Admin::create([
             'role_id' => '2', 'first_name' => 'sub',
             'last_name' => 'admin','email' => 'sub-admin@email.com',
             'phone' => '588887656', 'password' => Hash::make('12345678'),

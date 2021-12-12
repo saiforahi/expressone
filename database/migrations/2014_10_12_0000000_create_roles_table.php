@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Role;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateRolesTable extends Migration
 {
@@ -19,8 +20,8 @@ class CreateRolesTable extends Migration
             $table->timestamps();
         });
 
-        \App\Role::create(['title'=>'Supser-admin']);
-        \App\Role::create(['title'=>'Sub-admin']);
+        Role::create(['title'=>'Supser-admin']);
+        Role::create(['title'=>'Sub-admin']);
     }
 
     /**

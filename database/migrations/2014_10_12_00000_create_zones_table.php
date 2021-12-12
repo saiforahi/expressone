@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Zone;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateZonesTable extends Migration
 {
@@ -19,10 +20,9 @@ class CreateZonesTable extends Migration
             $table->boolean('status')->default(1);
             $table->timestamps();
         });
-
-        // \App\Zone::create([ 'name' =>'Dhaka North']);
-        // \App\Zone::create([ 'name' =>'Dhaka South']);
-        // \App\Zone::create([ 'name' =>'Gazipur']);
+        Zone::create([ 'name' =>'Dhaka North']);
+        Zone::create([ 'name' =>'Dhaka South']);
+        Zone::create([ 'name' =>'Gazipur']);
     }
 
     /**

@@ -18,7 +18,7 @@ class CSVController extends Controller
 
     public function get_csv_data(Request $request)
     {
-        Session::forget('csv_data'); 
+        Session::forget('csv_data');
         if(empty($request->file)){ return back();}
 
         $filename = '';
@@ -26,15 +26,15 @@ class CSVController extends Controller
         if($file=request()->file('file')){
             $filename  = date('Ymd-his').'.'.$file->getClientOriginalExtension();
             $file->move('./csv-file/',$filename);
-        } 
+        }
 
-        
+
         $file = fopen('./csv-file/'.$filename,"r");
         $i = 1;
 
 
          while (($line = fgetcsv($file)) !== FALSE) {
-            
+
             if($i != 1)
             {
                 if (empty($line[7])) $price = 0;
@@ -57,17 +57,17 @@ class CSVController extends Controller
             }
            $i++;
         }
-      
+
         \Session::put('csv_data',$lines);
         fclose($file);
         //--- Redirect Section
-        // exit; 
+        // exit;
         return redirect('/csv-temporary');
     }
 
     function show(){
         if(! Session::has('csv_data')){
-            Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!'); 
+            Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!');
             return redirect('/dashboard');
         }
         $areas = Area::latest()->get();
@@ -83,11 +83,11 @@ class CSVController extends Controller
         foreach(Session::get('csv_data') as $key=>$line){
             $zone = Area::find($request->area[$key]);
             $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
-        
+
             if ($shipping ==null) {
                 return back()->with('message','We are sorry to inform y ou that you may not create shipments right now. Because, Shipping Price for this zone is not setup Yet! Please wait for the administrative decision!!');
             }
-        
+
             if(empty($request->parcel_value[$key])){
                 echo 'null <br/>';
             }else echo $request->parcel_value[$key].' <br/>';
@@ -125,7 +125,7 @@ class CSVController extends Controller
             if($checkInvoice >0){
                 $invoice_id = $request->invoice_id[$key].rand(222,22);
             }else $invoice_id = $request->invoice_id[$key];
-            
+
             $insert = new Shipment();
             $insert->user_id = Auth::guard('user')->user()->id;
             $insert->zone_id = $zone->zone_id;
@@ -148,11 +148,12 @@ class CSVController extends Controller
             $insert->save();
         }
         // exit;
-        Session::flash('message', 'CSV-file data has been uploaded to database successfully'); 
-        Session::forget('csv_data'); 
+        Session::flash('message', 'CSV-file data has been uploaded to database successfully');
+        Session::forget('csv_data');
         return redirect('/dashboard');
+        ret
     }
 
 
-   
+
 }

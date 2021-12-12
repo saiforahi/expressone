@@ -38,7 +38,6 @@ class CreateShipmentsTable extends Migration
             $table->string('shipping_status')->default(0);
             $table->string('status')->default(1);
             $table->timestamp('time_starts')->useCurrent();
-
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('zone_id')->references('id')->on('zones');
             $table->foreign('area_id')->references('id')->on('areas');
