@@ -353,10 +353,10 @@ Route::post('/register', 'AuthController@registerStore')->name('register.store')
 Route::post('/logout', 'AuthController@logout')->name('logout');
 
 Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
-
     Route::get('/dashboard', 'DashboardController@index')->name('user.dashboard');
     Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
     Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
+    Route::delete('/shipment-delete/{id}', '\App\Http\Controllers\User\ShipmentController@shipmentDelete')->name('shipment.delete');
 
     Route::get('/profile', 'DashboardController@profile')->name('profile');
     Route::get('/profile-edit', 'DashboardController@ProfileEdit')->name('ProfileEdit');
