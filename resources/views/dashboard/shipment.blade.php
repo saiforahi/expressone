@@ -83,7 +83,7 @@
                         </div>
 
                         <div class="col text-left">
-                            <label for="invoice_id">Invoice Id</label>
+                            <label for="invoice_id"> <strong>Ref. No</strong></label>
                             <input type="text" id="invoice_id" class="form-control" name="invoice_id" value="{{rand()}}">
                         </div>
                     </div>
