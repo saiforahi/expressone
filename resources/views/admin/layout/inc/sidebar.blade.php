@@ -199,10 +199,11 @@
                         <li><a href="{{ route('mail-setup') }}"><i class="fa mdi mdi-email-open"></i> Mail SetUp</a>
                         </li>
                     @endif
+                    {{-- <li class="text-danger">
+                        <a href="javascript:;"><i class="fa mdi mdi-power"></i> Logout</a>
 
+                    </li> --}}
 
-                    <li class="text-danger"><a href="javascript:;"><i class="fa mdi mdi-power"></i> Logout</a>
-                    </li>
                 </ul>
             </div>
 
