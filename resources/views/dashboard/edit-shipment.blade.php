@@ -49,10 +49,13 @@
                             <label class="" for="address">Address</label>
                             <input type="text" id="address" class="form-control" name="address"  value="{{$shipment->address}}">
                         </div>
+                        @if (!empty($shipment->zip_code))
                         <div class="col text-left">
                             <label for="zip_code">Zip Code</label>
                             <input type="text" id="zip_code" class="form-control" name="zip_code"  value="{{$shipment->zip_code}}">
                         </div>
+                        @endif
+
                         <div class="col text-left">
                             <label for="area">Area</label>
                             <select class="form-control select2" name="area" id="area">
@@ -66,6 +69,7 @@
 
                     <h5 class="card-title mt-4">Shipment Details:</h5>
                     <div class="form-row my-4">
+                        @if (!empty($shipment->weight))
                         <div class="col text-left">
                             <label class="" for="weight">Weight</label>
                             <input type="text" id="weight" class="form-control" name="weight"  value="{{$shipment->weight}}">
@@ -74,6 +78,7 @@
                                         class="weight_info">1.00 kg</span></small>
                             </div>
                         </div>
+                        @endif
                         <div class="col cod_target text-left">
                             <label for="parcel_value">Declared Parcel Value</label>
                             <input type="number" id="parcel_value" class="form-control" name="parcel_value"  value="{{$shipment->parcel_value}}">
@@ -93,7 +98,7 @@
                             <textarea id="merchant_note" class="form-control" rows="3" name="merchant_note">{{$shipment->merchant_note}}</textarea>
                         </div>
                     </div>
-                    
+
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label for="usr3">How do you want to arrange for shipment?</label><br>
@@ -113,7 +118,7 @@
                                 </button>
                         </div>
                     </div>
-                    
+
                     <button type="button" onclick="calculate()" class="mt-2 px-4 btn btn-success float-left d-none"> Shipping  Rate Calculate </button>
                 </form>
             </div>
@@ -145,9 +150,9 @@
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         $(document).ready(function () {
             $('.select2').select2({ theme: "bootstrap",width: '100%' });
-            
+
             $('#area').change(function () { calculate(); });
-            
+
             $('#weight').keyup(function () {
                 let id = parseFloat($(this).val());
                 $('.weight_info').text(id.toFixed(2));
@@ -172,7 +177,7 @@
             let weight = $("#weight").val();
             let parcel_value = $("#parcel_value").val();
             let delivery_type = $(".activating2").attr('id');
-            
+
             $.ajax({
                 url: "{{ route('merchant.rate.check') }}",
                 type: 'post',
@@ -204,7 +209,7 @@
                     }
                 }
             });
-        }      
+        }
     </script>
 
 @endpush
