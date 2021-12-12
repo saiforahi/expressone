@@ -37,17 +37,17 @@
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="name">Customer Name</label>
-                            <input type="text" id="name" class="form-control" name="name">
+                            <input type="text" id="name" class="form-control" name="name" placeholder="Customer Name">
                         </div>
                         <div class="col text-left">
                             <label for="usr3">Phone Number</label>
-                            <input type="text" class="form-control" name="phone">
+                            <input type="text" class="form-control" name="phone" placeholder="Customer phone">
                         </div>
                     </div>
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="address">Address</label>
-                            <input type="text" id="address" class="form-control" name="address">
+                            <input type="text" id="address" class="form-control" name="address" placeholder="Customer Address">
                         </div>
                         {{-- <div class="col text-left">
                             <label for="zip_code">Zip Code</label>
@@ -67,16 +67,16 @@
                     <h5 class="card-title mt-4">Shipment Details:</h5>
                     <div class="form-row my-4">
                         <div class="col text-left">
-                            <label class="" for="weight">Weight</label>
-                            <input type="text" id="weight" class="form-control" name="weight" value="1">
-                            <div class="w-100">
+                            <label class="" for="weight">Weight charge</label>
+                            <input type="number" id="weight_charge" class="form-control" name="weight_charge" value="1">
+                            {{-- <div class="w-100">
                                 <small>My total chargeable weight is <span
                                         class="weight_info">1.00 kg</span></small>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="col cod_target text-left">
                             <label for="parcel_value">Declared Parcel Value</label>
-                            <input type="number" id="parcel_value" class="form-control" name="parcel_value">
+                            <input type="number" id="parcel_value" class="form-control" name="parcel_value" placeholder="Enter Parcel Value">
                             <div class="w-100">
                                 <small>My parcel value is <span class="parcel_value_info">0</span> Taka</small>
                             </div>
