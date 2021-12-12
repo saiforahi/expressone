@@ -10,12 +10,10 @@ use App\ShippingPrice;
 use App\Zone; use Auth;
 class CSVController extends Controller
 {
-
     public function create()
     {
         return view('dashboard.csv.create');
     }
-
     public function get_csv_data(Request $request)
     {
         Session::forget('csv_data');
@@ -27,12 +25,8 @@ class CSVController extends Controller
             $filename  = date('Ymd-his').'.'.$file->getClientOriginalExtension();
             $file->move('./csv-file/',$filename);
         }
-
-
         $file = fopen('./csv-file/'.$filename,"r");
         $i = 1;
-
-
          while (($line = fgetcsv($file)) !== FALSE) {
 
             if($i != 1)
@@ -43,7 +37,6 @@ class CSVController extends Controller
                 else $post_code = $line[4];
                 if (empty($line[0])) $invoice = rand();
                 else $invoice = $line[0];
-
                $lines[] = array(
                 'invoice'=>$invoice,
                 'customer'=>$line[1],
@@ -64,7 +57,6 @@ class CSVController extends Controller
         // exit;
         return redirect('/csv-temporary');
     }
-
     function show(){
         if(! Session::has('csv_data')){
             Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!');
@@ -74,12 +66,10 @@ class CSVController extends Controller
         // dd($areas);
         return view('dashboard.csv.show',compact('areas'));
     }
-
     public function store(Request $request)
     {
         $price = 0; $total_price = 0;
         $cod_type = 0; $cod_amount = 0;
-
         foreach(Session::get('csv_data') as $key=>$line){
             $zone = Area::find($request->area[$key]);
             $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
@@ -105,7 +95,6 @@ class CSVController extends Controller
                         $cod_amount = ((int)$request->parcel_value[$key] / 100) * $shipping->cod_value;
                     }
                 }
-
                 $weight = (float)$request->weight[$key];
                 if ($weight > $shipping->max_weight) {
                     $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
@@ -120,12 +109,10 @@ class CSVController extends Controller
             }else{
                 $total_price = $price = 0;
             }
-
             $checkInvoice = Shipment::where('invoice_id',$request->invoice_id[$key])->count();
             if($checkInvoice >0){
                 $invoice_id = $request->invoice_id[$key].rand(222,22);
             }else $invoice_id = $request->invoice_id[$key];
-
             $insert = new Shipment();
             $insert->user_id = Auth::guard('user')->user()->id;
             $insert->zone_id = $zone->zone_id;
@@ -152,7 +139,4 @@ class CSVController extends Controller
         Session::forget('csv_data');
         return redirect('/dashboard');
     }
-
-
-
 }
