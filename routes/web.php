@@ -236,7 +236,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/view-merchant-handover/{user}', 'HoldShipmentController@merchant_handover_parcels')->name('merchant-handover-parcels');
     Route::get('/handover-to-merchant/{user}', 'HoldShipmentController@handover2merchant')->name('handover-to-merchant');
 
-
     Route::get('/admin-list', 'AdminController@index')->name('admin-list');
     Route::get('/admins', 'AdminController@admins')->name('admins');
     Route::get('/admin/create', 'AdminController@create')->name('create-admin');

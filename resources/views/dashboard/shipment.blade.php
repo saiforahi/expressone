@@ -49,10 +49,10 @@
                             <label class="" for="address">Address</label>
                             <input type="text" id="address" class="form-control" name="address">
                         </div>
-                        <div class="col text-left">
+                        {{-- <div class="col text-left">
                             <label for="zip_code">Zip Code</label>
                             <input type="text" id="zip_code" class="form-control" name="zip_code">
-                        </div>
+                        </div> --}}
                         <div class="col text-left">
                             <label for="area">Area</label>
                             <select class="form-control select2" name="area" id="area">
@@ -93,7 +93,7 @@
                             <textarea id="merchant_note" class="form-control" rows="3" name="merchant_note"></textarea>
                         </div>
                     </div>
-                    
+
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label for="usr3">How do you want to arrange for shipment?</label><br>
@@ -113,7 +113,7 @@
                                 </button>
                         </div>
                     </div>
-                    
+
                     <!-- <h5 class="card-title mt-5">Service Type:</h5>
                     <div class="form-row">
                         <div class="col-md-6 form-group text-left">
@@ -188,9 +188,9 @@
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         $(document).ready(function () {
             $('.select2').select2({ theme: "bootstrap",width: '100%' });
-            
+
             $('#area').change(function () { calculate(); });
-            
+
             $('#weight').keyup(function () {
                 let id = parseFloat($(this).val());
                 $('.weight_info').text(id.toFixed(2));
@@ -215,7 +215,7 @@
             let weight = $("#weight").val();
             let parcel_value = $("#parcel_value").val();
             let delivery_type = $(".activating2").attr('id');
-            
+
             $.ajax({
                 url: "{{ route('merchant.rate.check') }}",
                 type: 'post',

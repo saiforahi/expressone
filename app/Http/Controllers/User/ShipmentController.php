@@ -72,7 +72,7 @@ class ShipmentController extends Controller
             "name.required" => "Please enter customer name.",
             "phone.required" => "Please enter customer phone number.",
             "address.required" => "Please enter customer address.",
-            "weight.required" => "Parcel weight required",
+            //"weight.required" => "Parcel weight required",
             "parcel_value.max" => "The value of parcel must be 7 character",
             "area.required" => "Please select customer area",
         ];
@@ -82,11 +82,11 @@ class ShipmentController extends Controller
             'phone' => 'required|max:20',
             'address' => 'required|max:255',
             'area' => 'required',
-            'zip_code' => 'max:10',
+            //'zip_code' => 'max:10',
             'parcel_value' => 'max:7',
             'invoice_id' => 'max:20',
             'merchant_note' => 'max:255',
-            'weight' => 'required|max:5',
+            //'weight' => 'required|max:5',
             'delivery_type' => 'required',
         ], $messages);
 
@@ -96,31 +96,31 @@ class ShipmentController extends Controller
         $cod_amount = 0;
         $zone = Area::find($request->area);
         $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
-        if (!$shipping) {
-            return response()->json(['status' => 'error', 'errors' => ['message' => 'Sorry, not any shipping rate set this zone']], 422);
-        }
-        if ($shipping->cod == 1) {
-            $cod_type = 1;
-            if (!$request->parcel_value) {
-                // return response()->json(['status' => 'error', 'errors' => ['message' => 'Please declared your parcel value first.']], 422);
-                $cod_amount = 0;
-            } else {
-                $cod_amount = ((int)$request->parcel_value / 100) * $shipping->cod_value;
-            }
-        }
+        // if (!$shipping) {
+        //     return response()->json(['status' => 'error', 'errors' => ['message' => 'Sorry, not any shipping rate set this zone']], 422);
+        // }
+        // if ($shipping->cod == 1) {
+        //     $cod_type = 1;
+        //     if (!$request->parcel_value) {
+        //         // return response()->json(['status' => 'error', 'errors' => ['message' => 'Please declared your parcel value first.']], 422);
+        //         $cod_amount = 0;
+        //     } else {
+        //         $cod_amount = ((int)$request->parcel_value / 100) * $shipping->cod_value;
+        //     }
+        // }
 
 
-        $weight = (float)$request->weight;
-        if ($weight > $shipping->max_weight) {
-            $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-            if ((int)$ExtraWeight < $ExtraWeight) {
-                $ExtraWeight = (int)$ExtraWeight + 1;
-            }
-            $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-        } else {
-            $price = (int)$shipping->max_price;
-        }
-        $total_price = $price + $cod_amount + (int)$request->parcel_value;
+        // $weight = (float)$request->weight;
+        // if ($weight > $shipping->max_weight) {
+        //     $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
+        //     if ((int)$ExtraWeight < $ExtraWeight) {
+        //         $ExtraWeight = (int)$ExtraWeight + 1;
+        //     }
+        //     $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
+        // } else {
+        //     $price = (int)$shipping->max_price;
+        // }
+        // $total_price = $price + $cod_amount + (int)$request->parcel_value;
 
         $insert = new Shipment();
         $insert->user_id = Auth::guard('user')->user()->id;
