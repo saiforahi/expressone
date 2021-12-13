@@ -1,5 +1,6 @@
 <?php
 
+use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index')->name('home');
@@ -235,7 +236,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/view-merchant-handover/{user}', 'HoldShipmentController@merchant_handover_parcels')->name('merchant-handover-parcels');
     Route::get('/handover-to-merchant/{user}', 'HoldShipmentController@handover2merchant')->name('handover-to-merchant');
 
-
     Route::get('/admin-list', 'AdminController@index')->name('admin-list');
     Route::get('/admins', 'AdminController@admins')->name('admins');
     Route::get('/admin/create', 'AdminController@create')->name('create-admin');
@@ -362,7 +362,6 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::get('/profile-edit', 'DashboardController@ProfileEdit')->name('ProfileEdit');
     Route::post('/profile-update', 'DashboardController@ProfileUpdate')->name('ProfileUpdate');
 
-
     Route::get('/account', 'DashboardController@account')->name('account');
     Route::post('/change-email', 'DashboardController@ChangeMail')->name('ChangeMail');
     Route::post('/change-password', 'DashboardController@ChangePassword')->name('ChangePassword');
@@ -371,7 +370,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
     Route::post('prepare-shipment-submit', 'ShipmentController@PrepareShipmentSubmit')->name('PrepareShipmentSubmit');
     Route::get('/edit-shipment/{shipment}', 'ShipmentController@edit')->name('editShipment');
-    Route::post('/edit-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
+    Route::post('/update-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
 
     Route::get('payments', 'ShipmentController@payments')->name('payments');
     Route::get('payments-load', 'ShipmentController@payments_loading')->name('payments-load');
@@ -384,7 +383,6 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 
     Route::get('prepare-shipment-details/{id}', 'ShipmentController@PrepareShipmentEdit')->name('PrepareShipmentEdit');
 });
-
 
 Route::get('driver/login', 'Driver\AuthController@index');
 Route::post('driver/login', 'Driver\AuthController@login')->name('driver.login');
@@ -400,11 +398,9 @@ Route::group(['middleware' => 'auth:driver', 'namespace' => 'Driver', 'prefix' =
     Route::get('/my-shipments/{type}', 'ShipmentController@my_shipments')->name('my-shipments');
     Route::get('/shipping-details/{id}/{status}', 'ShipmentController@show')->name('shipping-details');
 
-
     Route::get('/cencell-parcel/{id}', 'ShipmentController@cencel_parcel')->name('cancel-parcel');
     Route::get('/receive-shipment/{id}', 'ShipmentController@receive_parcel')->name('receive-parcel');
     Route::get('/receive-all-shipment/{user}', 'ShipmentController@receive_all_parcel')->name('receive-all-parcel');
-
 
     Route::get('/my-parcels/{type}', 'ShipmentController@my_parcels')->name('my-parcel');
     Route::get('/agent-dispatch', 'ShipmentController@agent_dispatch')->name('box-for-delivery');

@@ -37,22 +37,22 @@
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="name">Customer Name</label>
-                            <input type="text" id="name" class="form-control" name="name">
+                            <input type="text" id="name" class="form-control" name="name" placeholder="Customer Name">
                         </div>
                         <div class="col text-left">
                             <label for="usr3">Phone Number</label>
-                            <input type="text" class="form-control" name="phone">
+                            <input type="text" class="form-control" name="phone" placeholder="Customer phone">
                         </div>
                     </div>
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="address">Address</label>
-                            <input type="text" id="address" class="form-control" name="address">
+                            <input type="text" id="address" class="form-control" name="address" placeholder="Customer Address">
                         </div>
-                        <div class="col text-left">
+                        {{-- <div class="col text-left">
                             <label for="zip_code">Zip Code</label>
                             <input type="text" id="zip_code" class="form-control" name="zip_code">
-                        </div>
+                        </div> --}}
                         <div class="col text-left">
                             <label for="area">Area</label>
                             <select class="form-control select2" name="area" id="area">
@@ -67,23 +67,23 @@
                     <h5 class="card-title mt-4">Shipment Details:</h5>
                     <div class="form-row my-4">
                         <div class="col text-left">
-                            <label class="" for="weight">Weight</label>
-                            <input type="text" id="weight" class="form-control" name="weight" value="1">
-                            <div class="w-100">
+                            <label class="" for="weight">Weight charge</label>
+                            <input type="number" id="weight_charge" class="form-control" name="weight_charge" value="1">
+                            {{-- <div class="w-100">
                                 <small>My total chargeable weight is <span
                                         class="weight_info">1.00 kg</span></small>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="col cod_target text-left">
                             <label for="parcel_value">Declared Parcel Value</label>
-                            <input type="number" id="parcel_value" class="form-control" name="parcel_value">
+                            <input type="number" id="parcel_value" class="form-control" name="parcel_value" placeholder="Enter Parcel Value">
                             <div class="w-100">
                                 <small>My parcel value is <span class="parcel_value_info">0</span> Taka</small>
                             </div>
                         </div>
 
                         <div class="col text-left">
-                            <label for="invoice_id">Invoice Id</label>
+                            <label for="invoice_id"> <strong>Ref. No</strong></label>
                             <input type="text" id="invoice_id" class="form-control" name="invoice_id" value="{{rand()}}">
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                             <textarea id="merchant_note" class="form-control" rows="3" name="merchant_note"></textarea>
                         </div>
                     </div>
-                    
+
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label for="usr3">How do you want to arrange for shipment?</label><br>
@@ -113,7 +113,7 @@
                                 </button>
                         </div>
                     </div>
-                    
+
                     <!-- <h5 class="card-title mt-5">Service Type:</h5>
                     <div class="form-row">
                         <div class="col-md-6 form-group text-left">
@@ -188,9 +188,9 @@
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         $(document).ready(function () {
             $('.select2').select2({ theme: "bootstrap",width: '100%' });
-            
+
             $('#area').change(function () { calculate(); });
-            
+
             $('#weight').keyup(function () {
                 let id = parseFloat($(this).val());
                 $('.weight_info').text(id.toFixed(2));
@@ -215,7 +215,7 @@
             let weight = $("#weight").val();
             let parcel_value = $("#parcel_value").val();
             let delivery_type = $(".activating2").attr('id');
-            
+
             $.ajax({
                 url: "{{ route('merchant.rate.check') }}",
                 type: 'post',
