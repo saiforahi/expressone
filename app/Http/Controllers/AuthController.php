@@ -33,6 +33,11 @@ class AuthController extends Controller
 
     public function registerStore(Request $request)
     {
+        echo '<pre>';
+        echo '======================<br>';
+        print_r($request->all());
+        echo '<br>======================<br>';
+        exit();
         $request->validate([
             'first_name' => 'required|max:50',
             'last_name' => 'required|max:50',

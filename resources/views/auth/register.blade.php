@@ -22,7 +22,6 @@
             </div>
         </section>
         <!-- /.Breadcrumb -->
-
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-sm-12">
@@ -34,9 +33,9 @@
                                 <div class="row" style="margin-bottom:15px">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="title-2">First name</label>
+                                            <label class="title-2">First name:</label>
                                             <input type="text" value="{{ old('first_name') }}" class="form-control"
-                                                placeholder="first_name" name="first_name" required>
+                                                placeholder="First name" name="first_name" required>
                                             @error('first_name')
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
@@ -44,14 +43,14 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="title-2">Last name</label>
+                                            <label class="title-2">Last name:</label>
                                             <input type="text" value="{{ old('last_name') }}" class="form-control"
                                                 placeholder="Last name" name="last_name">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label class="title-2">Phone</label>
+                                            <label class="title-2">Contact No:</label>
                                             <input type="text" value="{{ old('phone') }}" class="form-control"
                                                 placeholder="Enter valid phone no" name="phone">
                                             @error('phone')
@@ -59,7 +58,6 @@
                                             @enderror
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="row" style="margin-bottom:15px">
                                     <div class="col-md-4">
@@ -121,26 +119,21 @@
 
                                 </div>
                                 <div class="row" style="margin-bottom:15px">
-                                    <div class="col-md-4">
-                                        <label class="title-2"> Contact Number: </label>
-                                        <input type="number" value="" class="form-control"
-                                            placeholder="Enter your phone number" name="phone" required="">
-                                    </div>
+
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="title-2">Business Address:</label>
-                                           <textarea name="" id="" cols="30" rows="3" class="form-control" placeholder="Business Address" spellcheck="false"></textarea>
-                                                                      </div>
+                                            <textarea name="" id="" cols="30" rows="3" class="form-control"
+                                                placeholder="Business Address" spellcheck="false"></textarea>
+                                        </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="title-2">Designated Pickup Address: </label>
-                                           <textarea name="" id="" cols="30" rows="3" class="form-control" placeholder="Business Address" spellcheck="false"></textarea>
-                                                                      </div>
+                                            <textarea name="" id="" cols="30" rows="3" class="form-control"
+                                                placeholder="Business Address" spellcheck="false"></textarea>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="row">
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="title-2"> </label>
@@ -150,6 +143,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </form>
                         </div>
                     </div>
