@@ -11,16 +11,16 @@
                         <img src="{{$user->image == null? asset('images/user.png'):asset('storage/user/'.$user->image)}}" style="max-width:100%;max-height:160px" class="img-rounded" alt="{{$user->first_name}}">
                     </div>
                     <div class="col-md-10 text-capitalize">
-                       <b>Name:</b> {{$user->first_name}} {{$user->last_name}} 
+                       <b>Name:</b> {{$user->first_name}} {{$user->last_name}}
                        &nbsp; &nbsp; &nbsp; <b>Shop Name:</b> {{$user->shop_name}}<hr/>
-                        <b>Phone:</b> {{$user->phone}} &nbsp; &nbsp; &nbsp; 
+                        <b>Phone:</b> {{$user->phone}} &nbsp; &nbsp; &nbsp;
                         <b>Email:</b> {{$user->email}}<hr>
                         <b>Address:</b> {{$user->address}}
                     </div>
                   </div>
                 </div>
                 <div class="page-title">
-                    <h3>Merchant Shipment List 
+                    <h3>Merchant Shipment List
                         @if($shipments->count()>0 && Request::segment(6)=='0')
                         <a data-target="#assignShipment" data-toggle="modal" data-id="all" href="#" class="btn btn-primary assign pull-right">Assign all parcels to a Rider</a> @endif
                     </h3>
@@ -32,13 +32,13 @@
                     </div>
                 @endif
                 <div class="clearfix"></div>
-            
+
                 <div class="x_panel">
                     <div class="x_content table-responsive">
                         <table id="datatable-buttons" class="table table-striped table-bordered dataTable no-footer dtr-inline">
                             <thead>
                             <tr class="bg-dark">
-                                <th>#SL 
+                                <th>#SL
                                     <!-- <input id="checkAll" type="checkbox" name="checkAll"> -->
                                 </th>
                                  <th>Customer Info</th><th>Area</th>
@@ -47,6 +47,7 @@
                             </thead>
                             <tbody>
                             @foreach($shipments as $key=>$shipment)
+
                                 <tr>
                                     <th scope="row">
                                         <input style="display:none" type="checkbox" id="ids" name="ids[]" value="{{$shipment->id}}"> {{$key+1}}</th>
@@ -54,10 +55,10 @@
 
                                     <th scope="row">Name: {{$shipment->name}} <br>Price: {{$shipment->price}}
                                     </th>
-                                    <th scope="row">
+                                    {{-- <th scope="row">
                                         Zone: {{$shipment->zone->name}} <br>
-                                        Area: {{$shipment->area->name}} 
-                                    </th>
+                                        Area: {{$shipment->area->name}}
+                                    </th> --}}
                                     <th scope="row"><i class="fa fa-phone"></i> {{$shipment->phone}}<br>
 
                                     <i class="fa fa-map-marker"></i> {{$shipment->address}}<br>
@@ -75,7 +76,7 @@
                                         @elseif($shipment->status=='2')
                                             cancelled
                                         @else
-                                        
+
                                         @endif
                                         <!-- <a href="#" class="btn btn-primary btn-xs assign" data-toggle="modal" data-target="#assignShipment" data-id="{{$shipment->id}}">to Driver <i class="fa fa-truck"></i></a> -->
                                     </th>
@@ -143,7 +144,7 @@
     <link href="{{asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
           rel="stylesheet">
     <link href="{{asset('vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}" rel="stylesheet">
-    
+
 @endpush
 
 @push('scripts')
@@ -165,8 +166,8 @@
     <script src="{{asset('vendors/pdfmake/build/vfs_fonts.js')}}"></script>
     <script type="text/javascript">
         $(function(){
-             $('#checkAll').click(function () {    
-                 $('input:checkbox').prop('checked', this.checked);    
+             $('#checkAll').click(function () {
+                 $('input:checkbox').prop('checked', this.checked);
              });
 
             $('.assign').on('click',function(){

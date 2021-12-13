@@ -358,7 +358,6 @@ class ShipmentController extends Controller
         ];
         $shipment->update($data);
         $output = array('done' => 'done',);
-
         // return json_encode($output);
         return back()->with('message', 'Shipment has been udated successfully!');
     }
