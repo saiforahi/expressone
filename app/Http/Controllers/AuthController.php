@@ -99,8 +99,7 @@ class AuthController extends Controller
             $merchant->website_link = $data['website_link'];
             $merchant->password = Hash::make($data['password']);
             $merchant->save();
-            //dd('back to verify');
-            return view('auth.verify');
+            dd('Please wait we will approve your request soon');
         }
     }
 
