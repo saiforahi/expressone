@@ -55,8 +55,8 @@
                                     <th scope="row">Name: {{$shipment->name}} <br>Price: {{$shipment->price}}
                                     </th>
                                     <th scope="row">
-                                        Zone: {{$shipment->zone->name}} <br>
-                                        Area: {{$shipment->area->name}} 
+                                        Zone:  <br>
+                                        Area:  
                                     </th>
                                     <th scope="row"><i class="fa fa-phone"></i> {{$shipment->phone}}<br>
 

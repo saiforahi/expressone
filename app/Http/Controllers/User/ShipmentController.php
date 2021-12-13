@@ -66,8 +66,7 @@ class ShipmentController extends Controller
 
 
 
-    public function PrepareShipmentSubmit(Request $request)
-    {
+    public function PrepareShipmentSubmit(Request $request){
         $messages = [
             "name.required" => "Please enter customer name.",
             "phone.required" => "Please enter customer phone number.",
@@ -152,8 +151,7 @@ class ShipmentController extends Controller
         return back()->with('message', 'Shipment has been saved successfully!');
     }
 
-    public function PrepareShipmentEdit($id)
-    {
+    public function PrepareShipmentEdit($id){
         $earth = new Earth();
         $earth = $earth->getCountries()->toArray();
         $address = address::all();
@@ -164,34 +162,33 @@ class ShipmentController extends Controller
         return view('dashboard.shipment_edit', compact('shipment', 'address', 'earth'));
     }
 
-
+    
     function show(Shipment $shipment)
     {
-        $zone = Area::find($shipment->area_id);
-        $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
+        // $zone = Area::find($shipment->area_id);
+        // $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
 
-        if ($shipping == null) {
-            dd('ShippingPrice missing');
-        }
+        // if ($shipping == null) {
+        //     dd('ShippingPrice missing');
+        // }
 
-        $weight = (float)$shipment->weight;
-        if ($weight > $shipping->max_weight) {
-            $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-            if ((int)$ExtraWeight < $ExtraWeight) {
-                $ExtraWeight = (int)$ExtraWeight + 1;
-            }
-            $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-        } else {
-            $price = (int)$shipping->max_price;
-        }
+        // $weight = (float)$shipment->weight;
+        // if ($weight > $shipping->max_weight) {
+        //     $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
+        //     if ((int)$ExtraWeight < $ExtraWeight) {
+        //         $ExtraWeight = (int)$ExtraWeight + 1;
+        //     }
+        //     $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
+        // } else {
+        //     $price = (int)$shipping->max_price;
+        // }
 
-        $total_price = $price + (int)$shipment->parcel_value;
+        $total_price = $price= 0;
 
 
         return view('dashboard.shipment-view', compact('shipment', 'price', 'total_price', 'shipping'));
     }
-
-    function shipment_pdf(Shipment $shipment)
+    function shipment_pdf_old(Shipment $shipment)
     {
         $zone = Area::find($shipment->area_id);
         $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
@@ -208,6 +205,28 @@ class ShipmentController extends Controller
         }
 
         $total_price = $price + (int)$shipment->parcel_value;
+        // return view('dashboard.shipment-pdf', compact('shipment','price','total_price','shipping'));
+        $pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping'));
+        return $pdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
+    }
+    function shipment_pdf(Shipment $shipment)
+    {
+        // $zone = Area::find($shipment->area_id);
+        // // $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
+
+        // $weight = (float)$shipment->weight;
+        // if ($weight > $shipping->max_weight) {
+        //     $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
+        //     if ((int)$ExtraWeight < $ExtraWeight) {
+        //         $ExtraWeight = (int)$ExtraWeight + 1;
+        //     }
+        //     $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
+        // } else {
+        //     $price = (int)$shipping->max_price;
+        // }
+
+        $total_price = $price = 0;
+        $shipping=0;
         // return view('dashboard.shipment-pdf', compact('shipment','price','total_price','shipping'));
         $pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping'));
         return $pdf->download('Invoice-' . $shipment->invoice_id . '.pdf');

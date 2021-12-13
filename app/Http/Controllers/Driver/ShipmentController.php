@@ -15,9 +15,9 @@ use Auth;
 use App\Events\ShipmentMovement;
 use App\Events\SendingSMS;
 use Session;
+
 class ShipmentController extends Controller
 {
-
     public function index(){
         $shipment = Shipment::where('status',1)->select('user_id')->groupBy('user_id')->pluck('user_id')->toArray();
         $user = User::whereIn('id',$shipment)->get();

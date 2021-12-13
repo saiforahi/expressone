@@ -5,3 +5,4 @@ public/csv-file
 /csv-file
 demo/vendor
 *.zip
+.lock
