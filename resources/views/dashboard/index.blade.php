@@ -75,7 +75,7 @@
                         <tbody>
                             @foreach ($shipment as $key => $shipments)
                                 <tr>
-                                    <td>{{ $shipments->id }}</td>
+                                    <td>{{ ++$key }}</td>
                                     <td class="text-center">
                                         @include('dashboard.include.shipping-status',
                                         ['status'=>$shipments->status,'shipping_status'=>$shipments->shipping_status])
