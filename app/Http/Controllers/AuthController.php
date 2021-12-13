@@ -24,7 +24,7 @@ class AuthController extends Controller
         if (Auth::guard('user')->check()) return Redirect('/dashboard');
         return view('auth.login');
     }
-    
+
     public function register()
     {
         if (Auth::guard('user')->check()) return Redirect('/dashboard');
@@ -38,7 +38,7 @@ class AuthController extends Controller
             'last_name' => 'required|max:50',
             'email' => 'required|email|max:100|unique:users,email',
             'phone' => 'required|max:15',
-            'password' => 'required|max:20|min:8|confirmed',
+            'password' => 'required|max:20|min:8|confirmed'
         ]);
 
         $user = User::create([
@@ -51,7 +51,7 @@ class AuthController extends Controller
         ]);
 
         // Auth::guard('user')->login($user);
-        
+
         // Session::put('verification_email',$request->email);
         // dd(Session::get('verification_email'));
         // $this->send_verification_code();
@@ -80,7 +80,7 @@ class AuthController extends Controller
 
     public function verify()
     {
-        if (Auth::guard('user')->check()) {  
+        if (Auth::guard('user')->check()) {
             Session::put('verification_email',Auth::guard('user')->user()->email);
             Auth::guard('user')->logout();
         }
@@ -113,13 +113,13 @@ class AuthController extends Controller
     function send_verification_code(){
         // dd(Session::get('verification_email'));
         $subject =  'Verification code | '.basic_information()->company_name;
-        
+
         $code = rand();
         $user=User::where('email',Session::get('verification_email'))->first();
         $add = User_verification::create([
             'user_id'=>$user->id,'verification_code'=>$code
         ]);
-        
+
         $this->get_config($subject);
         \Mail::to(Session::get('verification_email'))->send(new UserVerificationMail($subject,$code));
         return view('emails.users.UserVerificationMail',compact('subject','code'));
