@@ -51,6 +51,43 @@
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-4">
+                                    <label class="title-2">Email No:</label>
+                                    <input type="text" value="{{ old('email') }}" class="form-control"
+                                        placeholder="Enter valid email" name="email">
+                                    @error('phone')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label class="title-2">Password: </label>
+                                    <input type="password" class="form-control" min="8" max="20"
+                                        placeholder="Enter password" name="password" required>
+                                    @error('password')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="title-2">Confirm Password: </label>
+                                    <input type="password" class="form-control" min="8" max="20" required
+                                        placeholder="Confirm your password" name="password_confirmation">
+                                    @error('password_confirmation')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="title-2">Website link: </label>
+                                    <input class="form-control" name="website_link" placeholder="Web site link">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="title-2">Shop name</label>
+                                    <input class="form-control" name="shop_name" placeholder="Shop name">
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <label class="title-2">Address: </label>
+                                    <textarea class="form-control" name="address" id="" cols="30" rows="5"></textarea>
+                                </div>
+                                {{-- <div class="form-group col-md-4">
                                     <label class="title-2">Bank Account Name: </label>
                                     <input type="text" class="form-control" placeholder="Account Name"
                                         name="bank_acc_name" max="50" required>
@@ -81,27 +118,11 @@
                                     @error('bank_branch_name')
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label class="title-2"> Password: </label>
-                                    <input type="password" class="form-control" min="8" max="20"
-                                        placeholder="Enter password" name="password" required>
-                                    @error('password')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label class="title-2"> Confirm Password: </label>
-                                    <input type="password" class="form-control" min="8" max="20" required
-                                        placeholder="Confirm your password" name="password_confirmation">
-                                    @error('password_confirmation')
-                                        <span class="invalid-feedback">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label class="title-2"> </label>
+                                </div> --}}
+                                <div class="form-group col-md-3">
+
                                     <button type="submit" class="form-control"
-                                        style="background-color: #e922c8;border-radius: 10px; color:#fff;">
+                                        style="background-color: #e922c8;border-radius: 80px; color:#fff;">
                                         Register</button>
                                 </div>
                             </form>
