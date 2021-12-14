@@ -34,73 +34,67 @@ class AuthController extends Controller
 
     public function registerStore(Request $request)
     {
-        // $request->validate([
-        //     'first_name' => 'required|max:50',
-        //     'shop_name' => 'required|max:200',
-        //     'email' => 'required|email|max:100|unique:users,email',
-        //     'phone' => 'required|max:15',
-        //     'address' => 'required',
-        //     'website_link' => 'required|url',
-        //     'password' => 'required|max:20|min:8|confirmed'
-        // ]);
-        // $user = User::create([
-        //     'user_id' => 'UR' . rand(100, 999) . time(),
-        //     'first_name' => $request->first_name,
-        //     'last_name' => $request->last_name,
-        //     'shop_name' => $request->shop_name,
-        //     'email' => $request->email,
-        //     'phone' => $request->phone,
-        //     'address' => $request->address,
-        //     'website_link' => $request->website_link,
-        //     'password' => Hash::make($request->password),
-        // ]);
-        // // Auth::guard('user')->login($user);
-        // // Session::put('verification_email',$request->email);
-        // // dd(Session::get('verification_email'));
-        // // $this->send_verification_code();
-        // return redirect('/verify');
-        if ($request->isMethod('post')) {
-            $data = $request->all();
-            // echo '<pre>';
-            // echo '======================<br>';
-            // print_r($data);
-            // echo '<br>======================<br>';
-            // exit();
-            //Validation rules
-            $rules = [
-                'first_name' => 'required',
-                'shop_name' => 'required',
-                'email' => 'required',
-                'phone' => 'required',
-                'address' => 'required',
-                'website_link' => 'required',
-                'password' => 'required'
-            ];
-            //Validation message
-            $customMessage = [
-                'first_name.required' => 'Name is required',
-                'shop_name.required' => 'Shop name is required',
-                'email.email' => 'Email is required',
-                'phone.required' => 'Phone is required',
-                'address.required' => 'Post title is required',
-                'website_link.required' => 'Post title is required',
-                'password.required' => 'Post title is required'
-            ];
-            $this->validate($request, $rules, $customMessage);
-            $merchant =  new User();
-            //Saving other field to users table
-            $merchant->user_id = 'UR' . rand(100, 999) . time();
-            $merchant->first_name = $data['first_name'];
-            $merchant->last_name = $data['last_name'];
-            $merchant->shop_name = $data['shop_name'];
-            $merchant->email = $data['email'];
-            $merchant->phone = $data['phone'];
-            $merchant->address = $data['address'];
-            $merchant->website_link = $data['website_link'];
-            $merchant->password = Hash::make($data['password']);
-            $merchant->save();
-            dd('Please wait we will approve your request soon');
-        }
+        // if ($request->isMethod('post')) {
+        //     $data = $request->all();
+        //     //Validation rules
+        //     $rules = [
+        //         'first_name' => 'required',
+        //         'shop_name' => 'required',
+        //         'email' => 'required',
+        //         'phone' => 'required',
+        //         'address' => 'required',
+        //         'website_link' => 'required',
+        //         'password' => 'required'
+        //     ];
+        //     //Validation message
+        //     $customMessage = [
+        //         'first_name.required' => 'Name is required',
+        //         'shop_name.required' => 'Shop name is required',
+        //         'email.email' => 'Email is required',
+        //         'phone.required' => 'Phone is required',
+        //         'address.required' => 'Post title is required',
+        //         'website_link.required' => 'Post title is required',
+        //         'password.required' => 'Post title is required'
+        //     ];
+        //     $this->validate($request, $rules, $customMessage);
+        //     $merchant =  new User();
+        //     //Saving other field to users table
+        //     $merchant->user_id = 'UR' . rand(100, 999) . time();
+        //     $merchant->first_name = $data['first_name'];
+        //     $merchant->last_name = $data['last_name'];
+        //     $merchant->shop_name = $data['shop_name'];
+        //     $merchant->email = $data['email'];
+        //     $merchant->phone = $data['phone'];
+        //     $merchant->address = $data['address'];
+        //     $merchant->website_link = $data['website_link'];
+        //     $merchant->password = Hash::make($data['password']);
+        //     $merchant->save();
+        //     dd('Please wait we will approve your request soon');
+        // }
+        $request->validate([
+            'first_name' => 'required|max:50',
+            'last_name' => 'required|max:50',
+            'email' => 'required|email|max:100|unique:users,email',
+            'phone' => 'required|max:15',
+            'password' => 'required|max:20|min:8|confirmed',
+        ]);
+
+        $user = User::create([
+            'user_id' => 'UR' . rand(100, 999) . time(),
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'password' => Hash::make($request->password),
+            'is_verified'=> 1,
+        ]);
+
+        // Auth::guard('user')->login($user);
+        
+        Session::put('verification_email',$request->email);
+        // dd(Session::get('verification_email'));
+        $this->send_verification_code();
+        return redirect('/verify');
     }
 
     public function login(Request $request)
