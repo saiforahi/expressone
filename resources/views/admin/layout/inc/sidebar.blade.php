@@ -18,13 +18,13 @@
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             @if (checkAdminAccess('zone') != 0)
-                                <li><a href="{{ route('zone') }}">Distribution Zone</a></li>
+                                <li><a href="{{ route('zone') }}">Distribution Zone (District)</a></li>
                             @endif
                             @if (checkAdminAccess('hub') != 0)
-                                <li><a href="{{ route('hub') }}">Hub</a></li>
+                                <li><a href="{{ route('hub') }}">Hub (Unit)</a></li>
                             @endif
                             @if (checkAdminAccess('area') != 0)
-                                <li><a href="{{ route('area') }}">Area</a></li>
+                                <li><a href="{{ route('area') }}">Area (Area)</a></li>
                             @endif
                         </ul>
                     </li>

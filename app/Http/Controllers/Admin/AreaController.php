@@ -81,15 +81,19 @@ class AreaController extends Controller
     }
 
     public function delete_hub(Hub $hub)
-    {   
-        if(\Auth::guard('admin')->user()->role_id !='1') return 0;
-        $area = Area::where('hub_id',$hub->id)->count();
-        if($area > 0) return 0;
-        $hub->delete(); return 1;
+    {
+        if (\Auth::guard('admin')->user()->role_id != '1') return 0;
+        $area = Area::where('hub_id', $hub->id)->count();
+        if ($area > 0) return 0;
+        $hub->delete();
+        return 1;
     }
 
 
-    public function zone(){ return view('admin.area.zone');}
+    public function zone()
+    {
+        return view('admin.area.zone');
+    }
 
     public function zoneGet()
     {
@@ -138,11 +142,13 @@ class AreaController extends Controller
     }
 
     public function zoneDelete(Request $request)
-    { 
-        $hub = Hub::where('zone_id',$request->id)->count();
-        if($hub > 0) { echo 'Foreign key integrated'; return false; }
-        else{
-            Zone::where('id',$request->id)->delete();
+    {
+        $hub = Hub::where('zone_id', $request->id)->count();
+        if ($hub > 0) {
+            echo 'Foreign key integrated';
+            return false;
+        } else {
+            Zone::where('id', $request->id)->delete();
             return true;
         }
     }
@@ -158,14 +164,15 @@ class AreaController extends Controller
         return view('admin.area.area', compact('zone'));
     }
 
-    function areaGetSingle(Request $request){
+    function areaGetSingle(Request $request)
+    {
         return Area::findOrFail($request->id);
     }
     public function areaStore(Request $request)
     {
         // dd($request)
         $this->validate($request, [
-            'zone_id' => 'required','hub_id' => 'required',
+            'zone_id' => 'required', 'hub_id' => 'required',
             'name' => 'required|max:255|unique:areas,name,' . $request->id,
         ]);
 
@@ -187,8 +194,8 @@ class AreaController extends Controller
         return DataTables::of(Area::orderBy('id', 'DESC'))->addColumn('action', function ($country) {
             return '
             <div class="btn-group  btn-group-sm text-right">
-                <button class="btn btn-info btn-xs edit" id="'.$country->id.'"><i class="fa fa-edit"></i> Edit</button>
-                <button class="btn btn-danger btn-xs delete" id="'.$country->id.'"><i class="fa fa-trash"></i> Delete</button>
+                <button class="btn btn-info btn-xs edit" id="' . $country->id . '"><i class="fa fa-edit"></i> Edit</button>
+                <button class="btn btn-danger btn-xs delete" id="' . $country->id . '"><i class="fa fa-trash"></i> Delete</button>
             </div>
             ';
         })->addColumn('status', function ($country) {
@@ -217,12 +224,15 @@ class AreaController extends Controller
         }
     }
 
-    public function areaDelete(Area $area){ 
-        $area->delete(); return true;
+    public function areaDelete(Area $area)
+    {
+        $area->delete();
+        return true;
     }
 
     // ajax call
-    function zone_wize_area(Zone $zone){
-        return Area::where('zone_id',$zone->id)->select('id','name')->get();
+    function zone_wize_area(Zone $zone)
+    {
+        return Area::where('zone_id', $zone->id)->select('id', 'name')->get();
     }
 }
