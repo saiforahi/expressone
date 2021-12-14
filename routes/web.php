@@ -2,7 +2,14 @@
 
 use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
-
+Route::get('/clear-cache', function () {
+    $exitCode = Artisan::call('cache:clear');
+    return 'Application cache cleared';
+});
+Route::get('/clear-config', function () {
+    $exitCode = Artisan::call('config:clear');
+    return 'Application cache cleared';
+});
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/about', 'HomeController@about')->name('about');
 Route::get('/team', 'HomeController@team')->name('team');
