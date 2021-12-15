@@ -112,8 +112,8 @@
                                         @endif
                                         <a href="/shipment-info/{{ $shipments->id }}"
                                             class="btn btn-primary btn-sm viewMore"><i class="fa fa-search-plus"></i></a>
-                                        <!--<a href="/shipment-pdf/{{ $shipments->id }}" class="btn btn-info btn-sm"><i-->
-                                        <!--        class="fa fa-file-pdf"></i></a>-->
+                                        <a href="/shipment-pdf/{{ $shipments->id }}" class="btn btn-info btn-sm">
+                                            <i class="fa fa-file-pdf"></i></a>
                                     </td>
                                 </tr>
                             @endforeach
