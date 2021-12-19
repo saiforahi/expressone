@@ -94,22 +94,8 @@ class ShipmentController extends Controller
     function shipment_print(Shipment $shipment)
     {
         $zone = Area::find($shipment->area_id);
-        $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
-        if ($shipping == null) {
-            dd('ShippingPrice missing');
-        }
-
-        $weight = (float) $shipment->weight;
-        if ($weight > $shipping->max_weight) {
-            $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-            if ((int) $ExtraWeight < $ExtraWeight) {
-                $ExtraWeight = (int) $ExtraWeight + 1;
-            }
-            $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-        } else {
-            $price = (int) $shipping->max_price;
-        }
-        $total_price = $price + (int) $shipment->parcel_value;
+        $shipping = '';
+        $total_price = $price = (int) $shipment->cod_amount;
 
         return view('admin.shipment.includes.pos_printing', compact('shipment', 'price', 'total_price', 'shipping'));
     }

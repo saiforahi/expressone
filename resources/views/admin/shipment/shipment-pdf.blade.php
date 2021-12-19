@@ -28,10 +28,7 @@
         </div>
         <div class="col-md-6" style="float:left;text-align:right;padding:25px;">
             <table style="float:right">
-                <tr>
-
-                    <th>{{ QrCode::size(150)->generate($shipment->tracking_code) }}</th>
-                </tr>
+                
                 <tr>
                     <td colspan="2">Date: {{ date('d F, Y') }}</td>
                 </tr>
