@@ -49,10 +49,7 @@
                             <label class="" for="address">Address</label>
                             <input type="text" id="address" class="form-control" name="address" placeholder="Customer Address">
                         </div>
-                        {{-- <div class="col text-left">
-                            <label for="zip_code">Zip Code</label>
-                            <input type="text" id="zip_code" class="form-control" name="zip_code">
-                        </div> --}}
+                        
                         <div class="col text-left">
                             <label for="area">Area</label>
                             <select class="form-control select2" name="area" id="area">

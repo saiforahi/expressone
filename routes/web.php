@@ -136,12 +136,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
 
     Route::post('/agent-dispatch-assing-to-driver', 'ShipmentController@agent_dispatchAssigning')->name('agent-dispatch-assing2Driver');
 
-
     Route::get('/all-shipments', 'ShipmentController@all_shipments')->name('all-shipments');
     Route::get('/shipment-details/{shipment}', 'ShipmentController@new_shipment_detail')->name('shipment-details');
     Route::get('/shipment-print/{shipment}', 'ShipmentController@shipment_print')->name('shipment-print');
     Route::post('/reset-shipment', 'ShipmentController@reset_shipment')->name('reset-shipment');
-
     // ajax call, get zone wize area
     Route::get('/zone-to-area/{zone}', 'AreaController@zone_wize_area')->name('zone-to-area');
     // reconcile
@@ -360,6 +358,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::get('/dashboard', 'DashboardController@index')->name('user.dashboard');
     Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
     Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
+    Route::get('/shipment-cnote/{shipment}', 'ShipmentController@shipmentConsNote')->name('merchant.shipmentCn');
     Route::delete('/shipment-delete/{id}', '\App\Http\Controllers\User\ShipmentController@shipmentDelete')->name('shipment.delete');
 
     Route::get('/profile', 'DashboardController@profile')->name('profile');
