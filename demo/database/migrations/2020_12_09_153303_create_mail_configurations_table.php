@@ -15,7 +15,7 @@ class CreateMailConfigurationsTable extends Migration
     {
         Schema::create('mail_configurations', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->comment('default: config');
+            $table->string('type')->comment('default:config');
             $table->string('username');
             $table->string('password');
             $table->string('send_email')->comment('referrece email to send mail');

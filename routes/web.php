@@ -74,6 +74,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/merchant-list', 'MerchantController@index')->name('merchant.list');
     Route::get('/merchant-details/{user}', 'MerchantController@show')->name('merchant.details');
     Route::post('/merchant-list', 'MerchantController@store')->name('merchant.store');
+    Route::post('/update-merchant-verify-status', 'MerchantController@updateMerchantStatus')->name('merchant.verify.status');
 
     Route::get('/shipping-price-set', 'ShippingPriceController@shippingPrice')->name('shippingPrice.set');
     Route::post('/shipping-price-set', 'ShippingPriceController@shippingPriceAdd')->name('shippingPrice.add');

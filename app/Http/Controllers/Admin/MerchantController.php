@@ -7,6 +7,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Shipment;
+
 class MerchantController extends Controller
 {
     public function index()
@@ -27,7 +28,6 @@ class MerchantController extends Controller
             'address' => 'max:255',
             'website_link' => 'max:255',
         ]);
-
         $register_user = new User();
         $register_user->user_id = 'UR' . rand(100, 999) . time();
         $register_user->first_name = $request->first_name;
@@ -38,7 +38,7 @@ class MerchantController extends Controller
         $register_user->address = $request->address;
         $register_user->website_link = $request->website_link;
         $register_user->password = Hash::make($request->password);
-        $register_user->is_verified='1';
+        $register_user->is_verified = '1';
         $register_user->save();
 
         return redirect('/admin/merchant-list');
@@ -46,8 +46,8 @@ class MerchantController extends Controller
 
     public function show(User $user)
     {
-        $shipments = Shipment::where('user_id',$user->id)->get();
-        return view('admin.merchant.merchant-details', compact('user','shipments'));
+        $shipments = Shipment::where('user_id', $user->id)->get();
+        return view('admin.merchant.merchant-details', compact('user', 'shipments'));
     }
 
     public function update(Request $request, $id)
@@ -58,5 +58,19 @@ class MerchantController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function updateMerchantStatus(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = $request->all();
+            //dd($data);
+            if ($data['is_verified'] == "Verified") {
+                $is_verified = 0;
+            } else {
+                $is_verified = 1;
+            }
+            User::where('id', $data['verified_id'])->update(['is_verified' => $is_verified]);
+            return  response()->json(['is_verified' => $is_verified, 'verified_id' => $data['verified_id']]);
+        }
     }
 }
