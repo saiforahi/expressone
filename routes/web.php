@@ -1,14 +1,16 @@
 <?php
-
 use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
-Route::get('/clear-cache', function () {
-    $exitCode = Artisan::call('cache:clear');
-    return 'Application cache cleared';
-});
-Route::get('/clear-config', function () {
-    $exitCode = Artisan::call('config:clear');
-    return 'Application cache cleared';
+use Illuminate\Support\Facades\Artisan;
+//To clear all cache
+Route::get('clear', function () {
+	Artisan::call('cache:clear');
+	Artisan::call('config:clear');
+	Artisan::call('config:cache');
+	Artisan::call('view:clear');
+	Artisan::call('optimize:clear');
+	Artisan::call('route:cache');
+	return "Cleared!";
 });
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/about', 'HomeController@about')->name('about');
@@ -27,9 +29,7 @@ Route::get('/blog-category/{blog_category}', 'HomeController@category_post')->na
 Route::get('/blog-search', 'HomeController@seach_blog')->name('search-post');
 // ajax call
 Route::get('/check-rate', 'HomeController@rateCheck')->name('rate.check');
-
 Route::get('/pricing', 'HomeController@pricing')->name('pricing');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ Route::post('admin/login', 'Admin\AuthController@login')->name('admin.login');
 Route::post('admin/register', 'Admin\AuthController@store')->name('admin.register');
 Route::post('admin/logout', 'Admin\AuthController@logout')->name('admin.logout');
 
-Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => 'Admin'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function () {
     Route::get('/', 'DashboardController@index')->name('admin-dashboard');
     Route::get('/basic-information', 'BasicInformationController@index')->name('basic-information');
     Route::post('/basic-information', 'BasicInformationController@update')->name('basic-information.update');
@@ -74,7 +74,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/merchant-list', 'MerchantController@index')->name('merchant.list');
     Route::get('/merchant-details/{user}', 'MerchantController@show')->name('merchant.details');
     Route::post('/merchant-list', 'MerchantController@store')->name('merchant.store');
-    Route::post('/update-merchant-verify-status', 'MerchantController@updateMerchantStatus')->name('merchant.verify.status');
+    Route::post('/update-merchant-verify', 'MerchantController@updateMerchantStatus')->name('admin.merchant.status');
 
     Route::get('/shipping-price-set', 'ShippingPriceController@shippingPrice')->name('shippingPrice.set');
     Route::post('/shipping-price-set', 'ShippingPriceController@shippingPriceAdd')->name('shippingPrice.add');
@@ -144,7 +144,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
 
     // ajax call, get zone wize area
     Route::get('/zone-to-area/{zone}', 'AreaController@zone_wize_area')->name('zone-to-area');
-
     // reconcile
     Route::get('/reconcile', 'ShipmentController@reconcile')->name('AdminReconcile');
     Route::get('/load-shipment-reconcilable', 'ShipmentController@load_shipment_reconcilable');
@@ -152,8 +151,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/create-reconcile/{shipment}', 'ShipmentController@create_reconcile');
     Route::get('/remove-reconcile/{shipment}', 'ShipmentController@remove_reconcile');
     Route::get('/return-reconcile2receive', 'ShipmentController@return_shipments2receive');
-
-
     // delivery
     Route::get('/delivery', 'ShipmentController@delivery')->name('AdminDelivery');
     Route::get('/get-shipment/{field}/{keyword}', 'ShipmentController@shipment_search')->name('delivery-search');
@@ -170,13 +167,13 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/export-selected/{shipment_ids}', 'ShipmentController@export_shipments')->name('export-selected');
     Route::get('/delivery-payment-form/{shipment_ids}', 'ShipmentController@deliveryPaymentsForMerchant')->name('delivery-payment-form');
     Route::post('/save-delivery-payment', 'ShipmentController@save_delivery_payment')->name('delivery-payment-save');
-    Route::get('/return-selected-to-merchant/{shipment_ids}','ShipmentController@return_shipments');
+    Route::get('/return-selected-to-merchant/{shipment_ids}', 'ShipmentController@return_shipments');
 
 
     // download
     Route::get('/shipment-download', 'ShipmentController@download')->name('AdminDownload');
     Route::get('/get-shipment-withBulkID/{bulk_id}', 'ShipmentController@shipment_search_withBulkID')->name('delivery-search-bulkid');
-    Route::get('/get-shipment-files/{type}/{bulk_id}','ShipmentController@download_file')->name('get-shipment-files');
+    Route::get('/get-shipment-files/{type}/{bulk_id}', 'ShipmentController@download_file')->name('get-shipment-files');
 
     Route::get('/admin-upload-csv', 'CSVController@create')->name('AdminUploadCSV');
     Route::post('/admin-upload-csv', 'CSVController@get_csv_data')->name('AdminShowCSV');
@@ -192,37 +189,37 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/cencell-shipment/{id}', 'ShipmentController@cencell')->name('cencell-shipment');
 
     // third party shipments
-    Route::get('/thirdparty-shipments/{hub}','ThirdpartyShipmentController@index')->name('thirdparty-shipments');
-    Route::get('/thirdparty-hub-shipments/{hub}','ThirdpartyShipmentController@show')->name('thirdparty-hub-shipments');
-    Route::get('/thirdparty-left/{hub}','ThirdpartyShipmentController@show_left_side')->name('thirdparty-left');
-    Route::get('/thirdparty-right/{hub}','ThirdpartyShipmentController@show_right_side')->name('thirdparty-right');
-    Route::get('/thirdparty-moveTo-right/{thirdparty_shipment}','ThirdpartyShipmentController@moveToright')->name('thirdparty2right');
-    Route::get('/thirdparty-moveTo-left/{thirdparty_shipment}','ThirdpartyShipmentController@moveToleft')->name('thirdparty2left');
-    Route::get('/thirdparty-sendToSort','ThirdpartyShipmentController@sendToSort')->name('thirdpartySendToSort');
-    Route::get('/thirdparty-csv-pdf/{type}','ShipmentController@get_csv_pdf');
-    Route::get('/thirdparty-rightWithInvoice/{invoice_id}','ThirdpartyShipmentController@show_right_withInvoice')->name('thirdparty-rightWithInvoice');
+    Route::get('/thirdparty-shipments/{hub}', 'ThirdpartyShipmentController@index')->name('thirdparty-shipments');
+    Route::get('/thirdparty-hub-shipments/{hub}', 'ThirdpartyShipmentController@show')->name('thirdparty-hub-shipments');
+    Route::get('/thirdparty-left/{hub}', 'ThirdpartyShipmentController@show_left_side')->name('thirdparty-left');
+    Route::get('/thirdparty-right/{hub}', 'ThirdpartyShipmentController@show_right_side')->name('thirdparty-right');
+    Route::get('/thirdparty-moveTo-right/{thirdparty_shipment}', 'ThirdpartyShipmentController@moveToright')->name('thirdparty2right');
+    Route::get('/thirdparty-moveTo-left/{thirdparty_shipment}', 'ThirdpartyShipmentController@moveToleft')->name('thirdparty2left');
+    Route::get('/thirdparty-sendToSort', 'ThirdpartyShipmentController@sendToSort')->name('thirdpartySendToSort');
+    Route::get('/thirdparty-csv-pdf/{type}', 'ShipmentController@get_csv_pdf');
+    Route::get('/thirdparty-rightWithInvoice/{invoice_id}', 'ThirdpartyShipmentController@show_right_withInvoice')->name('thirdparty-rightWithInvoice');
 
     // hold
-    Route::get('/hold-shipments/{hold}','HoldShipmentController@index')->name('hold-shipments');
-    Route::get('/move-to-hold_shipment/{shipment}/{hub}','HoldShipmentController@move_to_hold_shipment')->name('move-to-hold_shipment');
+    Route::get('/hold-shipments/{hold}', 'HoldShipmentController@index')->name('hold-shipments');
+    Route::get('/move-to-hold_shipment/{shipment}/{hub}', 'HoldShipmentController@move_to_hold_shipment')->name('move-to-hold_shipment');
     Route::get('/hold-agentDispatch-to-driverAssign-withInvoice/{invce_id}', 'HoldShipmentController@move_to_hold_shipmentWithInvoice');
     Route::get('/hold-agentDispatch-to-driverAssign-rider/{driver}', 'HoldShipmentController@move_to_hold_shipmentRider');
-    Route::get('/hold-shipment-rows/{type}','HoldShipmentController@hold_shipment_rows');
-    Route::get('/driver-hub-shipment-rows/{type}','HoldShipmentController@driver_hub_shipments');
-    Route::get('/move-back-to-hold_shipment/{shipment}/{type}','HoldShipmentController@move_back2hold_shipment');
-    Route::get('/sendToSorting-hold_shipment','HoldShipmentController@sendToSorting');
+    Route::get('/hold-shipment-rows/{type}', 'HoldShipmentController@hold_shipment_rows');
+    Route::get('/driver-hub-shipment-rows/{type}', 'HoldShipmentController@driver_hub_shipments');
+    Route::get('/move-back-to-hold_shipment/{shipment}/{type}', 'HoldShipmentController@move_back2hold_shipment');
+    Route::get('/sendToSorting-hold_shipment', 'HoldShipmentController@sendToSorting');
 
-    Route::get('/move-to-return_shipment/{shipment}/{hub}','HoldShipmentController@move_to_return_shipment');
-    Route::get('/move-to-return_shipment-withInvoice/{inviceid}','HoldShipmentController@move_to_return_shipment_withInvoice');
-    Route::get('/move-to-return_shipment-withRider/{driver}','HoldShipmentController@move_to_return_shipment_withRider');
+    Route::get('/move-to-return_shipment/{shipment}/{hub}', 'HoldShipmentController@move_to_return_shipment');
+    Route::get('/move-to-return_shipment-withInvoice/{inviceid}', 'HoldShipmentController@move_to_return_shipment_withInvoice');
+    Route::get('/move-to-return_shipment-withRider/{driver}', 'HoldShipmentController@move_to_return_shipment_withRider');
 
-    Route::get('/return-shipment-rows/{type}','HoldShipmentController@return_shipment_rows');
-    Route::get('/return-shipments-parcels/{hub}','HoldShipmentController@return_shipments_parcels');
-    Route::get('/move-back-to-return_shipment/{return_shipment}/{type}','HoldShipmentController@move_back2return_shipment');
+    Route::get('/return-shipment-rows/{type}', 'HoldShipmentController@return_shipment_rows');
+    Route::get('/return-shipments-parcels/{hub}', 'HoldShipmentController@return_shipments_parcels');
+    Route::get('/move-back-to-return_shipment/{return_shipment}/{type}', 'HoldShipmentController@move_back2return_shipment');
 
-    Route::get('/return-sorting/{hub}','HoldShipmentController@return_sorting')->name('return-sorting');
-    Route::get('/return-dispatch','HoldShipmentController@return_dispatch')->name('return-dispatch');
-    Route::get('/return-dispatch/view/{hub}','HoldShipmentController@dispatch_view')->name('return-dispatch-view');
+    Route::get('/return-sorting/{hub}', 'HoldShipmentController@return_sorting')->name('return-sorting');
+    Route::get('/return-dispatch', 'HoldShipmentController@return_dispatch')->name('return-dispatch');
+    Route::get('/return-dispatch/view/{hub}', 'HoldShipmentController@dispatch_view')->name('return-dispatch-view');
     Route::get('/return-status-dispatch/{hub}', 'HoldShipmentController@status_dispatch')->name('return-status-dispatch');
     Route::get('/return-status-on-transit/{hub}', 'HoldShipmentController@status_on_transit')->name('return-status-on-transit');
     Route::get('/return-dispatch-box-view/{return_shipment_box}', 'HoldShipmentController@dispatch_box_view')->name('return-box-view');
@@ -230,8 +227,8 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/return-change-box-status-bulk-id/{return_shipment_box}/{status}', 'HoldShipmentController@box_status_changes_bulk_id')->name('return-box-status-change-bulk-id');
     Route::get('/return-box-sorting/{hub}', 'HoldShipmentController@box_sorting')->name('return-box-sorting');
 
-    Route::get('/receive-from-hub','HoldShipmentController@receive_from_hub')->name('receive-from-hub');
-    Route::get('/return-agent-dispatch','HoldShipmentController@agent_dispatch')->name('return-agent-dispatch');
+    Route::get('/receive-from-hub', 'HoldShipmentController@receive_from_hub')->name('receive-from-hub');
+    Route::get('/return-agent-dispatch', 'HoldShipmentController@agent_dispatch')->name('return-agent-dispatch');
     Route::get('/return-agent-dispatch-agentSide', 'HoldShipmentController@agent_dispatch_agentSide')->name('return-agent-dispatch-agentSide');
     Route::get('/return-agent-dispatch-driverSide', 'HoldShipmentController@agent_dispatch_driverSide')->name('return-agent-dispatch-driverSide');
     Route::get('/return-agentDispatch-to-driverAssign/{return_shipment_box}/{shipment}', 'HoldShipmentController@agentDispatch2DriverAssign')->name('return-agent-dispatch-driverAssign');
@@ -340,7 +337,6 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/blog/category/delete/{blog_category}', 'Blog_categoryController@destroy')->name('delete-category');
     Route::post('/blog/category/update', 'Blog_categoryController@update')->name('update-category');
 
-
     Route::get('set-mail-info', 'BasicInformationController@mailing_info')->name('mail-setup');
     Route::post('set-mail-info', 'BasicInformationController@save_mailing_info')->name('save-mail-setup');
 });
@@ -417,10 +413,9 @@ Route::group(['middleware' => 'auth:driver', 'namespace' => 'Driver', 'prefix' =
 
     Route::get('/return-agent-dispatch', 'ShipmentController@return_agent_dispatch')->name('return-box-for-delivery');
     Route::post('/return-shipment-delivery', 'ShipmentController@return_delivery_report')->name('return-shipment-delivery');
-    Route::post('/confirm-otp','ShipmentController@otp_confirmation')->name('confirm-opt');
+    Route::post('/confirm-otp', 'ShipmentController@otp_confirmation')->name('confirm-opt');
 });
 
-
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
+   Lfm::routes();
 });

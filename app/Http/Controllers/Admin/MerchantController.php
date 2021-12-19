@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use App\Shipment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class MerchantController extends Controller
 {
@@ -63,14 +64,13 @@ class MerchantController extends Controller
     {
         if ($request->ajax()) {
             $data = $request->all();
-            //dd($data);
             if ($data['is_verified'] == "Verified") {
                 $is_verified = 0;
             } else {
                 $is_verified = 1;
             }
-            User::where('id', $data['verified_id'])->update(['is_verified' => $is_verified]);
-            return  response()->json(['is_verified' => $is_verified, 'verified_id' => $data['verified_id']]);
+            User::where('id', $data['merchant_id'])->update(['is_verified' => $is_verified]);
+            return response()->json(['is_verified' => $is_verified, 'merchant_id' => $data['merchant_id']]);
         }
     }
 }

@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array
      */
     protected $except = [
-        "/sadmin/check-current-pwd"
+        "admin/update-merchant-verify",
     ];
 }
