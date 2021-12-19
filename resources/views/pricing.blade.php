@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title','Pricing')
+@section('title', 'Pricing')
 @section('content')
     <article>
         <!-- Product Delivery -->
@@ -19,8 +19,8 @@
                             <div class="pb-120 hidden-xs"></div>
                         </div>
                         <div class="delivery-img pt-10">
-                            <img alt="" src="assets/img/block/delivery.png" class="wow slideInLeft"
-                                 data-wow-offset="50" data-wow-delay=".20s"/>
+                            <img alt="" src="assets/img/block/delivery.png" class="wow slideInLeft" data-wow-offset="50"
+                                data-wow-delay=".20s" />
                         </div>
                     </div>
                 </div>
@@ -33,4 +33,3 @@
 
     @include('includes.contact')
 @endsection
-
