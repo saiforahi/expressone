@@ -49,7 +49,7 @@
                                         <th>Phone</th>
                                         <th>Email</th>
                                         <th>Status</th>
-                                        <th>Is verified?</th>
+
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -64,24 +64,19 @@
                                             <th scope="row">{{ $users['phone'] }}</th>
                                             <th scope="row">{{ $users['email'] }}</th>
                                             <th scope="row">
-                                                @if ($users->status == 1)
-                                                    <a class="btn btn-sm btn-success">Registered
-                                                    </a>
-                                                @endif
-                                            </th>
-                                            <th scope="row">
                                                 @if ($users->is_verified == 1)
-                                                    <a title="Change" merchant_id="{{ $users->id }}"
-                                                        class="text-success merchant_status btn btn-success btn-sm"
-                                                        id="merchant_{{ $users->id }}" href="javascript:void(0)">
-                                                        Verified
+                                                    <a title="Make not_verified"
+                                                        class="update_verified_status label label-success"
+                                                        id="verified_{{ $users->id }}" verified_id="{{ $users->id }}"
+                                                        href="javascript:void(0)">Verified
                                                     </a>
                                                 @else
-                                                <a title="Change" merchant_id="{{ $users->id }}"
-                                                    class="text-danger merchant_status btn btn-warning btn-sm"
-                                                    id="merchant_{{ $users->id }}" href="javascript:void(0)">
-                                                    Not Verified
-                                                </a>
+
+                                                    <a title="Make verified"
+                                                        class="update_verified_status label label-danger"
+                                                        id="verified_{{ $users->id }}"
+                                                        verified_id="{{ $users->id }}" href="javascript:void(0)">Registered
+                                                    </a>
                                                 @endif
                                             </th>
 
@@ -101,6 +96,7 @@
             </div>
         </div>
     </div>
+
     <!-- Modal for add merchant-->
     <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
@@ -303,25 +299,25 @@
                 }
             })
             //Update merchant verify status
-            $(".merchant_status").click(function() {
+            $(".update_verified_status").click(function() {
                 var is_verified = $(this).text();
-                var merchant_id = $(this).attr("merchant_id");
+                var verified_id = $(this).attr("verified_id");
+                //alert(verified_id)
                 $.ajax({
                     type: 'post',
-                    url: '/admin/update-merchant-verify',
+                    url: '/admin/update-merchant-verify-status',
                     data: {
                         is_verified: is_verified,
-                        merchant_id: merchant_id
+                        verified_id: verified_id
                     },
                     success: function(resp) {
-                        //alert(resp)
                         if (resp['is_verified'] == 0) {
-                            $("#merchant_" + merchant_id).html(
-                                "<a href='javascript:void(0)' class='merchant_status text-white'>Not verified</a>"
+                            $("#verified_" + verified_id).html(
+                                "<a href='javascript:void(0)' class='verified_status'>Not verified</a>"
                             )
-                        } else if (resp['is_verified'] == 1) {
-                            $("#merchant_" + merchant_id).html(
-                                "<a href='javascript:void(0)' class='merchant_status text-white'>Verified</a>"
+                        } else if (resp['status'] == 1) {
+                            $("#verified_" + verified_id).html(
+                                "<a href='javascript:void(0)' class='verified_status'>Verified</a>"
                             )
                         }
                     },

@@ -10,7 +10,8 @@
                     <div class="col-sm-8 pull-left">
                         <div class="title-wrap">
                             <h2 class="section-title no-margin"> Verify your Account </h2>
-                            <p class="fs-16 no-margin"> Please check your email and get your login verification code </p>
+                            {{-- <p class="fs-16 no-margin">Please check your email and get your login verification code </p> --}}
+                            <p class="fs-16 no-margin">Please contact with system admin to be verified</p>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -24,7 +25,7 @@
         </section>
         <!-- /.Breadcrumb -->
 
-        <div class="container">
+        {{-- <div class="container">
             <div class="row">
                 <div class="col-md-5 col-sm-6 col-md-offset-4">
                     <div class="login-wrap">
@@ -42,7 +43,7 @@
                                 <div class="form-group">
                                     <input type="text" class="form-control"placeholder="Enter verification code" name="verification_code" max="100" required>
                                 </div>
-                         
+
                                 <div class="form-group">
                                     <button type="submit" class="btn-1"> Verify now</button>
                                 </div>
@@ -61,6 +62,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </article>
 @endsection

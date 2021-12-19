@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\User;
-
 use App\Area;
 use App\Http\Controllers\Controller;
 use App\Shipment;
@@ -163,9 +161,10 @@ class ShipmentController extends Controller
         return view('dashboard.shipment_edit', compact('shipment', 'address', 'earth'));
     }
 
-    
+
     function show(Shipment $shipment)
     {
+
         // $zone = Area::find($shipment->area_id);
         // $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
 
@@ -183,11 +182,12 @@ class ShipmentController extends Controller
         // } else {
         //     $price = (int)$shipping->max_price;
         // }
-
-        $total_price = $price= 0;
-
-
-        return view('dashboard.shipment-view', compact('shipment', 'price', 'total_price', 'shipping'));
+        //$total_price = $price= 0;
+        return view('dashboard.shipment-view', compact('shipment'));
+    }
+    function shipmentConsNote(Shipment $shipment)
+    {
+        return view('dashboard.shipmentCNote', compact('shipment'));
     }
     function shipment_pdf_old(Shipment $shipment)
     {

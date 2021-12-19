@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $hub = \App\Admin_hub::where('admin_id',Auth::guard('admin')->user()->id)->first();
         if($hub!=null){
             Session::put('admin_hub',$hub);
-        }        
+        }
         return view('admin.dashboard');
     }
 

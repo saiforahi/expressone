@@ -9,7 +9,7 @@
                     <div class="col-sm-8 pull-left">
                         <div class="title-wrap">
                             <h2 class="section-title no-margin"> Merchant Register </h2>
-                            <p class="fs-16 no-margin"> Create your account </p>
+                            <p class="fs-16 no-margin"> Create your account</p>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -75,13 +75,13 @@
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="form-group col-md-4">
+                                {{-- <div class="form-group col-md-4">
                                     <label class="title-2">Website link: </label>
                                     <input class="form-control" name="website_link" placeholder="Web site link">
-                                </div>
+                                </div> --}}
                                 <div class="form-group col-md-4">
                                     <label class="title-2">Shop name</label>
-                                    <input class="form-control" name="shop_name" placeholder="Shop name">
+                                    <input type="text" class="form-control" name="shop_name" placeholder="Shop name" value="{{ old('shop_name') }}">
                                 </div>
                                 <div class="form-group col-md-5">
                                     <label class="title-2">Address: </label>
