@@ -70,7 +70,6 @@ class DashboardController extends Controller
 
     public function profile()
     {
-
         return view('dashboard.profile');
     }
 
@@ -108,7 +107,6 @@ class DashboardController extends Controller
             $register_user->image = $fileStore3;
         }
         $register_user->save();
-
         $request->session()->flash('message', 'Profile update successfully');
         return redirect('/profile');
 

@@ -13,7 +13,7 @@
               <div class="tile-stats">
                 <div class="icon"><i class="fa fa-shopping-cart"></i>
                 </div>
-                <?php $shipments = \DB::table('shipments')->select('id')->count();?>  
+                <?php $shipments = \DB::table('shipments')->select('id')->count();?>
                 <div class="count">{{sprintf("%02d",$shipments)}}</div>
 
                 <h3>Total shipments</h3>
@@ -24,7 +24,7 @@
               <div class="tile-stats">
                 <div class="icon"><i class="fa fa-truck"></i>
                 </div>
-                <?php $drivers = \DB::table('drivers')->select('id')->count();?> 
+                <?php $drivers = \DB::table('drivers')->select('id')->count();?>
                 <div class="count">{{sprintf('%02d',$drivers)}}</div>
 
                 <h3>Riders</h3>
@@ -35,7 +35,7 @@
               <div class="tile-stats">
                 <div class="icon"><i class="fa fa-sort-amount-desc"></i>
                 </div>
-                <?php $users = \DB::table('users')->select('id')->count();?> 
+                <?php $users = \DB::table('users')->select('id')->count();?>
                 <div class="count">{{sprintf('%02d',$users)}}</div>
 
                 <h3>Merchants</h3>
@@ -46,8 +46,8 @@
               <div class="tile-stats">
                 <div class="icon"><i class="fa fa-user-plus"></i>
                 </div>
-                <?php $admins = \DB::table('admins')->where('role_id',1)->select('id')->count();?> 
-                <?php $employees = \DB::table('admins')->where('role_id','!=',1)->select('id')->count();?> 
+                <?php $admins = \DB::table('admins')->where('role_id',1)->select('id')->count();?>
+                <?php $employees = \DB::table('admins')->where('role_id','!=',1)->select('id')->count();?>
                 <div class="count">{{sprintf('%02d',$admins)}} / {{sprintf('%02d',$employees)}}</div>
 
                 <h3>Employees</h3>

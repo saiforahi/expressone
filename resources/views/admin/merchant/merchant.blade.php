@@ -65,9 +65,8 @@
                                             <th scope="row">{{ $users['email'] }}</th>
                                             <th scope="row">
                                                 @if ($users->status == 1)
-                                                    <a class="label label-success">Registered
+                                                    <a class="btn btn-sm btn-success">Registered
                                                     </a>
-
                                                 @endif
                                             </th>
                                             <th scope="row">

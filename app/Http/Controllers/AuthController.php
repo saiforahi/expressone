@@ -2,33 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
-
-use Auth;
-use App\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Session;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\UserRegistrationMail;
 use App\Mail\UserVerificationMail;
-use App\User_verification;
-
 use App\Mail_configuration;
-use Illuminate\Contracts\Session\Session as SessionSession;
+use App\User;
+use App\User_verification;
+use Auth;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Session;
 
 class AuthController extends Controller
 {
     public function index()
     {
-        if (Auth::guard('user')->check()) return Redirect('/dashboard');
+        if (Auth::guard('user')->check()) {
+            return Redirect('/dashboard');
+        }
         return view('auth.login');
     }
 
     public function register()
     {
-        if (Auth::guard('user')->check()) return Redirect('/dashboard');
+        if (Auth::guard('user')->check()) {
+            return Redirect('/dashboard');
+        }
         return view('auth.register');
     }
 
@@ -78,20 +79,19 @@ class AuthController extends Controller
             'phone' => 'required|max:15',
             'password' => 'required|max:20|min:8|confirmed',
         ]);
-
         $user = User::create([
             'user_id' => 'UR' . rand(100, 999) . time(),
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'shop_name' => $request->shop_name,
+            'address' => $request->address,
             'password' => Hash::make($request->password),
-            'is_verified'=> 1,
         ]);
 
         // Auth::guard('user')->login($user);
-        
-        Session::put('verification_email',$request->email);
+        Session::put('verification_email', $request->email);
         // dd(Session::get('verification_email'));
         $this->send_verification_code();
         return redirect('/verify');
@@ -103,7 +103,7 @@ class AuthController extends Controller
             'email' => 'required|email|max:100',
             'password' => 'required|max:20|min:8',
         ]);
-        if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
+        if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password,'is_verified' => 1], $request->get('remember'))) {
             if (Auth::guard('user')->user()->is_verified == 1) {
                 return redirect()->intended('/dashboard');
             } else {
@@ -127,11 +127,11 @@ class AuthController extends Controller
         return view('auth.verify');
     }
 
-    function verify_code(Request $request)
+    public function verify_code(Request $request)
     {
         $check = User_verification::where([
             'verification_code' => $request->verification_code,
-            'status' => 'waiting'
+            'status' => 'waiting',
         ])->first();
         if ($check == null) {
             return back()->with('message', 'Verification code does not match!');
@@ -146,23 +146,21 @@ class AuthController extends Controller
         return redirect('/login');
     }
 
-
-    function send_verification_code()
+    public function send_verification_code()
     {
         // dd(Session::get('verification_email'));
-        $subject =  'Verification code | ' . basic_information()->company_name;
+        $subject = 'Verification code | ' . basic_information()->company_name;
 
         $code = rand();
         $user = User::where('email', Session::get('verification_email'))->first();
         $add = User_verification::create([
-            'user_id' => $user->id, 'verification_code' => $code
+            'user_id' => $user->id, 'verification_code' => $code,
         ]);
 
         $this->get_config($subject);
         \Mail::to(Session::get('verification_email'))->send(new UserVerificationMail($subject, $code));
         return view('emails.users.UserVerificationMail', compact('subject', 'code'));
     }
-
 
     public function logout(Request $request)
     {

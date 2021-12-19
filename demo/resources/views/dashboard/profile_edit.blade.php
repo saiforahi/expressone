@@ -67,7 +67,7 @@
                                     Name</label><input name="last_name" id="examplePassword11" value="{{Auth::guard('user')->user()->last_name}}" type="text" required max="100" class="form-control">
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div class="form-row">
                             <div class="col-md-4">
