@@ -1,5 +1,5 @@
 @extends('dashboard.layout.app')
-@section('pageTitle', 'Prepare Shipment')
+@section('pageTitle', 'Edit Shipment')
 @section('content')
     <div class="app-page-title">
         <div class="page-title-wrapper">
@@ -32,31 +32,40 @@
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="main-card mb-3 card card-body">
-                <form id="upload_form" method="post" action="{{ route('PrepareShipmentSubmit') }}"> {{ csrf_field() }}
+
+                <form id="upload_form" action="{{ route('updateShipment',$shipment->id) }}" method="post"> {{ csrf_field() }}
                     <h5 class="card-title">Customer Details:</h5>
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="name">Customer Name</label>
-                            <input type="text" id="name" class="form-control" name="name" placeholder="Customer Name">
+                            <input type="text" id="name" class="form-control" name="name" value="{{ $shipment->name }}">
                         </div>
                         <div class="col text-left">
                             <label for="usr3">Phone Number</label>
-                            <input type="text" class="form-control" name="phone" placeholder="Customer phone">
+                            <input type="text" class="form-control" name="phone" value="{{ $shipment->phone }}">
                         </div>
                     </div>
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="address">Address</label>
                             <input type="text" id="address" class="form-control" name="address"
-                                placeholder="Customer Address">
+                                value="{{ $shipment->address }}">
                         </div>
+                        @if (!empty($shipment->zip_code))
+                            <div class="col text-left">
+                                <label for="zip_code">Zip Code</label>
+                                <input type="text" id="zip_code" class="form-control" name="zip_code"
+                                    value="{{ $shipment->zip_code }}">
+                            </div>
+                        @endif
 
                         <div class="col text-left">
                             <label for="area">Area</label>
                             <select class="form-control select2" name="area" id="area">
                                 <option value="" selected disabled>Select area</option>
                                 @foreach ($area as $areas)
-                                    <option value="{{ $areas->id }}">{{ $areas->name }}</option>
+                                    <option @if ($shipment->area_id == $areas->id)selected @endif value="{{ $areas->id }}">{{ $areas->name }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -64,33 +73,36 @@
 
                     <h5 class="card-title mt-4">Shipment Details:</h5>
                     <div class="form-row my-4">
-                        <div class="col text-left">
-                            <label class="" for="weight">Weight charge</label>
-                            <input type="number" id="weight_charge" class="form-control" name="weight_charge" value="1">
-                            {{-- <div class="w-100">
-                                <small>My total chargeable weight is <span
-                                        class="weight_info">1.00 kg</span></small>
-                            </div> --}}
-                        </div>
+                        @if (!empty($shipment->weight))
+                            <div class="col text-left">
+                                <label class="" for="weight">Weight</label>
+                                <input type="text" id="weight" class="form-control" name="weight"
+                                    value="{{ $shipment->weight }}">
+                                <div class="w-100">
+                                    <small>My total chargeable weight is <span class="weight_info">1.00 kg</span></small>
+                                </div>
+                            </div>
+                        @endif
                         <div class="col cod_target text-left">
                             <label for="parcel_value">Declared Parcel Value</label>
                             <input type="number" id="parcel_value" class="form-control" name="parcel_value"
-                                placeholder="Enter Parcel Value">
+                                value="{{ $shipment->parcel_value }}">
                             <div class="w-100">
                                 <small>My parcel value is <span class="parcel_value_info">0</span> Taka</small>
                             </div>
                         </div>
 
                         <div class="col text-left">
-                            <label for="invoice_id"> <strong>Ref. No</strong></label>
+                            <label for="invoice_id">Invoice Id</label>
                             <input type="text" id="invoice_id" class="form-control" name="invoice_id"
-                                value="{{ rand() }}">
+                                value="{{ $shipment->invoice_id }}">
                         </div>
                     </div>
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label for="merchant_note">Merchant Note</label>
-                            <textarea id="merchant_note" class="form-control" rows="3" name="merchant_note"></textarea>
+                            <textarea id="merchant_note" class="form-control" rows="3"
+                                name="merchant_note">{{ $shipment->merchant_note }}</textarea>
                         </div>
                     </div>
 
@@ -101,26 +113,29 @@
 
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" checked name="delivery_type" id="inlineRadio1"
-                                    value="1">
+                                    value="1" @if ($shipment->delivery_type == '1')checked @endif />
                                 <label class="form-check-label" for="inlineRadio1">Regular</label>
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="delivery_type" id="inlineRadio2"
-                                    value="2">
+                                    value="2" @if ($shipment->delivery_type == '2')checked @endif />
                                 <label class="form-check-label" for="inlineRadio2">Express</label>
                             </div>
                         </div>
                         <div class="col text-right">
                             <button type="submit" id="submit_button" class="btn btn-success rounded my-4"> <i
-                                    class="fa fa-check"></i> Shipping Submit
+                                    class="fa fa-edit"></i> Save the Change
                             </button>
                         </div>
                     </div>
 
+                    <button type="button" onclick="calculate()" class="mt-2 px-4 btn btn-success float-left d-none">
+                        Shipping Rate Calculate </button>
                 </form>
             </div>
         </div>
     </div>
+
 @endsection
 
 @push('style')
@@ -211,68 +226,7 @@
                     }
                 }
             });
-
-            //alert(zone);
         }
-
-        // $('#submit_button').click(function () {
-        //     var form = new FormData($('#upload_form')[0]);
-        //     warnBeforeRedirect(form);
-        // });
-
-        // function warnBeforeRedirect(form) {
-        //     swal({
-        //             title: "Sure want to save?",
-        //             text: "If you click 'OK' you cant edit data.",
-        //             type: "warning",
-        //             showCancelButton: true
-        //         }, function () {
-        //             $.ajax({
-        //                 url: "{{ route('PrepareShipmentSubmit') }}",
-        //                 type: 'post',
-        //                 processData: false,
-        //                 contentType: false,
-        //                 data: form,
-        //                 dataType: 'json',
-        //                 error: function (data) {
-        //                     if (data.status === 422) {
-        //                         var errors = $.parseJSON(data.responseText);
-        //                         let allData = '', mainData = '';
-        //                         $.each(errors, function (key, value) {
-        //                             if ($.isPlainObject(value)) {
-        //                                 $.each(value, function (key, value) {
-        //                                     allData += value + "<br/>";
-        //                                 });
-        //                             } else {
-        //                                 mainData += value + "<br/>";
-        //                             }
-        //                         });
-        //                         swal({
-        //                             title: mainData,
-        //                             text: allData,
-        //                             type: 'error',
-        //                             html: true,
-        //                             confirmButtonText: 'Ok'
-        //                         })
-        //                     }
-        //                 },
-        //                 success: function (data) {
-        //                     if (data.error == 'error') {
-        //                         swal({
-        //                             title: "Something wrong",
-        //                             text: 'Please check the shipping rate again.',
-        //                             type: 'error',
-        //                             confirmButtonText: 'Ok'
-        //                         })
-        //                     } else {
-        //                         var url = '{{ route('user.dashboard') }}';
-        //                         window.location.href = url;
-        //                     }
-        //                 }
-        //             });
-        //         }
-        //     );
-        // }
     </script>
 
 @endpush

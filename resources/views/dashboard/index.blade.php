@@ -69,6 +69,7 @@
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Customer</th>
                                 <th class="text-center">Delivery type</th>
+                                <th class="text-center">COD Amount</th>
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
@@ -95,6 +96,9 @@
                                     </td>
                                     <td>
                                         @if ($shipments->delivery_type == '1') Regular  @else Express @endif
+                                    </td>
+                                    <td>
+                                        {{ $shipments->cod_amount }}
                                     </td>
                                     <td>
                                         @if ($shipments->status == '1' && $shipments->shipping_status == '0')

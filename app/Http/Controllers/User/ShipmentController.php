@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers\User;
+
 use App\Area;
 use App\Http\Controllers\Controller;
 use App\Shipment;
@@ -39,33 +41,34 @@ class ShipmentController extends Controller
                 // return ['status' => 'error', 'message' => 'Please declared your parcel value first.'];
                 $cod_amount = 0;
             } else {
-                $cod_amount = (int)(((int)$request->parcel_value / 100) * $shipping->cod_value);
+                $cod_amount = (int) (((int) $request->parcel_value / 100) * $shipping->cod_value);
             }
         }
 
         if (!$request->weight) {
             return ['status' => 'error', 'message' => 'Please enter your product weight'];
         } else {
-            $weight = (float)$request->weight;
+            $weight = (float) $request->weight;
             if ($weight > $shipping->max_weight) {
                 $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-                if ((int)$ExtraWeight < $ExtraWeight) {
-                    $ExtraWeight = (int)$ExtraWeight + 1;
+                if ((int) $ExtraWeight < $ExtraWeight) {
+                    $ExtraWeight = (int) $ExtraWeight + 1;
                 }
                 $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
             } else {
-                $price = (int)$shipping->max_price;
+                $price = (int) $shipping->max_price;
             }
         }
 
-        $total_price = $price + $cod_amount + (int)$request->parcel_value;
+        $total_price = $price + $cod_amount + (int) $request->parcel_value;
 
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
     }
 
 
 
-    public function PrepareShipmentSubmit(Request $request){
+    public function PrepareShipmentSubmit(Request $request)
+    {
         $messages = [
             "name.required" => "Please enter customer name.",
             "phone.required" => "Please enter customer phone number.",
@@ -150,7 +153,8 @@ class ShipmentController extends Controller
         return back()->with('message', 'Shipment has been saved successfully!');
     }
 
-    public function PrepareShipmentEdit($id){
+    public function PrepareShipmentEdit($id)
+    {
         $earth = new Earth();
         $earth = $earth->getCountries()->toArray();
         $address = address::all();
@@ -194,18 +198,18 @@ class ShipmentController extends Controller
         $zone = Area::find($shipment->area_id);
         $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
 
-        $weight = (float)$shipment->weight;
+        $weight = (float) $shipment->weight;
         if ($weight > $shipping->max_weight) {
             $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-            if ((int)$ExtraWeight < $ExtraWeight) {
-                $ExtraWeight = (int)$ExtraWeight + 1;
+            if ((int) $ExtraWeight < $ExtraWeight) {
+                $ExtraWeight = (int) $ExtraWeight + 1;
             }
             $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
         } else {
-            $price = (int)$shipping->max_price;
+            $price = (int) $shipping->max_price;
         }
 
-        $total_price = $price + (int)$shipment->parcel_value;
+        $total_price = $price + (int) $shipment->parcel_value;
         // return view('dashboard.shipment-pdf', compact('shipment','price','total_price','shipping'));
         $pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping'));
         return $pdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
@@ -225,12 +229,11 @@ class ShipmentController extends Controller
         // } else {
         //     $price = (int)$shipping->max_price;
         // }
-
         $total_price = $price = $shipment->cod_amount;
-        $shipping=0;
+        $shipping = 0;
         // return view('dashboard.shipment-pdf', compact('shipment','price','total_price','shipping'));
         $qrcode = QrCode::size(150)->format('svg')->generate($shipment->tracking_code);
-        $pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping','qrcode'));
+        $pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping', 'qrcode'));
         return $pdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
     }
 
@@ -272,22 +275,22 @@ class ShipmentController extends Controller
                         if (!$shipment->parcel_value) {
                             $cod_amount = 0;
                         } else {
-                            $cod_amount = ((int)$shipment->parcel_value / 100) * $shipping->cod_value;
+                            $cod_amount = ((int) $shipment->parcel_value / 100) * $shipping->cod_value;
                         }
                     }
 
 
-                    $weight = (float)$shipment->weight;
+                    $weight = (float) $shipment->weight;
                     if ($weight > $shipping->max_weight) {
                         $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-                        if ((int)$ExtraWeight < $ExtraWeight) {
-                            $ExtraWeight = (int)$ExtraWeight + 1;
+                        if ((int) $ExtraWeight < $ExtraWeight) {
+                            $ExtraWeight = (int) $ExtraWeight + 1;
                         }
                         $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
                     } else {
-                        $price = (int)$shipping->max_price;
+                        $price = (int) $shipping->max_price;
                     }
-                    $total_price = $price + (int)$shipment->parcel_value;
+                    $total_price = $price + (int) $shipment->parcel_value;
                     if ($shipment->price == 0) return $price . ' Tk';
                     else return $total_price . ' Tk';
                 } else {
@@ -302,87 +305,44 @@ class ShipmentController extends Controller
         $payments =  Shipment_delivery_payment::where('shipment_id', $shipment->id)->get();
         return view('dashboard.include.shipment-delivery-payment', compact('payments'));
     }
-
-
     function edit(Shipment $shipment)
     {
+        $title = "Update Shipment";
         $area = Area::where('status', 1)->get();
-        return view('dashboard.edit-shipment', compact('area', 'shipment'));
-
+        return view('dashboard.edit-shipment', compact('shipment', 'title', 'area'));
     }
-
     function update(Shipment $shipment, Request $request)
     {
-        $messages = [
-            "name.required" => "Please enter customer name.",
-            "phone.required" => "Please enter customer phone number.",
-            "address.required" => "Please enter customer address.",
-            "weight.required" => "Parcel weight required",
-            "parcel_value.max" => "The value of parcel must be 7 character",
-            "area.required" => "Please select customer area",
-        ];
-
-        $price = 0;
-        $total_price = 0;
-        $cod_type = 0;
-        $cod_amount = 0;
-        $zone = Area::find($request->area);
-        $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
-        if (!$shipping) {
-            return response()->json(['status' => 'error', 'errors' => ['message' => 'Sorry, not any shipping rate set this zone']], 422);
+        if ($request->isMethod('post')) {
+            $dataSet = $request->all();
+            $rules = [
+                "name.required" => "Please enter customer name.",
+                "phone.required" => "Please enter customer phone number.",
+                "address.required" => "Please enter customer address.",
+                "parcel_value.required" => "Please enter parcel value",
+                "cod_amount.required" => "Please enter cod_amount"
+            ];
+            //Validation message
+            $customMessage = [
+                'name.required' => 'Name is required',
+                'phone.email' => 'Phone is required',
+                'address.required' => 'Address is required',
+                'parcel_value.required' => 'Parcel value is required',
+                'cod_amount.required' => 'Parcel enter COD amount'
+            ];
+            $this->validate($request, $rules, $customMessage);
+            //Saving data
+            $shipment->name = $dataSet['name'];
+            $shipment->phone = $dataSet['phone'];
+            $shipment->address = $dataSet['address'];
+            $shipment->cod_amount = $dataSet['cod_amount'];
+            $shipment->parcel_value = $dataSet['parcel_value'];
+            $shipment->invoice_id = $dataSet['invoice_id'];
+            $shipment->merchant_note = $dataSet['merchant_note'];
+            $shipment->delivery_type = 1;
+            $shipment->update();
+            return redirect()->route('merhcant_shipments')->with('success', 'Shipment has been udated successfully!');
         }
-        if ($shipping->cod == 1) {
-            $cod_type = 1;
-            if (!$request->parcel_value) {
-                // return response()->json(['status' => 'error', 'errors' => ['message' => 'Please declared your parcel value first.']], 422);
-                $cod_amount = 0;
-            } else {
-                $cod_amount = ((int)$request->parcel_value / 100) * $shipping->cod_value;
-            }
-        }
-
-
-        $weight = (float)$request->weight;
-        if ($weight > $shipping->max_weight) {
-            $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-            if ((int)$ExtraWeight < $ExtraWeight) {
-                $ExtraWeight = (int)$ExtraWeight + 1;
-            }
-            $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-        } else {
-            $price = (int)$shipping->max_price;
-        }
-        $total_price = $price + $cod_amount + (int)$request->parcel_value;
-
-        $checkInvoice = Shipment::where('invoice_id', $request->invoice_id)->count();
-        if ($checkInvoice > 0) {
-            $invoice_id = $request->invoice_id . rand(222, 22);
-        } else $invoice_id = $request->invoice_id;
-
-        $data = [
-            'user_id' => Auth::guard('user')->user()->id,
-            'zone_id' => $zone->zone_id,
-            'area_id' => $request->area,
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'zip_code' => $request->zip_code,
-            'parcel_value' => $request->parcel_value,
-            'invoice_id' => $invoice_id,
-            'merchant_note' => $request->merchant_note,
-            'weight' => $request->weight,
-            'delivery_type' => $request->delivery_type,
-            'cod' => $cod_type,
-            'cod_amount' => $cod_amount,
-            'price' => $price,
-            'tracking_code' => rand(),
-            'total_price' => $total_price,
-        ];
-        $shipment->update($data);
-        $output = array('done' => 'done',);
-
-        // return json_encode($output);
-        return back()->with('message', 'Shipment has been udated successfully!');
     }
 
     public function destroy($id)

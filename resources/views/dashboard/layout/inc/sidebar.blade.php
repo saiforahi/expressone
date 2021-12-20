@@ -53,7 +53,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{route('PrepareShipment')}}" class="{{ (request()->is('prepare-shipment')) ? 'mm-active' : '' }}">
+                    <a href="{{ route('merhcant_shipments') }}" class="{{ (request()->is('prepare-shipment')) ? 'mm-active' : '' }}">
                         <i class="metismenu-icon fa fa-location-arrow" aria-hidden="true"></i>
                         Prepare Shipment
                     </a>

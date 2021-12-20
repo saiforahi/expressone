@@ -37,8 +37,6 @@
             </div>
             <!-- /.card -->
         </div>
-
     </div>
-    {{-- Test --}}
 @endsection
 

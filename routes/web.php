@@ -1,4 +1,6 @@
 <?php
+
+use App\Shipment;
 use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
@@ -360,25 +362,25 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
     Route::get('/shipment-cnote/{shipment}', 'ShipmentController@shipmentConsNote')->name('merchant.shipmentCn');
     Route::delete('/shipment-delete/{id}', '\App\Http\Controllers\User\ShipmentController@shipmentDelete')->name('shipment.delete');
-
+    //Profile
     Route::get('/profile', 'DashboardController@profile')->name('profile');
     Route::get('/profile-edit', 'DashboardController@ProfileEdit')->name('ProfileEdit');
     Route::post('/profile-update', 'DashboardController@ProfileUpdate')->name('ProfileUpdate');
-
+    //Account
     Route::get('/account', 'DashboardController@account')->name('account');
     Route::post('/change-email', 'DashboardController@ChangeMail')->name('ChangeMail');
     Route::post('/change-password', 'DashboardController@ChangePassword')->name('ChangePassword');
-
-    Route::get('/prepare-shipment', 'ShipmentController@index')->name('PrepareShipment');
+    //Shipment
+    Route::get('/prepare-shipment', 'ShipmentController@index')->name('merhcant_shipments');
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
     Route::post('prepare-shipment-submit', 'ShipmentController@PrepareShipmentSubmit')->name('PrepareShipmentSubmit');
     Route::get('/edit-shipment/{shipment}', 'ShipmentController@edit')->name('editShipment');
     Route::post('/update-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
-
+    //Payment
     Route::get('payments', 'ShipmentController@payments')->name('payments');
     Route::get('payments-load', 'ShipmentController@payments_loading')->name('payments-load');
     Route::get('/show-payment/{shipment}', 'ShipmentController@show_payment')->name('payments-show');
-
+    //CSV
     Route::get('/csv-upload', 'CSVController@create')->name('csv-upload');
     Route::post('/csv-upload', 'CSVController@get_csv_data')->name('get-csv');
     Route::get('/csv-temporary', 'CSVController@show')->name('csv-temporary');
