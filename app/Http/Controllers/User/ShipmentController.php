@@ -341,7 +341,7 @@ class ShipmentController extends Controller
             $shipment->merchant_note = $dataSet['merchant_note'];
             $shipment->delivery_type = 1;
             $shipment->update();
-            return redirect()->route('merhcant_shipments')->with('success', 'Shipment has been udated successfully!');
+            return redirect()->route('user.dashboard')->with('success', 'Shipment has been udated successfully!');
         }
     }
 
