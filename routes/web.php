@@ -94,8 +94,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/shipping-list/cancelled', 'ShipmentController@shipment_cancelled')->name('AdminShipmentCancelled');
 
     Route::post('/add-parcelBy-admin', 'ShipmentController@add_parcel')->name('add-parcelBy-admin');
-
-
     Route::get('/assign-to-hub/{user_id}/{status}/{shipping_status}', 'ShipmentController@assignToHub')->name('AdminShipmentReceive');
     Route::get('/receiving-parcels/{user_id}/{status?}/{shipping_status?}', 'ShipmentController@receving_parcels')->name('receiving-parcels');
     Route::get('/get-hub-csv-files/{user_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
@@ -109,7 +107,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/remove-hub-parcel/{hub_shipment}', 'ShipmentController@remove_hub_parcel')->name('remove-hub-parcel');
     Route::get('/change-hub-with-area/{id}', 'ShipmentController@change_bub')->name('change-hub-with-area');
     Route::get('/hub-sorting/{hub}', 'ShipmentController@hub_sorting')->name('hub-sorting');
-
 
     Route::get('/shipping-list/dispatch', 'ShipmentController@shipment_dispatch')->name('AdminShipmentDispatch');
     Route::get('/dispatch/view/{hub}', 'ShipmentController@dispatch_view')->name('dispatchView');
@@ -128,16 +125,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
 
     //first login design , agent-dispatch with  bulk-id
     # Route::post('/agent-dispatch/', 'ShipmentController@assigDriverForDelivery')->name('assigDriverForDelivery');
-
     Route::get('/agent-dispatch-agentSide', 'ShipmentController@agent_dispatch_agentSide')->name('agent-dispatch-agentSide');
     Route::get('/agent-dispatch-driverSide', 'ShipmentController@agent_dispatch_driverSide')->name('agent-dispatch-driverSide');
-
     Route::get('/agentDispatch-to-driverAssign/{hub_shipment_box}/{shipment}', 'ShipmentController@agentDispatch2DriverAssign')->name('agent-dispatch-driverAssign');
     Route::get('/agentDispatch-to-driverAssign-withInvoice/{invce_id}', 'ShipmentController@agentDispatch2DriverAssignWithInvoice');
     Route::get('/driver-assign2agent-dispatch/{hub_shipment_box}/{shipment}', 'ShipmentController@driverAssign2Agent_dispatch')->name('driver-assign2agent-dispatch');
 
     Route::post('/agent-dispatch-assing-to-driver', 'ShipmentController@agent_dispatchAssigning')->name('agent-dispatch-assing2Driver');
-
     Route::get('/all-shipments', 'ShipmentController@all_shipments')->name('all-shipments');
     Route::get('/shipment-details/{shipment}', 'ShipmentController@new_shipment_detail')->name('shipment-details');
     Route::get('/shipment-print/{shipment}', 'ShipmentController@shipment_print')->name('shipment-print');
@@ -169,7 +163,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/save-delivery-payment', 'ShipmentController@save_delivery_payment')->name('delivery-payment-save');
     Route::get('/return-selected-to-merchant/{shipment_ids}', 'ShipmentController@return_shipments');
 
-
     // download
     Route::get('/shipment-download', 'ShipmentController@download')->name('AdminDownload');
     Route::get('/get-shipment-withBulkID/{bulk_id}', 'ShipmentController@shipment_search_withBulkID')->name('delivery-search-bulkid');
@@ -180,7 +173,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
 
     Route::get('/csv-temporary', 'CSVController@show')->name('admin-csv-temporary');
     Route::post('/csv-temporary', 'CSVController@store')->name('admin-csv-save');
-
 
     Route::get('/shipping-list/cencelled-items/{id}', 'ShipmentController@cencelled_shippings')->name('CencelledShipping');
     Route::get('/back-to-shipment/{id}', 'ShipmentController@back2shipment')->name('back2shipment');
@@ -198,7 +190,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/thirdparty-sendToSort', 'ThirdpartyShipmentController@sendToSort')->name('thirdpartySendToSort');
     Route::get('/thirdparty-csv-pdf/{type}', 'ShipmentController@get_csv_pdf');
     Route::get('/thirdparty-rightWithInvoice/{invoice_id}', 'ThirdpartyShipmentController@show_right_withInvoice')->name('thirdparty-rightWithInvoice');
-
     // hold
     Route::get('/hold-shipments/{hold}', 'HoldShipmentController@index')->name('hold-shipments');
     Route::get('/move-to-hold_shipment/{shipment}/{hub}', 'HoldShipmentController@move_to_hold_shipment')->name('move-to-hold_shipment');
@@ -252,13 +243,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/role-assign', 'AdminController@save_role_assign')->name('save-role-assign');
     Route::get('/get-employee-roles/{admin}', 'AdminController@employee_roles')->name('get-roles');
 
-
     Route::get('/sliders', 'SliderController@index')->name('adminSlider');
     Route::get('/sliders-show', 'SliderController@sliders')->name('sliders');
     Route::post('/save-slider', 'SliderController@store')->name('save-slider');
     Route::post('/update-slider', 'SliderController@update')->name('update-slider');
     Route::get('/slider-show/{slider}', 'SliderController@show')->name('show-slider');
-
 
     Route::get('/about-us', 'AboutController@index')->name('adminAbout');
     Route::get('/mission', 'AboutController@mission')->name('adminMission');
@@ -315,7 +304,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/delete-promise-post/{about}', 'AboutController@destroyPromise')->name('delete-promise-post');
     Route::get('/delete-history-post/{about}', 'AboutController@destroyHistory')->name('delete-history-post');
     Route::get('/delete-team-post/{about}', 'AboutController@destroyTeam')->name('delete-team-post');
-
 
     Route::get('/messages', 'MessageController@index')->name('contact-messages');
     Route::get('/view-messages', 'MessageController@messages')->name('messages');
@@ -385,7 +373,6 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::post('/csv-upload', 'CSVController@get_csv_data')->name('get-csv');
     Route::get('/csv-temporary', 'CSVController@show')->name('csv-temporary');
     Route::post('/csv-temporary', 'CSVController@store_new')->name('csv-save');
-
     Route::get('prepare-shipment-details/{id}', 'ShipmentController@PrepareShipmentEdit')->name('PrepareShipmentEdit');
 });
 

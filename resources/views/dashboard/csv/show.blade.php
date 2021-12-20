@@ -58,15 +58,7 @@
                             </div>
                             <div class="form-row">
 
-                                {{-- <div class="col text-left">
-                                <label for="zip_code">Zip Code</label>
-                                <input type="text" id="zip_code" class="form-control" name="zip_code[]" value="{{$line['post_code']}}">
-                            </div> --}}
-                                {{-- <div class="col text-left">
-                                <label class="" for="weight">Weight</label>
-                                <input type="text"  class="form-control weight" data-key="{{$key}}" name="weight[]" id="weight{{$key}}" value="1">
-                               
-                            </div> --}}
+
                                 <div class="col cod_target text-left">
                                     <label for="parcel_value">COD amount</label>
                                     <input type="number" class="form-control parcel_value" data-key="{{ $key }}"
@@ -104,7 +96,7 @@
                                 <div class="col-md-3 text-left">
                                     <label for="area">Area</label>
                                     <select class="form-control select2 area" data-key="{{ $key }}" name="area[]"
-                                        id="area{{ $key }}" style="padding:1px;" required="">
+                                        id="area{{ $key }}" style="padding:1px;">
                                         <option value="" selected disabled>Select area</option>
                                         @foreach ($areas as $area)
                                             <option value="{{ $area->id }}">{{ $area->name }}</option>

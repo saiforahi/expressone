@@ -5,7 +5,7 @@
         <div class="col-md-12">
             <div class="main-card mb-3 card">
                 <div class="card-header">  Your Shipment </div> <br>
-                <div class="container table-responsive">
+                <div class="container-fluid table-responsive">
                     <table id="shipmnets" class="align-middle mb-0 table table-borderless table-striped table-hover text-center">
                         <thead>
                         <tr>
@@ -78,7 +78,7 @@
 
         $('#shipmnets').on('click', '.btnNew' ,function(e){
             let id = $(this).attr('id')
-           window.open('/show-payment/'+id, 'Merchant Payment'); 
+           window.open('/show-payment/'+id, 'Merchant Payment');
         })
     })
 </script>

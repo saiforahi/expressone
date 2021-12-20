@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\User;
-
 use App\Area;
 use App\Http\Controllers\Controller;
 use App\Shipment;
