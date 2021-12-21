@@ -218,25 +218,16 @@ class ShipmentController extends Controller
     }
     function shipment_pdf(Shipment $shipment)
     {
-        // $zone = Area::find($shipment->area_id);
-        // // $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
-
-        // $weight = (float)$shipment->weight;
-        // if ($weight > $shipping->max_weight) {
-        //     $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-        //     if ((int)$ExtraWeight < $ExtraWeight) {
-        //         $ExtraWeight = (int)$ExtraWeight + 1;
-        //     }
-        //     $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-        // } else {
-        //     $price = (int)$shipping->max_price;
-        // }
         $total_price = $price = $shipment->cod_amount;
-        $shipping = 0;
-        // return view('dashboard.shipment-pdf', compact('shipment','price','total_price','shipping'));
-        $qrcode = QrCode::size(150)->format('svg')->generate($shipment->tracking_code);
-        $pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping', 'qrcode'));
-        return $pdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
+        $data = [
+            'shipment' => $shipment,
+            'price' => $price,
+            'total_price'=>$total_price
+          ];
+        //$pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping', 'qrcode'));
+        $mpdf = PDF::loadView('dashboard.shipment-pdf', $data)->save('Invoice-' . $shipment->invoice_id . '.pdf');
+        return $mpdf->Output('Invoice-' . $shipment->invoice_id . '.pdf', 'D');
+        // return $pdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
     }
 
     function payments()
