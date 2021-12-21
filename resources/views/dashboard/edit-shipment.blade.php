@@ -14,7 +14,6 @@
             </div>
         </div>
     </div>
-
     <div class="tab-content">
         @if ($errors->any())
             @foreach ($errors->all() as $error)
@@ -32,17 +31,19 @@
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="main-card mb-3 card card-body">
-                <form id="upload_form" action="{{ route('updateShipment',$shipment->id) }}" method="post">
+                <form id="upload_form" action="{{ route('updateShipment', $shipment->id) }}" method="post">
                     {{ csrf_field() }}
                     <h5 class="card-title">Customer Details:</h5>
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="name">Customer Name</label>
-                            <input type="text" id="name" class="form-control" name="name" placeholder="Customer Name" value="{{ $shipment->name }}">
+                            <input type="text" id="name" class="form-control" name="name" placeholder="Customer Name"
+                                value="{{ $shipment->name }}">
                         </div>
                         <div class="col text-left">
                             <label for="usr3">Phone Number</label>
-                            <input type="text" class="form-control" name="phone" placeholder="Customer phone" value="{{ $shipment->phone }}">
+                            <input type="text" class="form-control" name="phone" placeholder="Customer phone"
+                                value="{{ $shipment->phone }}">
                         </div>
                     </div>
                     <div class="form-row my-4">
@@ -51,32 +52,42 @@
                             <input type="text" id="address" class="form-control" name="address"
                                 placeholder="Customer Address" value="{{ $shipment->address }}">
                         </div>
-
                     </div>
-
+                    <div class="form-row my-4">
+                        <div class="col text-left">
+                            <label for="exampleFormControlSelect1">Area</label>
+                            <select class="form-control" name="area_id">
+                                @foreach ($area as $a)
+                                    <option value="{{ $a->id }}" @if ($a->id == $shipment->area_id)
+                                        selected
+                                @endif >{{ $a->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <h5 class="card-title mt-4">Shipment Details:</h5>
                     <div class="form-row my-4">
-                        @if ($shipment->weight_charge !== null )
-                        <div class="col text-left">
-                            <label class="" for="weight">Weight charge</label>
-                            <input type="number" id="weight_charge" class="form-control" name="weight_charge" value="{{ $shipment->weight_charge }}">
-
-                        </div>
+                        @if ($shipment->weight_charge !== null)
+                            <div class="col text-left">
+                                <label class="" for="weight">Weight charge</label>
+                                <input type="number" id="weight_charge" class="form-control" name="weight_charge"
+                                    value="{{ $shipment->weight_charge }}">
+                            </div>
                         @endif
                         <div class="col text-left">
                             <label for="cod_amount">COD Amount</label>
-                            <input type="number" id="cod_amount" class="form-control" name="cod_amount" value="{{ $shipment->cod_amount }}">
-
+                            <input type="number" id="cod_amount" class="form-control" name="cod_amount"
+                                value="{{ $shipment->cod_amount }}">
                         </div>
                         <div class="col cod_target text-left">
                             <label for="parcel_value">Declared Parcel Value</label>
                             <input type="number" id="parcel_value" class="form-control" name="parcel_value"
                                 placeholder="Enter Parcel Value" value="{{ $shipment->parcel_value }}">
                             <div class="w-100">
-                                <small>My parcel value is <span class="parcel_value_info">{{ $shipment->parcel_value }}</span> Taka</small>
+                                <small>My parcel value is <span
+                                        class="parcel_value_info">{{ $shipment->parcel_value }}</span> Taka</small>
                             </div>
                         </div>
-
                         <div class="col text-left">
                             <label for="invoice_id"> <strong>Ref. No</strong></label>
                             <input type="text" id="invoice_id" class="form-control" name="invoice_id"
@@ -86,15 +97,14 @@
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label for="merchant_note">Merchant Note</label>
-                            <textarea id="merchant_note" class="form-control" rows="3" name="merchant_note"> {{ $shipment->merchant_note }} </textarea>
+                            <textarea id="merchant_note" class="form-control" rows="3"
+                                name="merchant_note"> {{ $shipment->merchant_note }} </textarea>
                         </div>
                     </div>
-
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label for="usr3">How do you want to arrange for shipment?</label><br>
                             <label for="merchant_note">Service Type: &nbsp; &nbsp; &nbsp; </label>
-
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" checked name="delivery_type" id="inlineRadio1"
                                     value="1">
@@ -119,6 +129,5 @@
 @endsection
 @push('style')
 @endpush
-
 @push('script')
 @endpush

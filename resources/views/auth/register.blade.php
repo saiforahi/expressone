@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
     <article>
         <!-- Breadcrumb -->
@@ -8,7 +7,7 @@
                 <div class="row">
                     <div class="col-sm-8 pull-left">
                         <div class="title-wrap">
-                            <h2 class="section-title no-margin"> Merchant Register </h2>
+                            <h2 class="section-title no-margin"> Merchant Register</h2>
                             <p class="fs-16 no-margin"> Create your account</p>
                         </div>
                     </div>
@@ -27,6 +26,7 @@
                 <div class="col-md-12 col-sm-12">
                     <div class="regi_form_wrapper">
                         <div class="quote_form">
+                            @include('flash.message')
                             <form class="row" action="{{ route('register.store') }}" method="post">
                                 @csrf
                                 <div class="form-group col-md-4">
@@ -81,7 +81,8 @@
                                 </div> --}}
                                 <div class="form-group col-md-4">
                                     <label class="title-2">Shop name</label>
-                                    <input type="text" class="form-control" name="shop_name" placeholder="Shop name" value="{{ old('shop_name') }}">
+                                    <input type="text" class="form-control" name="shop_name" placeholder="Shop name"
+                                        value="{{ old('shop_name') }}">
                                 </div>
                                 <div class="form-group col-md-5">
                                     <label class="title-2">Address: </label>
