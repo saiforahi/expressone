@@ -6,13 +6,13 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 //To clear all cache
 Route::get('clear', function () {
-	Artisan::call('cache:clear');
-	Artisan::call('config:clear');
-	Artisan::call('config:cache');
-	Artisan::call('view:clear');
-	Artisan::call('optimize:clear');
-	Artisan::call('route:cache');
-	return "Cleared!";
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+    Artisan::call('view:clear');
+    Artisan::call('optimize:clear');
+    Artisan::call('route:cache');
+    return "Cleared!";
 });
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/about', 'HomeController@about')->name('about');
@@ -83,10 +83,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/shipping-price-set-edit', 'ShippingPriceController@shippingPriceEdit')->name('shippingPrice.edit');
     Route::get('/delete-shipping-price/{shipping_price}', 'ShippingPriceController@destroy')->name('delete-shipping-price');
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
-
+    //Admin Driver  list
     Route::resource('/driver-list', 'DriverController');
     Route::get('/driver-shipments/{id}', 'DriverController@assigned_shipments')->name('admin-driverShipments');
-
+    //Shipping List
     Route::get('/shipping-list', 'ShipmentController@index')->name('AdminShipment.index');
     Route::get('/shipping-list/more/{id}/{status}/{shipping_status}', 'ShipmentController@show')->name('AdminShipmentMore');
     Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', 'ShipmentController@save_driver_shipment')->name('saveDriverShipments');
@@ -405,5 +405,5 @@ Route::group(['middleware' => 'auth:driver', 'namespace' => 'Driver', 'prefix' =
 });
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
-   Lfm::routes();
+    Lfm::routes();
 });

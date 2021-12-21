@@ -21,10 +21,11 @@ class Driver extends Authenticatable
         'password', 'remember_token',
     ];
 
-    // relation 
+    // relation
     public function hub_shipment_boxes()
     {
     	return $this->belongsToMany(Hub_shipment_box::class);
     }
     
+
 }

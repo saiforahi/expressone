@@ -72,9 +72,10 @@ class DriverController extends Controller
     }
 
 
-    function assigned_shipments($id){
+    public function assigned_shipments($id){
         Session::flash('message', 'Driver assigned shipments');
         $shipments = Driver_shipment::where('driver_id',$id)->get();
+        //dd($shipments);
         return view('admin.driver.shipments', compact('shipments'));
     }
 }
