@@ -1,13 +1,11 @@
 <div id="DivIdToPrint">
-
     <div id="invoice-POS">
-
         <center id="top">
             <div class="info">
                 <div class="row">
                     {{QrCode::size(150)->generate($shipment->tracking_code)}}
                 </div>
-                <div class="row">
+                <div class="row tracking_code">
                     Tracking-code: {{ $shipment->tracking_code }}
                 </div>
                 {{-- <img src="data:image/png;base64,{{DNS2D::getBarcodeSVG('12', 'QRCODE')}}" alt="barcode" /> --}}
@@ -19,7 +17,6 @@
 
         <div id="mid">
             <div class="info">
-                
                 <p> Reciepient : {{ $shipment->name}} <br/>
                     Merchant Name : {{ $shipment->user->first_name }} {{ $shipment->user->last_name }} <br>
                     Email : {{ $shipment->user->email }} </br>
@@ -56,7 +53,6 @@
 
                 </table>
             </div>
-
             <div id="legalcopy">
                 <p class="legal"><strong>Thank you for your business!</strong> .
                 </p>
@@ -70,8 +66,6 @@
             margin: 0 auto;
             width: 104mm;
             background: #FFF;
-
-
             ::selection {
                 background: #f31544;
                 color: #FFF;
@@ -102,76 +96,61 @@
                 color: #666;
                 line-height: 1.2em;
             }
-
             #top,
             #mid,
             #bot {
                 /* Targets all id with 'col-' */
                 border-bottom: 1px solid #EEE;
             }
-
             #top {
                 min-height: 100px;
             }
-
             #mid {
                 min-height: 80px;
             }
-
             #bot {
                 min-height: 50px;
             }
-
             .info {
                 display: block;
                 //float:left;
                 margin-left: 0;
             }
-
-            .title {
+           .title {
                 float: right;
             }
 
             .title p {
                 text-align: right;
             }
-
             table {
                 width: 100%;
                 border-collapse: collapse;
             }
-
             td {
                 //padding: 5px 0 5px 15px;
                 //border: 1px solid #EEE
             }
-
             .tabletitle {
                 //padding: 5px;
                 font-size: .5em;
                 background: #EEE;
             }
-
             .service {
                 border-bottom: 1px solid silver;
             }
-
             .item {
                 width: 24mm;
             }
-
             .itemtext {
                 font-size: .5em;
             }
-
             #legalcopy {
                 margin-top: 5mm;
             }
         }
-
     </style>
 </div>
-
 <script type="text/javascript">
     function printDiv() {
         var divToPrint = document.getElementById('DivIdToPrint');

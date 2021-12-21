@@ -190,7 +190,10 @@ class ShipmentController extends Controller
     }
     function shipmentConsNote(Shipment $shipment)
     {
-        return view('dashboard.shipmentCNote', compact('shipment'));
+        $zone = Area::find($shipment->area_id);
+        $price = $shipment->delivery_charge;
+        $total_price = $shipment->cod_amount;
+        return view('dashboard.shipmentCNote', compact('shipment','zone','price','total_price'));
     }
     function shipment_pdf_old(Shipment $shipment)
     {
@@ -319,7 +322,8 @@ class ShipmentController extends Controller
                 "phone.required" => "Please enter customer phone number.",
                 "address.required" => "Please enter customer address.",
                 "parcel_value.required" => "Please enter parcel value",
-                "cod_amount.required" => "Please enter cod_amount"
+                "cod_amount.required" => "Please enter cod_amount",
+                "area_id.required" => "Please select area"
             ];
             //Validation message
             $customMessage = [
@@ -327,7 +331,8 @@ class ShipmentController extends Controller
                 'phone.email' => 'Phone is required',
                 'address.required' => 'Address is required',
                 'parcel_value.required' => 'Parcel value is required',
-                'cod_amount.required' => 'Parcel enter COD amount'
+                'cod_amount.required' => 'Parcel enter COD amount',
+                'area_id.required' => 'Please select area'
             ];
             $this->validate($request, $rules, $customMessage);
             //Saving data
@@ -337,6 +342,7 @@ class ShipmentController extends Controller
             $shipment->cod_amount = $dataSet['cod_amount'];
             $shipment->parcel_value = $dataSet['parcel_value'];
             $shipment->invoice_id = $dataSet['invoice_id'];
+            $shipment->area_id = $dataSet['area_id'];
             $shipment->merchant_note = $dataSet['merchant_note'];
             $shipment->delivery_type = 1;
             $shipment->update();
