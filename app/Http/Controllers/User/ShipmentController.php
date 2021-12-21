@@ -310,7 +310,7 @@ class ShipmentController extends Controller
     function edit(Shipment $shipment)
     {
         $title = "Update Shipment";
-        $area = Area::where('status', 1)->get();
+        $area = Area::where('status', 1)->select('name','id')->get();
         return view('dashboard.edit-shipment', compact('shipment', 'title', 'area'));
     }
     function update(Shipment $shipment, Request $request)
