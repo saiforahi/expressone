@@ -67,7 +67,7 @@ class AuthController extends Controller
             'email' => 'required|email|max:100',
             'password' => 'required|max:20|min:8',
         ]);
-        if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password,'is_verified' => 1], $request->get('remember'))) {
+        if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
             if (Auth::guard('user')->user()->is_verified == 1) {
                 return redirect()->intended('/dashboard');
             } else {

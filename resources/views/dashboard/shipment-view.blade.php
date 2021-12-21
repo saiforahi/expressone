@@ -67,7 +67,7 @@
                                 </td>
                                 <td>{{ date('F m, Y', strtotime($shipment->created_at)) }}</td>
                                 <td>
-                                    QR Code
+                                    {{QrCode::size(150)->generate($shipment->tracking_code)}}
                                 </td>
                             </tr>
                         </tbody>
