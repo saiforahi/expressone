@@ -1,5 +1,4 @@
 @extends('layouts.app')
-
 @section('content')
     <article>
         <!-- Breadcrumb -->
@@ -22,7 +21,6 @@
             </div>
         </section>
         <!-- /.Breadcrumb -->
-
         <div class="container">
             <div class="row">
                 <div class="col-md-5 col-sm-6 col-md-offset-4">

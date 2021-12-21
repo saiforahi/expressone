@@ -8,9 +8,9 @@
                 <div class="row">
                     <div class="col-sm-8 pull-left">
                         <div class="title-wrap">
-                            <h2 class="section-title no-margin"> Merchant Register </h2>
+                            <h2 class="section-title no-margin"> Merchant Register</h2>
                             <p class="fs-16 no-margin"> Create your account</p>
-                        </div>
+                                                </div>
                     </div>
                     <div class="col-sm-4">
                         <ol class="breadcrumb-menubar list-inline">
@@ -27,6 +27,7 @@
                 <div class="col-md-12 col-sm-12">
                     <div class="regi_form_wrapper">
                         <div class="quote_form">
+                            @include('flash.message')
                             <form class="row" action="{{ route('register.store') }}" method="post">
                                 @csrf
                                 <div class="form-group col-md-4">
