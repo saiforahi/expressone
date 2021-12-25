@@ -115,8 +115,8 @@ class ShipmentController extends Controller
         $shipment_id = Driver_hub_shipment_box::where('id',$request->id)->pluck('shipment_id')->first();
         Session::put('shipment_id',$shipment_id);
     
-        if($request->status=='delivered') $number = 'on-6';
-        if($request->status=='partial') $number = 'on-6.5';
+        if($request->status=='delivered') {$number = 'on-6';}
+        elseif($request->status=='partial') $number = 'on-6.5';
         elseif($request->status=='hold') $number = '7';
         elseif($request->status=='return') $number = 'on-8';
         else $number ='9';

@@ -85,7 +85,8 @@
                 </button> </h5>
             </div>
             <div class="modal-body">
-                <form action="{{route('update-admin')}}" id="edit_employee" method="post" enctype="multipart/form-data">@csrf
+                <form action="{{route('update-admin')}}" id="edit_employee" method="post" enctype="multipart/form-data">
+                    @csrf
                     @include('admin.admins.form') <br>
                     <span class="form_result2"></span>
                     <input type="hidden" name="id">
@@ -243,7 +244,7 @@
                         $("[type='submit']").html('<i class="fa fa-check"></i> Save employee');
                         $("[type='submit']").prop('disabled',false);
                         $('.form_result2').html(html);
-                        $('.edit_employee').modal('hide');
+                        // $('.edit_employee').modal('hide');
                     }
                 });
             });

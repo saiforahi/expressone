@@ -64,9 +64,9 @@ class DashboardController extends Controller
                     return $data;
                 })
                 ->addColumn('amount', function ($driverShipment) {
-                    if($driverShipment->shipment->price==0){
-                        $data = 'Pay by merchant ('.$driverShipment->shipment->price.')';
-                    }else {$data = 'Pay by customer ('.$driverShipment->shipment->price.')';}
+                    if($driverShipment->shipment->cod_amount==0){
+                        $data = 'Pay by merchant ('.$driverShipment->shipment->cod_amount.')';
+                    }else {$data = 'Pay by customer ('.$driverShipment->shipment->cod_amount.')';}
                     return $data;
                 })
                 ->addColumn('area', function ($driverShipment) {
@@ -85,7 +85,7 @@ class DashboardController extends Controller
         return DataTables::of(Driver_hub_shipment_box::where(['driver_id'=>Auth::guard('driver')->user()->id,'status'=>'assigned'])->orderBy('id', 'DESC'))
         ->addColumn('date', function ($driverShipment) {
             $data = 'Date: '.date('M d, Y H:i',strtotime($driverShipment->created_at)).'<br/>';
-            $data.= 'TracingCode: '.$driverShipment->shipment->tracking_code; return $data;
+            $data.= 'TrackingCode: '.$driverShipment->shipment->tracking_code; return $data;
         })
         ->addColumn('customer_info', function ($driverShipment) {
             $data =  $driverShipment->shipment->name.'<br/>';
@@ -98,9 +98,9 @@ class DashboardController extends Controller
             return $data;
         })
         ->addColumn('amount', function ($driverShipment) {
-            if($driverShipment->shipment->price==0){
-                $data = 'Pay by merchant ('.$driverShipment->shipment->price.')';
-            }else {$data = 'Pay by customer ('.$driverShipment->shipment->price.')';}
+            if($driverShipment->shipment->cod_amount==0){
+                $data = 'Pay by merchant ('.$driverShipment->shipment->cod_amount.')';
+            }else {$data = 'Pay by customer ('.$driverShipment->shipment->cod_amount.')';}
             return $data;
         })
         ->addColumn('area', function ($driverShipment) {
@@ -164,9 +164,9 @@ class DashboardController extends Controller
                 return $data;
             })
             ->addColumn('amount', function ($shipment) {
-                if($shipment->price==0){
-                    $data = 'Pay by merchant ('.$shipment->price.')';
-                }else {$data = 'Pay by customer ('.$shipment->price.')';}
+                if($shipment->cod_amount==0){
+                    $data = 'Pay by merchant ('.$shipment->cod_amount.')';
+                }else {$data = 'Pay by customer ('.$shipment->cod_amount.')';}
                 return $data;
             })
             ->addColumn('area', function ($shipment) {
