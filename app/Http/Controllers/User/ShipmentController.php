@@ -253,9 +253,9 @@ class ShipmentController extends Controller
                 return $shipment->invoice_id;
             })
             ->addColumn('payment_by', function ($shipment) {
-                if ($shipment->price == 0) {
+                if ($shipment->cod_amount == 0) {
                     $price = 'Merchant will pay';
-                } else $price = 'User will pay';
+                } else $price = 'Reciepient will pay';
                 return $price;
             })
             ->addColumn('amount', function ($shipment) {
@@ -287,7 +287,8 @@ class ShipmentController extends Controller
                     if ($shipment->price == 0) return $price . ' Tk';
                     else return $total_price . ' Tk';
                 } else {
-                    return '<span class="text-danger">' . $shipment->price . ' Tk</span>';
+                    $price = (int)$shipment->cod_amount - (int) $shipment->delivery_charge;
+                    return '<span class="text-danger">' . $price . ' Tk</span>';
                 }
             })
             ->rawColumns(['id', 'tracking_code', 'invoice_no', 'payment_by', 'amount', 'action'])->make(true);
