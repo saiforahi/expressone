@@ -63,9 +63,6 @@ class ShipmentController extends Controller
 
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
     }
-
-
-
     public function PrepareShipmentSubmit(Request $request)
     {
         $messages = [
@@ -151,7 +148,6 @@ class ShipmentController extends Controller
         // return json_encode($output);
         return back()->with('message', 'Shipment has been saved successfully!');
     }
-
     public function PrepareShipmentEdit($id)
     {
         $earth = new Earth();
@@ -163,8 +159,6 @@ class ShipmentController extends Controller
         }
         return view('dashboard.shipment_edit', compact('shipment', 'address', 'earth'));
     }
-
-
     function show(Shipment $shipment)
     {
 
@@ -271,8 +265,6 @@ class ShipmentController extends Controller
                             $cod_amount = ((int) $shipment->parcel_value / 100) * $shipping->cod_value;
                         }
                     }
-
-
                     $weight = (float) $shipment->weight;
                     if ($weight > $shipping->max_weight) {
                         $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
@@ -340,7 +332,6 @@ class ShipmentController extends Controller
             return redirect()->route('user.dashboard')->with('success', 'Shipment has been udated successfully!');
         }
     }
-
     public function destroy($id)
     {
         //
