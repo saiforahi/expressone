@@ -57,7 +57,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="main-card mb-3 card">
-                <div class="card-header"> Your Shipment </div> <br>
+                <div class="card-header"> Your Shipment</div> <br>
                 <div class="container-fluid table-responsive">
                     <table id="dashboardDatatable"
                         class="align-middle mb-0 table table-borderless table-striped table-hover text-center">
@@ -68,8 +68,10 @@
                                 <th>Tracking No.</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Customer</th>
-                                <th class="text-center">Delivery type</th>
+                                <th class="text-center">Delv. type</th>
                                 <th class="text-center">COD Amount</th>
+                                <th class="text-center">Delv. charge</th>
+                                <th class="text-center">Wgt. charge</th>
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
@@ -95,10 +97,16 @@
                                         <i class="fa fa-phone-square mr-1" aria-hidden="true"></i>{{ $shipments->phone }}
                                     </td>
                                     <td>
-                                        @if ($shipments->delivery_type == '1') Regular  @else Express @endif
+                                        Regular
                                     </td>
                                     <td>
                                         {{ $shipments->cod_amount }}
+                                    </td>
+                                    <td>
+                                        {{ $shipments->delivery_charge }}
+                                    </td>
+                                    <td>
+                                        {{ $shipments->weight_charge }}
                                     </td>
                                     <td>
                                         @if ($shipments->status == '1' && $shipments->shipping_status == '0')
