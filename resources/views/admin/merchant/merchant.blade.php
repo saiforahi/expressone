@@ -71,14 +71,14 @@
                                             </th>
                                             <th scope="row">
                                                 @if ($users->is_verified == 1)
-                                                    <a title="Change" merchant_id="{{ $users->id }}"
-                                                        class="text-success merchant_status btn btn-success btn-sm"
+                                                    <a atitle="Change" merchant_id="{{ $users->id }}"
+                                                        class="text-success merchant_status"
                                                         id="merchant_{{ $users->id }}" href="javascript:void(0)">
                                                         Verified
                                                     </a>
                                                 @else
                                                 <a title="Change" merchant_id="{{ $users->id }}"
-                                                    class="text-danger merchant_status btn btn-warning btn-sm"
+                                                    class="text-danger merchant_status"
                                                     id="merchant_{{ $users->id }}" href="javascript:void(0)">
                                                     Not Verified
                                                 </a>
@@ -317,11 +317,11 @@
                         //alert(resp)
                         if (resp['is_verified'] == 0) {
                             $("#merchant_" + merchant_id).html(
-                                "<a href='javascript:void(0)' class='merchant_status text-white'>Not verified</a>"
+                                "<a href='javascript:void(0)' class='merchant_status'>Not verified</a>"
                             )
                         } else if (resp['is_verified'] == 1) {
                             $("#merchant_" + merchant_id).html(
-                                "<a href='javascript:void(0)' class='merchant_status text-white'>Verified</a>"
+                                "<a href='javascript:void(0)' class='merchant_status'>Verified</a>"
                             )
                         }
                     },

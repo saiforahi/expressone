@@ -7,7 +7,7 @@
                 <div class="page-title-icon">
                     <i class="fa fa-file-excel-o text-success" aria-hidden="true"></i>
                 </div>
-                <div>Edit csv-file data
+                <div>Edit csv-file data+++++++
                     <div class="page-title-subheading">Check all the file data and update
                     </div>
                 </div>
@@ -43,12 +43,12 @@
                                 <div class="col text-left">
                                     <label class="" for="name">Customer Name</label>
                                     <input type="text" id="name" class="form-control" name="name[]"
-                                        value="{{ $line['name'] }}" required>
+                                        value="{{ $line['customer'] }}" required>
                                 </div>
                                 <div class="col text-left">
                                     <label for="usr3">Phone Number</label>
                                     <input type="text" class="form-control" name="phone[]"
-                                        value="{{ $line['phone'] }}" required>
+                                        value="{{ $line['contact'] }}" required>
                                 </div>
                                 <div class="col text-left">
                                     <label class="" for="address">Address</label>
@@ -70,12 +70,16 @@
                                         value="{{ $line['delivery_charge'] }}">
                                 </div>
                                 <div class="col cod_target text-left">
-                                    <label for="weight_charge">Weight Charge</label>
+                                    <label for="parcel_value">Weight Charge</label>
                                     <input type="number" class="form-control weight_charge" data-key="{{ $key }}"
                                         name="weight_charge[]" id="weight_charge{{ $key }}"
                                         value="{{ $line['weight_charge'] }}">
                                 </div>
-
+                                <div class="col text-left">
+                                    <label for="invoice_id">Invoice Id</label>
+                                    <input type="text" id="invoice_id" class="form-control" name="invoice_id[]"
+                                        value="{{ $line['invoice'] }}">
+                                </div>
                             </div>
 
                             <div class="form-row">
