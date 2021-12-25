@@ -28,9 +28,7 @@
     <div style="width:50%;float:left;text-align:right;padding:25px;">
         <table style="float:right">
             <tr>
-                <th><img src="data:image/png;base64, {!! base64_encode(
-    QrCode::format('png')->size(100)->generate($shipment->tracking_code),
-) !!} "></th>
+                <th><img src="data:image/png;base64, {!!base64_encode(QrCode::format('png')->size(100)->generate($shipment->tracking_code))!!} "></th>
             </tr>
             <tr>
                 <td colspan="2">Date: {{ date('d F, Y') }}</td>

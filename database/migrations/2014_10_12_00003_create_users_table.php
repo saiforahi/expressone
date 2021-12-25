@@ -27,7 +27,7 @@ class CreateUsersTable extends Migration
             $table->string('website_link')->nullable();
             $table->string('image')->nullable();
             $table->enum('status',['0','1'])->default(1);
-            $table->enum('is_verified',['0','1'])->default(0);
+            $table->tinyInteger('is_verified')->default(0);
             $table->rememberToken();
             $table->foreign('area_id')->references('id')->on('areas');
             $table->timestamps();

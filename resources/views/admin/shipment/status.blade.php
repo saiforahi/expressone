@@ -5,7 +5,7 @@
     	<span class="label label-info">Pick-up</span>
 
     @elseif($shipping_status=='2')
-    	<span class="label label-primary">Piced-up</span>
+    	<span class="label label-primary">Picked-up</span>
 
     @elseif($shipping_status=='3')
         <span class="label label-primary"> Dispatch Center</span>

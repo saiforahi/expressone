@@ -94,6 +94,7 @@ class AdminController extends Controller
 
     public function update(Request $request)
     {
+        // dd($request->all());
         $validator = Validator::make(request()->all(), [
             'first_name'=>'required', 'last_name'=>'required',
             'email'=>'required|unique:admins,email,'.$request->id,

@@ -37,13 +37,13 @@
                                        Address: {{$row->shipment->address}}
                                     </td>
                                     <td> 
-                                       @if($row->shipment->price==0) Pay by merchant @else Pay by customer @endif
+                                       @if($row->shipment->cod_amount==0) Pay by merchant @else Pay by customer @endif
                                         <br>
-                                        Payable: ( {{$row->shipment->price}} )
+                                        Payable: ( {{$row->shipment->cod_amount}} )
                                     </td>
                                     <td class="text-right">
                                         <button class="btn btn-info btn-sm more" data-id="{{$row->shipment->id}}">More info</button>
-                                        <button class="btn btn-success btn-sm report" data-price="{{$row->shipment->price}}" data-id="{{$row->id}}">Delivery Report</button>
+                                        <button class="btn btn-success btn-sm report" data-price="{{$row->shipment->cod_amount}}" data-id="{{$row->id}}">Delivery Report</button>
                                     </td>
                                 </tr>
                             @endforeach
