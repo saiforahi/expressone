@@ -61,7 +61,7 @@
                                             <input style="display:none" type="checkbox" id="ids" name="ids[]"
                                                 value="{{ $shipment->id }}"> {{ $key + 1 }}
                                         </th>
-                                        <th scope="row">Name: {{ $shipment->name }} <br>Price: {{ $shipment->price }}
+                                        <th scope="row">Name: {{ $shipment->name }} <br>Price: {{ $shipment->cod_amount }}
                                         </th>
                                         {{-- <th scope="row">
                                         Zone: {{$shipment->zone->name}} <br>

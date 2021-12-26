@@ -42,11 +42,11 @@
             <tr> <td style="width:20%">Merchant info: </td> <td>{{$shipment->user->first_name}} {{$shipment->user->last_name}} - {{$shipment->user->phone}}</td></tr>
             <tr> <td style="width:20%">Customer Name: </td> <td>{{$shipment->name}}</td></tr>
             <tr> <td style="width:20%">Invoice ID: </td> <td>{{$shipment->invoice_id}}</td></tr>
-            <tr> <td style="width:20%">Price </td> <td> @if($shipment->price==0)Pay by merchant @else Pay by customer @endif
-                ( {{$shipment->price}} Tk)</td></tr>
+            <tr> <td style="width:20%">Price </td> <td> @if(($shipment->cod_amount-$shipment->delivery_charge)<0)Pay by merchant @else Pay by customer @endif
+                ( {{$shipment->cod_amount}} Tk)</td></tr>
             <tr> <td style="width:20%">Phone </td> <td>{{$shipment->phone}}</td></tr>
             <tr> <td style="width:20%">Address </td> <td>{{$shipment->address}}</td></tr>
-            <?php $total_price[] = $shipment->total_price; ?>
+            <?php $total_price[] = $shipment->cod_amount; ?>
         </table>
         @endforeach
 

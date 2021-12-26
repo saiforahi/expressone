@@ -103,8 +103,8 @@
                 Phone: {{$shipment->phone}} <br>
                 Address: {{$shipment->address}}
             </td>
-            <td>@if($shipment->price==0)Pay by merchant @else Pay by customer @endif 
-                ({{$shipment->price}}) </td>
+            <td>@if($shipment->cod_amount==0)Pay by merchant @else Pay by customer @endif 
+                ({{$shipment->cod_amount}}) </td>
         </tr>
         @endforeach
  

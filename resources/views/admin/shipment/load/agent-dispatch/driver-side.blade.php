@@ -15,7 +15,7 @@
             <td colspan="3">Customer: {{$shipment->name}} </td>
           </tr>
           <tr>
-            <td>Price: {{$shipment->price}}</td>
+            <td>Price: {{$shipment->cod_amount}}</td>
             <td></td><td class="text-right">
               Weight: <input style="width:80px;height:17px" type="number" readonly="" value="{{$shipment->weight}}"></td>
           </tr>

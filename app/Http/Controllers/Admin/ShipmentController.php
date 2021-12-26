@@ -348,9 +348,9 @@ class ShipmentController extends Controller
         // dd($shipments);
         Shipment::where('status', 1)->select('user_id')->groupBy('user_id')->pluck('user_id')->toArray();
         foreach ($shipments as $key => $shipment) {
-            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->price, $shipment->weight, ''];
+            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->cod_amount, $shipment->weight, ''];
         }
-        $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'Price', 'Weight', 'Product Selling Price'];
+        $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'COD Amount', 'Weight', 'Product Selling Price'];
         return self::getCsv($columnNames, $rows, date('d/m/Y h i s') . '.csv');
     }
 
@@ -875,9 +875,9 @@ class ShipmentController extends Controller
     {
         foreach (explode(',', $shipment_ids) as $key => $id) {
             $shipment = Shipment::find($id);
-            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->price, $shipment->weight, ''];
+            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->cod_amount, $shipment->weight, ''];
         }
-        $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'Price', 'Weight', 'Product Selling Price'];
+        $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'COD Amount', 'Weight', 'Product Selling Price'];
         return self::getCsv($columnNames, $rows, date('d-m-Y - ') . COUNT(explode(',', $shipment_ids)) . '-parcels.csv');
     }
 
@@ -943,9 +943,9 @@ class ShipmentController extends Controller
 
         if ($type == 'csv') {
             foreach ($shipments as $key => $shipment) {
-                $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->price, '', ''];
+                $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->cod_amount, '', ''];
             }
-            $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'Price', 'Instruction', 'Product Selling Price'];
+            $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'COD Amount', 'Instruction', 'Product Selling Price'];
             return self::getCsv($columnNames, $rows, $bulk_id . '.csv');
         } else {
             return view('admin.shipment.load.download.shipment-pdf', compact('shipments', 'bulk_id'));
@@ -1068,9 +1068,9 @@ class ShipmentController extends Controller
 
             // dd($shipments);
             foreach ($shipments as $key => $shipment) {
-                $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->price, $shipment->weight, ''];
+                $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->cod_amount, $shipment->weight, ''];
             }
-            $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'Price', 'Weight', 'Product Selling Price'];
+            $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'COD Amount', 'Weight', 'Product Selling Price'];
 
             return self::getCsv($columnNames, $rows, date('d/m/Y h i s') . '.csv');
         }
@@ -1084,7 +1084,7 @@ class ShipmentController extends Controller
             ->where('time_starts', '>=', $date)->get();
 
         foreach ($shipments as $key => $shipment) {
-            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->price, $shipment->weight, ''];
+            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->cod_amount, $shipment->weight, ''];
         }
         $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'Price', 'Weight', 'Product Selling Price'];
         return self::getCsv($columnNames, $rows, date('d/m/Y h i s') . '.csv');

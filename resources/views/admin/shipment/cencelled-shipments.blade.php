@@ -48,7 +48,7 @@
                                         <img width="42" height="42" class="img-thumbnail img-fluid" src="{{$shipment->image == null? asset('images/user.png'):asset('storage/user/'.$shipment->image)}}">
                                     </th>
 
-                                    <th scope="row">Name: {{$shipment->name}} <br>Price: {{$shipment->price}}
+                                    <th scope="row">Name: {{$shipment->name}} <br>Price: {{$shipment->cod_amount}}
                                     </th>
                                     <th scope="row"><i class="fa fa-phone"></i> {{$shipment->phone}}<br>
 
