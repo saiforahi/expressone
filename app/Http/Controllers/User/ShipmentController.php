@@ -79,6 +79,7 @@ class ShipmentController extends Controller
             'phone' => 'required|max:20',
             'address' => 'required|max:255',
             'area' => 'required',
+            "cod_amount"=> 'required',
             //'zip_code' => 'max:10',
             'parcel_value' => 'max:7',
             'invoice_id' => 'max:20',
@@ -90,7 +91,7 @@ class ShipmentController extends Controller
         $price = 0;
         $total_price = 0;
         $cod_type = 0;
-        $cod_amount = 0;
+        $cod_amount = $request->cod_amount;
         $zone = Area::find($request->area);
         $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
         // if (!$shipping) {
@@ -132,13 +133,13 @@ class ShipmentController extends Controller
         $insert->merchant_note = $request->merchant_note;
         $insert->weight = $request->weight;
         $insert->delivery_type = $request->delivery_type;
-        $insert->delivery_type = $request->delivery_type;
+        $insert->cod_amount = $cod_amount;
         $new_id = Shipment::all()->first();
         $insert->tracking_code = rand();
         $insert->cod = $cod_type;
         $insert->cod_amount = $cod_amount;
-        $insert->price = $price;
-        $insert->total_price = $total_price;
+        $insert->price = $cod_amount;
+        $insert->total_price = $cod_amount;
         $insert->save();
 
         $output = array(
