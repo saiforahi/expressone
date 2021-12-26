@@ -79,7 +79,6 @@ class ShipmentController extends Controller
             'phone' => 'required|max:20',
             'address' => 'required|max:255',
             'area' => 'required',
-            "cod_amount"=> 'required',
             //'zip_code' => 'max:10',
             'parcel_value' => 'max:7',
             'invoice_id' => 'max:20',
@@ -91,7 +90,7 @@ class ShipmentController extends Controller
         $price = 0;
         $total_price = 0;
         $cod_type = 0;
-        $cod_amount = $request->cod_amount;
+        $cod_amount = 0;
         $zone = Area::find($request->area);
         $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
         // if (!$shipping) {
@@ -133,13 +132,13 @@ class ShipmentController extends Controller
         $insert->merchant_note = $request->merchant_note;
         $insert->weight = $request->weight;
         $insert->delivery_type = $request->delivery_type;
-        $insert->cod_amount = $cod_amount;
+        $insert->delivery_type = $request->delivery_type;
         $new_id = Shipment::all()->first();
         $insert->tracking_code = rand();
         $insert->cod = $cod_type;
         $insert->cod_amount = $cod_amount;
-        $insert->price = $cod_amount;
-        $insert->total_price = $cod_amount;
+        $insert->price = $price;
+        $insert->total_price = $total_price;
         $insert->save();
 
         $output = array(
@@ -306,7 +305,7 @@ class ShipmentController extends Controller
                 "name.required" => "Please enter customer name.",
                 "phone.required" => "Please enter customer phone number.",
                 "address.required" => "Please enter customer address.",
-                "delivery_charge.required" => "Please enter delivery charge",
+                "parcel_value.required" => "Please enter parcel value",
                 "cod_amount.required" => "Please enter cod_amount",
                 "area_id.required" => "Please select area"
             ];
@@ -315,7 +314,7 @@ class ShipmentController extends Controller
                 'name.required' => 'Name is required',
                 'phone.email' => 'Phone is required',
                 'address.required' => 'Address is required',
-                'delivery_charge.required' => 'Delivery charge required',
+                'parcel_value.required' => 'Parcel value is required',
                 'cod_amount.required' => 'Parcel enter COD amount',
                 'area_id.required' => 'Please select area'
             ];
@@ -325,7 +324,7 @@ class ShipmentController extends Controller
             $shipment->phone = $dataSet['phone'];
             $shipment->address = $dataSet['address'];
             $shipment->cod_amount = $dataSet['cod_amount'];
-            $shipment->delivery_charge = $dataSet['delivery_charge'];
+            $shipment->parcel_value = $dataSet['parcel_value'];
             $shipment->invoice_id = $dataSet['invoice_id'];
             $shipment->area_id = $dataSet['area_id'];
             $shipment->merchant_note = $dataSet['merchant_note'];
