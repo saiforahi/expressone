@@ -80,12 +80,12 @@
                                 value="{{ $shipment->cod_amount }}">
                         </div>
                         <div class="col cod_target text-left">
-                            <label for="parcel_value">Declared Parcel Value</label>
-                            <input type="number" id="parcel_value" class="form-control" name="parcel_value"
-                                placeholder="Enter Parcel Value" value="{{ $shipment->parcel_value }}">
+                            <label for="parcel_value">Delivery charge</label>
+                            <input type="number" id="delivery_charge" class="form-control" name="delivery_charge"
+                                placeholder="Enter Parcel Value" value="{{ $shipment->delivery_charge }}">
                             <div class="w-100">
                                 <small>My parcel value is <span
-                                        class="parcel_value_info">{{ $shipment->parcel_value }}</span> Taka</small>
+                                        class="parcel_value_info">{{ $shipment->delivery_charge }}</span> Taka</small>
                             </div>
                         </div>
                         <div class="col text-left">
