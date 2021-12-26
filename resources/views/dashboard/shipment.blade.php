@@ -65,13 +65,14 @@
                     <h5 class="card-title mt-4">Shipment Details:</h5>
                     <div class="form-row my-4">
                         <div class="col text-left">
-                            <label class="" for="weight">Weight charge</label>
-                            <input type="number" id="weight_charge" class="form-control" name="weight_charge" value="1">
+                            <label class="" for="weight">COD Amount</label>
+                            <input type="number" id="cod_amount" class="form-control" name="cod_amount" value="1">
                             {{-- <div class="w-100">
                                 <small>My total chargeable weight is <span
                                         class="weight_info">1.00 kg</span></small>
                             </div> --}}
                         </div>
+                        
                         <div class="col cod_target text-left">
                             <label for="parcel_value">Declared Parcel Value</label>
                             <input type="number" id="parcel_value" class="form-control" name="parcel_value"
