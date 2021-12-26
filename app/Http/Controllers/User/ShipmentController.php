@@ -63,14 +63,13 @@ class ShipmentController extends Controller
 
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
     }
-    public function PrepareShipmentSubmit(Request $request)
+    public function shipmentSave(Request $request)
     {
         $messages = [
             "name.required" => "Please enter customer name.",
             "phone.required" => "Please enter customer phone number.",
             "address.required" => "Please enter customer address.",
-            //"weight.required" => "Parcel weight required",
-            "parcel_value.max" => "The value of parcel must be 7 character",
+            "cod_amount.required" => "Please enter cod_amount",
             "area.required" => "Please select customer area",
         ];
 
@@ -78,14 +77,8 @@ class ShipmentController extends Controller
             'name' => 'required|max:100',
             'phone' => 'required|max:20',
             'address' => 'required|max:255',
-            'area' => 'required',
             "cod_amount"=> 'required',
-            //'zip_code' => 'max:10',
-            'parcel_value' => 'max:7',
-            'invoice_id' => 'max:20',
-            'merchant_note' => 'max:255',
-            //'weight' => 'required|max:5',
-            'delivery_type' => 'required',
+            'area' => 'required'
         ], $messages);
 
         $price = 0;
@@ -121,27 +114,23 @@ class ShipmentController extends Controller
         // $total_price = $price + $cod_amount + (int)$request->parcel_value;
 
         $insert = new Shipment();
-        $insert->user_id = Auth::guard('user')->user()->id;
-        $insert->zone_id = $zone->zone_id;
-        $insert->area_id = $request->area;
         $insert->name = $request->name;
         $insert->phone = $request->phone;
         $insert->address = $request->address;
-        $insert->zip_code = $request->zip_code;
+        $insert->cod_amount = $request->cod_amount;
+        $insert->area_id = $request->area;
         $insert->parcel_value = $request->parcel_value;
-        $insert->invoice_id = $request->invoice_id;
+        $insert->delivery_charge = $request->delivery_charge;
+        $insert->weight_charge = $request->weight_charge;
+        $insert->invoice_id = rand(1111, 9999);
+        $insert->tracking_code = rand(1100, 9999);
         $insert->merchant_note = $request->merchant_note;
         $insert->weight = $request->weight;
         $insert->delivery_type = $request->delivery_type;
-        $insert->cod_amount = $cod_amount;
-        $new_id = Shipment::all()->first();
-        $insert->tracking_code = rand();
-        $insert->cod = $cod_type;
-        $insert->cod_amount = $cod_amount;
+        $insert->user_id = Auth::guard('user')->user()->id;
+        $insert->zone_id = $zone->zone_id;
         $insert->price = $cod_amount;
-        $insert->total_price = $cod_amount;
         $insert->save();
-
         $output = array(
             'done' => 'done',
         );

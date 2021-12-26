@@ -96,7 +96,6 @@ class CSVController extends Controller
         $total_price = 0;
         $cod_type = 0;
         $cod_amount = 0;
-
         foreach (Session::get('csv_data') as $key => $line) {
             $zone = Area::find($request->area[$key]);
             $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
@@ -122,7 +121,6 @@ class CSVController extends Controller
                         $cod_amount = ((int) $request->parcel_value[$key] / 100) * $shipping->cod_value;
                     }
                 }
-
                 $weight = (float) $request->weight[$key];
                 if ($weight > $shipping->max_weight) {
                     $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
