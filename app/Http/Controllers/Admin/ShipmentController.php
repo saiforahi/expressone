@@ -383,7 +383,7 @@ class ShipmentController extends Controller
 
             $shipment_ids[] = $hubShipment->shipment_id;
             $message = 'Dear ' . $hubShipment->shipment->name . ', You have a parcel on ' . basic_information()->wensote_link . ' &  paracel is in Dispatch centen. We will get you soon!';
-            event(new SendingSMS('customer', $hubShipment->shipment->phone, $message));
+            // event(new SendingSMS('customer', $hubShipment->shipment->phone, $message));
         }
 
         //get the last id of hub_shipment_boxes table

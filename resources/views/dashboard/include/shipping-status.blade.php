@@ -8,7 +8,7 @@
     	<span class="text-primary">Pic-up</span>
 
     @elseif($shipping_status=='3')
-        <span class="text-primary"> Dispatch Center</span>
+        <span class="text-primary">Dispatch Center</span>
 
     @elseif($shipping_status=='4')
     	<span class="text-primary">In Transit</span>

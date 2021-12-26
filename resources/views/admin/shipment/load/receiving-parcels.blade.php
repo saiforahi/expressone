@@ -8,10 +8,10 @@
                 <td class="text-right">
                     <select class="select2 select2_single areaOp" data-key="{{$key}}" id="area{{$key}}">
                         @foreach($areas as $area)
-                            <option value="{{$area->id}}" @if($shipment->area_id==$area->id)selected @endif >
-                                {{$area->name}}</option>
+                            <option value="{{$area->id}}" @if($shipment->area_id==$area->id)selected @endif>{{$area->name}}</option>
                         @endforeach
-                    </select></td>
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td>Customer: {{$shipment->name}} </td>

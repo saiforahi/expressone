@@ -10,6 +10,16 @@
 	</div>
 </div>
 <br/>
+{{-- <div class="row">
+	<div class="col-md-4">
+	  <input type="text" class="form-control" name="password" placeholder="password">
+	</div>
+	<div class="col-md-4">
+	  <input type="text" class="form-control" name="password_confirmation" placeholder="Confirm password">
+	</div>
+	
+</div> --}}
+<br/>
 <div class="row">
 	<div class="col-md-4">
 	  <select class="form-control select2" style="width:100%" name="hub_ids[]" required="" multiple="">

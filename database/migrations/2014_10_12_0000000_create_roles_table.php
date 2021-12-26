@@ -19,7 +19,7 @@ class CreateRolesTable extends Migration
             $table->timestamps();
         });
 
-        \App\Role::create(['title'=>'Supser-admin']);
+        \App\Role::create(['title'=>'Super-admin']);
         \App\Role::create(['title'=>'Sub-admin']);
     }
 
