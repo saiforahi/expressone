@@ -67,12 +67,18 @@
                         <div class="col text-left">
                             <label class="" for="weight">COD Amount</label>
                             <input type="number" id="cod_amount" class="form-control" name="cod_amount" value="1">
-                            {{-- <div class="w-100">
-                                <small>My total chargeable weight is <span
-                                        class="weight_info">1.00 kg</span></small>
-                            </div> --}}
                         </div>
-                        
+                        <div class="col text-left">
+                            <label class="" for="delivery_charge">Delivery Charge</label>
+                            <input type="number" class="form-control" name="delivery_charge" value="0" placeholder="Enter Delivery Charge">
+
+                        </div>
+                        <div class="col text-left">
+                            <label class="" for="delivery_charge">Weight Charge</label>
+                            <input type="number" class="form-control" name="weight_charge" value="0" placeholder="Enter weight charge">
+
+                        </div>
+
                         <div class="col cod_target text-left">
                             <label for="parcel_value">Declared Parcel Value</label>
                             <input type="number" id="parcel_value" class="form-control" name="parcel_value"
@@ -80,12 +86,6 @@
                             <div class="w-100">
                                 <small>My parcel value is <span class="parcel_value_info">0</span> Taka</small>
                             </div>
-                        </div>
-
-                        <div class="col text-left">
-                            <label for="invoice_id"> <strong>Ref. No</strong></label>
-                            <input type="text" id="invoice_id" class="form-control" name="invoice_id"
-                                value="{{ rand() }}">
                         </div>
                     </div>
                     <div class="form-row my-4">
@@ -107,7 +107,7 @@
                             </div>
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" type="radio" name="delivery_type" id="inlineRadio2"
-                                    value="2">
+                                    value="2" disabled>
                                 <label class="form-check-label" for="inlineRadio2">Express</label>
                             </div>
                         </div>
