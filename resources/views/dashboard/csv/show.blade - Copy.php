@@ -7,7 +7,7 @@
                 <div class="page-title-icon">
                     <i class="fa fa-file-excel-o text-success" aria-hidden="true"></i>
                 </div>
-                <div>Edit csv-file data+++++++
+                <div>Edit csv-file data
                     <div class="page-title-subheading">Check all the file data and update
                     </div>
                 </div>

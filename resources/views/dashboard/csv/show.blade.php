@@ -100,7 +100,9 @@
 
                                 <div class="col text-left">
                                     <label for="merchant_note">Merchant note</label>
-                                    <input type="text" id="merchant_note" class="form-control" name="merchant_note[]">
+                                    <input type="text" class="form-control merchant_note" data-key="{{ $key }}"
+                                        name="merchant_note[]" id="merchant_note{{ $key }}"
+                                        value="{{ $line['merchant_note'] }}">
                                 </div>
                             </div>
 

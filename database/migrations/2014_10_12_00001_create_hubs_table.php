@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
+use App\Hub;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 class CreateHubsTable extends Migration
 {
@@ -21,9 +22,7 @@ class CreateHubsTable extends Migration
             $table->foreign('zone_id')->references('id')->on('zones');
             $table->timestamps();
         });
-        // \App\Hub::create([ 'name' =>'Hub one','zone_id'=>1]);
-        // \App\Hub::create([ 'name' =>'Hub two','zone_id'=>2]);
-        // \App\Hub::create([ 'name' =>'Hub three','zone_id'=>3]);
+        Hub::create([ 'name' =>'Hub One Dhaka','zone_id'=>1]);
     }
 
     /**
