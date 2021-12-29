@@ -6,18 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Shipment;
 use App\ShippingPrice;
 use App\Shipment_delivery_payment;
+use App\ShippingCharge;
 use Illuminate\Http\Request;
 use Auth;
 use PDF;
 use DataTables;
+use Illuminate\Support\Facades\DB;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ShipmentController extends Controller
 {
     public function index()
     {
-        $area = Area::where('status', 1)->get();
-        return view('dashboard.shipment', compact('area'));
+        $data['area'] = Area::where('status', 1)->get();
+        $data['shippingCharges'] = ShippingCharge::select('id','consignment_type','shipping_amount')->get();
+        //dd($data['shippingCharges']);
+        return view('dashboard.shipment', $data);
     }
 
     public function rateCheck(Request $request)
@@ -71,14 +75,15 @@ class ShipmentController extends Controller
             "address.required" => "Please enter customer address.",
             "cod_amount.required" => "Please enter cod_amount",
             "area.required" => "Please select customer area",
+            "shipping_charge_id.required" => "Please select shipping charge",
         ];
-
         $request->validate([
             'name' => 'required|max:100',
             'phone' => 'required|max:20',
             'address' => 'required|max:255',
             "cod_amount"=> 'required',
-            'area' => 'required'
+            'area' => 'required',
+            'shipping_charge_id' => 'required'
         ], $messages);
 
         $price = 0;
@@ -119,8 +124,8 @@ class ShipmentController extends Controller
         $insert->address = $request->address;
         $insert->cod_amount = $request->cod_amount;
         $insert->area_id = $request->area;
+        $insert->shipping_charge_id = $request->shipping_charge_id;
         $insert->parcel_value = $request->parcel_value;
-        $insert->delivery_charge = $request->delivery_charge;
         $insert->weight_charge = $request->weight_charge;
         $insert->invoice_id = rand(1111, 9999);
         $insert->tracking_code = rand(1100, 9999);
@@ -134,7 +139,6 @@ class ShipmentController extends Controller
         $output = array(
             'done' => 'done',
         );
-
         // return json_encode($output);
         return back()->with('message', 'Shipment has been saved successfully!');
     }
@@ -285,17 +289,19 @@ class ShipmentController extends Controller
     {
         $title = "Update Shipment";
         $area = Area::where('status', 1)->select('name','id')->get();
-        return view('dashboard.edit-shipment', compact('shipment', 'title', 'area'));
+        $shippingCharges = ShippingCharge::select('id','consignment_type','shipping_amount')->get();
+        return view('dashboard.edit-shipment', compact('shipment', 'title', 'area','shippingCharges'));
     }
     function update(Shipment $shipment, Request $request)
     {
         if ($request->isMethod('post')) {
             $dataSet = $request->all();
+
             $rules = [
                 "name.required" => "Please enter customer name.",
                 "phone.required" => "Please enter customer phone number.",
                 "address.required" => "Please enter customer address.",
-                "delivery_charge.required" => "Please enter delivery charge",
+
                 "cod_amount.required" => "Please enter cod_amount",
                 "area_id.required" => "Please select area"
             ];
@@ -304,7 +310,7 @@ class ShipmentController extends Controller
                 'name.required' => 'Name is required',
                 'phone.email' => 'Phone is required',
                 'address.required' => 'Address is required',
-                'delivery_charge.required' => 'Delivery charge required',
+
                 'cod_amount.required' => 'Parcel enter COD amount',
                 'area_id.required' => 'Please select area'
             ];
@@ -314,7 +320,6 @@ class ShipmentController extends Controller
             $shipment->phone = $dataSet['phone'];
             $shipment->address = $dataSet['address'];
             $shipment->cod_amount = $dataSet['cod_amount'];
-            $shipment->delivery_charge = $dataSet['delivery_charge'];
             $shipment->invoice_id = $dataSet['invoice_id'];
             $shipment->area_id = $dataSet['area_id'];
             $shipment->merchant_note = $dataSet['merchant_note'];

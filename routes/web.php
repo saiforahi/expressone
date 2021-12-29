@@ -362,7 +362,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::get('/account', 'DashboardController@account')->name('account');
     Route::post('/change-email', 'DashboardController@ChangeMail')->name('ChangeMail');
     Route::post('/change-password', 'DashboardController@ChangePassword')->name('ChangePassword');
-    //Shipment
+    //Merchant Shipment
     Route::get('/prepare-shipment', 'ShipmentController@index')->name('merhcant_shipments');
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
     Route::post('shipment-save', 'ShipmentController@shipmentSave')->name('PrepareShipmentSubmit');

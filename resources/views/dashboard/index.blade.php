@@ -69,7 +69,6 @@
                                 <th>Tracking No.</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Customer</th>
-                                <th class="text-center">Delv. type</th>
                                 <th class="text-center">COD Amt.</th>
                                 <th class="text-center">Wgt. charge</th>
                                 <th class="text-center">Actions</th>
@@ -111,9 +110,7 @@
                                         <i class="fa fa-user mr-1" aria-hidden="true"></i>{{ $shipments->name }}<br>
                                         <i class="fa fa-phone-square mr-1" aria-hidden="true"></i>{{ $shipments->phone }}
                                     </td>
-                                    <td>
-                                        Regular
-                                    </td>
+
                                     <td>
                                         {{ $shipments->cod_amount }}
                                     </td>
