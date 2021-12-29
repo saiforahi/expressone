@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Hub;
 use App\Admin;
+use App\Admin_hub;
 use Session; use Auth;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
 class DashboardController extends Controller
 {
     public function index()
     {
-        $hub = \App\Admin_hub::where('admin_id',Auth::guard('admin')->user()->id)->first();
+        $hub = Admin_hub::where('admin_id',Auth::guard('admin')->user()->id)->first();
         if($hub!=null){
             Session::put('admin_hub',$hub);
         }

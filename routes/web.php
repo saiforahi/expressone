@@ -318,7 +318,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/save-blog', 'BlogController@store')->name('save-blog');
     Route::get('/blog/delete/{blog}', 'BlogController@destroy')->name('delete-blog');
 
-
     Route::get('/blog/category', 'Blog_categoryController@index')->name('blog-category');
     Route::get('/blog/categories', 'Blog_categoryController@categories')->name('blog-categories');
     Route::post('/blog/category/save', 'Blog_categoryController@store')->name('save-category');

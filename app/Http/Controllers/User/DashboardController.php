@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use App\Shipment;
+use App\Area;
 use App\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Shipment;
 use Auth; use Session;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller
 {
@@ -75,7 +76,7 @@ class DashboardController extends Controller
 
     public function ProfileEdit()
     {
-        $areas = \App\Area::all();
+        $areas = Area::all();
         return view('dashboard.profile_edit',compact('areas'));
     }
 
@@ -85,17 +86,20 @@ class DashboardController extends Controller
             'first_name' => 'required|max:100',
             'last_name' => 'required|max:100',
             'phone' => 'required|max:20',
+            'national_id' => 'required',
+            'bin_no' => 'required',
             'shop_name' => 'required|max:100',
             'address' => 'required|max:255',
             'area_id' => 'required|max:255',
-            'website_link' => 'sometimes|nullable|max:255',
-            'id' => 'required',
+            'website_link' => 'sometimes|nullable|max:255'
         ]);
 
         $register_user = User::find($request->id);
         $register_user->first_name = $request->first_name;
         $register_user->last_name = $request->last_name;
         $register_user->phone = $request->phone;
+        $register_user->national_id = $request->national_id;
+        $register_user->bin_no = $request->bin_no;
         $register_user->shop_name = $request->shop_name;
         $register_user->address = $request->address;
         $register_user->area_id = $request->area_id;
