@@ -330,6 +330,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     //Shipping Charge
     Route::match(['get', 'post'], 'add-edit-shipping-charge/{id?}', [ShippingChargeController::class, 'addEditCharge'])->name('addEditCharge');
     Route::get('shipping-charges', [ShippingChargeController::class, 'index'])->name('shippingCharges');
+    Route::post('set-shipping-charge/{id}', [ShippingChargeController::class, 'setShippingCharge'])->name('setShippingCharge');
 });
 
 /*
@@ -367,11 +368,11 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::post('shipment-save', 'ShipmentController@shipmentSave')->name('PrepareShipmentSubmit');
     Route::get('/edit-shipment/{shipment}', 'ShipmentController@edit')->name('editShipment');
     Route::post('/update-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
-    //Payment
+    //Merchant Payment routes
     Route::get('payments', 'ShipmentController@payments')->name('payments');
     Route::get('payments-load', 'ShipmentController@payments_loading')->name('payments-load');
     Route::get('/show-payment/{shipment}', 'ShipmentController@show_payment')->name('payments-show');
-    //CSV
+    //Merchant CSV
     Route::get('/csv-upload', 'CSVController@create')->name('csv-upload');
     Route::post('/csv-upload', 'CSVController@get_csv_data')->name('get-csv');
     Route::get('/csv-temporary', 'CSVController@show')->name('csv-temporary');

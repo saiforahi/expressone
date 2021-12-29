@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Shipment;
 use App\ShippingCharge;
 use Illuminate\Http\Request;
 
@@ -71,10 +72,28 @@ class ShippingChargeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function setShippingCharge(Request $request, $id)
     {
-        //
+        try {
+            $parcel = Shipment::findOrFail($id);
+            $parcel->shipping_charge_id =$request->result[$id];
+            $parcel->save();
+            return redirect()->back();
+        } catch (\Throwable $th) {
+            return redirect()->back();
+        }
     }
+    // public function resultSubmit(Request $request, $id){
+    //     try {
+    //         $patient = Patient::findOrFail($id);
+    //         $patient->result =$request->result[$id];
+    //         $patient->result_time = Carbon::now();
+    //         $patient->save();
+    //         return redirect()->route('patient.index')->with('success', 'COVID RESULT UPDATE');
+    //     } catch (\Throwable $th) {
+    //         return redirect()->route('patient.index')->with('error', 'Something went wrong, please try again later!');
+    //     }
+    // }
 
     /**
      * Display the specified resource.

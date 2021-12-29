@@ -63,12 +63,7 @@
                                         name="cod_amount[]" id="cod_amount{{ $key }}"
                                         value="{{ $line['cod_amount'] }}">
                                 </div>
-                                <div class="col cod_target text-left">
-                                    <label for="delivery_charge">Delivery Charge</label>
-                                    <input type="number" class="form-control delivery_charge" data-key="{{ $key }}"
-                                        name="delivery_charge[]" id="delivery_charge{{ $key }}"
-                                        value="{{ $line['delivery_charge'] }}">
-                                </div>
+
                                 <div class="col cod_target text-left">
                                     <label for="weight_charge">Weight Charge</label>
                                     <input type="number" class="form-control weight_charge" data-key="{{ $key }}"
@@ -79,14 +74,7 @@
                             </div>
 
                             <div class="form-row">
-                                <div class="col-md-2 text-left">
-                                    <label for="invoice_id">Shipping method</label>
-                                    <select class="form-control" name="delivery_type[]" required style="padding:1px;">
-                                        <option value="" disabled>Select Delivery type</option>
-                                        <option value="1" selected>Regualr</option>
-                                        <option value="2" disabled>Express</option>
-                                    </select>
-                                </div>
+
                                 <div class="col-md-3 text-left">
                                     <label for="area">Area</label>
                                     <select class="form-control select2 area" data-key="{{ $key }}" name="area[]"

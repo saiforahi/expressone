@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\User;
 
+use Auth;
 use App\Area;
 use App\User;
 use App\Shipment;
-use Auth; use Session;
+use App\ShippingCharge;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,13 +16,18 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $shipment = Shipment::orderBy('id','DESC')->where('user_id', Auth::guard('user')->user()->id)->get();
-        return view('dashboard.index',compact('shipment'));
+        $shipment = Shipment::orderBy('id', 'DESC')->where('user_id', Auth::guard('user')->user()->id)->get();
+        $shippingCharges =  DB::table('shipping_charges')->select('id','consignment_type', 'shipping_amount')->get();
+        return view('dashboard.index', compact('shipment', 'shippingCharges'));
     }
 
-    public function account(){ return view('dashboard.account');}
+    public function account()
+    {
+        return view('dashboard.account');
+    }
 
-    public function ChangeMail(Request $request){
+    public function ChangeMail(Request $request)
+    {
         $request->validate([
             'email' => 'required|max:100',
             'password' => 'required|max:20',
@@ -41,7 +48,6 @@ class DashboardController extends Controller
             $request->session()->flash('message', 'Something wrong try again later');
             return redirect('/account');
         }
-
     }
 
     public function ChangePassword(Request $request)
@@ -66,7 +72,6 @@ class DashboardController extends Controller
             $request->session()->flash('message', 'Something wrong try again later');
             return redirect('/account');
         }
-
     }
 
     public function profile()
@@ -77,7 +82,7 @@ class DashboardController extends Controller
     public function ProfileEdit()
     {
         $areas = Area::all();
-        return view('dashboard.profile_edit',compact('areas'));
+        return view('dashboard.profile_edit', compact('areas'));
     }
 
     public function ProfileUpdate(Request $request)
@@ -113,6 +118,5 @@ class DashboardController extends Controller
         $register_user->save();
         $request->session()->flash('message', 'Profile update successfully');
         return redirect('/profile');
-
     }
 }
