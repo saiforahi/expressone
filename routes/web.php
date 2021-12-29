@@ -4,6 +4,7 @@ use App\Shipment;
 use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\Admin\ShippingChargeController;
 //To clear all cache
 Route::get('clear', function () {
     Artisan::call('cache:clear');
@@ -327,6 +328,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
 
     Route::get('set-mail-info', 'BasicInformationController@mailing_info')->name('mail-setup');
     Route::post('set-mail-info', 'BasicInformationController@save_mailing_info')->name('save-mail-setup');
+    //Shipping Charge
+    Route::match(['get', 'post'], 'add-edit-shipping-charge/{id?}', [ShippingChargeController::class, 'addEditCharge'])->name('addEditCharge');
+    Route::get('shipping-charges', [ShippingChargeController::class, 'index'])->name('shippingCharges');
 });
 
 /*
