@@ -301,7 +301,6 @@ class ShipmentController extends Controller
                 "name.required" => "Please enter customer name.",
                 "phone.required" => "Please enter customer phone number.",
                 "address.required" => "Please enter customer address.",
-
                 "cod_amount.required" => "Please enter cod_amount",
                 "area_id.required" => "Please select area"
             ];
