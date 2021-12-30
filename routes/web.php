@@ -48,6 +48,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/', 'DashboardController@index')->name('admin-dashboard');
     Route::get('/basic-information', 'BasicInformationController@index')->name('basic-information');
     Route::post('/basic-information', 'BasicInformationController@update')->name('basic-information.update');
+    Route::post('/update-verify-message/{id}', 'BasicInformationController@updateVerifyMsg')->name('updateVerifyMsg');
 
     Route::get('/admin-change-hub/{hub}', 'DashboardController@admin_changes_hub')->name('admin-change-hub');
     Route::get('/get-admin-hub-ids/{admin}', 'DashboardController@get_admin_hub_ids')->name('get-admin-hub-ids');
@@ -310,6 +311,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/view-messages', 'MessageController@messages')->name('messages');
     Route::get('/message-show/{message}', 'MessageController@show')->name('view-message');
     Route::get('/delete-message/{message}', 'MessageController@destroy')->name('delete-message');
+    Route::get('/merchant-verify-message', 'MessageController@cms_page')->name('cms_page');
 
     Route::get('/blog/index', 'BlogController@index')->name('AdminBlog');
     Route::get('/blog-posts', 'BlogController@blogs')->name('blogs');

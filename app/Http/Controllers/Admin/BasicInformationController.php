@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\Admin;
 use App\BasicInformation;
+use App\CmsPage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail_configuration;
@@ -8,7 +9,8 @@ class BasicInformationController extends Controller
 {
     public function index()
     {
-        return view('admin.website_manage.basic_information');
+        $verifyMsg = CmsPage::get();
+        return view('admin.website_manage.basic_information', compact('verifyMsg'));
     }
     public function update(Request $request)
     {
@@ -52,5 +54,10 @@ class BasicInformationController extends Controller
             'send_email'=>$request->send_email
         ]);
         return back()->with('message','Configuring email setup updated successfully!','success');
+    }
+
+    public function updateVerifyMsg($id)
+    {
+        dd($id);
     }
 }
