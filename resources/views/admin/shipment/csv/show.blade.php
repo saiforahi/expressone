@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        
+
                         <div class="col-md-3 text-left">
                             <label for="zip_code">Zip Code</label>
                             <input type="text" id="zip_code" class="form-control" name="zip_code[]" value="{{$line['post_code']}}">
@@ -33,12 +33,11 @@
                         <div class="col-md-3 text-left">
                             <label class="" for="weight">Weight</label>
                             <input type="text"  class="form-control weight" data-key="{{$key}}" name="weight[]" id="weight{{$key}}" value="1">
-                           
+
                         </div>
                         <div class="col-md-3 cod_target text-left">
                             <label for="parcel_value">Declared Parcel Value</label>
                             <input type="number" class="form-control parcel_value" data-key="{{$key}}" name="parcel_value[]" id="parcel_value{{$key}}" value="{{$line['price']}}">
-                           
                         </div>
                         <div class="col-md-3 text-left">
                             <label for="invoice_id">Invoice Id</label>
@@ -53,7 +52,7 @@
                                 <option value=""  disabled>Select Delivery type</option>
                                 <option value="1" selected>Regualr</option>
                                 <option value="2">Express</option>
-                            </select> 
+                            </select>
                         </div>
                         <div class="col-md-3 text-left">
                             <label for="area">Area</label>
@@ -62,7 +61,7 @@
                                 @foreach($areas as $area)
                                     <option value="{{$area->id}}">{{$area->name}}</option>
                                 @endforeach
-                            </select> 
+                            </select>
                         </div>
 
                         <div class="col-md-7 text-left">
@@ -70,7 +69,7 @@
                             <input type="text" id="merchant_note" class="form-control" name="merchant_note[]">
                         </div>
                     </div>
-                  
+
                 </div>
                 @endforeach  <br>
                 <div class="form_each"> <br>
@@ -94,15 +93,15 @@
                         <div class="col-md-4">
                             <button type="submit" onclick="working()" class="submit mt-2 px-4 btn btn-success pull-right"> <b class="fa fa-send"> Save shipment Sheet</b>  </button>
                         </div>
-                    </div>  
-                    
+                    </div>
+
                 </div>
             </form><br>
         </div>
     </div>
 @endsection
 @push('style')
-    
+
     <link rel="stylesheet" href="{{asset('vendors/select2/dist/css/select2.min.css')}}">
     <link rel="stylesheet" href="{{asset('vendors/select2/dist/css/bootstrap4-select2.css')}}">
      <style type="text/css">
@@ -127,7 +126,7 @@
     </style>
 @endpush
 @push('scripts')
-   
+
     <!-- Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>

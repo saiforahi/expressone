@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\CmsPage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Message;
 use Session;
 use DataTables;
 use Validator;
+
 class MessageController extends Controller
 {
     /**
@@ -26,27 +28,28 @@ class MessageController extends Controller
             $data = '<div class="btn-group btn-group-sm">
                 <button class="btn btn-success show" id="' . $about->id . '" type="button"> View</button>';
 
-            $data .=' <button class="btn btn-danger delete" id="' . $about->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>';
+            $data .= ' <button class="btn btn-danger delete" id="' . $about->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>';
 
-            $data .='</div>';  return $data; 
+            $data .= '</div>';
+            return $data;
         })
-     
-        ->addColumn('sender', function ($about) {  
-           return $about->name.' - '.$about->phone;
-        })
-        ->addColumn('email', function ($about) {
-            return $about->email;
-        })
-        ->addColumn('message', function ($about) {
-            if (strlen($about->message) > 50) {
-                return mb_substr($about->message, 0, 50).' ...';
-            }else return $about->message;
-        })->rawColumns(['name','email','message','action'])->make(true);
+
+            ->addColumn('sender', function ($about) {
+                return $about->name . ' - ' . $about->phone;
+            })
+            ->addColumn('email', function ($about) {
+                return $about->email;
+            })
+            ->addColumn('message', function ($about) {
+                if (strlen($about->message) > 50) {
+                    return mb_substr($about->message, 0, 50) . ' ...';
+                } else return $about->message;
+            })->rawColumns(['name', 'email', 'message', 'action'])->make(true);
     }
 
     public function show(Message $message)
     {
-        return view('admin.website_manage.message.view',compact('message'));
+        return view('admin.website_manage.message.view', compact('message'));
     }
 
     /**
@@ -82,5 +85,12 @@ class MessageController extends Controller
     {
         $message->delete();
         return response()->json(['success' => 'Message has been removed successfully.']);
+    }
+
+    public function cms_page()
+    {
+        $regVerifyMsg = DB::table('cms_pages')->first();
+        dd($regVerifyMsg);
+        return view('auth.verify', compact('regVerifyMsg'));
     }
 }

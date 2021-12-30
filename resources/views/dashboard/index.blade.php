@@ -64,13 +64,12 @@
                         <thead>
                             <tr>
                                 <th>##</th>
+                                <th>Shipping Type</th>
                                 <th class="text-center">Status</th>
                                 <th>Tracking No.</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Customer</th>
-                                <th class="text-center">Delv. type</th>
-                                <th class="text-center">COD Amount</th>
-                                <th class="text-center">Delv. charge</th>
+                                <th class="text-center">COD Amt.</th>
                                 <th class="text-center">Wgt. charge</th>
                                 <th class="text-center">Actions</th>
                             </tr>
@@ -79,6 +78,21 @@
                             @foreach ($shipment as $key => $shipments)
                                 <tr>
                                     <td>{{ ++$key }}</td>
+                                    <td>
+                                        <form action="{{ route('setShippingCharge', $shipments->id) }}"
+                                            id="formSubmit_{{ $shipments->id }}" method="post">
+                                            @csrf
+                                            <select name="result[{{ $shipments->id }}]" class="form-control"
+                                                onchange="formSubmit({{ $shipments->id }})">
+                                                <option value="">Select Type</option>
+                                                @foreach ($shippingCharges as $shipping)
+                                                    <option value="{{ $shipping->id }}" {{ $shipping->id == $shipments->shipping_charge_id ? 'selected' : '' }}>
+                                                        {{ $shipping->consignment_type }}-{{ $shipping->shipping_amount }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </form>
+                                    </td>
                                     <td class="text-center">
                                         @include('dashboard.include.shipping-status',
                                         ['status'=>$shipments->status,'shipping_status'=>$shipments->shipping_status])
@@ -96,15 +110,11 @@
                                         <i class="fa fa-user mr-1" aria-hidden="true"></i>{{ $shipments->name }}<br>
                                         <i class="fa fa-phone-square mr-1" aria-hidden="true"></i>{{ $shipments->phone }}
                                     </td>
-                                    <td>
-                                        Regular
-                                    </td>
+
                                     <td>
                                         {{ $shipments->cod_amount }}
                                     </td>
-                                    <td>
-                                        {{ $shipments->delivery_charge }}
-                                    </td>
+
                                     <td>
                                         {{ $shipments->weight_charge }}
                                     </td>
@@ -126,7 +136,8 @@
                                             class="btn btn-primary btn-sm viewMore"><i class="fa fa-search-plus"></i></a>
                                         <a href="/shipment-pdf/{{ $shipments->id }}" class="btn btn-info btn-sm">
                                             <i class="fa fa-file-pdf"></i></a>
-                                        <a href="{{ url('shipment-cnote', $shipments->id)}}" class="btn btn-primary btn-sm">
+                                        <a href="{{ url('shipment-cnote', $shipments->id) }}"
+                                            class="btn btn-primary btn-sm">
                                             <i class="fa fa-print"></i></a>
                                     </td>
                                 </tr>
@@ -166,7 +177,6 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
 
-
     <script type="text/javascript">
         $(function() {
             $('#dashboardDatatable').dataTable({
@@ -175,5 +185,9 @@
                 ]
             })
         })
+        //Set shipping charage
+        function formSubmit(id) {
+            $('#formSubmit_' + id).submit();
+        }
     </script>
 @endpush

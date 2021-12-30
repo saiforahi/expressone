@@ -19,7 +19,7 @@ class CreateShipmentsTable extends Migration
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->integer('cod_amount')->nullable();
-            $table->integer('delivery_charge')->nullable();
+            $table->integer('shipping_charge_id')->nullable()->comment('PK of shipping_charges table');
             $table->integer('weight_charge')->nullable();
             $table->string('merchant_note')->nullable();
             $table->integer('invoice_id')->unique();

@@ -60,22 +60,31 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
+                        <div class="col text-left">
+                            <label for="area">Shipping/Consignment Note Type</label>
+                            <select class="form-control" name="shipping_charge_id">
+                                <option value="" selected disabled>Select Shipping Method</option>
+                                @foreach ($shippingCharges as $shippingCharge)
+                                    <option value="{{ $shippingCharge->id }}">
+                                        {{ $shippingCharge->consignment_type }}
+                                        -{{ $shippingCharge->shipping_amount }}
 
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <h5 class="card-title mt-4">Shipment Details:</h5>
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="weight">COD Amount</label>
                             <input type="number" id="cod_amount" class="form-control" name="cod_amount" value="1">
                         </div>
-                        <div class="col text-left">
-                            <label class="" for="delivery_charge">Delivery Charge</label>
-                            <input type="number" class="form-control" name="delivery_charge" value="0" placeholder="Enter Delivery Charge">
 
-                        </div>
                         <div class="col text-left">
                             <label class="" for="delivery_charge">Weight Charge</label>
-                            <input type="number" class="form-control" name="weight_charge" value="0" placeholder="Enter weight charge">
+                            <input type="number" class="form-control" name="weight_charge" value="0"
+                                placeholder="Enter weight charge">
 
                         </div>
 
@@ -94,30 +103,11 @@
                             <textarea id="merchant_note" class="form-control" rows="3" name="merchant_note"></textarea>
                         </div>
                     </div>
-
-                    <div class="form-row my-4">
-                        <div class="col text-left">
-                            <label for="usr3">How do you want to arrange for shipment?</label><br>
-                            <label for="merchant_note">Service Type: &nbsp; &nbsp; &nbsp; </label>
-
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" checked name="delivery_type" id="inlineRadio1"
-                                    value="1">
-                                <label class="form-check-label" for="inlineRadio1">Regular</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="delivery_type" id="inlineRadio2"
-                                    value="2" disabled>
-                                <label class="form-check-label" for="inlineRadio2">Express</label>
-                            </div>
-                        </div>
-                        <div class="col text-right">
-                            <button type="submit" id="submit_button" class="btn btn-success rounded my-4"> <i
-                                    class="fa fa-check"></i> Shipping Submit
-                            </button>
-                        </div>
+                    <div class="col text-right">
+                        <button type="submit" id="submit_button" class="btn btn-success rounded my-4">
+                            <i class="fa fa-check"></i> Shipping Submit
+                        </button>
                     </div>
-
                 </form>
             </div>
         </div>

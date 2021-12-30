@@ -12,7 +12,8 @@
         </div>
         <div class="page-title-actions">
             <div class="d-inline-block dropdown">
-                <button type="button" onclick="location.href='{{ route('profile') }}';" class="btn-shadow btn btn-info">
+                <button type="button" onclick="location.href='{{ route('profile') }}';"
+                    class="btn-shadow btn btn-info">
                     <span class="btn-icon-wrapper pr-2 opacity-7"><i class="fa fa-hand-o-left"
                             aria-hidden="true"></i></span>
                     Back Profile
@@ -44,25 +45,22 @@
                     {{ csrf_field() }}
                     <input type="hidden" name="id" value="{{ Auth::guard('user')->user()->id }}">
                     <div class="form-row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="exampleEmail11" class="">First Name</label><input
                                     name="first_name" id="exampleEmail11"
-                                    value="{{ Auth::guard('user')->user()->first_name }}" type="text" required max="100"
-                                    class="form-control">
+                                    value="{{ Auth::guard('user')->user()->first_name }}" type="text" required
+                                    max="100" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="examplePassword11" class="">Last
                                     Name</label><input name="last_name" id="examplePassword11"
-                                    value="{{ Auth::guard('user')->user()->last_name }}" type="text" required max="100"
-                                    class="form-control">
+                                    value="{{ Auth::guard('user')->user()->last_name }}" type="text" required
+                                    max="100" class="form-control">
                             </div>
                         </div>
-
-                    </div>
-                    <div class="form-row">
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="exampleEmail11" class="">Phone</label>
@@ -72,6 +70,8 @@
                             </div>
                         </div>
 
+                    </div>
+                    <div class="form-row">
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="shop_name" class="">Shop Name</label>
@@ -90,24 +90,35 @@
                                         <option @if ($area->id == Auth::guard('user')->user()->area_id) selected @endif value="{{ $area->id }}">{{ $area->name }}</option> @endforeach </select>
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-md-7">
+                        <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label for="national_id" class="">NID</label>
+                                <input name="national_id" value="{{ Auth::guard('user')->user()->national_id }}"
+                                    type="number" class="form-control" required placeholder="Enter NID No">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label for="national_id" class="">BIN</label>
+                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}"
+                                    type="number" class="form-control" required placeholder="Enter bin no">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="position-relative form-group"><label for="address"
                                     class="">Address</label><input name="address" id="address"
                                     value="{{ Auth::guard('user')->user()->address }}" type="text"
                                     class="form-control" required max="255">
                             </div>
                         </div>
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="website_link" class="">Website (optional)
                                     Link</label><input name="website_link" id="website_link"
                                     value="{{ Auth::guard('user')->user()->website_link }}" type="url"
-                                    class="form-control" max="255">
+                                    class="form-control" placeholder="https://findbankswiftcode.com/">
                             </div>
                         </div>
-
                     </div>
                     <a href="{{ route('profile') }}" class="mt-2 btn btn-secondary float-right mx-3">Cancel</a>
                     <button class="mt-2 btn btn-success float-right">Update</button>

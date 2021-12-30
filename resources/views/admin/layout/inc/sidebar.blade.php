@@ -2,7 +2,8 @@
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
             <a href="/" class="site_title">
-                <img src="./images/{{ basic_information()->company_logo }}"></a>
+                <img src="{{ asset('logo') }}/{{ basic_information()->company_logo }}" alt="Logo">
+            </a>
         </div>
         <div class="clearfix"></div>
         <br />
@@ -26,6 +27,7 @@
                             @if (checkAdminAccess('area') != 0)
                                 <li><a href="{{ route('area') }}">Area (Area)</a></li>
                             @endif
+
                         </ul>
                     </li>
                     {{-- <li><a><i class="fa fa-money"></i> Shipping Price <span class="fa fa-chevron-down"></span></a>
@@ -37,9 +39,15 @@
                     </li> --}}
 
                     @if (checkAdminAccess('all-shipments') != 0)
+                        <li><a href="{{ route('shippingCharges') }}"><i class="fa mdi mdi-table"></i>Shipping
+                                Charge</a>
+                        </li>
+                    @endif
+                    @if (checkAdminAccess('all-shipments') != 0)
                         <li><a href="{{ route('all-shipments') }}"><i class="fa mdi mdi-export"></i> All shipments</a>
                         </li>
                     @endif
+
 
                     <li><a><i class="fa mdi mdi-cube-send"></i> Logistics <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">

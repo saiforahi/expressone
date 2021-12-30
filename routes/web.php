@@ -4,6 +4,7 @@ use App\Shipment;
 use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\Admin\ShippingChargeController;
 //To clear all cache
 Route::get('clear', function () {
     Artisan::call('cache:clear');
@@ -47,6 +48,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/', 'DashboardController@index')->name('admin-dashboard');
     Route::get('/basic-information', 'BasicInformationController@index')->name('basic-information');
     Route::post('/basic-information', 'BasicInformationController@update')->name('basic-information.update');
+    Route::post('/update-verify-message/{id}', 'BasicInformationController@updateVerifyMsg')->name('updateVerifyMsg');
 
     Route::get('/admin-change-hub/{hub}', 'DashboardController@admin_changes_hub')->name('admin-change-hub');
     Route::get('/get-admin-hub-ids/{admin}', 'DashboardController@get_admin_hub_ids')->name('get-admin-hub-ids');
@@ -309,6 +311,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/view-messages', 'MessageController@messages')->name('messages');
     Route::get('/message-show/{message}', 'MessageController@show')->name('view-message');
     Route::get('/delete-message/{message}', 'MessageController@destroy')->name('delete-message');
+    Route::get('/merchant-verify-message', 'MessageController@cms_page')->name('cms_page');
 
     Route::get('/blog/index', 'BlogController@index')->name('AdminBlog');
     Route::get('/blog-posts', 'BlogController@blogs')->name('blogs');
@@ -316,7 +319,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/show-blog/{blog}', 'BlogController@show')->name('show-blog-admin');
     Route::post('/save-blog', 'BlogController@store')->name('save-blog');
     Route::get('/blog/delete/{blog}', 'BlogController@destroy')->name('delete-blog');
-
 
     Route::get('/blog/category', 'Blog_categoryController@index')->name('blog-category');
     Route::get('/blog/categories', 'Blog_categoryController@categories')->name('blog-categories');
@@ -327,6 +329,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
 
     Route::get('set-mail-info', 'BasicInformationController@mailing_info')->name('mail-setup');
     Route::post('set-mail-info', 'BasicInformationController@save_mailing_info')->name('save-mail-setup');
+    //Shipping Charge
+    Route::match(['get', 'post'], 'add-edit-shipping-charge/{id?}', [ShippingChargeController::class, 'addEditCharge'])->name('addEditCharge');
+    Route::get('shipping-charges', [ShippingChargeController::class, 'index'])->name('shippingCharges');
+    Route::post('set-shipping-charge/{id}', [ShippingChargeController::class, 'setShippingCharge'])->name('setShippingCharge');
 });
 
 /*
@@ -358,17 +364,17 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::get('/account', 'DashboardController@account')->name('account');
     Route::post('/change-email', 'DashboardController@ChangeMail')->name('ChangeMail');
     Route::post('/change-password', 'DashboardController@ChangePassword')->name('ChangePassword');
-    //Shipment
+    //Merchant Shipment
     Route::get('/prepare-shipment', 'ShipmentController@index')->name('merhcant_shipments');
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
     Route::post('shipment-save', 'ShipmentController@shipmentSave')->name('PrepareShipmentSubmit');
     Route::get('/edit-shipment/{shipment}', 'ShipmentController@edit')->name('editShipment');
     Route::post('/update-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
-    //Payment
+    //Merchant Payment routes
     Route::get('payments', 'ShipmentController@payments')->name('payments');
     Route::get('payments-load', 'ShipmentController@payments_loading')->name('payments-load');
     Route::get('/show-payment/{shipment}', 'ShipmentController@show_payment')->name('payments-show');
-    //CSV
+    //Merchant CSV
     Route::get('/csv-upload', 'CSVController@create')->name('csv-upload');
     Route::post('/csv-upload', 'CSVController@get_csv_data')->name('get-csv');
     Route::get('/csv-temporary', 'CSVController@show')->name('csv-temporary');

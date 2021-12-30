@@ -43,9 +43,8 @@ class CSVController extends Controller
                     'phone' => $line[2],
                     'address' => $line[3],
                     'cod_amount' => $line[4],
-                    'delivery_charge' => $line[5],
-                    'weight_charge' => $line[6],
-                    'merchant_note' => $line[7]
+                    'weight_charge' => $line[5],
+                    'merchant_note' => $line[6]
                 );
             }
             $i++;
@@ -64,7 +63,6 @@ class CSVController extends Controller
             return redirect('/dashboard');
         }
         $areas = Area::latest()->get();
-        // dd($areas);
         return view('dashboard.csv.show', compact('areas'));
     }
     public function store_new(Request $request)
@@ -75,7 +73,7 @@ class CSVController extends Controller
             $insert->phone =  $line['phone'];
             $insert->address = $line['address'];
             $insert->cod_amount = $line['cod_amount'];
-            $insert->delivery_charge = $line['delivery_charge'];
+            //$insert->delivery_charge = $line['delivery_charge'];
             $insert->weight_charge = $line['weight_charge'];
             $insert->merchant_note = $line['merchant_note'];
             //CSV Data

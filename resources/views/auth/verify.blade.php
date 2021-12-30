@@ -2,21 +2,28 @@
 
 @section('content')
 
-<article>
+    <article>
         <!-- Breadcrumb -->
         <section class="theme-breadcrumb pad-50">
             <div class="theme-container container ">
                 <div class="row">
                     <div class="col-sm-8 pull-left">
-                        <div class="title-wrap">
-                            <h2 class="section-title no-margin"> Verify your Account </h2>
-                            {{-- <p class="fs-16 no-margin">Please check your email and get your login verification code </p> --}}
-                            <p class="fs-16 no-margin">Please contact with system admin to be verified</p>
-                        </div>
+
+                        @if (!empty($regVerifyMsg))
+                            <div class="title-wrap">
+                                <h2 class="section-title no-margin">{{ $regVerifyMsg->title }}</h2>
+                                <p class="fs-16 no-margin">{{ $regVerifyMsg->description }}</p>
+                            </div>
+                        @else
+                            <div class="title-wrap">
+                                <h2 class="section-title no-margin">Verify your Account</h2>
+                                <p class="fs-16 no-margin">Please contact with system admin to be verified default</p>
+                            </div>
+                        @endif
                     </div>
                     <div class="col-sm-4">
                         <ol class="breadcrumb-menubar list-inline">
-                            <li><a href="{{route('home')}}" class="gray-clr">Home</a></li>
+                            <li><a href="{{ route('home') }}" class="gray-clr">Home</a></li>
                             <li class="active">Verify account</li>
                         </ol>
                     </div>
@@ -30,14 +37,14 @@
                 <div class="col-md-5 col-sm-6 col-md-offset-4">
                     <div class="login-wrap">
                         <div class="login-form" style="border-top: 0">
-                            @if(session()->has('verification_error'))
+                            @if (session()->has('verification_error'))
                                 <div class="alert alert-danger alert-dismissible">
                                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                     {{ session()->get('verification_error') }}
                                 </div>
                             @endif
 
-                            @if(session()->has('verification_email'))
+                            @if (session()->has('verification_email'))
                             <form method="POST" class="login">
                                 @csrf
                                 <div class="form-group">

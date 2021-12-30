@@ -64,6 +64,7 @@
                                 @endforeach
                             </select>
                         </div>
+
                     </div>
                     <h5 class="card-title mt-4">Shipment Details:</h5>
                     <div class="form-row my-4">
@@ -79,15 +80,7 @@
                             <input type="number" id="cod_amount" class="form-control" name="cod_amount"
                                 value="{{ $shipment->cod_amount }}">
                         </div>
-                        <div class="col cod_target text-left">
-                            <label for="parcel_value">Delivery charge</label>
-                            <input type="number" id="delivery_charge" class="form-control" name="delivery_charge"
-                                placeholder="Enter Parcel Value" value="{{ $shipment->delivery_charge }}">
-                            <div class="w-100">
-                                <small>My parcel value is <span
-                                        class="parcel_value_info">{{ $shipment->delivery_charge }}</span> Taka</small>
-                            </div>
-                        </div>
+
                         <div class="col text-left">
                             <label for="invoice_id"> <strong>Ref. No</strong></label>
                             <input type="text" id="invoice_id" class="form-control" name="invoice_id"
@@ -101,27 +94,11 @@
                                 name="merchant_note"> {{ $shipment->merchant_note }} </textarea>
                         </div>
                     </div>
-                    <div class="form-row my-4">
-                        <div class="col text-left">
-                            <label for="usr3">How do you want to arrange for shipment?</label><br>
-                            <label for="merchant_note">Service Type: &nbsp; &nbsp; &nbsp; </label>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" checked name="delivery_type" id="inlineRadio1"
-                                    value="1">
-                                <label class="form-check-label" for="inlineRadio1">Regular</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="delivery_type" id="inlineRadio2"
-                                    value="2" disabled>
-                                <label class="form-check-label" for="inlineRadio2">Express</label>
-                            </div>
-                        </div>
                         <div class="col text-right">
                             <button type="submit" id="submit_button" class="btn btn-success rounded my-4"> <i
                                     class="fa fa-check"></i> Save Changes
                             </button>
                         </div>
-                    </div>
                 </form>
             </div>
         </div>

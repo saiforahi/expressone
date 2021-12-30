@@ -1,8 +1,7 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
-
 use App\BasicInformation;
+use App\CmsPage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail_configuration;
@@ -10,15 +9,14 @@ class BasicInformationController extends Controller
 {
     public function index()
     {
-        return view('admin.website_manage.basic_information');
+        $verifyMsg = CmsPage::get();
+        return view('admin.website_manage.basic_information', compact('verifyMsg'));
     }
-
     public function update(Request $request)
     {
         $request->validate([
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5000'
         ]);
-
         $insert = BasicInformation::find($request->id);
         $insert->website_title = $request->website_title;
         $insert->company_name = $request->company_name;
@@ -35,8 +33,8 @@ class BasicInformationController extends Controller
         $insert->address = $request->address;
         if ($request->hasFile('image')) {
             $extension = $request->file('image')->getClientOriginalExtension();
-            $fileStore3 = rand(10, 100) . time() . "." . $extension;
-            $request->file('image')->storeAs('public/logo', $fileStore3);
+            $fileStore3 = time() . "." . $extension;
+            $request->file('image')->storeAs('logo', $fileStore3);
             $insert->company_logo = $fileStore3;
         }
         $insert->save();
@@ -55,7 +53,11 @@ class BasicInformationController extends Controller
             'password'=>$request->password,
             'send_email'=>$request->send_email
         ]);
-       
         return back()->with('message','Configuring email setup updated successfully!','success');
+    }
+
+    public function updateVerifyMsg($id)
+    {
+        dd($id);
     }
 }
