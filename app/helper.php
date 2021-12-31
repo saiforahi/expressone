@@ -143,3 +143,11 @@ function checkAdminAccess($route){
     $access = \App\Admin_role::where('admin_id',Auth::guard('admin')->user()->id)->where('route',$route);
     return $access->count();
 }
+
+if (! function_exists('custom_asset')) {
+    function custom_asset($path, $secure = null)
+    {
+        return app('url')->asset('public/'.$path, $secure);
+        //return app('url')->asset('public/'.$path, $secure);
+    }
+}

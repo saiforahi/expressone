@@ -38,11 +38,13 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered">
                                     <thead>
-                                    <tr class="bg-dark">
-                                        <th>Area Name</th> <th>Hub</th>
-                                        <th>Shipping Distribution Zone</th>
-                                        <th>Status</th><th>Action</th>
-                                    </tr>
+                                        <tr class="bg-dark">
+                                            <th>Area Name</th>
+                                            <th>Hub</th>
+                                            <th>Shipping Distribution Zone</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
                                     </thead>
                                 </table>
                             </div>

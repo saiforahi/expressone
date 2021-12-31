@@ -382,7 +382,7 @@ class ShipmentController extends Controller
             event(new ShipmentMovement($hubShipment->shipment_id, 'admin', Auth::guard('admin')->user()->id, 'admin-dispatch', 'Dispatch the shipment', 'dispatch'));
 
             $shipment_ids[] = $hubShipment->shipment_id;
-            $message = 'Dear ' . $hubShipment->shipment->name . ', You have a parcel on ' . basic_information()->wensote_link . ' &  paracel is in Dispatch centen. We will get you soon!';
+            $message = 'Dear ' . $hubShipment->shipment->name . ', You have a parcel on ' . basic_information()->wensote_link . ' &  paracel is in Dispatch center. We will get you soon!';
             // event(new SendingSMS('customer', $hubShipment->shipment->phone, $message));
         }
 
@@ -507,8 +507,9 @@ class ShipmentController extends Controller
 
         Hub_shipment_box::where(['hub_id' => $hub->id, 'status' => 'on-transit'])->update(['status' => $status]);
 
-        $pdf = PDF::loadView('admin.shipment.shipment-pdf', compact('shipment_ids', 'hub'));
-        return $pdf->download(' parcels for-' . $hub->name . ' - ' . date('y-m-d h:i:s') . '.pdf');
+        // $pdf = PDF::loadView('admin.shipment.shipment-pdf', compact('shipment_ids', 'hub'));
+        // return $pdf->download(' parcels for-' . $hub->name . ' - ' . date('y-m-d h:i:s') . '.pdf');
+        return redirect()->back();
     }
 
 
@@ -549,6 +550,7 @@ class ShipmentController extends Controller
     // agent dispatch center view
     function agent_dispatch()
     {
+        // dd(Session::has('admin_sub'));
         return view('admin.shipment.agent-dispatch');
     }
 

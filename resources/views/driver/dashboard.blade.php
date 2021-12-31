@@ -14,7 +14,7 @@
                         </div>
                     @endif
                     <div class="x_title">
-                        <h2><i class="fa fa-truck"></i> <small>My Shipments tabe</small></h2>
+                        <h2><i class="fa fa-truck"></i> <small>My Shipments tab</small></h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
@@ -46,10 +46,8 @@
                                             <div class="input-prepend input-group">
                                                 <span class="add-on input-group-addon"><i class="fa fa-check"></i></span>
                                                 <div class="form-control">
-                                                    
-                                                <label class="radio-inline"><input type="radio" name="type" value="delivery">Delivery Shipment
-                                                    </label>
-                                                <label class="radio-inline"><input type="radio" name="type" value="pickup">Pickup Shipments</label>
+                                                    <label class="radio-inline"><input type="radio" name="type" value="delivery">Delivery Shipment</label>
+                                                    <label class="radio-inline"><input type="radio" name="type" value="pickup">Pickup Shipments</label>
                                                 </div>
                                             </div>
                                         </div>

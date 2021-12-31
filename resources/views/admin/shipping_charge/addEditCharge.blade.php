@@ -3,16 +3,19 @@
 @section('content')
     <div class="right_col" role="main">
         <div class="">
-            <div class="page-title">
-                <div class="title_left">
-                    <h3>{{ $title }}</h3>
-                </div>
-            </div>
+            
             <div class="clearfix"></div>
             <div class="row">
-                <div class="col-12">
+                <div class="col-md-6 col-md-offset-3">
                     <div class="x_panel">
                         <div class="card">
+                            <div class="card-header">
+                                <div class="page-title">
+                                    <div class="title_left">
+                                        <h3>{{ $title }}</h3>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="card-body">
                                 <form action="{{ route('addEditCharge', $charge->id) }}" method="post">
                                     @csrf
