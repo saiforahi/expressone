@@ -141,14 +141,11 @@
                     <div>
                         <button type="submit" class="btn btn-success submit">Submit Request</button>
                     </div>
-
                     <div class="clearfix"></div>
-
                     <div class="separator">
                         <p class="change_link">Already a member ?
                             <a href="#signin" class="to_register"> Log in </a>
                         </p>
-
                         <div class="clearfix"></div>
                     </div>
                 </form>
