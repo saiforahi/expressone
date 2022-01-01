@@ -66,7 +66,7 @@
                         </div>
                         <div class="x_content">
                             <form id="upload_form" autocomplete="off" method="post" class="form-horizontal form-label-left input_mask">
-                                {{csrf_field()}}
+                                {{ csrf_field() }}
                                 <input type="hidden" value="" name="id" id="area_id">
                                 <div class="form-group has-feedback">
                                     <label for="zone_id">Shipping distribution zone:</label>
@@ -347,7 +347,7 @@
                                     title: "Deleted", text: 'Area has been deleted',
                                     type: 'success', confirmButtonText: 'Ok'
                                 });
-                                table.ajax.reload(); 
+                                table.ajax.reload();
                             }else{
                                 swal({
                                     title: "Something went wroing", text: 'Area unable to delete',

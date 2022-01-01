@@ -1,10 +1,15 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
-use App\BasicInformation;
+
 use App\CmsPage;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\BasicInformation;
 use App\Mail_configuration;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+
 class BasicInformationController extends Controller
 {
     public function index()
@@ -43,21 +48,31 @@ class BasicInformationController extends Controller
 
     public function mailing_info()
     {
-        $info = Mail_configuration::where('type','config')->first();
-        return view('admin.settings.mail_configuration',compact('info'));
+        $info = Mail_configuration::where('type', 'config')->first();
+        return view('admin.settings.mail_configuration', compact('info'));
     }
 
-    function save_mailing_info(Request $request){
-        Mail_configuration::where('type','config')->update([
-            'username'=>$request->username,
-            'password'=>$request->password,
-            'send_email'=>$request->send_email
-        ]);
-        return back()->with('message','Configuring email setup updated successfully!','success');
-    }
-
-    public function updateVerifyMsg($id)
+    function save_mailing_info(Request $request)
     {
-        dd($id);
+        Mail_configuration::where('type', 'config')->update([
+            'username' => $request->username,
+            'password' => $request->password,
+            'send_email' => $request->send_email
+        ]);
+        return back()->with('message', 'Configuring email setup updated successfully!', 'success');
+    }
+    public function addVerifyMsg()
+    {
+        # code...
+    }
+    public function updateVerifyMsg(Request $request, $id)
+    {
+
+        $verifyMsg = CmsPage::findOrFail($id);
+        $verifyMsg->title = $request->title;
+        $verifyMsg->slug = Str::slug($verifyMsg->title);
+        $verifyMsg->description = $request->description;
+        $verifyMsg->update();
+        return back()->with('message', 'Updated successfully!', 'success');
     }
 }
