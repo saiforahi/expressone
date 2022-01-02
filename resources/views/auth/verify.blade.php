@@ -7,13 +7,13 @@
         <section class="theme-breadcrumb pad-50">
             <div class="theme-container container ">
                 <div class="row">
-                    <div class="col-sm-8 pull-left">
 
-                        @if (!empty($regVerifyMsg))
-                            <div class="title-wrap">
-                                <h2 class="section-title no-margin">{{ $regVerifyMsg->title }}</h2>
-                                <p class="fs-16 no-margin">{{ $regVerifyMsg->description }}</p>
-                            </div>
+                    <div class="col-sm-8 pull-left">
+                        @if (!empty($verifyMessage))
+                        <div class="title-wrap">
+                            <h2 class="section-title no-margin">{{ $verifyMessage->title }}</h2>
+                            <p class="fs-16 no-margin">{{ $verifyMessage->description }}</p>
+                        </div>
                         @else
                             <div class="title-wrap">
                                 <h2 class="section-title no-margin">Verify your Account</h2>

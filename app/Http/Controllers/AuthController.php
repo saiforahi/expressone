@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\UserRegistrationMail;
-use App\Mail\UserVerificationMail;
-use App\Mail_configuration;
+use App\CmsPage;
 use App\User;
 use App\User_verification;
-use Auth;
+use App\Mail_configuration;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Config;
+use App\Mail\UserRegistrationMail;
+use App\Mail\UserVerificationMail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -53,7 +52,7 @@ class AuthController extends Controller
             'address' => $request->address,
             'password' => Hash::make($request->password),
         ]);
-        return redirect()->back()->with('success','Your registration is successful, please contact with admin to be verified');
+        return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to be verified');
         // // Auth::guard('user')->login($user);
         // Session::put('verification_email', $request->email);
         // // dd(Session::get('verification_email'));
@@ -88,7 +87,8 @@ class AuthController extends Controller
         if (!Session::has('verification_email')) {
             return redirect('/login');
         }
-        return view('auth.verify');
+        $data['verifyMessage'] = CmsPage::first();
+        return view('auth.verify', $data);
     }
 
     public function verify_code(Request $request)
@@ -122,7 +122,7 @@ class AuthController extends Controller
         ]);
 
         $this->get_config($subject);
-        \Mail::to(Session::get('verification_email'))->send(new UserVerificationMail($subject, $code));
+        Mail::to(Session::get('verification_email'))->send(new UserVerificationMail($subject, $code));
         return view('emails.users.UserVerificationMail', compact('subject', 'code'));
     }
 
@@ -137,7 +137,7 @@ class AuthController extends Controller
         $email = basic_information()->email;
         if ($email != null) {
             $this->get_config('New merchant registered');
-            \Mail::to($email)->send(new UserRegistrationMail($user));
+            Mail::to($email)->send(new UserRegistrationMail($user));
             return view('emails.users.UserRegistrationMail', compact('user'));
         }
     }

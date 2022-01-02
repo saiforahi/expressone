@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\CmsPage;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Message;
 use Session;
-use DataTables;
 use Validator;
+use DataTables;
+use App\CmsPage;
+use App\Message;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class MessageController extends Controller
 {
@@ -85,12 +86,5 @@ class MessageController extends Controller
     {
         $message->delete();
         return response()->json(['success' => 'Message has been removed successfully.']);
-    }
-
-    public function cms_page()
-    {
-        $regVerifyMsg = DB::table('cms_pages')->first();
-        dd($regVerifyMsg);
-        return view('auth.verify', compact('regVerifyMsg'));
     }
 }
