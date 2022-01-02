@@ -48,7 +48,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/', 'DashboardController@index')->name('admin-dashboard');
     Route::get('/basic-information', 'BasicInformationController@index')->name('basic-information');
     Route::post('/basic-information', 'BasicInformationController@update')->name('basic-information.update');
-    Route::get('/add-verify-message', 'BasicInformationController@addVerifyMsg')->name('addVerifyMsg');
+    Route::post('/add-merchant-verify-message', 'BasicInformationController@addVerifyMsg')->name('addVerifyMsg');
     Route::post('/update-verify-message/{id}', 'BasicInformationController@updateVerifyMsg')->name('updateVerifyMsg');
 
     Route::get('/admin-change-hub/{hub}', 'DashboardController@admin_changes_hub')->name('admin-change-hub');

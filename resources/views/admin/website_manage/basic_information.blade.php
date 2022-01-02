@@ -222,12 +222,16 @@
                     <div class="x_panel">
                         <div class="x_title">
                             <h2>Merchant Verify Message</h2>
-                            <ul class="nav navbar-right panel_toolbox">
-                                <li>
-                                    <a class="btn btn-primary">
-                                        <i class="fa fa-edit"></i> Add New</a>
-                                </li>
-                            </ul>
+                            @if (count($verifyMsg) == 0)
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal"
+                                            data-target="#exampleModal2">
+                                            <i class="fa fa-plus"></i> Add New
+                                        </button>
+                                    </li>
+                                </ul>
+                            @endif
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
@@ -242,16 +246,16 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($verifyMsg as $item)
-                                        <tr>
-                                            <td>{{ $item->title }}</td>
-                                            <td>{{ $item->description }}</td>
-                                            <td>
-                                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#exampleModalCenter">
-                                                    Edit Message
-                                                </button>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td>{{ $item->title }}</td>
+                                                <td>{{ $item->description }}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                                        data-target="#exampleModalCenter">
+                                                        Edit Message
+                                                    </button>
+                                                </td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -266,11 +270,46 @@
     <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
+            @if (count($verifyMsg))
+                <div class="modal-content">
+                    <form action="{{ url('/admin/update-verify-message', $item->id) }}" method="post">
+                        {{ csrf_field() }}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Update</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="title">Email address</label>
+                                <input type="text" class="form-control" value="{{ $item->title }}" name="title">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <input type="text" class="form-control" value="{{ $item->description }}"
+                                    name="description">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+
+            @endif
+        </div>
+    </div>
+    <!-- add Modal -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <form action="{{ url('/admin/update-verify-message', $item->id )}}" method="post">
-                    {{ csrf_field()}}
+                <form action="{{ url('/admin/add-merchant-verify-message') }}" method="post">
+                    {{ csrf_field() }}
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Update</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add New</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -278,16 +317,18 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="title">Email address</label>
-                            <input type="text" class="form-control" value="{{ $item->title }}" name="title">
+                            <input type="text" class="form-control" name="title"
+                                placeholder="Enter Merchant verify message page title">
                         </div>
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <input type="text" class="form-control" value="{{ $item->description }}" name="description">
+                            <input type="text" class="form-control" name="description"
+                                placeholder="Enter short description">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
             </div>

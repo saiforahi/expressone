@@ -61,9 +61,14 @@ class BasicInformationController extends Controller
         ]);
         return back()->with('message', 'Configuring email setup updated successfully!', 'success');
     }
-    public function addVerifyMsg()
+    public function addVerifyMsg(Request $request)
     {
-        # code...
+        $user = CmsPage::create([
+            'title' =>  $request->title,
+            'slug' =>  Str::slug($request->title),
+            'description' => $request->description
+        ]);
+        return back()->with('message', 'Created successfully!', 'success');
     }
     public function updateVerifyMsg(Request $request, $id)
     {
