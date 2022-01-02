@@ -8,9 +8,9 @@
 <body>
     <div style="width:50%;float:left">
         <table>
-            <tr>
+            {{-- <tr>
                 <th><img src="{{ asset('images/' . basic_information()->company_logo) }}" style="height:100px"></th>
-            </tr>
+            </tr> --}}
             <tr>
                 <th style="padding-left:15px;">
                     <a
