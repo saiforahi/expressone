@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Driver;
 
 use App\Driver;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -31,7 +31,7 @@ class AuthController extends Controller
 
             return redirect()->intended('/driver');
         }
-    
+
         return back()->withInput($request->only('email', 'remember'))->withErrors([
             'email' => 'Wrong information or this account not login.',
         ]);
