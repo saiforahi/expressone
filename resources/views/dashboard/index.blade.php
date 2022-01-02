@@ -80,7 +80,7 @@
                                     <td>{{ ++$key }}</td>
                                     <td>
                                         <form action="{{ route('setShippingCharge', $shipments->id) }}"
-                                            id="formSubmit_{{ $shipments->id }}" method="post" onsubmit="return false">
+                                            id="formSubmit_{{ $shipments->id }}" method="post">
                                             @csrf
                                             <select name="result[{{ $shipments->id }}]" class="form-control"
                                                 onchange="formSubmit({{ $shipments->id }})">
@@ -167,17 +167,12 @@
             margin-top: 6%;
         }
 
-        /*.app-theme-white .app-sidebar {z-index: 5;}*/
-
     </style>
 @endpush
-
 @push('script')
-
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
-
     <script type="text/javascript">
         $(function() {
             $('#dashboardDatatable').dataTable({
