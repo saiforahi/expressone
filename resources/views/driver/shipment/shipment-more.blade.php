@@ -92,7 +92,6 @@
                                             <a data-toggle="modal" data-target="#cancelParcel"
                                                 data-id="{{ $row->shipment->id }}" class="btn-xs btn btn-warning cencel"><i
                                                     class="fa fa-times"></i> Cancell</a>
-
                                         </th>
                                     </tr>
                                 @endforeach
