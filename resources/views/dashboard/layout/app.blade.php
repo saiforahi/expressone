@@ -35,7 +35,7 @@
     </div>
 
 </div>
-<script src="{{asset('vendors/jquery/dist/jquery.min.js')}}" type="text/javascript"></script>
+<script src="{{asset('ass_vendors/jquery/dist/jquery.min.js')}}" type="text/javascript"></script>
 <script type="text/javascript" src="{{asset('dashboards/main.js')}}"></script>
 <style type="text/css"> #datatable-buttons_filter{width:44%} </style>
 @stack('script')

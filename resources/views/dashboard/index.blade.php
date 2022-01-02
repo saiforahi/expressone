@@ -80,13 +80,14 @@
                                     <td>{{ ++$key }}</td>
                                     <td>
                                         <form action="{{ route('setShippingCharge', $shipments->id) }}"
-                                            id="formSubmit_{{ $shipments->id }}" method="post">
+                                            id="formSubmit_{{ $shipments->id }}" method="post" onsubmit="return false">
                                             @csrf
                                             <select name="result[{{ $shipments->id }}]" class="form-control"
                                                 onchange="formSubmit({{ $shipments->id }})">
                                                 <option value="">Select Type</option>
                                                 @foreach ($shippingCharges as $shipping)
-                                                    <option value="{{ $shipping->id }}" {{ $shipping->id == $shipments->shipping_charge_id ? 'selected' : '' }}>
+                                                    <option value="{{ $shipping->id }}"
+                                                        {{ $shipping->id == $shipments->shipping_charge_id ? 'selected' : '' }}>
                                                         {{ $shipping->consignment_type }}-{{ $shipping->shipping_amount }}
                                                     </option>
                                                 @endforeach

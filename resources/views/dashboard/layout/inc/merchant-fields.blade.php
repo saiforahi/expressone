@@ -100,8 +100,8 @@
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="national_id" class="">BIN</label>
-                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}"
-                                    type="number" class="form-control" required placeholder="Enter bin no">
+                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="number"
+                                    class="form-control" required placeholder="Enter bin no">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -129,13 +129,12 @@
 
 </div>
 
-<script src="{{ asset('vendors/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
-<link href="{{ asset('vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/bootstrap4-select2.css') }}">
-
-<script src="{{ asset('vendors/sweetalert/sweetalert.js') }}"></script>
-<script src="{{ asset('vendors/select2/dist/js/select2.min.js') }}"></script>
+<script src="{{ asset('ass_vendors/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
+<link href="{{ asset('ass_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/bootstrap4-select2.css') }}">
+<script src="{{ asset('ass_vendors/sweetalert/sweetalert.js') }}"></script>
+<script src="{{ asset('ass_vendors/select2/dist/js/select2.min.js') }}"></script>
 <script type="text/javascript">
     $('.select2').select2({
         theme: "bootstrap",

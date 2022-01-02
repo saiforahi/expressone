@@ -83,18 +83,6 @@ class ShippingChargeController extends Controller
             return redirect()->back();
         }
     }
-    // public function resultSubmit(Request $request, $id){
-    //     try {
-    //         $patient = Patient::findOrFail($id);
-    //         $patient->result =$request->result[$id];
-    //         $patient->result_time = Carbon::now();
-    //         $patient->save();
-    //         return redirect()->route('patient.index')->with('success', 'COVID RESULT UPDATE');
-    //     } catch (\Throwable $th) {
-    //         return redirect()->route('patient.index')->with('error', 'Something went wrong, please try again later!');
-    //     }
-    // }
-
     /**
      * Display the specified resource.
      *
