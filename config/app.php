@@ -181,6 +181,8 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
+
+
     ],
 
     /*
@@ -233,12 +235,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-
         'Image' => Intervention\Image\Facades\Image::class,
-        // 'PDF' => Barryvdh\DomPDF\Facade::class,
         'PDF' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class,
         'Milon\Barcode\BarcodeServiceProvider',
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

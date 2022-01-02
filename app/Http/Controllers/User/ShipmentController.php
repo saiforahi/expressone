@@ -1,17 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\User;
+
 use App\Area;
-use App\Http\Controllers\Controller;
+use DataTables;
 use App\Shipment;
 use App\ShippingPrice;
-use App\Shipment_delivery_payment;
 use App\ShippingCharge;
 use Illuminate\Http\Request;
-use Auth;
-use PDF;
-use DataTables;
+use App\Shipment_delivery_payment;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ShipmentController extends Controller
@@ -19,7 +20,7 @@ class ShipmentController extends Controller
     public function index()
     {
         $data['area'] = Area::where('status', 1)->get();
-        $data['shippingCharges'] = ShippingCharge::select('id','consignment_type','shipping_amount')->get();
+        $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
         //dd($data['shippingCharges']);
         return view('dashboard.shipment', $data);
     }
@@ -81,7 +82,7 @@ class ShipmentController extends Controller
             'name' => 'required|max:100',
             'phone' => 'required|max:20',
             'address' => 'required|max:255',
-            "cod_amount"=> 'required',
+            "cod_amount" => 'required',
             'area' => 'required',
             'shipping_charge_id' => 'required'
         ], $messages);
@@ -181,7 +182,7 @@ class ShipmentController extends Controller
         $zone = Area::find($shipment->area_id);
         $price = $shipment->delivery_charge;
         $total_price = $shipment->cod_amount;
-        return view('dashboard.shipmentCNote', compact('shipment','zone','price','total_price'));
+        return view('dashboard.shipmentCNote', compact('shipment', 'zone', 'price', 'total_price'));
     }
     function shipment_pdf_old(Shipment $shipment)
     {
@@ -210,12 +211,21 @@ class ShipmentController extends Controller
         $data = [
             'shipment' => $shipment,
             'price' => $price,
-            'total_price'=>$total_price
-          ];
+            'total_price' => $total_price
+        ];
         //$pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping', 'qrcode'));
         $mpdf = PDF::loadView('dashboard.shipment-pdf', $data)->save('Invoice-' . $shipment->invoice_id . '.pdf');
         // $mpdf->Output('Invoice-' . $shipment->invoice_id . '.pdf', 'D');
         // return $pdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
+    }
+    function shipmentInvoice($id)
+    {
+
+        $data['title'] = "Invoice";
+        $data['paracelInv'] = Shipment::findOrFail($id);
+        set_time_limit(300);
+        $pdf = PDF::loadView('dashboard.shipmentInvoicePdf', $data);
+        return $pdf->stream();
     }
 
     function payments()
@@ -288,9 +298,9 @@ class ShipmentController extends Controller
     function edit(Shipment $shipment)
     {
         $title = "Update Shipment";
-        $area = Area::where('status', 1)->select('name','id')->get();
-        $shippingCharges = ShippingCharge::select('id','consignment_type','shipping_amount')->get();
-        return view('dashboard.edit-shipment', compact('shipment', 'title', 'area','shippingCharges'));
+        $area = Area::where('status', 1)->select('name', 'id')->get();
+        $shippingCharges = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
+        return view('dashboard.edit-shipment', compact('shipment', 'title', 'area', 'shippingCharges'));
     }
     function update(Shipment $shipment, Request $request)
     {
