@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Shipment;
+use PDF;
+use App\Hub;
 use App\Area;
 use App\User;
-use App\Hub;
-use App\Hub_shipment;
-use App\Hub_shipment_box;
-use App\Driver_hub_shipment_box;
 use App\Driver;
-use App\Driver_return_shipment_box;
+use App\Shipment;
+use App\Hub_shipment;
 use App\ShippingPrice;
-use App\Reconcile_shipment;
 use App\Driver_shipment;
-use App\Driver_shipment_delivery;
-use Illuminate\Http\Request;
-use Session;
-use Auth;
-use PDF;
-use App\Events\ShipmentMovement;
+use App\Hub_shipment_box;
 use App\Events\SendingSMS;
-use App\Shipment_delivery_payment;
+use App\Reconcile_shipment;
 use App\Thirdparty_shipment;
+use Illuminate\Http\Request;
+use App\Driver_hub_shipment_box;
+use App\Events\ShipmentMovement;
+use App\Driver_shipment_delivery;
+use App\Shipment_delivery_payment;
+use App\Driver_return_shipment_box;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class ShipmentController extends Controller
 {
@@ -181,7 +181,11 @@ class ShipmentController extends Controller
 
     function save_driver_shipment($id, Request $request)
     {
-        // dd($request->all());
+        // echo '<pre>';
+        // echo '======================<br>';
+        // print_r($request->all());
+        // echo '<br>======================<br>';
+        // exit();
         if (is_numeric($request->shipment_id)) {
             // dd('single');
             $check = Driver_shipment::where(['driver_id' => $request->driver_id, 'shipment_id' => $request->shipment_id])->count();

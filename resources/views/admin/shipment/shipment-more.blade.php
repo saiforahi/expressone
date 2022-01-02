@@ -24,7 +24,8 @@
                     </div>
                 </div>
                 <div class="page-title">
-                    <h3>Merchant Shipment List
+                    <h3>
+                        Merchant Shipment List
                         @if ($shipments->count() > 0 && Request::segment(6) == '0')
                             <a data-target="#assignShipment" data-toggle="modal" data-id="all" href="#"
                                 class="btn btn-primary assign pull-right">Assign all parcels to a Rider</a>
@@ -49,37 +50,38 @@
                                     </th>
                                     <th>Customer Info</th>
                                     <th>Area</th>
-                                    <th>Customer Contact</th>
                                     <th>Delivery Type</th>
+                                    <th>Assign</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($shipments as $key => $shipment)
-                                    <tr>
+                                    <tr shipment_id={{ $shipment->id }}>
                                         <th scope="row">
-                                            <input style="display:none" type="checkbox" id="ids" name="ids[]"
-                                                value="{{ $shipment->id }}"> {{ $key + 1 }}
+                                            {{-- <input style="display:none" type="checkbox" id="ids" name="ids[]"
+                                                value="{{ $shipment->id }}"> --}}
+                                            {{ $key + 1 }}
                                         </th>
-                                        <th scope="row">Name: {{ $shipment->name }} <br>Price: {{ $shipment->cod_amount }}
+                                        <th scope="row">Name: {{ $shipment->name }} <br>Price:
+                                            {{ $shipment->cod_amount }}
                                         </th>
-                                        {{-- <th scope="row">
-                                        Zone: {{$shipment->zone->name}} <br>
-                                        Area: {{$shipment->area->name}}
-                                    </th> --}}
-                                        <th scope="row"><i class="fa fa-phone"></i> {{ $shipment->phone }}<br>
 
+                                        <th scope="row"><i class="fa fa-phone"></i> {{ $shipment->phone }}<br>
                                             <i class="fa fa-map-marker"></i> {{ $shipment->address }}<br>
                                         </th>
                                         <th scope="row">
-                                            @if ($shipment->delivery_type == '1') Regular
-                                            @else Express @endif
-                                        </th>
 
+                                            @if ($shipment->shipping_charge_id == 1)
+                                                Regular
+                                            @else
+                                                Express
+                                            @endif
+                                        </th>
                                         <th class="text-right">
-                                            <a href="#" class="btn btn-primary btn-xs assign" data-toggle="modal"
+                                            <button type="button" class="btn btn-primary btn-xs assign" data-toggle="modal"
                                                 data-target="#assignShipment" data-id="{{ $shipment->id }}">to Driver <i
-                                                    class="fa fa-truck"></i></a>
+                                                    class="fa fa-truck"></i></button>
                                         </th>
                                         <th scope="row">
                                             @if ($shipment->status == '1' && $shipment->shipping_status < 2)
@@ -95,6 +97,33 @@
                                             @endif
                                         </th>
                                     </tr>
+                                    {{-- Assign to driver modal --}}
+                                    <!-- Modal to assign to driver -->
+                                    <div id="assignShipment" class="modal fade" role="dialog">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close"
+                                                        data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Assign all parcels to a Rider</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="post">
+                                                        @csrf
+                                                        @include('admin.shipment.includes.shipment-assign-driver-form')
+                                                        <input type="hidden" name="shipment_id"
+                                                            value="{{ $shipment->id }}" id="shipment_id"><br>
+                                                        <button type="submit" class="pull-right btn btn-info btn-sm"> <i
+                                                                class="fa fa-truck"></i>
+                                                            Assign to pick parcels </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    {{-- Assign to driver modal --}}
+
                                 @endforeach
                             </tbody>
                         </table>
@@ -103,31 +132,13 @@
             </div>
         </div>
     </div>
-    <!-- Modal to assign to driver -->
-    <div id="assignShipment" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Assign all parcels to a Rider</h4>
-                </div>
-                <div class="modal-body">
-                    <form method="post">@csrf
-                        @include('admin.shipment.includes.shipment-assign-driver-form')
-                        <input type="hidden" name="shipment_id" id="shipment_id"> <br>
-                        <button type="submit" class="pull-right btn btn-info btn-sm"> <i class="fa fa-truck"></i> Assign
-                            to pick parcels</button>
-                    </form>
-                </div>
-            </div>
 
-        </div>
-    </div>
     <!-- Modal cancelling note-->
     <div class="modal fade" id="cancelNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <form id="cancelForm" class="modal-content">@csrf
+            <form id="cancelForm" class="modal-content">
+                @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Cancel Note
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
