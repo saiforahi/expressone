@@ -59,6 +59,22 @@
                                 <td><button class="btn btn-success">{{ Auth::guard('user')->user()->bin_no }}</button></td>
                             </tr>
                             <tr>
+                                <td>Bank:</td>
+                                <td>{{ Auth::guard('user')->user()->bank_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Bank branch:</td>
+                                <td>{{ Auth::guard('user')->user()->bank_br_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Account name:</td>
+                                <td>{{ Auth::guard('user')->user()->bank_acc_name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Bank Account:</td>
+                                <td><button class="btn btn-success">{{ Auth::guard('user')->user()->bank_acc_no }}</button></td>
+                            </tr>
+                            <tr>
                                 <td>Address:</td>
                                 <td>{{ Auth::guard('user')->user()->address }}</td>
                             </tr>

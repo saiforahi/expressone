@@ -17,7 +17,7 @@ class DashboardController extends Controller
     public function index()
     {
         $shipment = Shipment::orderBy('id', 'DESC')->where('user_id', Auth::guard('user')->user()->id)->get();
-        $shippingCharges =  DB::table('shipping_charges')->select('id','consignment_type', 'shipping_amount')->get();
+        $shippingCharges =  DB::table('shipping_charges')->select('id', 'consignment_type', 'shipping_amount')->get();
         return view('dashboard.index', compact('shipment', 'shippingCharges'));
     }
 
@@ -87,16 +87,23 @@ class DashboardController extends Controller
 
     public function ProfileUpdate(Request $request)
     {
+       
+        $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         $request->validate([
-            'first_name' => 'required|max:100',
-            'last_name' => 'required|max:100',
-            'phone' => 'required|max:20',
+            'first_name' => 'required|min:3|max:50',
+            'last_name' => 'required|min:3|max:50',
+            //'phone' => ['required', 'regex:/^(?:\+88|01)?(?:\d{11}|\d{13})$'],
+            'phone' => ['required', 'regex:/(^(\+8801|8801|01|008801))[1|3-9]{1}(\d){8}$/'],
             'national_id' => 'required',
             'bin_no' => 'required',
-            'shop_name' => 'required|max:100',
+            'shop_name' => 'required|min:3',
             'address' => 'required|max:255',
             'area_id' => 'required|max:255',
-            'website_link' => 'sometimes|nullable|max:255'
+            'website_link' => 'required|regex:' . $regex,
+            'bank_name' => 'required|min:3',
+            'bank_br_name' => 'required|max:100',
+            'bank_acc_name' => 'required|max:255',
+            'bank_acc_no' => 'required|numeric'
         ]);
 
         $register_user = User::find($request->id);
@@ -109,6 +116,10 @@ class DashboardController extends Controller
         $register_user->address = $request->address;
         $register_user->area_id = $request->area_id;
         $register_user->website_link = $request->website_link;
+        $register_user->bank_name = $request->bank_name;
+        $register_user->bank_br_name = $request->bank_br_name;
+        $register_user->bank_acc_name = $request->bank_acc_name;
+        $register_user->bank_acc_no = $request->bank_acc_no;
         if ($request->hasFile('image')) {
             $extension = $request->file('image')->getClientOriginalExtension();
             $fileStore3 = rand(10, 100) . time() . "." . $extension;

@@ -214,10 +214,9 @@ class ShipmentController extends Controller
             'total_price' => $total_price
         ];
         //$pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping', 'qrcode'));
-        $mpdf = PDF::loadView('dashboard.shipment-pdf-old', $data);
+        $mpdf = PDF::loadView('dashboard.shipment-pdf', $data);
         // $mpdf->Output('Invoice-' . $shipment->invoice_id . '.pdf', 'D');
         return $mpdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
-        // return $mpdf->stream();
     }
     function shipmentInvoice($id)
     {

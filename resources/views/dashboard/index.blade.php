@@ -140,9 +140,9 @@
                                         <a href="{{ route('merchant.shipmentCn', $shipments->id) }}"
                                             class="btn btn-primary btn-sm">
                                             <i class="fa fa-print"></i></a>
-                                        <a target="_blank" href="{{ route('shipmentInvoice', $shipments->id) }}"
+                                        {{-- <a target="_blank" href="{{ route('shipmentInvoice', $shipments->id) }}"
                                             class="btn btn-primary btn-sm">
-                                            Invoice</a>
+                                            Invoice</a> --}}
                                     </td>
                                 </tr>
                             @endforeach
