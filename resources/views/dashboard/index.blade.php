@@ -75,7 +75,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                           
                             @foreach ($shipment as $key => $shipments)
                                 <tr>
                                     <td> {{ ++$key }}</td>
@@ -96,7 +95,8 @@
                                         </form>
                                     </td>
                                     <td class="text-center">
-                                        Status
+                                        @include('dashboard.include.shipping-status',
+                                        ['status'=>$shipments['status'],'shipping_status'=>$shipments['shipping_status']])
                                     </td>
                                     <td><a style="color: #495057;text-decoration: none"
                                             href="/tracking?code={{ $shipments['tracking_code'] }}"
