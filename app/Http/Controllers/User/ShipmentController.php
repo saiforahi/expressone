@@ -217,7 +217,6 @@ class ShipmentController extends Controller
         $mpdf = PDF::loadView('dashboard.shipment-pdf', $data);
         // $mpdf->Output('Invoice-' . $shipment->invoice_id . '.pdf', 'D');
         return $mpdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
-        // return $mpdf->stream();
     }
     function shipmentInvoice($id)
     {
