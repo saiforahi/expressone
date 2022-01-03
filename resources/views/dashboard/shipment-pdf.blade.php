@@ -13,8 +13,7 @@
             </tr> --}}
             <tr>
                 <th style="padding-left:15px;">
-                    <a
-                        href="{{ basic_information()->website_link }}">{{ basic_information()->company_name }}</a><br>
+                    <a href="{{ basic_information()->website_link }}">{{ basic_information()->company_name }}</a><br>
                     {{ basic_information()->phone_number_one }},
                     {{ basic_information()->phone_number_two }}
                 </th>
