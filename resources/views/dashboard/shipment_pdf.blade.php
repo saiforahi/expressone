@@ -1,2 +1,2 @@
 <h1>Invoice </h1>
-{!! QrCode::size(100)->generate(Request::url()) !!}
+<img src="data:image/png;base64,{{ DNS2D::getBarcodePNG(url('/'), 'QRCODE') }}">

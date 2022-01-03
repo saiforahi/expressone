@@ -95,6 +95,35 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="position-relative form-group">
+                                    <label for="bank_name" class="">Bank name</label>
+                                    <input name="bank_name" value="{{ Auth::guard('user')->user()->bank_name }}"
+                                        type="text" class="form-control" required placeholder="Enter bank name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="position-relative form-group">
+                                    <label for="bank_br_name" class="">Bank br. name</label>
+                                    <input name="bank_br_name" value="{{ Auth::guard('user')->user()->bank_br_name }}"
+                                        type="text" class="form-control" required placeholder="Enter bank br name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="position-relative form-group">
+                                    <label for="bank_acc_name" class="">Bank A/C name</label>
+                                    <input name="bank_acc_name" value="{{ Auth::guard('user')->user()->bank_acc_name }}"
+                                        type="text" class="form-control" required placeholder="Enter bank account name">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="position-relative form-group">
+                                    <label for="bank_acc_no" class="">Bank A/C no</label>
+                                    <input name="bank_acc_no" value="{{ Auth::guard('user')->user()->bank_acc_no }}"
+                                        type="text" class="form-control" required placeholder="Enter bank A/c no">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="position-relative form-group">
                                     <label for="shop_name" class="">Shop Name</label><input name="shop_name"
                                         id="shop_name" value="{{ Auth::guard('user')->user()->shop_name }}" type="text"
                                         class="form-control" required max="255">
@@ -135,13 +164,13 @@
     </div>
 @endsection
 @push('style')
-    <link href="{{ asset('vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/bootstrap4-select2.css') }}">
+    <link href="{{ asset('ass_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/bootstrap4-select2.css') }}">
 @endpush
 @push('script')
-    <script src="{{ asset('vendors/sweetalert/sweetalert.js') }}"></script>
-    <script src="{{ asset('vendors/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/sweetalert/sweetalert.js') }}"></script>
+    <script src="{{ asset('ass_vendors/select2/dist/js/select2.min.js') }}"></script>
     <script type="text/javascript">
         $('.select2').select2({
             theme: "bootstrap",

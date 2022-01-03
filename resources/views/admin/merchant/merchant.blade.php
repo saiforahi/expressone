@@ -77,11 +77,11 @@
                                                         Verified
                                                     </a>
                                                 @else
-                                                <a title="Change" merchant_id="{{ $users->id }}"
-                                                    class="text-danger merchant_status"
-                                                    id="merchant_{{ $users->id }}" href="javascript:void(0)">
-                                                    Not Verified
-                                                </a>
+                                                    <a title="Change" merchant_id="{{ $users->id }}"
+                                                        class="text-danger merchant_status"
+                                                        id="merchant_{{ $users->id }}" href="javascript:void(0)">
+                                                        Not Verified
+                                                    </a>
                                                 @endif
                                             </th>
 
