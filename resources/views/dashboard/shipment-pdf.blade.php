@@ -8,9 +8,9 @@
 <body>
     <div style="width:50%;float:left">
         <table>
-            <tr>
-                <th><img src="{{ asset('/images/' . basic_information()->company_logo) }}" style="height:100px"></th>
-            </tr>
+            {{-- <tr>
+                <th><img src="{{ asset('images/' . basic_information()->company_logo) }}" style="height:100px"></th>
+            </tr> --}}
             <tr>
                 <th style="padding-left:15px;">
                     <a
@@ -28,7 +28,7 @@
     <div style="width:50%;float:left;text-align:right;padding:25px;">
         <table style="float:right">
             <tr>
-                <th><img src="data:image/png;base64, {!!base64_encode(QrCode::format('png')->size(100)->generate($shipment->tracking_code))!!} "></th>
+                <th><img src="data:image/png;base64,{{ DNS2D::getBarcodePNG(url('/',$shipment->tracking_code), 'QRCODE') }}" alt="qr" class="qr-image"></th>
             </tr>
             <tr>
                 <td colspan="2">Date: {{ date('d F, Y') }}</td>
