@@ -220,11 +220,10 @@ class ShipmentController extends Controller
     }
     function shipmentInvoice($id)
     {
-
         $data['title'] = "Invoice";
         $data['paracelInv'] = Shipment::findOrFail($id);
         set_time_limit(300);
-        $pdf = PDF::loadView('dashboard.shipmentInvoicePdf', $data);
+        $pdf = PDF::loadView('dashboard.shipment_pdf', $data);
         return $pdf->stream();
     }
 
