@@ -75,19 +75,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($shipment as $key => $shipments)
+                            @foreach ((array) $shipments as $key => $shipment)
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>
-                                        <form action="{{ route('setShippingCharge', $shipments->id) }}"
-                                            id="formSubmit_{{ $shipments->id }}" method="post">
+                                        <form action="{{ route('setShippingCharge', $shipment->id) }}"
+                                            id="formSubmit_{{ $shipment->id }}" method="post">
                                             @csrf
-                                            <select name="result[{{ $shipments->id }}]" class="form-control"
-                                                onchange="formSubmit({{ $shipments->id }})">
+                                            <select name="result[{{ $shipment->id }}]" class="form-control"
+                                                onchange="formSubmit({{ $shipment->id }})">
                                                 <option value="">Select Type</option>
                                                 @foreach ($shippingCharges as $shipping)
                                                     <option value="{{ $shipping->id }}"
-                                                        {{ $shipping->id == $shipments->shipping_charge_id ? 'selected' : '' }}>
+                                                        {{ $shipping->id == $shipment->shipping_charge_id ? 'selected' : '' }}>
                                                         {{ $shipping->consignment_type }}-{{ $shipping->shipping_amount }}
                                                     </option>
                                                 @endforeach
@@ -96,33 +96,33 @@
                                     </td>
                                     <td class="text-center">
                                         @include('dashboard.include.shipping-status',
-                                        ['status'=>$shipments->status,'shipping_status'=>$shipments->shipping_status])
+                                        ['status'=>$shipment->status,'shipping_status'=>$shipment->shipping_status])
                                     </td>
                                     <td><a style="color: #495057;text-decoration: none"
-                                            href="/tracking?code={{ $shipments->tracking_code }}"
-                                            target="_blank">{{ $shipments->tracking_code }}
+                                            href="/tracking?code={{ $shipment->tracking_code }}"
+                                            target="_blank">{{ $shipment->tracking_code }}
                                         </a></td>
                                     <td class="text-center">
                                         <p style="color: black;font-size: 15px" class="mb-0">
-                                            {{ $shipments->updated_at->format('d M') }}</p>
-                                        {{ $shipments->updated_at->format('Y') }}
+                                            {{ $shipment->updated_at->format('d M') }}</p>
+                                        {{ $shipment->updated_at->format('Y') }}
                                     </td>
                                     <td class="" style="font-size: 13px">
-                                        <i class="fa fa-user mr-1" aria-hidden="true"></i>{{ $shipments->name }}<br>
-                                        <i class="fa fa-phone-square mr-1" aria-hidden="true"></i>{{ $shipments->phone }}
+                                        <i class="fa fa-user mr-1" aria-hidden="true"></i>{{ $shipment->name }}<br>
+                                        <i class="fa fa-phone-square mr-1" aria-hidden="true"></i>{{ $shipment->phone }}
                                     </td>
 
                                     <td>
-                                        {{ $shipments->cod_amount }}
+                                        {{ $shipment->cod_amount }}
                                     </td>
 
                                     <td>
-                                        {{ $shipments->weight_charge }}
+                                        {{ $shipment->weight_charge }}
                                     </td>
                                     <td>
-                                        @if ($shipments->status == '1' && $shipments->shipping_status == '0')
+                                        @if ($shipment->status == '1' && $shipment->shipping_status == '0')
                                             <form style="display: inline-block" class="form-delete" method="post"
-                                                action="{{ url('shipment-delete', $shipments->id) }}">
+                                                action="{{ url('shipment-delete', $shipment->id) }}">
                                                 @method('DELETE')
                                                 @csrf
                                                 <button type="submit" class="btn btn-sm btn-danger btn-sm"
@@ -130,29 +130,34 @@
                                                     <i class="fa fa-trash text-white"></i>
                                                 </button>
                                             </form>
-                                            <a href="/edit-shipment/{{ $shipments->id }}"
+                                            <a href="{{ route('editShipment', $shipment->id) }}"
                                                 class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i></a>
                                         @endif
-                                        <a href="/shipment-info/{{ $shipments->id }}"
+                                        <a href="/shipment-info/{{ $shipment->id }}"
                                             class="btn btn-primary btn-sm viewMore"><i class="fa fa-search-plus"></i></a>
-                                        <a href="/shipment-pdf/{{ $shipments->id }}" class="btn btn-info btn-sm">
+                                        <a href="{{ route('pdf.shipment', $shipment->id) }}" class="btn btn-info btn-sm">
                                             <i class="fa fa-file-pdf"></i></a>
-                                        <a href="{{ url('shipment-cnote', $shipments->id) }}"
+                                        <a href="{{ route('merchant.shipmentCn', $shipment->id) }}"
                                             class="btn btn-primary btn-sm">
                                             <i class="fa fa-print"></i></a>
+                                        {{-- <a target="_blank" href="{{ route('shipmentInvoice', $shipments->id) }}"
+                                            class="btn btn-primary btn-sm">
+                                            Invoice</a> --}}
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>
-                    <br>
+                    </table> <br>
                 </div>
                 <div class="d-block text-center card-footer">
+
                 </div>
             </div>
         </div>
     </div>
+
 @endsection
+
 @push('style')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
@@ -178,16 +183,10 @@
                     [0, 'desc']
                 ]
             })
-            //option A
-            $("#formSubmit_").submit(function(e) {
-                alert('submit intercepted');
-                e.preventDefault(e);
-            });
         })
-        {{-- //Set shipping charage
+        //Set shipping charage
         function formSubmit(id) {
-            console.log('okay');
             $('#formSubmit_' + id).submit();
-        } --}}
+        }
     </script>
 @endpush

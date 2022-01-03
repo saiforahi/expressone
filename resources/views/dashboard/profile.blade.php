@@ -25,7 +25,6 @@
             </div>
         </div>
     </div>
-
     <div class="row">
         <div class="col-lg-8">
             <div class="main-card mb-3 card">
@@ -51,12 +50,14 @@
                             </tr>
                             <tr>
                                 <td>National ID:</td>
-                                <td><button class="btn btn-primary">{{ Auth::guard('user')->user()->national_id }}</button>
+                                <td><button
+                                        class="btn btn-primary">{{ Auth::guard('user')->user()->national_id }}</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>BIN:</td>
-                                <td><button class="btn btn-success">{{ Auth::guard('user')->user()->bin_no }}</button></td>
+                                <td><button class="btn btn-success">{{ Auth::guard('user')->user()->bin_no }}</button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Bank:</td>
@@ -72,7 +73,9 @@
                             </tr>
                             <tr>
                                 <td>Bank Account:</td>
-                                <td><button class="btn btn-success">{{ Auth::guard('user')->user()->bank_acc_no }}</button></td>
+                                <td><button
+                                        class="btn btn-success">{{ Auth::guard('user')->user()->bank_acc_no }}</button>
+                                </td>
                             </tr>
                             <tr>
                                 <td>Address:</td>
@@ -82,15 +85,10 @@
                                 <td>Page / Website Link:</td>
                                 <td>{{ Auth::guard('user')->user()->website_link }}</td>
                             </tr>
-
-
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-
     </div>
-
-
 @endsection

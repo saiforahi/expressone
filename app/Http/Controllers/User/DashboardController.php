@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\User;
 
-use Auth;
 use App\Area;
 use App\User;
 use App\Shipment;
@@ -10,13 +9,16 @@ use App\ShippingCharge;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $shipment = Shipment::orderBy('id', 'DESC')->where('user_id', Auth::guard('user')->user()->id)->get();
+        $shipment = Shipment::orderBy('id', 'DESC')->where('user_id', Auth::guard('user')->user()->id)->get()->toArray();
+        //dd($shipment);
+        //$shipment = json_decode(json_encode($shipments), true);
         $shippingCharges =  DB::table('shipping_charges')->select('id', 'consignment_type', 'shipping_amount')->get();
         return view('dashboard.index', compact('shipment', 'shippingCharges'));
     }
@@ -87,7 +89,7 @@ class DashboardController extends Controller
 
     public function ProfileUpdate(Request $request)
     {
-       
+
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         $request->validate([
             'first_name' => 'required|min:3|max:50',
