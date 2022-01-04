@@ -91,6 +91,13 @@
 @endsection
 @push('style')
     <style type="text/css">
+        @page {
+            size: auto;
+            /* auto is the initial value */
+            margin: 0mm;
+            /* this affects the margin in the printer settings */
+        }
+
         #invoice {
             padding: 30px
         }
