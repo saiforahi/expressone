@@ -7,6 +7,7 @@ use App\Admin;
 use App\Admin_hub;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Session\Session;
 
 class DashboardController extends Controller
