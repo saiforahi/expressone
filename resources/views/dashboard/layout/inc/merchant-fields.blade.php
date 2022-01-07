@@ -105,6 +105,34 @@
                             </div>
                         </div>
                         <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label for="bank_name" class="">Bank name</label>
+                                <input name="bank_name" value="{{ Auth::guard('user')->user()->bank_name }}"
+                                    type="text" class="form-control" required placeholder="Enter bank name">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label for="bank_br_name" class="">Bank br. name</label>
+                                <input name="bank_br_name" value="{{ Auth::guard('user')->user()->bank_br_name }}"
+                                    type="text" class="form-control" required placeholder="Enter bank br name">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label for="bank_acc_name" class="">Bank A/C name</label>
+                                <input name="bank_acc_name" value="{{ Auth::guard('user')->user()->bank_acc_name }}"
+                                    type="text" class="form-control" required placeholder="Enter bank account name">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label for="bank_acc_no" class="">Bank A/C no</label>
+                                <input name="bank_acc_no" value="{{ Auth::guard('user')->user()->bank_acc_no }}"
+                                    type="text" class="form-control" required placeholder="Enter bank A/c no">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="position-relative form-group"><label for="address"
                                     class="">Address</label><input name="address" id="address"
                                     value="{{ Auth::guard('user')->user()->address }}" type="text"

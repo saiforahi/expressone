@@ -236,7 +236,6 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        'Milon\Barcode\BarcodeServiceProvider',
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'DNS1D' => Milon\Barcode\Facades\DNS1DFacade::class,

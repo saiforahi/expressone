@@ -181,11 +181,6 @@ class ShipmentController extends Controller
 
     function save_driver_shipment($id, Request $request)
     {
-        // echo '<pre>';
-        // echo '======================<br>';
-        // print_r($request->all());
-        // echo '<br>======================<br>';
-        // exit();
         if (is_numeric($request->shipment_id)) {
             // dd('single');
             $check = Driver_shipment::where(['driver_id' => $request->driver_id, 'shipment_id' => $request->shipment_id])->count();

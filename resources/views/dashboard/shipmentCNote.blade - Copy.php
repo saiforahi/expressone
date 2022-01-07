@@ -22,7 +22,7 @@
 
     </style>
 @endsection
-@push('scripts')
+@push('script')
     <script>
         window.addEventListener("load", window.print());
     </script>

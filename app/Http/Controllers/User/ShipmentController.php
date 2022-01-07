@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Area;
-use DataTables;
 use App\Shipment;
 use App\ShippingPrice;
 use App\ShippingCharge;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use App\Shipment_delivery_payment;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;

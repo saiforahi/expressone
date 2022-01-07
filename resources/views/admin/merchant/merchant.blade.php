@@ -1,7 +1,6 @@
 @extends('admin.layout.app')
 @section('title', 'Merchant List')
 @section('content')
-
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
@@ -38,7 +37,6 @@
                 <div class="col-12">
                     <div class="x_panel">
                         <div class="x_content">
-
                             <table id="datatable-buttons"
                                 class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>
@@ -77,11 +75,11 @@
                                                         Verified
                                                     </a>
                                                 @else
-                                                <a title="Change" merchant_id="{{ $users->id }}"
-                                                    class="text-danger merchant_status"
-                                                    id="merchant_{{ $users->id }}" href="javascript:void(0)">
-                                                    Not Verified
-                                                </a>
+                                                    <a title="Change" merchant_id="{{ $users->id }}"
+                                                        class="text-danger merchant_status"
+                                                        id="merchant_{{ $users->id }}" href="javascript:void(0)">
+                                                        Not Verified
+                                                    </a>
                                                 @endif
                                             </th>
 
@@ -90,7 +88,6 @@
                                                     class="btn btn-primary btn-xs pull-right">View</a>
                                             </th>
                                         </tr>
-
                                     @endforeach
                                 </tbody>
                             </table>
