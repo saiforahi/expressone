@@ -26,7 +26,7 @@ class AuthController extends Controller
             return redirect()->intended('/admin');
         }
         return back()->withInput($request->only('name', 'remember'))->withErrors([
-            'name' => 'Wrong information or this account not login.',
+            'name' => 'Wrong information or this account can not login.',
         ]);
     }
     public function store(Request $request)

@@ -13,7 +13,6 @@ class CheckAdmin
 {
     public function handle($request, Closure $next, $guard = null)
     {
-
         if (!Auth::guard($guard)->check() && $guard == "admin") {
             return redirect('admin/login');
         } else {
@@ -37,8 +36,6 @@ class CheckAdmin
         if (!Auth::guard($guard)->check() && $guard == "driver") {
             return redirect('driver/login');
         }
-
-
         return $next($request);
     }
 }
