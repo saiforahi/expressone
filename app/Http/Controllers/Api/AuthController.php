@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function __construct() {
         $this->middleware('auth:sanctum', ['except' => ['login','register']]);
     }
-    public function logout() {
+    public function logout(Request $request) {
         $request->user()->tokens()->delete(); //deleting all the tokens
         return response()->json(['success'=>true,'message' => 'User successfully signed out'],201);
     }
