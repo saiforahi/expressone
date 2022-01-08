@@ -10,7 +10,7 @@
                     <table id="datatable-buttons" class="table table-striped table-bordered dataTable no-footer dtr-inline">
                         <thead>
                         <tr class="bg-dark">
-                            <th>#SL 
+                            <th>#SL
                                 <!-- <input id="checkAll" type="checkbox" name="checkAll"> -->
                             </th>
                              <th>Customer Info</th>
@@ -27,7 +27,7 @@
                                 </th>
                                 <th scope="row">
                                     Zone: {{$row->shipment->zone->name}} <br>
-                                    Area: {{$row->shipment->area->name}} 
+                                    Area: {{$row->shipment->area->name}}
                                 </th>
                                 <th scope="row"><i class="fa fa-phone"></i> {{$row->shipment->phone}}<br>
 
@@ -42,10 +42,10 @@
                                     @include('admin.shipment.status',
                                     ['status'=>$row->shipment->status,'shipping_status'=>$row->shipment->shipping_status])
                                 </th>
-                               
+
                                 <th class="text-right">
-                                  
-                                   
+
+
                                 </th>
                             </tr>
                         @endforeach
@@ -68,7 +68,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button></h5>
-        
+
       </div>
       <div class="modal-body">
         @csrf
@@ -76,7 +76,7 @@
             <label for="exampleFormControlInput1">Note (if any)</label>
             <textarea class="form-control" name="note" placeholder="note" rows="4"></textarea>
         </div>
-       
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -101,7 +101,7 @@
 @endpush
 
 @push('scripts')
-   
+
 <script type="text/javascript">
     $(function(){
         $('.cencel').on('click',function(){

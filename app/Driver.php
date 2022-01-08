@@ -26,6 +26,6 @@ class Driver extends Authenticatable
     {
     	return $this->belongsToMany(Hub_shipment_box::class);
     }
-    
+
 
 }

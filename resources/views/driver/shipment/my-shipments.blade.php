@@ -32,8 +32,8 @@
                                         <td>{{$row->shipment->address}}</td>
                                         <td>{{$row->shipment->total_price}}</td>
                                         <td> @if($type=='cancelled')
-                                            <a href="#" class="btn btn-xs btn-info"><i class="fa fa-undo"> </i> Undo Cancel</a> @else 
-                                            <a href="#" disabled class="btn btn-xs btn-success"><i class="fa fa-check"> </i> {{$type}}</a> @endif 
+                                            <a href="#" class="btn btn-xs btn-info"><i class="fa fa-undo"> </i> Undo Cancel</a> @else
+                                            <a href="#" disabled class="btn btn-xs btn-success"><i class="fa fa-check"> </i> {{$type}}</a> @endif
                                         </td>
                                     </tr>
                                 @endforeach

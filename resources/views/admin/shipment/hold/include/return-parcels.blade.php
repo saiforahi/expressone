@@ -26,7 +26,7 @@
           <td></td><td class="text-right">Hub: {{hub_from_area($item->shipment->area_id)->name}}</td>
         </tr>
         <tr>
-          <td colspan="3">Address: {{$item->shipment->address}} </td>  
+          <td colspan="3">Address: {{$item->shipment->address}} </td>
         </tr>
         <tr class="text-right">
           <td class="text-left" style="width:50%">Date: <small>{{date('M d, Y',strtotime($item->shipment->created_at))}} (<b class="text-info">{{$item->shipment->created_at->diffForHumans()}}</b>)</small> </td>
@@ -35,7 +35,7 @@
                 <button class="btn btn-xs btn-default" onclick="move(<?php echo $item->id.','.$item->hub_id;?>)"><i class="fa fa-arrow-left"></i> Move </button>
             </td>
         </tr>
-        
+
       </tbody>
 </table>
 @endforeach
@@ -47,7 +47,7 @@
         $.ajax({
             type: "get",url: '/admin/move-back-to-return_shipment/'+shipment_id+'/return',
             success: function(data){
-                $('.row'+shipment_id).remove(); 
+                $('.row'+shipment_id).remove();
                 $(".part1").load('/admin/driver-hub-shipment-rows/return');
             },error: function (request, error) {
                 alert(" Can't do because: " + error);

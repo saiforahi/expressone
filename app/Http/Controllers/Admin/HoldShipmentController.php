@@ -31,12 +31,12 @@ class HoldShipmentController extends Controller
             $hub_box = Driver_hub_shipment_box::where(['status'=>$type,'status_in'=>null])->select('hub_shipment_box_id')
             ->groupBy('hub_shipment_box_id')->pluck('hub_shipment_box_id')->toArray();
             $hubInfo = Hub_shipment_box::whereIn('id',$hub_box)->get();
-      
+
             if($hubInfo->count() !=0){
                 foreach($hubInfo as $ship){ $hub_ids[] = $ship->hub_id;}
                 $hubs = Hub::whereIn('id',$hub_ids)->get();
             } else $hubs = array();
-          
+
             return view('admin.shipment.hold.shipments',compact('type','hubs'));
         }
     }
@@ -110,11 +110,11 @@ class HoldShipmentController extends Controller
     public function move_back2hold_shipment(Shipment $shipment,$type)
     {
         Hold_shipment::where(['shipment_id'=>$shipment->id,'status'=>'assigning'])->delete();
-        
+
         Driver_hub_shipment_box::where(['shipment_id'=>$shipment->id,'status'=>$type])->update([
                 'status_in'=>null
         ]);
-        
+
     }
     // hold Shipments into Agent dispatch or save sorting
     public function sendToSorting(){
@@ -204,7 +204,7 @@ class HoldShipmentController extends Controller
         return view('admin.shipment.hold.include.return-parcels',compact('shipments'));
     }
     public function move_back2return_shipment(Return_shipment $return_shipment,$type)
-    {   
+    {
         // dd($return_shipment);
         Return_shipment::where(['id'=>$return_shipment->id,'status'=>'assigning'])->delete();
         Driver_hub_shipment_box::where(['shipment_id'=>$return_shipment->shipment_id,'status'=>$type])->update([
@@ -212,21 +212,21 @@ class HoldShipmentController extends Controller
         ]);
     }
     function return_sorting(Hub $hub){
-        
+
         $return_shipments = Return_shipment::where([
-            'hub_id'=>$hub->id,'status'=>'assigning'])->get();   
+            'hub_id'=>$hub->id,'status'=>'assigning'])->get();
 
         foreach ($return_shipments as $key => $hubShipment) {
             // Shipment::where('id',$hubShipment->shipment_id)->update(['shipping_status'=>'3']);
             // event(new ShipmentMovement($hubShipment->shipment_id, 'admin', Auth::guard('admin')->user()->id,'admin-return-dispatch','Return-dispatch the shipment','return-dispatch'));
-            $shipment_ids[] = $hubShipment->shipment_id; 
+            $shipment_ids[] = $hubShipment->shipment_id;
         }
 
-        
+
         //get the last id of hub_shipment_boxes table
         $bulk_id_init = Return_shipment_box::where('hub_id',$hub->id)->orderBy('id','desc')->first();
         if($bulk_id_init==null) $bulk_id = 1; else $bulk_id = $bulk_id_init->id;
-        
+
         //if action by superdamin, make box_by (hub_id) null
         // dd(Session::get('admin_hub'));
         if(Session::get('admin_hub') !=null)
@@ -234,7 +234,7 @@ class HoldShipmentController extends Controller
         else $boxByHub_id = null;
 
         // $box= Return_shipment_box::select("id")->whereRaw("find_in_set($shipment->id ,shipment_ids)")->first();
-       
+
         $pre_box = Return_shipment_box::where(['hub_id'=>$hub->id,'status'=>'dispatch']);
         // dd($pre_box->count());
         if($pre_box->count() =='0'){
@@ -243,7 +243,7 @@ class HoldShipmentController extends Controller
             ]);
             Return_shipment::where(['hub_id'=>$hub->id,'admin_id'=>Auth::guard('admin')->user()->id])->update(['status'=>'dispatch']);
             // return 'Data has been sorted into new bulkID at return-dispatch!';
-        }else{ 
+        }else{
             $pre_box->update([
                 'shipment_ids'=>$pre_box->first()->shipment_ids.','.implode(',',$shipment_ids)
             ]);
@@ -287,7 +287,7 @@ class HoldShipmentController extends Controller
         return view('admin.shipment.hold.dispatch-view',compact('hub'));
     }
     function status_dispatch(Hub $hub){
-        $boxes = Return_shipment_box::where(['hub_id'=>$hub->id,'status'=>'dispatch'])->get(); 
+        $boxes = Return_shipment_box::where(['hub_id'=>$hub->id,'status'=>'dispatch'])->get();
         return view('admin.shipment.hold.include.status-dispatch',compact('boxes','hub'));
     }
 
@@ -303,7 +303,7 @@ class HoldShipmentController extends Controller
         if($check->count() <1){
             $return_shipment_box->update(['status'=>$status]);
         }
-        
+
     }
 
     function box_status_changes_bulk_id($bulk_id,$status){
@@ -311,7 +311,7 @@ class HoldShipmentController extends Controller
         if($check->count() ==0){
             Return_shipment_box::where('bulk_id',$bulk_id)->update(['status'=>$status]);
         }
-        
+
     }
 
     function box_sorting(Hub $hub){
@@ -329,7 +329,7 @@ class HoldShipmentController extends Controller
     function receive_from_hub(){
         // dd(Session::get('admin_hub')->hub_id);
         if(Session::has('admin_hub')){
-            $boxes = Return_shipment_box::where(['hub_id'=>Session::get('admin_hub')->hub_id])->get(); 
+            $boxes = Return_shipment_box::where(['hub_id'=>Session::get('admin_hub')->hub_id])->get();
         }else{
             $boxes = Return_shipment_box::orderBy('id')->get();
         }
@@ -351,11 +351,11 @@ class HoldShipmentController extends Controller
         if(Session::has('admin_hub')){
             $hub = Hub::where('id',Session::get('admin_hub')->hub_id)->first();
         }else $hub = null;
-        
+
         if($hub ==null){
             $boxes = Return_shipment_box::where(['status'=>'transit'])->get();
         }else{
-            $boxes = Return_shipment_box::where(['hub_id'=>$hub->id,'status'=>'transit'])->get(); 
+            $boxes = Return_shipment_box::where(['hub_id'=>$hub->id,'status'=>'transit'])->get();
         }
         // dd($boxes);
         return view('admin.shipment.hold.agent.agent-side',compact('boxes'));
@@ -383,7 +383,7 @@ class HoldShipmentController extends Controller
         if($hub ==null){
             $boxes = Return_shipment_box::where(['status'=>'transit'])->get();
         }else{
-            $boxes = Return_shipment_box::where(['hub_id'=>$hub->id,'status'=>'transit'])->get(); 
+            $boxes = Return_shipment_box::where(['hub_id'=>$hub->id,'status'=>'transit'])->get();
         }
         $drivers = Driver::orderBy('first_name')->get();
         // dd($drivers);
@@ -404,16 +404,16 @@ class HoldShipmentController extends Controller
             'admin_id'=>Auth::guard('admin')->user()->id,'status_in'=>'assigning'
         ])->select('return_shipment_box_id','shipment_id')->distinct()->get();
         Session::put('box_ids',$box_ids);
-      
+
         $count = 0;
         foreach (Session::get('box_ids') as $key => $box) {
             $shipment = Shipment::where('id',$box->shipment_id)->first();
-            // Test if string contains the word 
+            // Test if string contains the word
             if(strpos($shipment->shipping_status, "on-") !== false){
                 return 'OPT not confirmed by the Rider! Please confirm OTP first from Rider!!';
             }
         }
-            
+
         Driver_return_shipment_box::where([
             'admin_id'=>Auth::guard('admin')->user()->id,'status_in'=>'assigning'
         ])->update( [
@@ -421,7 +421,7 @@ class HoldShipmentController extends Controller
         ]);
 
         // dd(Session::get('box_ids'));
-        
+
         $count = 0;
         foreach (Session::get('box_ids') as $key => $box) {
             $query = Return_shipment_box::where('id',$box->return_shipment_box_id)->first();
@@ -448,13 +448,13 @@ class HoldShipmentController extends Controller
             Driver_hub_shipment_box::where('id',$hb->id)->update(['status'=>'return']);
         }
     }
-    
+
 
     function merchant_handover(){
         if(Session::has('admin_hub')){
             $hub = Hub::where('id',Session::get('admin_hub')->hub_id)->first();
         }else $hub = null;
-        
+
         if($hub ==null){
             $ids = Return_shipment_box::where(['status'=>'transit'])->select('shipment_ids')
             ->groupBy('shipment_ids')->pluck('shipment_ids')->toArray();
@@ -464,14 +464,14 @@ class HoldShipmentController extends Controller
             ->groupBy('shipment_ids')
             ->pluck('shipment_ids')->toArray();
         }
-        
+
         $shipment = Shipment::whereIn('id',explode(',',implode(',',$ids)))->select('user_id')
         ->groupBy('user_id')->pluck('user_id')->toArray();
         $user = User::whereIn('id',$shipment)->get();
         // dd($user);
         return view('admin.shipment.hold.merchant-handover',compact('user'));
     }
-    
+
     function merchant_handover_parcels(User $user){
         return view('admin.shipment.hold.merchant-handover');
     }
@@ -485,9 +485,9 @@ class HoldShipmentController extends Controller
             $box= Return_shipment_box::orderBy('id','desc')->select("id")->where('status','transit')
             ->whereRaw("find_in_set($shipment->id ,shipment_ids)")->first();
             $box->update(['status'=>'return-delivery']);
-            
+
             event(new ShipmentMovement($shipment->id, 'admin',Auth::guard('admin')->user()->id,'handover-to-merchant','parcel hand over to merchant','handover-to-merchant'));
-            
+
             Shipment::where('id',$shipment->id)->update(['shipping_status'=>'10']);
         }
         return back()->with('message','Parcels are handover to merchant successfully!!');

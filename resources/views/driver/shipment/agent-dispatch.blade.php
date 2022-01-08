@@ -36,7 +36,7 @@
                                     <td>Area: {{$row->shipment->area->name}} <br>
                                        Address: {{$row->shipment->address}}
                                     </td>
-                                    <td> 
+                                    <td>
                                        @if($row->shipment->cod_amount==0) Pay by merchant @else Pay by customer @endif
                                         <br>
                                         Payable: ( {{$row->shipment->cod_amount}} )
@@ -79,7 +79,7 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Parcel Delivery Report</h4>
         </div>
-        <div class="modal-body"> 
+        <div class="modal-body">
             @include('driver.shipment.includes.driver-report-form')
         </div>
       </div>
@@ -163,7 +163,7 @@
                 $('[type=submit]').html('Working...');
                 $.ajax({
                     type: "POST", url: url, data: form.serialize(),
-                    success: function(data){  
+                    success: function(data){
                         $('[type=submit]').html('<i class="fa fa-send"></i> Submit Report');
                         $('.result').html(data);
                         if(data=='success'){
@@ -173,7 +173,7 @@
                     }
                 });
             });
-            
+
         })
     </script>
 

@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title','Shipping Hub')
+@section('title', 'Shipping Hub')
 @section('content')
     <div class="right_col" role="main">
         <div class="">
@@ -21,11 +21,11 @@
                 @foreach ($errors->all() as $error)
                     <div class="alert alert-danger alert-dismissible">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        {{$error}}
+                        {{ $error }}
                     </div>
                 @endforeach
             @endif
-            @if(session()->has('message'))
+            @if (session()->has('message'))
                 <div class="alert alert-success alert-dismissible">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     {{ session()->get('message') }}
@@ -38,12 +38,12 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered">
                                     <thead>
-                                    <tr class="bg-dark">
-                                        <th>Hub Name</th>
-                                        <th>Shipping Distribution Zone</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
-                                    </tr>
+                                        <tr class="bg-dark">
+                                            <th>Hub Name</th>
+                                            <th>Shipping Distribution Zone</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
                                     </thead>
                                 </table>
                             </div>
@@ -66,23 +66,22 @@
                         <div class="x_content">
                             <br>
                             <form id="upload_form" autocomplete="off" method="post"
-                                  class="form-horizontal form-label-left input_mask">
-                                {{csrf_field()}}
+                                class="form-horizontal form-label-left input_mask">
+                                {{ csrf_field() }}
                                 <input type="hidden" value="" name="id" id="hub_id">
                                 <div class="form-group has-feedback">
                                     <label for="zone_id">Shipping distribution zone:</label>
                                     <select class="col-md-7 col-xs-12 select2_single" name="zone_id" id="zone_id">
                                         <option></option>
-                                        @foreach($zone as $zones)
-                                            <option value="{{$zones->id}}">{{$zones->name}}</option>
+                                        @foreach ($zone as $zones)
+                                            <option value="{{ $zones->id }}">{{ $zones->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group has-feedback">
                                     <label for="code">Hub Name:</label>
-                                    <input type="text" class="form-control" placeholder="Hub name"
-                                           name="name" id="name"
-                                           value="">
+                                    <input type="text" class="form-control" placeholder="Hub name" name="name" id="name"
+                                        value="">
                                 </div>
                                 <hr>
                                 <div class="col-md-12 form-group has-feedback ">
@@ -103,46 +102,49 @@
     </div>
 @endsection
 @push('style')
-    <link href="{{asset('ass_vendors/sweetalert/sweetalert.css')}}" rel="stylesheet"/>
+    <link href="{{ asset('_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
     <!-- Datatables -->
-    <link href="{{asset('ass_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('ass_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
-          rel="stylesheet">
-    <link href="{{asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
-          rel="stylesheet">
-    <link href="{{asset('ass_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ asset('_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 @endpush
 @push('scripts')
     <!-- Datatables -->
-    <script src="{{asset('ass_vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/jszip/dist/jszip.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/pdfmake/build/pdfmake.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/pdfmake/build/vfs_fonts.js')}}"></script>
-    <script src="{{asset('ass_vendors/sweetalert/sweetalert.js')}}"></script>
+    <script src="{{ asset('_vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+    <script src="{{ asset('_vendors/jszip/dist/jszip.min.js') }}"></script>
+    <script src="{{ asset('_vendors/pdfmake/build/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('_vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('_vendors/sweetalert/sweetalert.js') }}"></script>
     <script>
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-        $(document).on('click', '.Change', function () {
-            let id = $(this).attr('id'), action;
+        $(document).on('click', '.Change', function() {
+            let id = $(this).attr('id'),
+                action;
             let clases = $(this);
             if ($(this).hasClass("btn-success")) {
                 action = 'inactive';
                 $.ajax({
-                    url: '{{route('hub.update')}}',
+                    url: '{{ route('hub.update') }}',
                     type: 'post',
-                    data: {_token: CSRF_TOKEN, id: id, action: action},
-                    success: function (response) {
+                    data: {
+                        _token: CSRF_TOKEN,
+                        id: id,
+                        action: action
+                    },
+                    success: function(response) {
                         $(clases).toggleClass('btn-success btn-info');
                         $(clases).html('Inactive');
                     }
@@ -150,10 +152,14 @@
             } else {
                 action = 'active';
                 $.ajax({
-                    url: '{{route('hub.update')}}',
+                    url: '{{ route('hub.update') }}',
                     type: 'post',
-                    data: {_token: CSRF_TOKEN, id: id, action: action},
-                    success: function (response) {
+                    data: {
+                        _token: CSRF_TOKEN,
+                        id: id,
+                        action: action
+                    },
+                    success: function(response) {
                         $(clases).toggleClass('btn-info btn-success');
                         $(clases).html('Active');
                     }
@@ -161,31 +167,47 @@
 
             }
         });
-        $(document).ready(function () {
-            $(function () { table.ajax.reload(); });
+        $(document).ready(function() {
+            $(function() {
+                table.ajax.reload();
+            });
             let table = $('.table').DataTable({
                 processing: true,
                 "language": {
                     processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>'
                 },
                 serverSide: true,
-                ajax: "{{route('AdminHubGet')}}",
-                order: [ [0, 'desc'] ],
-                columns: [
-                    {data: 'name'},
-                    {data: 'zone'},
-                    {data: 'status', orderable: false, searchable: false},
-                    {data: 'action', orderable: false, searchable: false, class:'text-right'}
+                ajax: "{{ route('AdminHubGet') }}",
+                order: [
+                    [0, 'desc']
+                ],
+                columns: [{
+                        data: 'name'
+                    },
+                    {
+                        data: 'zone'
+                    },
+                    {
+                        data: 'status',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'action',
+                        orderable: false,
+                        searchable: false,
+                        class: 'text-right'
+                    }
                 ]
             });
-           $(document).on('click', '.add-hub', function () {
+            $(document).on('click', '.add-hub', function() {
                 $('#hub_id').val('');
                 $('#zone_id').val('').trigger('change');
                 $('#myModal').modal('show');
                 $('#upload_form').trigger("reset");
                 $('.modal-header').html('New Hub Entry');
             });
-            $('#upload_form').on('submit', function () {
+            $('#upload_form').on('submit', function() {
                 event.preventDefault();
                 let form = new FormData(this);
                 let id = $('#hub_id').val();
@@ -193,70 +215,39 @@
                     swal({
                         title: "Are you sure want to add hub?",
                         text: "If all information is correct, press ok.",
-                        type: "info", showCancelButton: true,
-                        closeOnConfirm: false, showLoaderOnConfirm: true
-                    }, function () {
-                        setTimeout(function () {
+                        type: "info",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        showLoaderOnConfirm: true
+                    }, function() {
+                        setTimeout(function() {
                             $.ajax({
-                                url: "{{ route('hub.store') }}", method: "POST",
-                                cache: false, contentType: false, processData: false,
-                                data: form, dataType: 'json',
-                                error: function (data) {
+                                url: "{{ route('hub.store') }}",
+                                method: "POST",
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                data: form,
+                                dataType: 'json',
+                                error: function(data) {
                                     if (data.status === 422) {
-                                        var errors = $.parseJSON(data.responseText);
-                                        let allData = '', mainData = '';
-                                        $.each(errors, function (key, value) {
-                                            if ($.isPlainObject(value)) {
-                                                $.each(value, function (key, value) {
-                                                    allData += value + "<br/>";
-                                                });
-                                            } else { mainData += value + "<br/>";}
-                                        });
-                                        swal({
-                                            title: mainData,  text: allData,
-                                            type: 'error', html: true,
-                                            confirmButtonText: 'Ok'
-                                        })
-                                    }
-                                },
-                                success: function (data) {
-                                    if (data == 1) {
-                                        swal("Hub add successfully");
-                                        $("#upload_form").trigger("reset");
-                                        $('#myModal').modal('hide');
-                                        table.ajax.reload();
-                                    } else {
-                                        swal("Something wrong, please try again later!");
-                                        $("#upload_form").trigger("reset");
-                                        $('#myModal').modal('hide');
-                                    }
-                                }
-                            })
-                        }, 2000);
-                    });
-                } else {
-                    swal({
-                        title: "Are you sure want to update hub?",
-                        text: "If all information is correct, press ok.",
-                        type: "info", showCancelButton: true,
-                        closeOnConfirm: false, showLoaderOnConfirm: true
-                    }, function () {
-                        setTimeout(function () {
-                            $.ajax({
-                                url: "{{ route('hub.store') }}", method: "POST",
-                                cache: false,contentType: false,
-                                processData: false, data: form, dataType: 'json',
-                                error: function (data) {
-                                    if (data.status === 422) {
-                                        var errors = $.parseJSON(data.responseText);
-                                        let allData = '', mainData = '';
-                                        $.each(errors, function (key, value) {
-                                            if ($.isPlainObject(value)) {
-                                                $.each(value, function (key, value) {
-                                                    allData += value + "<br/>";
+                                        var errors = $.parseJSON(data
+                                            .responseText);
+                                        let allData = '',
+                                            mainData = '';
+                                        $.each(errors, function(key, value) {
+                                            if ($.isPlainObject(
+                                                value)) {
+                                                $.each(value, function(
+                                                    key, value
+                                                    ) {
+                                                    allData +=
+                                                        value +
+                                                        "<br/>";
                                                 });
                                             } else {
-                                                mainData += value + "<br/>";
+                                                mainData += value +
+                                                    "<br/>";
                                             }
                                         });
                                         swal({
@@ -268,14 +259,79 @@
                                         })
                                     }
                                 },
-                                success: function (data) {
+                                success: function(data) {
+                                    if (data == 1) {
+                                        swal("Hub add successfully");
+                                        $("#upload_form").trigger("reset");
+                                        $('#myModal').modal('hide');
+                                        table.ajax.reload();
+                                    } else {
+                                        swal(
+                                            "Something wrong, please try again later!");
+                                        $("#upload_form").trigger("reset");
+                                        $('#myModal').modal('hide');
+                                    }
+                                }
+                            })
+                        }, 2000);
+                    });
+                } else {
+                    swal({
+                        title: "Are you sure want to update hub?",
+                        text: "If all information is correct, press ok.",
+                        type: "info",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        showLoaderOnConfirm: true
+                    }, function() {
+                        setTimeout(function() {
+                            $.ajax({
+                                url: "{{ route('hub.store') }}",
+                                method: "POST",
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                data: form,
+                                dataType: 'json',
+                                error: function(data) {
+                                    if (data.status === 422) {
+                                        var errors = $.parseJSON(data
+                                            .responseText);
+                                        let allData = '',
+                                            mainData = '';
+                                        $.each(errors, function(key, value) {
+                                            if ($.isPlainObject(
+                                                value)) {
+                                                $.each(value, function(
+                                                    key, value
+                                                    ) {
+                                                    allData +=
+                                                        value +
+                                                        "<br/>";
+                                                });
+                                            } else {
+                                                mainData += value +
+                                                    "<br/>";
+                                            }
+                                        });
+                                        swal({
+                                            title: mainData,
+                                            text: allData,
+                                            type: 'error',
+                                            html: true,
+                                            confirmButtonText: 'Ok'
+                                        })
+                                    }
+                                },
+                                success: function(data) {
                                     if (data == 1) {
                                         swal("Hub update successfully");
                                         $("#upload_form").trigger("reset");
                                         $('#myModal').modal('hide');
                                         table.ajax.reload();
                                     } else {
-                                        swal("Something wrong, please try again later!");
+                                        swal(
+                                            "Something wrong, please try again later!");
                                         $("#upload_form").trigger("reset");
                                         $('#myModal').modal('hide');
                                     }
@@ -285,39 +341,48 @@
                     });
                 }
             });
-            $(document).on('click', '.edit', function () {
+            $(document).on('click', '.edit', function() {
                 $('#myModal').modal('show');
                 $('.modal-header').html('Hub Information Update');
                 $("#upload_form").trigger("reset");
                 let id = $(this).attr('id');
                 $.ajax({
                     url: "{{ route('hub.single') }}",
-                    type: 'get',data: {id: id}, dataType: 'json',
-                    success: function (data) {
+                    type: 'get',
+                    data: {
+                        id: id
+                    },
+                    dataType: 'json',
+                    success: function(data) {
                         $('#hub_id').val(data.id);
                         $('#zone_id').val(data.zone_id).trigger('change');
                         $('#name').val(data.name);
                     }
                 });
             });
-            $(document).on('click', '.delete', function () {
+            $(document).on('click', '.delete', function() {
                 let id = $(this).attr('id');
                 // alert(id) ; return false;
-                if(confirm('Are you sure to delete??')){
+                if (confirm('Are you sure to delete??')) {
                     $.ajax({
-                        url: "/admin/delete-hub/"+id,
-                        type: 'get',dataType: 'json',
-                        success: function (data) {
-                            if(data){
+                        url: "/admin/delete-hub/" + id,
+                        type: 'get',
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data) {
                                 swal({
-                                    title: "Deleted", text: 'Hub was deleted',
-                                    type: 'success', confirmButtonText: 'Ok'
+                                    title: "Deleted",
+                                    text: 'Hub was deleted',
+                                    type: 'success',
+                                    confirmButtonText: 'Ok'
                                 });
                                 table.ajax.reload();
-                            }else{
+                            } else {
                                 swal({
-                                    title: "Something went wroing", text: 'Hub unable to deleted',
-                                    type: 'error', confirmButtonText: 'Ok'
+                                    title: "Something went wroing",
+                                    text: 'Hub unable to deleted',
+                                    type: 'error',
+                                    confirmButtonText: 'Ok'
                                 });
                             }
                         }

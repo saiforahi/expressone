@@ -49,22 +49,22 @@ function driver_shipments($driver_id, $user_id)
     $num = array();
     foreach ($shipments as $key => $shipment) {
         $num[] = Driver_shipment::where(['driver_id'=>Auth::guard('driver')->user()->id,'shipment_id'=>$shipment->id])->count();
-    } 
+    }
     return COUNT($num);
 }
 
-// driver received shipments
+// ddriverreceive d shipments
 function pick_shipments($driver_id, $user_id)
 {
     $shipments = Shipment::where('user_id',$user_id)->where(['status'=>1,'shipping_status'=>2])->get();
     $num = array();
     foreach ($shipments as $key => $shipment) {
         $num[] = Driver_shipment::where(['driver_id'=>Auth::guard('driver')->user()->id,'shipment_id'=>$shipment->id])->count();
-    } 
+    }
     return COUNT($num);
 }
 
-function is_belongsTo_hub($userHub,$authHub){
+function is_belongsTo_hub($userHub ,$authHub){
     if(Auth::guard('admin')->user()->role_id ==1)  {
         return true;
     }else{
@@ -111,11 +111,11 @@ function is_in_reconcile_shipments($shipment_id){
 function is_admin_allow($admin_id, $route){
     return  \DB::table('admin_roles')
      ->where('admin_id', '=', $admin_id)
-     ->where('route', '=', $route)->count();   
+     ->where('route', '=', $route)->count();
 }
 
 function return_hub_count($hub_id,$status){
-    return \App\Return_shipment::where(['hub_id'=>$hub_id,'status'=>$status])->count();
+    return \App\Return_shipment::where(['hub_id'=>$hub_id,'status   '=>$status])->count();
 }
 
 function returnAt_return_shipment_box($hub_id){

@@ -7,17 +7,17 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Login</title>
+    <title>Login </title>
     <!-- Bootstrap -->
-    <link href="{{ URL::asset('ass_vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ URL::asset('_vendors') }}/bootstrap/dist/css/bootstrap.min.css">
     <!-- Font Awesome -->
-    <link href="{{ URL::asset('ass_vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ URL::asset('_vendors') }}/font-awesome/css/font-awesome.min.css">
     <!-- NProgress -->
-    <link href="{{ URL::asset('ass_vendors/nprogress/nprogress.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ URL::asset('_vendors') }}/nprogress/nprogress.css">
     <!-- Animate.css -->
-    <link href="{{ URL::asset('ass_vendors/animate.css/animate.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ URL::asset('_vendors') }}/animate.css/animate.min.css">
     <!-- Custom Theme Style -->
-    <link href="{{ URL::asset('build/css/custom.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ URL::asset('') }}build/css/custom.min.css">
 </head>
 
 <body class="login">
@@ -39,7 +39,6 @@
                                 </span>
                             @enderror
                         </div>
-
                         <div>
                             <input type="password" name="password"
                                 class="form-control mb-0 mt-3 @error('password') is-invalid @enderror"

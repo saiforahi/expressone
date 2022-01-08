@@ -13,7 +13,7 @@ Route::get('clear', function () {
     Artisan::call('view:clear');
     Artisan::call('optimize:clear');
     Artisan::call('route:cache');
-    return 'Cleared!';
+    return "Cleared!";
 });
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/about', 'HomeController@about')->name('about');

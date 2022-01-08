@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title','Driver List')
+@section('title','driver List')
 @section('content')
     <div class="right_col" role="main">
         <div class="">
@@ -37,7 +37,7 @@
                                     <th>Sl.</th>
                                     <th>Deliver To</th>
                                     <th>Shipment address</th>
-                                    <th>Total Price</th>
+                                    <th>COD Amount</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -47,8 +47,8 @@
                                         <td>{{$key+1}}</td>
                                         <td>{{$row->shipment->name}} - {{$row->shipment->phone}}</td>
                                         <td>{{$row->shipment->address}}</td>
-                                        <td>{{$row->shipment->total_price}}</td>
-                                        <td></td>
+                                        <td>{{$row->shipment->cod_amount}}</td>
+                                        <td>Need to ask</td>
                                     </tr>
 
                                 @endforeach

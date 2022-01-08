@@ -40,8 +40,8 @@ class DashboardController extends Controller
             ->whereBetween('created_at', [$dateFrom." 00:00:00", $dateTo." 23:59:59"])
             ->orderBy('id', 'DESC')->get();
         }
-        
-        return view('driver.includes.date-wize-shipments',compact('shipments'));
+
+        return view('deliverydriver        s.date-wize-shipments',compact('shipments'));
     }
 
     public function delivery_shipments()
@@ -174,8 +174,8 @@ class DashboardController extends Controller
             })
             ->addColumn('status', function ($shipment) {
                 $status = $shipment->status; $shipping_status = $shipment->shipping_status;
-            
-                return  view('dashboard.include.shipping-status',compact('status','shipping_status')). ' <button class="btn btn-warning btn-xs openModal" id="'.$shipment->id.'"> Confirm OTP</button>';
+
+                return  view('dashboard.include.shipping-status',compact('status','shipping_status')). ' <button class="btn btn-warning btn-xs openModal" id="'.$shipment->id.'            "> Confirm OTP</button>';
             })->rawColumns(['date','customer_info','merchant','amount','area','status'])->make(true);
     }
 

@@ -14,7 +14,7 @@
                         <div class="x_content">
                             <input type="search" id="invoiceID" placeholder="Invoice ID" >
                             <?php $riders = \DB::table('drivers')->select('id','first_name','last_name','phone')->get();?>
-                            
+
                             <select id="rider" style="padding:4.3px;">
                                 <option value="">Choose Rider</option>
                                 @foreach ($riders as $rider)
@@ -23,12 +23,12 @@
                             </select>
                         </div>
                         <div class="x_content part1"> </div>
-                    </div> 
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="x_panel">
                         <div class="x_content part2"></div>
-                    </div> 
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
 
 @endsection
 @push('style')
-    <style> .table{ border:1px solid sienna} </style>   
+    <style> .table{ border:1px solid sienna} </style>
 @endpush
 
 @push('scripts')
