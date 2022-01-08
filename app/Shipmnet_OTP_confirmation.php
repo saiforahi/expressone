@@ -8,9 +8,9 @@ class Shipmnet_OTP_confirmation extends Model
 {
     protected $fillable = ['otp','collect_by','shipment_id','driver_id'];
     protected $table = 'shipment_opt_confirmations';
-	
-	
-	//relationship
+
+
+	//relat	io	nship
     function shipment(){
         return $this->belongsTo(Shipment::class);
     }

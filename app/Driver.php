@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 class Driver extends Authenticatable
 {
-    use Notifiable,HasApiTokens;
+    use Notifiable, HasApiTokens;
 
     protected $guard = 'driver';
 
@@ -29,4 +29,6 @@ class Driver extends Authenticatable
     {
     	return $this->belongsToMany(Hub_shipment_box::class);
     }
+
+
 }

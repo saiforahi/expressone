@@ -60,7 +60,7 @@
           });
         }
       });
-      
+
       $(".agent-side").load('/admin/agent-dispatch-agentSide');
       $(".driver-side").load('/admin/agent-dispatch-driverSide');
     })

@@ -80,7 +80,7 @@
                                         </th>
                                         <th class="text-right">
                                             <button type="button" class="btn btn-primary btn-xs assign" data-toggle="modal"
-                                                data-target="#assignShipment" data-id="{{ $shipment->id }}">to Driver <i
+                                                data-target="#assignShipment" data-id="{{ $shipment->id }}">to driver <i
                                                     class="fa fa-truck"></i></button>
                                         </th>
                                         <th scope="row">

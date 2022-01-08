@@ -43,8 +43,8 @@ class ThirdpartyShipmentController extends Controller
         $shipments = Thirdparty_shipment::where('status_in','assigning')->get();
         return view('admin.shipment.thirdparty.right',compact('hub','shipments'));
     }
-    
-    //ajax call to show all shipment within a hub
+
+    //ajax call to show all shipment within     a hub
     function show(Hub $hub){
         $shipments = Thirdparty_shipment::where('hub_id',$hub->id)->get();
         // dd($shipments);
@@ -70,27 +70,27 @@ class ThirdpartyShipmentController extends Controller
         $shipments = Thirdparty_shipment::where('status_in','assigning')->get();
         foreach($shipments as $shipment){
             Shipment::where('id',$shipment->shipment_id)->update([
-                'shipping_status'=>'10'    
+                'shipping_status'=>'10'
             ]);
         }
-        Thirdparty_shipment::where('status_in','assigning')->update([
+        Thirdparty_shipment::where('status_in    ','assigning')->update([
             'status'=>'assigned','status_in'=>'assigned'
         ]);
         return back()->with('message','Send to sorted successfully to third-party!!');
     }
 
     public function get_csv_pdf($type){
-     
+
         $shipments = Shipment::all();
 
-        foreach ($shipments as $key => $shipment) {
+        foreach ($shipments as $key => $sh     ipment) {
             $rows[] =  [$shipment->invoice_id,$shipment->name,$shipment->phone,$shipment->address,$shipment->zip_code,$shipment->cod_amount,$shipment->weight,''];
         }
-        $columnNames = ['Invoice', 'Customer Name', 'Contact No.','Customer Address','Post Code','Price','Weight','Product Selling Price'];     
+        $columnNames = ['Invoice', 'Customer Name', 'Contact No.','Customer Address','Post Code','Price','Weight','Product Selling Price'];
         return self::getCsv($columnNames, $rows,date('d/m/Y h i s').'.csv');
 
 
-        if($type=='pdf'){
+             if($type=='pdf'){
             $shipment_ids = Thirdparty_shipment::where('status_in','assigning')->get();
             // return view('admin.shipment.thirdparty.shipment-pdf',compact('shipment_ids'));
             $pdf = PDF::loadView('admin.shipment.thirdparty.shipment-pdf', compact('shipment_ids'));
@@ -104,13 +104,13 @@ class ThirdpartyShipmentController extends Controller
             foreach ($shipments as $key => $shipment) {
                 $rows[] =  [$shipment->invoice_id,$shipment->name,$shipment->phone,$shipment->address,$shipment->zip_code,$shipment->cod_amount,$shipment->weight,''];
             }
-            $columnNames = ['Invoice', 'Customer Name', 'Contact No.','Customer Address','Post Code','Price','Weight','Product Selling Price'];  
-  
+            $columnNames = ['Invoice', 'Customer Name', 'Contact No.','Customer Address','Post Code','Price','Weight','Product Selling Price'];
+
             return self::getCsv($columnNames, $rows,date('d/m/Y h i s').'.csv');
         }
 
     }
-    
-    
-    
+
+
+
 }

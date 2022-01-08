@@ -1,8 +1,6 @@
 @extends('admin.layout.app')
 @section('title','Rider List')
 @section('content')
-
-
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
@@ -36,7 +34,6 @@
                 <div class="col-12">
                     <div class="x_panel">
                         <div class="x_content">
-
                             <table id="datatable-buttons"
                                    class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>

@@ -8,8 +8,8 @@ class Driver_hub_shipment_box extends Model
 {
     protected $fillable = ['driver_id','hub_shipment_box_id','shipment_id','admin_id','status','status_in','driver_note'];
     protected $table = 'driver_hub_shipment_box';
-    
-    function driver(){
+
+    funct    ion driver(){
     	return $this->belongsTo(Driver::class);
     }
     function hub_shipment_box(){
@@ -21,5 +21,6 @@ class Driver_hub_shipment_box extends Model
     function shipment(){
         return $this->belongsTo(Shipment::class);
     }
-  
+
 }
+  

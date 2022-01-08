@@ -4,64 +4,73 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Area; use Session;
+use App\Area;
+use Session;
 use App\Shipment;
 use App\ShippingPrice;
-use App\Zone; use Auth;
+use App\Zone;
+use Auth;
 class CSVController extends Controller
 {
-
     public function create()
     {
         return view('admin.shipment.csv.create');
     }
     public function get_csv_data(Request $request)
     {
-        Session::forget('csv_data'); 
-        if(empty($request->file)){ return back();}
+        Session::forget('csv_data');
+        if (empty($request->file)) {
+            return back();
+        }
 
         $filename = '';
-       //upload file
-        if($file=request()->file('file')){
-            $filename  = date('Ymd-his').'.'.$file->getClientOriginalExtension();
-            $file->move('./csv-file/',$filename);
-        } 
-
-        $file = fopen('./csv-file/'.$filename,"r");
-        $i = 1;
-        while (($line = fgetcsv($file)) !== FALSE) {
-            if($i != 1){
-                if (empty($line[9])) $price = 0;
-                else $price = $line[9];
-                
-                if (empty($line[0])) $invoice = rand();
-                else $invoice = $line[0];
-
-               $lines[] = array(
-                'invoice'=>$invoice,
-                'reference_no'=>$line[1],
-                'customer'=>$line[2],
-                'contact'=>$line[3],
-                'address'=>$line[4],
-                'delivery_area'=>$line[5],
-                'consignment_type'=>$line[6],
-                'cod_amount'=>$line[7],
-                'delivery_charge'=>$line[8],
-                'weight_charge'=> $line[9]
-               );
-            }
-           $i++;
+        //upload file
+        if ($file = request()->file('file')) {
+            $filename = date('Ymd-his') . '.' . $file->getClientOriginalExtension();
+            $file->move('./csv-file/', $filename);
         }
-      
-        \Session::put('csv_data',$lines);
+
+        $file = fopen('./csv-file/' . $filename, 'r');
+        $i = 1;
+        while (($line = fgetcsv($file)) !== false) {
+            if ($i != 1) {
+                if (empty($line[9])) {
+                    $price = 0;
+                } else {
+                    $price = $line[9];
+                }
+
+                if (empty($line[0])) {
+                    $invoice = rand();
+                } else {
+                    $invoice = $line[0];
+                }
+
+                $lines[] = [
+                    'invoice' => $invoice,
+                    'reference_no' => $line[1],
+                    'customer' => $line[2],
+                    'contact' => $line[3],
+                    'address' => $line[4],
+                    'delivery_area' => $line[5],
+                    'consignment_type' => $line[6],
+                    'cod_amount' => $line[7],
+                    'delivery_charge' => $line[8],
+                    'weight_charge' => $line[9],
+                ];
+            }
+            $i++;
+        }
+
+        \Session::put('csv_data', $lines);
         fclose($file);
         //--- Redirect Section
-        // exit; 
+        // exit;
         return redirect('/admin/csv-temporary');
     }
     // public function get_csv_data(Request $request)
     // {
-    //     Session::forget('csv_data'); 
+    //     Session::forget('csv_data');
     //     if(empty($request->file)){ return back();}
 
     //     $filename = '';
@@ -69,7 +78,7 @@ class CSVController extends Controller
     //     if($file=request()->file('file')){
     //         $filename  = date('Ymd-his').'.'.$file->getClientOriginalExtension();
     //         $file->move('./csv-file/',$filename);
-    //     } 
+    //     }
 
     //     $file = fopen('./csv-file/'.$filename,"r");
     //     $i = 1;
@@ -95,35 +104,38 @@ class CSVController extends Controller
     //         }
     //        $i++;
     //     }
-      
+
     //     \Session::put('csv_data',$lines);
     //     fclose($file);
     //     //--- Redirect Section
-    //     // exit; 
+    //     // exit;
     //     return redirect('/admin/csv-temporary');
     // }
 
-    function show(){
-        if(! Session::has('csv_data')){
-            Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!'); 
+    function show()
+    {
+        if (!Session::has('csv_data')) {
+            Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!');
             return redirect('/admin/admin-upload-csv');
         }
         $areas = Area::latest()->get();
-  
-        return view('admin.shipment.csv.show',compact('areas'));
+
+        return view('admin.shipment.csv.show', compact('areas'));
     }
     public function store_new(Request $request)
     {
         dd($request->all());
-        $price = 0; $total_price = 0;
-        $cod_type = 0; $cod_amount = 0;
+        $price = 0;
+        $total_price = 0;
+        $cod_type = 0;
+        $cod_amount = 0;
         // dd($request->all());
-        foreach(Session::get('csv_data') as $key=>$line){
+        foreach (Session::get('csv_data') as $key => $line) {
             $zone = Area::find($request->area[$key]);
             // if(empty($request->parcel_value[$key])){
             //     echo 'null <br/>';
             // }else echo $request->parcel_value[$key].' <br/>';
-                dd($request->parcel_value[$key]);
+            dd($request->parcel_value[$key]);
             // if(!empty($request->parcel_value[$key])){
             //     $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type[$key])->first();
             //     if (!$shipping) {
@@ -157,7 +169,7 @@ class CSVController extends Controller
             // if($checkInvoice >0){
             //     $invoice_id = $request->invoice_id[$key].rand(222,22);
             // }else $invoice_id = $request->invoice_id[$key];
-            
+
             // $insert = new Shipment();
             // $insert->user_id = $request->user_id;
             // $insert->zone_id = $zone->zone_id;
@@ -181,8 +193,9 @@ class CSVController extends Controller
             // $insert->save();
         }
         // exit;
-        Session::flash('message', 'CSV-file data has been uploaded to database successfully'); 
-        Session::forget('csv_data'); return redirect('/admin');
+        Session::flash('message', 'CSV-file data has been uploaded to database successfully');
+        Session::forget('csv_data');
+        return redirect('/admin');
     }
     // public function store(Request $request)
     // {
@@ -228,7 +241,7 @@ class CSVController extends Controller
     //         if($checkInvoice >0){
     //             $invoice_id = $request->invoice_id[$key].rand(222,22);
     //         }else $invoice_id = $request->invoice_id[$key];
-            
+
     //         $insert = new Shipment();
     //         $insert->user_id = $request->user_id;
     //         $insert->zone_id = $zone->zone_id;
@@ -252,22 +265,19 @@ class CSVController extends Controller
     //         $insert->save();
     //     }
     //     // exit;
-    //     Session::flash('message', 'CSV-file data has been uploaded to database successfully'); 
+    //     Session::flash('message', 'CSV-file data has been uploaded to database successfully');
     //     Session::forget('csv_data'); return redirect('/admin');
     // }
-
 
     public function edit($id)
     {
         //
     }
 
-
     public function update(Request $request, $id)
     {
         //
     }
-
 
     public function destroy($id)
     {

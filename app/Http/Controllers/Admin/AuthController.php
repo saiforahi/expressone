@@ -9,25 +9,32 @@ class AuthController extends Controller
 {
     public function index()
     {
+        //dd('okay');
         return view('admin.auth.login');
     }
     public function login(Request $request)
     {
         $messages = [
-            "name.required" => "Username is required",
-            "password.required" => "Password is required",
-            "password.min" => "Password must be at least 3 characters"
+            'name.required' => 'Username is required',
+            'password.required' => 'Password is required',
+            'password.min' => 'Password must be at least 3 characters',
         ];
-        $this->validate($request, [
-            'name'   => 'required',
-            'password' => 'required|min:3'
-        ],$messages);
+        $this->validate(
+            $request,
+            [
+                'name' => 'required',
+                'password' => 'required|min:3',
+            ],
+            $messages,
+        );
         if (Auth::guard('admin')->attempt(['email' => $request->name, 'password' => $request->password], $request->get('remember'))) {
             return redirect()->intended('/admin');
         }
-        return back()->withInput($request->only('name', 'remember'))->withErrors([
-            'name' => 'Wrong information or this account can not login.',
-        ]);
+        return back()
+            ->withInput($request->only('name', 'remember'))
+            ->withErrors([
+                'name' => 'Wrong information or this account not login.',
+            ]);
     }
     public function store(Request $request)
     {
