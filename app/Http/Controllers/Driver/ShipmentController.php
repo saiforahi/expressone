@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Shipment;
 use App\User;
 use App\Driver_shipment;
-use App \Driver_hub_shipment_box;
-use App\  Driver_return_shipment_box;
+use App\Driver_hub_shipment_box;
+use App\Driver_return_shipment_box;
 use App\Driver_shipment_delivery;
 use App\Shipmnet_OTP_confirmation;
 use Auth;
@@ -41,13 +41,13 @@ class ShipmentController extends Controller
         // $shipments_id = Driver_shipment::where('id',$id)->pluck('shipment_id')->first();
         Shipment::where('id',$id)->update(['shipping_status'=>2]);
 
-        $message = 'Dear '.$shipment->nam       e.', We '.basic_information()->company_name.' has received your parcel & we at your hand soon. Price of parcel delivery is: '.$shipment->total_price;
+        $message = 'Dear '.$shipment->name.', We '.basic_information()->company_name.' has received your parcel & we at your hand soon. Price of parcel delivery is: '.$shipment->total_price;
         event(new SendingSMS('customer',$shipment->phone ,$message));
 
         return back();
     }
 
-    public fun            ction my_shipments($type)
+    public function my_shipments($type)
     {
         if($type='return'){
             $shipments = Driver_hub_shipment_box::latest()->where(['driver_id'=>Auth::guard('driver')->user()->id,'status'=>$type])->get();
@@ -108,7 +108,7 @@ class ShipmentController extends Controller
         return view('ddrivershipment.includes.shipment-info',compact('shipment'));
     }
 
-    funct ion delivery_report(Request $request){
+    function delivery_report(Request $request){
         if($request->status=='partial' && $request->price==''){
             dd('Please set customer given price field');
         }
@@ -128,7 +128,7 @@ class ShipmentController extends Controller
         }
 
         Driver_shipment_delivery::create([
-            'driver_id'=>Auth::guard('dedriver->user()->id,'shipment_id'=>Sess  ion::get('shipment_id'),
+            'driver_id'=>Auth::guard('driver')->user()->id,'shipment_id'=>Session::get('shipment_id'),
             'type'=>$request->status
         ]);
 
@@ -156,7 +156,7 @@ class ShipmentController extends Controller
         if($status=='return'){
             // send sms to customer
             $shipment = Shipment::find($shipment_id);
-            $message = 'Dear '.$shipment->name.', You got an TOP for verifying your parcel on '.basic _information()->wensote_link.' is #'.rand(999,88888).'. Please save the code till your parcels on your hand!';
+            $message = 'Dear '.$shipment->name.', You got an TOP for verifying your parcel on '.basic_information()->wensote_link.' is #'.rand(999,88888).'. Please save the code till your parcels on your hand!';
             event(new SendingSMS('customer',$shipment->phone ,$message));
 
             // send sms to merchant
@@ -167,13 +167,13 @@ class ShipmentController extends Controller
         else if($status=='hold'){
             // send sms to customer
             $shipment = Shipment::find($shipment_id);
-            $message = 'Dear '.$shipment->name.', You got an TOP for verifying your parcel on '.basic_informatio n()->wensote_link.' is #'.rand(999,88888).'. Please save the code till your parcels on your hand!';
+            $message = 'Dear '.$shipment->name.', You got an TOP for verifying your parcel on '.basic_information()->wensote_link.' is #'.rand(999,88888).'. Please save the code till your parcels on your hand!';
             event(new SendingSMS('customer',$shipment->phone ,$message));
         }else{
             if($otp=='customer'){
                 // send sms to customer
                 $shipment = Shipment::find($shipment_id);
-                $message = 'Dear '.$shipment->name.', You got an TOP for verifying your parcel on '.basic_informat ion()->wensote_link.' is #'.rand(999,88888).'. Please save the code till your parcels on your hand!';
+                $message = 'Dear '.$shipment->name.', You got an TOP for verifying your parcel on '.basic_information()->wensote_link.' is #'.rand(999,88888).'. Please save the code till your parcels on your hand!';
                 event(new SendingSMS('customer',$shipment->phone ,$message));
             }
             if($otp=='merchant'){
@@ -189,7 +189,7 @@ class ShipmentController extends Controller
     public function return_agent_dispatch()
     {
         $paracels = Driver_return_shipment_box::where([
-            'driver_id'=>Auth::guard('delidriveruser()->id,
+            'driver_id'=>Auth::guard('driver')->user()->id,
                 'status_in'=>'assigned'
         ])->get();
         // dd($paracels);

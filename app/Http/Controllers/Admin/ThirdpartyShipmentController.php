@@ -83,7 +83,7 @@ class ThirdpartyShipmentController extends Controller
 
         $shipments = Shipment::all();
 
-        foreach ($shipments as $key => $sh     ipment) {
+        foreach ($shipments as $key => $shipment) {
             $rows[] =  [$shipment->invoice_id,$shipment->name,$shipment->phone,$shipment->address,$shipment->zip_code,$shipment->cod_amount,$shipment->weight,''];
         }
         $columnNames = ['Invoice', 'Customer Name', 'Contact No.','Customer Address','Post Code','Price','Weight','Product Selling Price'];

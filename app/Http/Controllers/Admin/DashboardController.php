@@ -8,13 +8,14 @@ use App\Admin_hub;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\Session\Session;
+use Session;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $hub = Admin_hub::where('admin_id', Auth::guard('admin')->user()->id)->first();
+        $hub = Admin_hub::with('hub')->where('admin_id', Auth::guard('admin')->user()->id)->first();
+        // dd($hub->hub->name);
         if ($hub != null) {
             Session::put('admin_hub', $hub);
         }
