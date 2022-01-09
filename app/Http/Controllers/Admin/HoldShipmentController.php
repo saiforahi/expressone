@@ -7,7 +7,6 @@ use App\User;
 use App\Driver;
 use App\Shipment;
 use App\Hold_shipment;
-use Session;
 use App\Return_shipment;
 use App\Hub_shipment_box;
 use App\Return_shipment_box;
@@ -18,6 +17,7 @@ use App\Driver_shipment_delivery;
 use App\Driver_return_shipment_box;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class HoldShipmentController extends Controller
 {

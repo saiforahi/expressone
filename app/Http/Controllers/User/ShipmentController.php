@@ -147,7 +147,7 @@ class ShipmentController extends Controller
     {
         $earth = new Earth();
         $earth = $earth->getCountries()->toArray();
-        $address = address::all();
+        $address = Address::all();
         $shipment = shipment::where('user_id', session('user-id'))->where('id', $id)->first();
         if ($shipment->status == 1) {
             return redirect('dashboard');
@@ -180,9 +180,7 @@ class ShipmentController extends Controller
     function shipmentConsNote(Shipment $shipment)
     {
         $zone = Area::find($shipment->area_id);
-        $price = $shipment->delivery_charge;
-        $total_price = $shipment->cod_amount;
-        return view('dashboard.shipmentCNote', compact('shipment', 'zone', 'price', 'total_price'));
+        return view('dashboard.shipmentCNote', compact('shipment'));
     }
     function shipment_pdf_old(Shipment $shipment)
     {

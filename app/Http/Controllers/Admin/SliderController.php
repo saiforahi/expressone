@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Slider;
 use Session;
-use DataTables;
-use Validator;
+use App\Slider;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 //use this library for uploading image
-use Illuminate\Http\UploadedFile;
-//user this intervention image library to resize/crop image
-use Intervention\Image\Facades\Image; 
-// import the Intervention Image Manager Class
 use Intervention\Image\ImageManager;
+//user this intervention image library to resize/crop image
+use Intervention\Image\Facades\Image;
+// import the Intervention Image Manager Class
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class SliderController extends Controller
 {
@@ -32,10 +33,10 @@ class SliderController extends Controller
 
             $data .=' <button class="btn btn-danger delete" id="' . $slider->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>';
 
-            $data .='</div>';  return $data; 
+            $data .='</div>';  return $data;
         })
-     
-        ->addColumn('slider_title', function ($slider) {  
+
+        ->addColumn('slider_title', function ($slider) {
             if($slider->photo==null) $src= 'images/user.png';
             else $src= $slider->photo;
             $data = '<img style="height:30px" src="/'.$src.'"> '.$slider->title;
@@ -53,13 +54,13 @@ class SliderController extends Controller
                 $data =' <button class="btn btn-warning btn-sm" type="button"><i class="mdi mdi-times m-r-3"></i>Unpublished</button>';
             }
 
-            return $data; 
+            return $data;
         })->rawColumns(['slider_title','description','status','action'])->make(true);
     }
 
     public function store(Request $request)
     {
-        $validator = $this->fields(); 
+        $validator = $this->fields();
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
@@ -90,7 +91,7 @@ class SliderController extends Controller
     public function update(Request $request)
     {
         $validator = Validator::make(request()->all(), [
-            'title'=>'required', 'id'=>'required', 
+            'title'=>'required', 'id'=>'required',
             'status'=>'required',
         ]);
 
@@ -127,12 +128,12 @@ class SliderController extends Controller
 
     function storeImage($slider,$type=null){
         if (request()->has('photo')) {
-            $fileName = rand().'.'.request()->photo->extension();  
+            $fileName = rand().'.'.request()->photo->extension();
             request()->photo->move('images/slider/', $fileName);
             // Image::make('images/slider/'.$fileName)->fit(100,100)->save();
             $slider->update(['photo'=>'images/slider/'.$fileName]);
             if ($type=='update') {
-                \File::delete(request()->oldLogo);
+                File::delete(request()->oldLogo);
             }
         }
     }

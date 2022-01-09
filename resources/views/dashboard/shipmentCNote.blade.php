@@ -50,33 +50,36 @@
                                     <th class="text-right">Mobile no</th>
                                     <th class="text-right">Status</th>
                                     <th class="text-right">COD Amount</th>
-                                    <th class="text-right">Cashpaid</th>
+                                    <th class="text-right">Cash payable</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Joh Doe</td>
-                                    <td class="text-right">Delivered</td>
-                                    <td class="text-right">Delivered</td>
-                                    <td class="text-right">120</td>
-                                    <td class="text-right">500</td>
+                                    <td>{{ $shipment->name }}</td>
+                                    <td class="text-right">{{ $shipment->phone }}</td>
+                                    <td class="text-right">
+                                        @include('dashboard.include.shipping-status',
+                                        ['status'=>$shipment['status'],'shipping_status'=>$shipment['shipping_status']])
+                                    </td>
+                                    <td class="text-right">{{ $shipment->cod_amount }}</td>
+                                    <td class="text-right">{{ $shipment->cod_amount }}</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="2"></td>
                                     <td colspan="2">Sub Total</td>
-                                    <td>5,200.00</td>
+                                    <td>{{ $shipment->cod_amount }}</td>
                                 </tr>
-                                <tr>
+                                {{-- <tr>
                                     <td colspan="2"></td>
                                     <td colspan="2">XYZ</td>
                                     <td>1,300.00</td>
-                                </tr>
+                                </tr> --}}
                                 <tr>
                                     <td colspan="2"></td>
-                                    <td colspan="2">Total Cash Paid</td>
-                                    <td>6,500.00</td>
+                                    <td colspan="2">Total Cash Payable</td>
+                                    <td>{{ $shipment->cod_amount }}</td>
                                 </tr>
                             </tfoot>
                         </table>

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Auth;
 use App\Area;
-use Session;
+use App\Zone;
 use App\Shipment;
 use App\ShippingPrice;
-use App\Zone;
-use Auth;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 class CSVController extends Controller
 {
     public function create()
@@ -62,7 +62,7 @@ class CSVController extends Controller
             $i++;
         }
 
-        \Session::put('csv_data', $lines);
+        Session::put('csv_data', $lines);
         fclose($file);
         //--- Redirect Section
         // exit;

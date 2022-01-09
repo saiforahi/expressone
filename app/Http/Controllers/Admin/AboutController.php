@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Session;
+use App\Team;
 use App\About;
+use Validator;
+use App\Vision;
 use App\History;
 use App\Mission;
 use App\Promise;
-use App\Team;
-use App\Vision;
-use Session;
-use DataTables;
-use Validator;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Yajra\DataTables\Facades\DataTables;
 
 class AboutController extends Controller
 {

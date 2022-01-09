@@ -112,11 +112,9 @@
                                         <i class="fa fa-phone-square mr-1"
                                             aria-hidden="true"></i>{{ $shipments['phone'] }}
                                     </td>
-
                                     <td>
                                         {{ $shipments['cod_amount'] }}
                                     </td>
-
                                     <td>
                                         {{ $shipments['weight_charge'] }}
                                     </td>
@@ -139,9 +137,6 @@
                                         <a href="{{ route('pdf.shipment', $shipments['id']) }}"
                                             class="btn btn-info btn-sm">
                                             <i class="fa fa-file-pdf"></i></a>
-                                        <a href="{{ route('merchant.shipmentCn', $shipments['id']) }}"
-                                            class="btn btn-primary btn-sm">
-                                            <i class="fa fa-print"></i></a>
                                         <a target="_blank" href="{{ route('merchant.shipmentCn', $shipments['id']) }}"
                                             class="btn btn-primary btn-sm">
                                             CN</a>

@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
-use App\Area;
-use App\Http\Controllers\Controller;
 use App\Hub;
+use Session;
+use App\Area;
 use App\Zone;
 use Illuminate\Http\Request;
-use Session;
-use DataTables;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class AreaController extends Controller
 {
@@ -82,7 +82,7 @@ class AreaController extends Controller
 
     public function delete_hub(Hub $hub)
     {
-        if (\Auth::guard('admin')->user()->role_id != '1') return 0;
+        if (Auth::guard('admin')->user()->role_id != '1') return 0;
         $area = Area::where('hub_id', $hub->id)->count();
         if ($area > 0) return 0;
         $hub->delete();

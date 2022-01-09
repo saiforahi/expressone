@@ -8,7 +8,7 @@ use App\Admin_hub;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
 {
@@ -34,7 +34,7 @@ class DashboardController extends Controller
 
     public function get_admin_hub_ids(Admin $admin)
     {
-        $hubs = \App\Admin_hub::where('admin_id', $admin->id)->get();
+        $hubs = Admin_hub::where('admin_id', $admin->id)->get();
         $ids = [];
         foreach ($hubs as $key => $value) {
             $ids[] = $value->hub_id;

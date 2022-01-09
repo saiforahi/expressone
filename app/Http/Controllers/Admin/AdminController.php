@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Hub;
 use App\Admin;
 use App\Admin_role;
-use App\Hub;
-use DataTables;
-use Validator;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 //use this library for uploading image
-use Illuminate\Http\UploadedFile;
-//user this intervention image library to resize/crop image
-use Intervention\Image\Facades\Image; 
-// import the Intervention Image Manager Class
 use Intervention\Image\ImageManager;
+//user this intervention image library to resize/crop image
+use Intervention\Image\Facades\Image;
+// import the Intervention Image Manager Class
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {
@@ -37,9 +38,9 @@ class AdminController extends Controller
             }else{
                 $data .=' <button class="btn btn-danger delete" id="' . $employee->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>';
             }
-            $data .='</div>';  return $data; 
+            $data .='</div>';  return $data;
         })
-        ->addColumn('employee_info', function ($employee) {  
+        ->addColumn('employee_info', function ($employee) {
             if($employee->image==null) $src= 'images/user.png';
             else $src= $employee->image;
 
@@ -67,13 +68,13 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
-        $validator = $this->fields(); 
+    {
+        $validator = $this->fields();
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
         $data = [
-            'role_id'=>'2', 'first_name'=>$request->first_name, 
+            'role_id'=>'2', 'first_name'=>$request->first_name,
             'last_name'=>$request->last_name,
             'email'=>$request->email,'phone'=>$request->phone,
             'password' =>Hash::make($request->password),
@@ -98,7 +99,7 @@ class AdminController extends Controller
         $validator = Validator::make(request()->all(), [
             'first_name'=>'required', 'last_name'=>'required',
             'email'=>'required|unique:admins,email,'.$request->id,
-            'phone'=>'required','address'=>'required', 
+            'phone'=>'required','address'=>'required',
             'hub_ids'=> "required|array|min:1",
             'hub_ids.*'=> "required|distinct|min:1",
         ]);
@@ -153,7 +154,7 @@ class AdminController extends Controller
                     'admin_id'=>$request->admin_id,
                     'route'=>$route
                 ]);
-            } 
+            }
         }else{
             Admin_role::create([ 'admin_id'=>$request->admin_id,'route'=>'admin' ]);
         }
@@ -180,12 +181,12 @@ class AdminController extends Controller
 
     function storeImage($admin,$type=null){
         if (request()->has('image')) {
-            $fileName = rand().'.'.request()->image->extension();  
+            $fileName = rand().'.'.request()->image->extension();
             request()->image->move('images/admin/', $fileName);
             Image::make('images/admin/'.$fileName)->fit(100,100)->save();
             $admin->update(['image'=>'images/admin/'.$fileName]);
             if ($type=='update') {
-                \File::delete(request()->oldLogo);
+                File::delete(request()->oldLogo);
             }
         }
     }
