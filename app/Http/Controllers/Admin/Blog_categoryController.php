@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 //use this library for uploading image
 use Illuminate\Http\UploadedFile;
 //user this intervention image library to resize/crop image
-use Intervention\Image\Facades\Image; 
+use Intervention\Image\Facades\Image;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManager;
 
@@ -41,14 +41,14 @@ class Blog_categoryController extends Controller
 
             $data .=' <button class="btn btn-danger delete" id="' . $about->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>';
 
-            $data .='</div>';  return $data; 
+            $data .='</div>';  return $data;
         })
         ->addColumn('photo', function ($about) {
             if($about->photo !=null){
                 return $photo = '<img src="/'.$about->photo.'" style="height:30px">';
             }
         })
-        ->addColumn('name', function ($about) {  
+        ->addColumn('name', function ($about) {
            return $about->name.' (<b>'.$about->blogs->count().'</b>)';
         })
         ->addColumn('status', function ($about) {
@@ -136,7 +136,7 @@ class Blog_categoryController extends Controller
 
     function storeImage($blog_category,$type=null){
         if (request()->has('photo')) {
-            $fileName = rand().'.'.request()->photo->extension();  
+            $fileName = rand().'.'.request()->photo->extension();
             request()->photo->move('images/blog/category/', $fileName);
             Image::make('images/blog/category/'.$fileName)->fit(100,100)->save();
             $blog_category->update(['photo'=>'images/blog/category/'.$fileName]);

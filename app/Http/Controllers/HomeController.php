@@ -18,53 +18,53 @@ class HomeController extends Controller
     {
         $banner = \App\Slider::where('status','1')->first();
         $about = \App\About::where('id','1')->first();
-        return view('index',compact('banner','about'));
+        return view('frontend.index',compact('banner','about'));
     }
 
     public function about()
     {
         $about = \App\About::where('id','1')->first();
         $abouts = \App\About::where('id','!=','1')->where('status','1')->get();
-        return view('about',compact('about','abouts'));
+        return view('frontend.about',compact('about','abouts'));
     }
     public function team()
     {
         $about = \App\Team::where('id','1')->first();
         $abouts = \App\Team::where('id','!=','1')->where('status','1')->get();
-        return view('team',compact('about','abouts'));
+        return view('frontend.team',compact('about','abouts'));
     }
     public function promise()
     {
         $about = \App\Promise::where('id','1')->first();
         $abouts = \App\Promise::where('id','!=','1')->where('status','1')->get();
-        return view('promise',compact('about','abouts'));
+        return view('frontend.promise',compact('about','abouts'));
     }
     public function vision()
     {
         $about = \App\Vision::where('id','1')->first();
         $abouts = \App\Vision::where('id','!=','1')->where('status','1')->get();
-        return view('vision',compact('about','abouts'));
+        return view('frontend.vision',compact('about','abouts'));
     }
     public function mission()
     {
         $about = \App\Mission::where('id','1')->first();
         $abouts = \App\Mission::where('id','!=','1')->where('status','1')->get();
-        return view('mission',compact('about','abouts'));
+        return view('frontend.mission',compact('about','abouts'));
     }
     public function history()
     {
         $about = \App\History::where('id','1')->first();
         $abouts = \App\History::where('id','!=','1')->where('status','1')->get();
-        return view('history',compact('about','abouts'));
+        return view('frontend.history',compact('about','abouts'));
     }
 
     function pricing(){
-        return view('pricing');
+        return view('frontend.pricing');
     }
 
     public function tracking()
     {
-        return view('tracking');
+        return view('frontend.tracking');
     }
     public function track_order(Request $request){
         // dd($request->all());
@@ -75,7 +75,7 @@ class HomeController extends Controller
 
     public function contact()
     {
-        return view('contact');
+        return view('frontend.contact');
     }
 
     function save_contact(Request $request){
@@ -91,14 +91,14 @@ class HomeController extends Controller
         $featuresPhotos = Blog::select('photo','id')->inRandomOrder()->limit(9)->get();
         // dd($featuresPhotos);
         $blogs = Blog::latest()->paginate(10);
-        return view('blog',compact('blogs','categories','featuresPhotos'));
+        return view('frontend.blog',compact('blogs','categories','featuresPhotos'));
     }
 
     function category_post(Blog_category $blog_category){
         $categories = Blog_category::orderBy('name')->get();
         $featuresPhotos = Blog::select('photo','id')->inRandomOrder()->limit(9)->get();
         $blogs = Blog::where('blog_category_id',$blog_category->id)->paginate(10);
-        return view('blog',compact('blogs','categories','featuresPhotos'));
+        return view('frontend.blog',compact('blogs','categories','featuresPhotos'));
     }
 
     function seach_blog(Request $request){
@@ -110,7 +110,7 @@ class HomeController extends Controller
            ->where('title', 'LIKE', "%{$keyword}%")
            ->orWhere('description', 'LIKE', "%{$keyword}%")
            ->paginate(10);
-        return view('blog',compact('blogs','categories','featuresPhotos'));
+        return view('frontend.blog',compact('blogs','categories','featuresPhotos'));
     }
 
     function fields(){
@@ -143,8 +143,6 @@ class HomeController extends Controller
                 $cod_amount = (int)(((int)$request->parcel_value / 100) * $shipping->cod_value);
             }
         }
-
-
         $weight = (float)$request->weight;
         if ($weight > $shipping->max_weight) {
             $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
@@ -155,10 +153,7 @@ class HomeController extends Controller
         } else {
             $price = (int)$shipping->max_price;
         }
-
-
         $total_price = $price + $cod_amount + (int)$request->parcel_value;
-
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
     }
 }

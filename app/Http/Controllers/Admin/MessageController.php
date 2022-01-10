@@ -1,15 +1,10 @@
 <?php
 
-namespace App\Http\Controllers\admin;
-
-use Session;
-use Validator;
-use DataTables;
-use App\CmsPage;
-use App\Message;
+namespace App\Http\Controllers\Admin;
+use App\Models\Message;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Yajra\DataTables\Facades\DataTables;
 
 class MessageController extends Controller
 {

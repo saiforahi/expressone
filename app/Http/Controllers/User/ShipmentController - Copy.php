@@ -1,16 +1,14 @@
 <?php
-
 namespace App\Http\Controllers\User;
-use App\Area;
-use App\Http\Controllers\Controller;
-use App\Shipment;
-use App\ShippingPrice;
-use App\Shipment_delivery_payment;
+use App\Models\Area;
+use App\Models\Shipment;
 use Illuminate\Http\Request;
-use Auth;
-use PDF;
-use DataTables;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Models\ShippingPrice;
+use Barryvdh\DomPDF\PDF as PDF;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
+use App\Models\Shipment_delivery_payment;
 
 class ShipmentController extends Controller
 {
@@ -152,7 +150,7 @@ class ShipmentController extends Controller
     {
         $earth = new Earth();
         $earth = $earth->getCountries()->toArray();
-        $address = address::all();
+        $address = Address::all();
         $shipment = shipment::where('user_id', session('user-id'))->where('id', $id)->first();
         if ($shipment->status == 1) {
             return redirect('dashboard');

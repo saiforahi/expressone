@@ -1,14 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\CmsPage;
-use App\User;
-use App\User_verification;
-use App\Mail_configuration;
+use App\Models\User;
+use App\Models\CmsPage;
 use Illuminate\Http\Request;
+use App\Models\User_verification;
 use App\Mail\UserRegistrationMail;
 use App\Mail\UserVerificationMail;
+use App\Models\Mail_configuration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -113,8 +112,7 @@ class AuthController extends Controller
     public function send_verification_code()
     {
         // dd(Session::get('verification_email'));
-        $subject = 'Verification code | ' . basic_information()->company_name;
-
+        $subject = 'Verification code | ' .basic_information()->company_name;
         $code = rand();
         $user = User::where('email', Session::get('verification_email'))->first();
         $add = User_verification::create([
