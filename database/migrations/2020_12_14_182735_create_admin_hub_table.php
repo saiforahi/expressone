@@ -16,9 +16,9 @@ class CreateAdminHubTable extends Migration
         Schema::create('admin_hub', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('admin_id');
-            $table->unsignedBigInteger('hub_id');
-            $table->foreign('admin_id')->references('id')->on('admins');
-            $table->foreign('hub_id')->references('id')->on('hubs');
+            $table->unsignedBigInteger('unit_id');
+            $table->foreign('admin_id')->references('id')->on('users');
+            $table->foreign('unit_id')->references('id')->on('units');
             $table->timestamps();
         });
     }

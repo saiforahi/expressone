@@ -18,18 +18,17 @@ class CreateUsersTable extends Migration
             $table->string('user_id');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('shop_name')->nullable();
+            $table->ipAddress('ip')->nullable();
+            
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('password');
-            $table->string('address')->nullable();
-            $table->unsignedBigInteger('area_id')->nullable();
-            $table->string('website_link')->nullable();
+            
             $table->string('image')->nullable();
             $table->enum('status',['0','1'])->default(1);
             $table->tinyInteger('is_verified')->default(0);
             $table->rememberToken();
-            $table->foreign('area_id')->references('id')->on('areas');
+            
             $table->timestamps();
         });
     }

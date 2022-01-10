@@ -20,9 +20,9 @@ class CreateDriverShipmentTable extends Migration
             $table->unsignedBigInteger('admin_id');
             $table->text('note')->nullable();
             $table->enum('status',['pending','delivered','lost','received','cancelled'])->default('pending');
-            $table->foreign('driver_id')->references('id')->on('drivers');
+            $table->foreign('driver_id')->references('id')->on('users');
             $table->foreign('shipment_id')->references('id')->on('shipments');
-            $table->foreign('admin_id')->references('id')->on('admins');
+            $table->foreign('admin_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

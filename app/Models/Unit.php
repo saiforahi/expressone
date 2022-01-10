@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Hub extends Model
+class Unit extends Model
 {
-    protected $fillable = ['name','zone_id','status'];
+    protected $fillable = ['name','point_id','status'];
+    protected $table="units";
     // relation 
     public function employees()
     {

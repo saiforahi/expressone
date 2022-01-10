@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Shipmnet_OTP_confirmation extends Model
 {
     protected $fillable = ['otp','collect_by','shipment_id','driver_id'];
-    protected $table = 'shipment_opt_confirmations';
+    protected $table = 'shipment_otp_confirmations';
 	
 	
 	//relationship

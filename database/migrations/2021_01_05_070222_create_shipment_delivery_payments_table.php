@@ -20,7 +20,7 @@ class CreateShipmentDeliveryPaymentsTable extends Migration
             $table->float('amount',8,2);
             
             $table->foreign('shipment_id')->references('id')->on('shipments');
-            $table->foreign('admin_id')->references('id')->on('admins');
+            $table->foreign('admin_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

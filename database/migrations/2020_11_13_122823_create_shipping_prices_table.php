@@ -15,7 +15,7 @@ class CreateShippingPricesTable extends Migration
     {
         Schema::create('shipping_prices', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('zone_id');
+            $table->unsignedBigInteger('point_id');
             $table->boolean('cod')->default(0);
             $table->string('cod_value')->nullable();
             $table->boolean('delivery_type');
@@ -23,7 +23,7 @@ class CreateShippingPricesTable extends Migration
             $table->string('max_price');
             $table->string('per_weight');
             $table->string('price');
-            $table->foreign('zone_id')->references('id')->on('zones');
+            $table->foreign('point_id')->references('id')->on('points');
             $table->timestamps();
         });
     }

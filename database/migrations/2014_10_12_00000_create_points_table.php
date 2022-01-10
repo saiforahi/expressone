@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\Hub;
+use App\Models\Point;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHubsTable extends Migration
+class CreatePointsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,15 +14,13 @@ class CreateHubsTable extends Migration
      */
     public function up()
     {
-        Schema::create('hubs', function (Blueprint $table) {
+        Schema::create('points', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('zone_id');
             $table->boolean('status')->default(1);
-            $table->foreign('zone_id')->references('id')->on('zones');
             $table->timestamps();
         });
-        Hub::create([ 'name' =>'Hub One Dhaka','zone_id'=>1]);
+        Point::create(['name' => 'Dhaka','status'=> 1]);
     }
 
     /**
@@ -32,6 +30,6 @@ class CreateHubsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hubs');
+        Schema::dropIfExists('points');
     }
 }

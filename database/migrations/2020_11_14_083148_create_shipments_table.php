@@ -15,33 +15,35 @@ class CreateShipmentsTable extends Migration
     {
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
-            $table->integer('cod_amount')->nullable();
-            $table->integer('shipping_charge_id')->nullable()->comment('PK of shipping_charges table');
-            $table->integer('weight_charge')->nullable();
-            $table->string('merchant_note')->nullable();
             $table->integer('invoice_id')->unique();
             $table->integer('tracking_code')->nullable();
-            $table->string('zip_code')->nullable();
-            $table->integer('parcel_value')->nullable();
+            $table->unsignedBigInteger('added_by')->nullable();
+            $table->json('recipient')->nullable();
+            
+            $table->integer('cod_amount')->nullable();
+            $table->integer('shipping_charge_id')->nullable()->comment('PK of shipping_charges table');
             $table->integer('weight')->nullable();
+            $table->integer('weight_charge')->nullable();
+            $table->integer('delivery_charge')->nullable();
+            $table->integer('parcel_type')->nullable();
             $table->string('delivery_type')->nullable();
-            $table->string('cod')->nullable();
-            $table->string('price')->nullable();
-            $table->string('total_price')->nullable();
+            $table->string('note')->nullable();
+            
+            $table->string('amount')->nullable('Amount to be collected from customer');
+           
             $table->string('shipping_status')->default(0);
             $table->string('status')->default(1);
+            
+            $table->unsignedBigInteger('delivery_location_id')->nullable();
+            $table->unsignedBigInteger('pickup_location_id')->nullable();
+            
+            $table->foreign('delivery_location_id')->references('id')->on('locations');
+            $table->foreign('pickup_location_id')->references('id')->on('locations');
+            $table->foreign('added_by')->references('id')->on('users');
+
             $table->timestamp('time_starts')->useCurrent();
-            $table->unsignedBigInteger('user_id');
-            $table->string('added_by')->default('merchant');
-            $table->unsignedBigInteger('zone_id')->nullable();
-            $table->unsignedBigInteger('area_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('zone_id')->references('id')->on('zones');
-            $table->foreign('area_id')->references('id')->on('areas');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

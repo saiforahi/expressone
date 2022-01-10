@@ -1,11 +1,11 @@
 <?php
 
-use App\Models\Zone;
+use App\Models\Unit;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateZonesTable extends Migration
+class CreateUnitsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,14 +14,15 @@ class CreateZonesTable extends Migration
      */
     public function up()
     {
-        Schema::create('zones', function (Blueprint $table) {
+        Schema::create('units', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('point_id');
             $table->boolean('status')->default(1);
+            $table->foreign('point_id')->references('id')->on('points');
             $table->timestamps();
         });
-        Zone::create(['name' => 'Dhaka','status'=> 1]);
-
+        Unit::create([ 'name' =>'Unit One Dhaka','point_id'=>1]);
     }
 
     /**
@@ -31,6 +32,6 @@ class CreateZonesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('zones');
+        Schema::dropIfExists('units');
     }
 }

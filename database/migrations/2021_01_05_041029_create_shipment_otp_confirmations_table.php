@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateThirdpartyShipmentsTable extends Migration
+class CreateShipmentOtpConfirmationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateThirdpartyShipmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('thirdparty_shipments', function (Blueprint $table) {
+        Schema::create('shipment_otp_confirmations', function (Blueprint $table) {
             $table->id();
+            $table->string('otp');
+            $table->string('collect_by');
             $table->unsignedBigInteger('shipment_id');
-            $table->unsignedBigInteger('hub_id');
-            $table->unsignedBigInteger('admin_id');
-            $table->string('status')->nullable();
-            $table->string('status_in')->nullable();
-
+            $table->unsignedBigInteger('driver_id');
+            
             $table->foreign('shipment_id')->references('id')->on('shipments');
-            $table->foreign('hub_id')->references('id')->on('hubs');
-            $table->foreign('admin_id')->references('id')->on('admins');
+            $table->foreign('driver_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
@@ -35,6 +33,6 @@ class CreateThirdpartyShipmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('thirdparty_shipments');
+        Schema::dropIfExists('shipment_otp_confirmations');
     }
 }
