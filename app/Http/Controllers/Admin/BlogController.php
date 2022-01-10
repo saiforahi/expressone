@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 //use this library for uploading image
 use Illuminate\Http\UploadedFile;
 //user this intervention image library to resize/crop image
-use Intervention\Image\Facades\Image; 
+use Intervention\Image\Facades\Image;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManager;
 
@@ -42,17 +42,17 @@ class BlogController extends Controller
 
             $data .=' <button class="btn btn-danger delete" id="' . $about->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>';
 
-            $data .='</div>';  return $data; 
+            $data .='</div>';  return $data;
         })
         ->addColumn('photo', function ($about) {
             if($about->photo !=null){
                 return $photo = '<img src="/'.$about->photo.'" style="height:30px">';
             }else return '<span class="text-danger">No photo</span>';
         })
-        ->addColumn('title', function ($about) {  
+        ->addColumn('title', function ($about) {
            return $about->title;
         })
-        ->addColumn('category', function ($about) {  
+        ->addColumn('category', function ($about) {
            return $about->blog_category->name;
         })
         ->addColumn('status', function ($about) {
@@ -73,12 +73,12 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $this->fields(); 
+        $validator = $this->fields();
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-       
+
         $data = [
             'admin_id'=>Auth::guard('admin')->user()->id,
             'blog_category_id'=>$request->blog_category_id,
@@ -116,12 +116,12 @@ class BlogController extends Controller
      */
     public function update(Request $request)
     {
-        $validator = $this->fields($request->id); 
+        $validator = $this->fields($request->id);
         // dd($request->all());
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
-       
+
         $data = [
             'admin_id'=>Auth::guard('admin')->user()->id,
             'blog_category_id'=>$request->blog_category_id,
@@ -161,7 +161,7 @@ class BlogController extends Controller
 
     function storeImage($blog,$type=null){
         if (request()->has('photo')) {
-            $fileName = rand().'.'.request()->photo->extension();  
+            $fileName = rand().'.'.request()->photo->extension();
             request()->photo->move('images/blog/', $fileName);
             // Image::make('images/blog/'.$fileName)->fit(100,100)->save();
             $blog->update(['photo'=>'images/blog/'.$fileName]);

@@ -1,15 +1,21 @@
 <?php
 
-use App\Models\Shipment;
-use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\Admin\ShippingChargeController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Driver\AuthController as DriverAuthController;
-use App\Http\Controllers\Driver\DashboardController as DriverDashboardController;
+use App\Http\Controllers\Frontend\HomeController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
 //To clear all cache
-Route::get('clear', function () {
+Route::get('cc', function () {
     Artisan::call('cache:clear');
     Artisan::call('config:clear');
     Artisan::call('config:cache');
@@ -36,6 +42,7 @@ Route::get('/blog-search', 'HomeController@seach_blog')->name('search-post');
 // ajax call
 Route::get('/check-rate', 'HomeController@rateCheck')->name('rate.check');
 Route::get('/pricing', 'HomeController@pricing')->name('pricing');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -413,8 +420,4 @@ Route::group(['middleware' => 'auth:driver', 'namespace' => 'Driver', 'prefix' =
     Route::get('/return-agent-dispatch', 'ShipmentController@return_agent_dispatch')->name('return-box-for-delivery');
     Route::post('/return-shipment-delivery', 'ShipmentController@return_delivery_report')->name('return-shipment-delivery');
     Route::post('/confirm-otp', 'ShipmentController@otp_confirmation')->name('confirm-opt');
-});
-
-Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
-    Lfm::routes();
 });

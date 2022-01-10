@@ -1,29 +1,30 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
-
-use PDF;
-use App\Hub;
-use App\Area;
-use App\User;
-use App\Driver;
-use App\Shipment;
-use App\Hub_shipment;
-use App\ShippingPrice;
-use App\Driver_shipment;
-use App\Hub_shipment_box;
-use App\Events\SendingSMS;
-use App\Reconcile_shipment;
-use App\Thirdparty_shipment;
-use Illuminate\Http\Request;
-use App\Driver_hub_shipment_box;
-use App\Events\ShipmentMovement;
-use App\Driver_shipment_delivery;
-use App\Shipment_delivery_payment;
-use App\Driver_return_shipment_box;
+use App\Models\Hub;
+use App\Models\Area;
+use App\Models\User;
+use App\Models\Driver;
+use App\Models\Shipment;
+use App\Models\Hub_shipment;
+use App\Models\Hold_shipment;
+use App\Models\ShippingPrice;
+use App\Models\Driver_shipment;
+use App\Models\Return_shipment;
+use Barryvdh\DomPDF\PDF as PDF;
+use App\Models\Hub_shipment_box;
+use App\Models\Shipment_movement;
+use App\Models\Reconcile_shipment;
+use App\Models\Return_shipment_box;
+use App\Models\Thirdparty_shipment;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Driver_hub_shipment_box;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
+use App\Models\Driver_shipment_delivery;
+use App\Models\Shipment_delivery_payment;
+use App\Models\Shipmnet_OTP_confirmation;
+use App\Models\Driver_return_shipment_box;
 
 class ShipmentController extends Controller
 {
@@ -489,7 +490,7 @@ class ShipmentController extends Controller
             foreach (explode(',', $box->shipment_ids) as $key => $shipment_id) {
                 Shipment::where('id', $shipment_id)->update(['shipping_status' => '4']);
                 if ($hub->zone->status == '1' && $hub->status == '1') {
-                    \App\Thirdparty_shipment::create([
+                    Thirdparty_shipment::create([
                         'shipment_id' => $shipment_id, 'hub_id' => $hub->id,
                         'admin_id' => Auth::guard('admin')->user()->id, 'status' => 'transit'
                     ]);
@@ -891,13 +892,13 @@ class ShipmentController extends Controller
     function save_delivery_payment(Request $request)
     {
         foreach ($request->shipment_ids as $key => $shipment_id) {
-            $count = \App\Shipment_delivery_payment::where('shipment_id', $shipment_id)->count();
+            $count = Shipment_delivery_payment::where('shipment_id', $shipment_id)->count();
             $data = [
                 'shipment_id' => $shipment_id,
                 'admin_id' => Auth::guard('admin')->user()->id, 'amount' => $request->amount[$key],
             ];
             if ($count < 1) {
-                \App\Shipment_delivery_payment::create($data);
+                Shipment_delivery_payment::create($data);
             }
         }
         return back()->with('message', 'Shipment Payment for delivery is successfully saved!');
@@ -913,7 +914,7 @@ class ShipmentController extends Controller
         // $outForDelivery = \App\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'out-for-delivery'])->first();
         // $assignDriver = \App\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'assign-driver-for-delivery'])->first();
         // $deliverReport = \App\Shipment_movement::where(['shipment_id'=>$shipment->id,'user_type'=>'driver','report_type'=>'delivery-report'])->first();
-        $audit_logs = \App\Shipment_movement::where('shipment_id', $shipment->id)->get();
+        $audit_logs = Shipment_movement::where('shipment_id', $shipment->id)->get();
 
 
         return view('admin.shipment.load.delivery.audit', compact('shipment', 'audit_logs'));
@@ -950,7 +951,7 @@ class ShipmentController extends Controller
             return self::getCsv($columnNames, $rows, $bulk_id . '.csv');
         } else {
             return view('admin.shipment.load.download.shipment-pdf', compact('shipments', 'bulk_id'));
-            $pdf = \PDF::loadView('admin.shipment.load.download.shipment-pdf', compact('shipments', 'bulk_id'));
+            $pdf = PDF::loadView('admin.shipment.load.download.shipment-pdf', compact('shipments', 'bulk_id'));
             return $pdf->download('Bulk-ID-' . $bulk_id . '.pdf');
         }
     }
@@ -980,23 +981,23 @@ class ShipmentController extends Controller
 
         if ($request->label == '0') {
             Driver_shipment::where('shipment_id', $request->id)->delete();
-            \App\Shipment_movement::where('shipment_id', $request->id)->delete();
+            Shipment_movement::where('shipment_id', $request->id)->delete();
         } elseif ($request->label == '1') {
             Driver_shipment::where('shipment_id', $request->id)
                 ->where('status', '!=', 'pending')
                 ->where('status', '!=', 'received')->delete();
-            \App\Shipment_movement::where('shipment_id', $request->id)
+            Shipment_movement::where('shipment_id', $request->id)
                 ->where('report_type', '!=', 'assing-driver-to-pickup')->delete();
         } else {
             Driver_shipment::where('shipment_id', $request->id)
                 ->where('status', '!=', 'received')->delete();
-            \App\Shipment_movement::where('shipment_id', $request->id)
+            Shipment_movement::where('shipment_id', $request->id)
                 ->where('report_type', '!=', 'receive-parcels')
                 ->where('report_type', '!=', 'assing-driver-to-pickup')->delete();
         }
 
         // hold_shipments
-        \App\Hold_shipment::where('shipment_id', $request->id)->delete();
+        Hold_shipment::where('shipment_id', $request->id)->delete();
 
         // hub_shipments
         // dd($request->id);
@@ -1021,15 +1022,15 @@ class ShipmentController extends Controller
         // driver_return_shipment_box
         Driver_return_shipment_box::where('shipment_id', $request->id)->delete();
 
-        $return_box = \App\Return_shipment_box::select("id", 'shipment_ids')->whereRaw("find_in_set($request->id ,shipment_ids)")->first();
+        $return_box = Return_shipment_box::select("id", 'shipment_ids')->whereRaw("find_in_set($request->id ,shipment_ids)")->first();
         if ($return_box != null) {
             $return_new_ids = explode(',', $return_box->shipment_ids);
             $pos = array_search($request->id, $new_ids);
             unset($return_new_ids[$pos]);
             if (count(explode(',', $return_box->shipment_ids)) == 1) {
-                \App\Return_shipment_box::where('id', $return_box->id)->delete();
+                Return_shipment_box::where('id', $return_box->id)->delete();
             } else {
-                \App\Return_shipment_box::whereRaw("find_in_set($request->id ,shipment_ids)")
+                Return_shipment_box::whereRaw("find_in_set($request->id ,shipment_ids)")
                     ->update(['shipment_ids' => implode(',', $return_new_ids)]);
             }
         }
@@ -1039,12 +1040,12 @@ class ShipmentController extends Controller
 
         Reconcile_shipment::where('shipment_id', $request->id)->delete();
 
-        \App\Return_shipment::where('shipment_id', $request->id)->delete();
+        Return_shipment::where('shipment_id', $request->id)->delete();
 
         Shipment_delivery_payment::where('shipment_id', $request->id)->delete();
 
         // shipment_opt_confirmations
-        \App\Shipmnet_OTP_confirmation::where('shipment_id', $request->id)->delete();
+        Shipmnet_OTP_confirmation::where('shipment_id', $request->id)->delete();
 
         // thirdparty_shipments
         Thirdparty_shipment::where('shipment_id', $request->id)->delete();
