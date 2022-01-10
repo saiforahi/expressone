@@ -6,7 +6,7 @@
 
         <div class="nav toggle" style="border-bottom:1px solid silver;text-align:center; margin-top:3px;width:auto;">
             @if(Auth::guard('admin')->user()->role_id !=1)
-            <?php $hubs = \App\Admin_hub::where('admin_id',Auth::guard('admin')->user()->id)->get();?>
+            <?php $hubs = \App\Models\Admin_hub::where('admin_id',Auth::guard('admin')->user()->id)->get();?>
                 <select style="padding:3px" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
                     @foreach($hubs as $row)
                     <option @if(\Session::get('admin_hub')->id==$row->hub_id) selected @endif value="/admin/admin-change-hub/{{$row->hub_id}}">{{$row->hub->name}}</option> @endforeach
