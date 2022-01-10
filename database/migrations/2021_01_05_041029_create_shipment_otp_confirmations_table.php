@@ -16,7 +16,7 @@ class CreateShipmentOtpConfirmationsTable extends Migration
         Schema::create('shipment_otp_confirmations', function (Blueprint $table) {
             $table->id();
             $table->string('otp');
-            $table->string('collect_by');
+            $table->string('collected_by');
             $table->unsignedBigInteger('shipment_id');
             $table->unsignedBigInteger('driver_id');
             

@@ -14,7 +14,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable,HasRoles;
 
     protected $fillable = [
-        'user_id', 'first_name', 'last_name','shop_name', 'email', 'phone', 'password','address','area_id','website_link','image','status','is_verified'
+        'first_name', 'last_name','email', 'phone', 'ip','password','image','status','is_verified'
     ];
 
     protected $hidden = [
@@ -26,7 +26,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime:Y-m-d h:i:s A',
     ];
 
-    function area(){
-    	return $this->belongsTo(Area::class);
+    public function inheritable()
+    {
+        return $this->morphTo();
     }
 }
