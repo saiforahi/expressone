@@ -10,7 +10,6 @@
         </td></tr>
     </table>
 @endforeach
-
 <script>
     function moveback(shipment_id,hub_id){
         $('.m'+shipment_id).text('Moving..');

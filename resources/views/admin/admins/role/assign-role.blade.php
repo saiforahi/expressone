@@ -50,8 +50,6 @@
             </div>
         </div>
     </div>
-
-
     <div class="modal fade add" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -64,17 +62,14 @@
     	    <div class="modal-body">
     	    	<form id="save_change" method="post">@csrf
     	    		<span class="form_result">Loading...</span>
-                    
+
     	    		<button class="btn btn-info pull-right" type="submit"><i class="fa fa-spinner"></i> Save Changes</button>
     	    	</form>
     	    </div>
         </div>
       </div>
     </div>
-
-
 @endsection
-
 @push('scripts')
     <script>
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');

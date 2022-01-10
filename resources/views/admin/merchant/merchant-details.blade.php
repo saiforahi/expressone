@@ -1,9 +1,7 @@
 @extends('admin.layout.app')
 @section('title','Merchant List')
 @section('content')
-
     <div class="right_col" role="main">
-        
         <div class="">
             <div class="page-title">
                 <div class="title_left">
@@ -32,7 +30,6 @@
                     {{ session()->get('message') }}
                 </div>
             @endif
-
             <div class="row">
                 <div class="x_panel">
                     <div class="col-md-6">
@@ -44,29 +41,26 @@
                                 Name: {{$user['first_name']}} {{$user['last_name']}} <br>
                                 Email: {{$user['email']}} <br>
                                 Phone: {{$user['phone']}} <br>
-                                
                             </div>
                         </div>
-
                     </div>
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-md-6">
                                 @if($user->area_id !=null)
-                                 Area: {{$user->area->name}} @else 
+                                 Area: {{$user->area->name}} @else
                                     Area: <span class="text-danger">Not set</span> @endif
-                                <br> 
+                                <br>
                                 Address: {{$user->address}} <br>
                                 Zip-Code: {{$user->zip_code}} <br>
                                 Website: @if($user->website_link==null)
-                                <span class="label label-warning">Not link</span> 
+                                <span class="label label-warning">Not link</span>
                                 @else <a target="_blank" class="label label-success">{{$user->website_link}}</a>  @endif <br>
                             </div>
                             <div class="col-md-6">
                                 Join Date: {{date('M d, Y',strtotime($user->created_at))}} <br>
-
                                 Status: @if($user->status==1)
-                                    <span class="label label-success">Registerd</span> 
+                                    <span class="label label-success">Registerd</span>
                                 @else <span class="label label-danger">Block</span>  @endif <br>
                                 Total Parcels: {{COUNT($shipments)}}
                             </div>
@@ -84,7 +78,6 @@
                                 <thead>
                                 <tr class="bg-dark">
                                     <th>Shipment info</th><th>Customer Info</th>
-                
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -93,12 +86,11 @@
                                         <th scope="row">
                                             Invoice ID: {{$shipment->invoice_id}} <br>
                                             Shipment Type : @if($shipment->delivery_type=='1') Regular Delivery @else Express Delivery @endif <br>
-                                            Price: {{$shipment->cod_amount}} 
+                                            Price: {{$shipment->cod_amount}}
                                             ( @if(($shipment->cod_amount-$shipment->delivery_charge) <=0) Paid by merchant @else Pay by customer @endif ) <br>
                                             Tracking code: <a href="/tracking?code={{$shipment->tracking_code}}" target="_blank">{{$shipment->tracking_code}}</a> <br>
                                             Status: @include('admin.shipment.status',['status'=>$shipment->status,'shipping_status'=>$shipment->shipping_status]) <br>
                                             Date: {{date('M d, Y',strtotime($shipment->created_at))}}
-
                                         </th>
                                         <th scope="row">
                                             Shipment ID : {{$shipment->id}} <br>
@@ -107,49 +99,43 @@
                                             Area: {{$shipment->area->name}} <br>
                                             Hub: {{$shipment->area->hub->name}} <br>
                                             Zone: {{$shipment->area->hub->zone->name}}
-                                           
                                         </th>
                                     </tr>@endforeach
-
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 @endsection
 @push('style')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet"/>
     <!-- Datatables -->
-    <link href="{{asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    <link href="{{asset('_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
           rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    <link href="{{asset('_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
           rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}" rel="stylesheet">
 @endpush
-
 @push('scripts')
     <!-- Datatables -->
-    <script src="{{asset('vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
-    <script src="{{asset('vendors/jszip/dist/jszip.min.js')}}"></script>
-    <script src="{{asset('vendors/pdfmake/build/pdfmake.min.js')}}"></script>
-    <script src="{{asset('vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+    
+    <script src="{{asset('_vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+    <script src="{{asset('_vendors/jszip/dist/jszip.min.js')}}"></script>
+    <script src="{{asset('_vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+    <script src="{{asset('_vendors/pdfmake/build/vfs_fonts.js')}}"></script>
 @endpush

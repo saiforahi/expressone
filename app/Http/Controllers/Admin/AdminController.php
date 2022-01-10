@@ -1,21 +1,16 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
-
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Hub;
 use App\Models\Admin;
-use App\Admin_role;
-use App\Hub;
-use DataTables;
-use Validator;
+use App\Models\Admin_role;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
-//use this library for uploading image
-use Illuminate\Http\UploadedFile;
 //user this intervention image library to resize/crop image
 use Intervention\Image\Facades\Image;
 // import the Intervention Image Manager Class
-use Intervention\Image\ImageManager;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {

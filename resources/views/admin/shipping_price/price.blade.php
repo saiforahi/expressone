@@ -58,11 +58,11 @@
                                             Taka,<br>
                                             Next per {{$shippings->per_weight}} KG price {{$shippings->price}} Taka
                                         </td>
-                                        
+
                                         <td class="text-right">
                                             <a href="/admin/delete-shipping-price/{{$shippings->id}}" data-toggle="tooltip"
                                                data-placement="top" data-original-title="Delete" class="delete" onclick="return confirm('Are you sure to remove the price permanently??')"><i class="fa text-danger fa-trash fa-2x"></i></a>
-                                            
+
                                             <a href="#" class="show-price" data-id="{{$shippings->id}}" data-toggle="modal" data-target="#editModal"><i class="fa text-info fa-edit fa-2x"></i></a>
                                         </td>
                                     </tr>
@@ -120,32 +120,32 @@
 @push('style')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet"/>
     <!-- Datatables -->
-    <link href="{{asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    <link href="{{asset('_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
           rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    <link href="{{asset('_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
           rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}" rel="stylesheet">
 @endpush
 
 @push('scripts')
     <!-- Datatables -->
-    <script src="{{asset('vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
-    <script src="{{asset('vendors/jszip/dist/jszip.min.js')}}"></script>
-    <script src="{{asset('vendors/pdfmake/build/pdfmake.min.js')}}"></script>
-    <script src="{{asset('vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+    
+    <script src="{{asset('_vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+    <script src="{{asset('_vendors/jszip/dist/jszip.min.js')}}"></script>
+    <script src="{{asset('_vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+    <script src="{{asset('_vendors/pdfmake/build/vfs_fonts.js')}}"></script>
 
     <script>
         $(document).ready(function () {
@@ -157,7 +157,7 @@
                 }
             });
 
-            // shiw price 
+            // shiw price
             $('.show-price').on('click',function(){
                 let id = $(this).data('id');
                 $.get( "/admin/show-shipping-price/"+id, function( data ) {

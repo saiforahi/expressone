@@ -8,12 +8,11 @@
         <b class="pull-right">Hub: {{$item->hub_shipment_box->hub->name}}</b>
         </td></tr>
         <tr><td><b>Parcel Value: </b>{{$item->shipment->total_price}}
-            <button class="btn btn-info btn-xs pull-right m{{$item->shipment_id}}" 
+            <button class="btn btn-info btn-xs pull-right m{{$item->shipment_id}}"
                 onclick="moveback(<?php echo $item->shipment_id.','.$item->hub_shipment_box->hub->id;?>)">Move <i class="fa fa-long-arrow-right"></i> </button>
         </td></tr>
     </table>
 @endforeach
-
 <script>
     function moveback(shipment_id,hub_id){
         $('.m'+shipment_id).text('Moving..');

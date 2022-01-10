@@ -6,18 +6,12 @@
         </p>
     </div>
     <div class="col-md-6 m-b-0 m-t-5">
-
         <button class="btn btn-xs btn-info form-control s{{$hub->id}}" onclick="sorting(<?php echo $hub->id;?>)">Send to sorting</button>
-
         <button class="btn btn-xs btn-default form-control viewParcel" data-toggle="modal" data-target="#viewParcel" data-hub_id="{{$hub->id}}">View Parcels</button>
-
         <div class="result2"></div>
     </div>
     </div>
 @endforeach
-
-
-
 <!-- Modal to view hub base parcels -->
 <div class="modal fade" id="viewParcel" role="dialog">
     <div class="modal-dialog">
@@ -28,11 +22,8 @@
         </div>
         <div class="modal-body hub-shipments"></div>
       </div>
-      
     </div>
   </div>
-
-
 <script>
     $('.viewParcel').on('click',function(){
       let id = $(this).data('hub_id');

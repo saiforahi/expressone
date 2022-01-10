@@ -1,7 +1,6 @@
 @extends('admin.dashboard')
 @section('title','Mail configuration')
 @section('content')
-
 <div class="right_col">
     <div class="row">
         <div class="col-md-12 col-sm-12 ">
@@ -16,7 +15,6 @@
                 <div class="x_content">
                     <br>
                     <form id="demo-form2" method="post" class="form-horizontal form-label-left" novalidate="">@csrf
-
                         <div class="item form-group">
                             <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">E-mail Server<span class="required">*</span>
                             </label>
@@ -38,7 +36,6 @@
                                 <input type="text" name="password" class="form-control" value="{{$info->password}}">
                             </div>
                         </div>
-
                         <div class="item form-group">
                             <label for="middle-name" class="col-form-label col-md-3 col-sm-3 label-align">Referrence email (sent from email)</label>
                             <div class="col-md-6 col-sm-6 ">
@@ -57,5 +54,4 @@
         </div>
     </div>
 </div>
-
 @endsection

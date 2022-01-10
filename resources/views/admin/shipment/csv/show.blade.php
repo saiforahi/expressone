@@ -6,9 +6,7 @@
             <form id="upload_form" method="post" action="">
                 {{csrf_field()}}
                 @foreach(\Session::get('csv_data') as $key=>$line)
-
                 <div class="page"><b>Parcel: {{$key+1}}</b></div>
-
                 <div class="form_each">
                     <div class="form-row">
                         <div class="col-md-4 text-left">
@@ -25,7 +23,6 @@
                         </div>
                     </div>
                     <div class="form-row">
-
                         <div class="col-md-3 text-left">
                             <label for="zip_code">Zip Code</label>
                             <input type="text" id="zip_code" class="form-control" name="zip_code[]" value="{{$line['post_code']}}">
@@ -33,7 +30,6 @@
                         <div class="col-md-3 text-left">
                             <label class="" for="weight">Weight</label>
                             <input type="text"  class="form-control weight" data-key="{{$key}}" name="weight[]" id="weight{{$key}}" value="1">
-
                         </div>
                         <div class="col-md-3 cod_target text-left">
                             <label for="parcel_value">Declared Parcel Value</label>
@@ -44,7 +40,6 @@
                             <input type="text" id="invoice_id" class="form-control" name="invoice_id[]" value="{{$line['invoice']}}">
                         </div>
                     </div>
-
                     <div class="form-row">
                         <div class="col-md-2 text-left">
                             <label for="invoice_id">Shipping method</label>
@@ -63,13 +58,11 @@
                                 @endforeach
                             </select>
                         </div>
-
                         <div class="col-md-7 text-left">
                             <label for="merchant_note">Merchant note</label>
                             <input type="text" id="merchant_note" class="form-control" name="merchant_note[]">
                         </div>
                     </div>
-
                 </div>
                 @endforeach  <br>
                 <div class="form_each"> <br>
@@ -81,7 +74,6 @@
                                 <option value="">Select Merchant</option>
                                 <option value="{{$merchant->id}}">{{$merchant->first_name.' '.$merchant->last_name}}</option> @endforeach
                             </select>
-
                         </div>
                         <div class="col-md-4">
                             <select name="type" class="select2 form-control">
@@ -94,16 +86,14 @@
                             <button type="submit" onclick="working()" class="submit mt-2 px-4 btn btn-success pull-right"> <b class="fa fa-send"> Save shipment Sheet</b>  </button>
                         </div>
                     </div>
-
                 </div>
             </form><br>
         </div>
     </div>
 @endsection
 @push('style')
-
-    <link rel="stylesheet" href="{{asset('vendors/select2/dist/css/select2.min.css')}}">
-    <link rel="stylesheet" href="{{asset('vendors/select2/dist/css/bootstrap4-select2.css')}}">
+    <link rel="stylesheet" href="{{asset('_vendors/select2/dist/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{asset('_vendors/select2/dist/css/bootstrap4-select2.css')}}">
      <style type="text/css">
     .form_each{ background: #e0f3ff;padding: 2%; border:1px solid ;width: 100%;float:left;}
     #NotFound1{border:2px solid red;}
@@ -126,7 +116,6 @@
     </style>
 @endpush
 @push('scripts')
-
     <!-- Select2 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
     <script>
@@ -134,7 +123,5 @@
           placeholder: "Select one",
           allowClear: true
       });
-
     </script>
-
 @endpush

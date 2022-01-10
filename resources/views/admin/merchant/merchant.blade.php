@@ -82,7 +82,6 @@
                                                     </a>
                                                 @endif
                                             </th>
-
                                             <th scope="row">
                                                 <a href="/admin/merchant-details/{{ $users->id }}"
                                                     class="btn btn-primary btn-xs pull-right">View</a>
@@ -91,7 +90,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
@@ -112,13 +110,11 @@
                             <br>
                             <form id="demo-form2" method="post" action="{{ route('merchant.store') }}" autocomplete="off"
                                 class="form-horizontal form-label-left input_mask"> {{ csrf_field() }}
-
                                 <div class="col-xs-12 form-group has-feedback">
                                     <label for="shop_name">Shop Name:</label>
                                     <input type="text" class="form-control" placeholder="Example: Daraz" name="shop_name"
                                         id="shop_name" value="{{ old('shop_name') }}">
                                 </div>
-
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="first_name">First Name:</label>
                                     <input type="text" class="form-control" placeholder="Arafat" name="first_name"
@@ -171,12 +167,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
-
     <!-- Modal for add merchant-->
     <div id="addParcel" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
@@ -208,7 +201,6 @@
                                 <div class="my-4" style="margin-top:1em ">
                                     @include('admin.shipment.includes.parcel-entry-form')
                                 </div>
-
                                 <div class="row"> <br>
                                     <label class="col-md-2">Status:</label>
                                     <div class="col-md-10">
@@ -234,7 +226,6 @@
                                         </select>
                                     </div>
                                 </div>
-
                                 <div class="row my-4" style="margin-top:1em">
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-success pull-right"><i
@@ -249,43 +240,37 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
-
 @endsection
 @push('style')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" />
     <!-- Datatables -->
-    <link href="{{ asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 @endpush
-
 @push('scripts')
     <!-- Datatables -->
-    <script src="{{ asset('vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
-    <script src="{{ asset('vendors/jszip/dist/jszip.min.js') }}"></script>
-    <script src="{{ asset('vendors/pdfmake/build/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+    <script src="{{ asset('_vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+    <script src="{{ asset('_vendors/jszip/dist/jszip.min.js') }}"></script>
+    <script src="{{ asset('_vendors/pdfmake/build/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('_vendors/pdfmake/build/vfs_fonts.js') }}"></script>
     <script>
         $(function() {
-
             $('.adNewParcel').on('click', function() {
                 $('#addParcel').modal('show');
             });

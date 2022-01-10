@@ -135,12 +135,12 @@
 
     </style>
 
-    <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/bootstrap4-select2.css') }}">
+    <link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/bootstrap4-select2.css') }}">
 @endpush
 
 @push('scripts')
-    <script src="{{ asset('vendors/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ asset('_vendors/select2/dist/js/select2.min.js') }}"></script>
 
     <script type="text/javascript">
         function sorting(hub_id) {
@@ -180,7 +180,7 @@
                 });
             });
 
-            // with Customer phone no 
+            // with Customer phone no
             $('[name=phoneNo]').on('keypress', function(e) {
                 if (e.which == 13) {
                     $.ajax({

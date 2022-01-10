@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Shipment;
 use App\User;
-use App\Driver;
+use App\Models\Driver;
 use App\Driver_shipment;
-use App\Driver_hub_shipment_box;
-
-use App\Http\Controllers\Controller;
+use App\Models\Shipment;
 use Illuminate\Http\Request;
-use Session;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Driver_hub_shipment_box;
+use Illuminate\Support\Facades\Session;
 
 class DriverController extends Controller
 {
@@ -44,7 +43,6 @@ class DriverController extends Controller
         $register_user->phone = $request->phone;
         $register_user->password = Hash::make($request->password);
         $register_user->save();
-
         Session::flash('message', 'Driver add successfully');
         return redirect('/admin/driver-list');
     }

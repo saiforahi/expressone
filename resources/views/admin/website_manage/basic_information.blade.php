@@ -337,7 +337,7 @@
 @endsection
 @push('scripts')
     <!-- validator -->
-    <script src="{{ asset('vendors/validator/validator.js') }}"></script>
+    <script src="{{ asset('_vendors/validator/validator.js') }}"></script>
     <script>
         function chooseFile() {
             $(".ImageUpload").click();

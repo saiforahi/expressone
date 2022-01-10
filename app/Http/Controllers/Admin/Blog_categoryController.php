@@ -1,19 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Blog_category;
 use Session;
-use DataTables;
 use Validator;
+use Illuminate\Http\Request;
+use App\Models\Blog_category;
+use Illuminate\Http\UploadedFile;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 //use this library for uploading image
-use Illuminate\Http\UploadedFile;
+use Intervention\Image\ImageManager;
 //user this intervention image library to resize/crop image
 use Intervention\Image\Facades\Image;
 // import the Intervention Image Manager Class
-use Intervention\Image\ImageManager;
+use Yajra\DataTables\Facades\DataTables;
 
 class Blog_categoryController extends Controller
 {

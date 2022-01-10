@@ -1,20 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
-use App\Http\Controllers\Controller;
+use App\Models\Blog;
 use Illuminate\Http\Request;
-use App\Blog;
-use Session; use Auth;
-use DataTables;
-use Validator;
-use Illuminate\Support\Facades\Hash;
-//use this library for uploading image
-use Illuminate\Http\UploadedFile;
-//user this intervention image library to resize/crop image
-use Intervention\Image\Facades\Image;
-// import the Intervention Image Manager Class
-use Intervention\Image\ImageManager;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
 {
@@ -166,7 +159,7 @@ class BlogController extends Controller
             // Image::make('images/blog/'.$fileName)->fit(100,100)->save();
             $blog->update(['photo'=>'images/blog/'.$fileName]);
             if ($type=='update') {
-                \File::delete(request()->oldLogo);
+                File::delete(request()->oldLogo);
             }
         }
     }
