@@ -77,6 +77,29 @@ class AuthController extends Controller
         $request->session()->flash('login_error', 'Wrong information or this account not login.');
         return back()->withInput($request->only('email', 'remember'));
     }
+    public function new_login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|max:100|exists:users',
+            'password' => 'required|max:20|min:8',
+        ]);
+        
+        if (User::where('email',$request->email)->first()->is_verified==1 && Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
+            switch(User::where('email',$request->email)->first()->inheritable_type){
+                case 'App\Models\Merchant':
+                    Auth::login(User::where('email',$request->email)->first());
+                    return redirect()->intended('/dashboard');
+                case 'App\Models\Admin':
+                    Auth::login(User::where('email',$request->email)->first());
+                    return redirect()->intended('/admin');
+            }
+        }
+        else if(User::where('email',$request->email)->first()->is_verified==0){
+            return redirect()->route('verify-user');
+        }
+        $request->session()->flash('login_error', 'Wrong information or this account can not login.');
+        return back()->withInput($request->only('email', 'remember'));
+    }
 
     public function verify()
     {

@@ -11,8 +11,7 @@ class Admin extends Model
     protected $fillable = [
         'type', 'units','is_active'
     ];
-    public function user()
-    {
+    public function user(){
         return $this->morphOne(User::class, 'inheritable');
     }
 }

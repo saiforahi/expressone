@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Driver extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        
+    ];
+    public function user(){
+        return $this->morphOne(User::class, 'inheritable');
+    }
 }

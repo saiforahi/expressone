@@ -47,7 +47,7 @@ Route::post('admin/login', [App\Http\Controllers\Admin\AuthController::class,'lo
 Route::post('admin/register', [App\Http\Controllers\Admin\AuthController::class,'store'])->name('admin.register');
 Route::post('admin/logout', [App\Http\Controllers\Admin\AuthController::class,'logout'])->name('admin.logout');
 
-Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function () {
+Route::group(['prefix' => 'admin', 'middleware' => 'auth', 'namespace' => 'Admin'], function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class,'index'])->name('admin-dashboard');
     Route::get('/basic-information', 'BasicInformationController@index')->name('basic-information');
     Route::post('/basic-information', 'BasicInformationController@update')->name('basic-information.update');
@@ -348,12 +348,12 @@ Route::get('/verify', [App\Http\Controllers\AuthController::class,'verify'])->na
 Route::post('/verify', [App\Http\Controllers\AuthController::class,'verify_code'])->name('verify-user-code');
 Route::post('/verification.resend', [App\Http\Controllers\AuthController::class,'send_verification_code'])->name('verification.resend');
 
-Route::post('/login', [App\Http\Controllers\AuthController::class,'login'])->name('login.store');
+Route::post('/login', [App\Http\Controllers\AuthController::class,'new_login'])->name('login.store');
 Route::get('/register', [App\Http\Controllers\AuthController::class,'register'])->name('register');
 Route::post('/register', [App\Http\Controllers\AuthController::class,'registerStore'])->name('register.store');
 Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout'])->name('logout');
 
-Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
+Route::group(['middleware' => 'auth', 'namespace' => 'User'], function () {
     Route::get('/dashboard', [App\Http\Controllers\User\DashboardController::class,'index'])->name('user.dashboard');
     Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
     Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');

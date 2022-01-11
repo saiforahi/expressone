@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Merchant;
 
 class User extends Authenticatable
 {
@@ -26,8 +27,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime:Y-m-d h:i:s A',
     ];
 
-    public function inheritable()
-    {
+    public function inheritable(){
         return $this->morphTo();
+    }
+    public function merchants(){
+        return $this->morphTo()->where('inheritable_type', Merchant::class);
+    }
+    public function morphClass(){
+        return $this->hasOne(get_class($this->inheritable),'id','inheritable_id'); 
     }
 }

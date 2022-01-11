@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Hub;
-use App\Admin;
-use App\Admin_hub;
+use App\Models\Unit;
+use App\Models\Admin;
+use App\Models\Admin_Unit;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;

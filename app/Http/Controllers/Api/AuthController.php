@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Models\User;
 use App\Models\Driver;
+use App\Models\Merchant;
 use Auth;
 
 class AuthController extends Controller
@@ -33,52 +34,29 @@ class AuthController extends Controller
             return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
         }
         
-        // $user->last_login_ip = request()->ip();
-        // $user->save();
-        if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password], true)) {
-            $user = Auth::guard('user')->user();
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], true)) {
+            $user = Auth::user();
             $token=$user->createToken('api_token')->plainTextToken;
             return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"user"=>$user],200);
         }
-        else if(Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], true)) {
-            $user = Auth::guard('admin')->user();
-            $token=$user->createToken('api_token')->plainTextToken;
-            return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"user"=>$user],200);
-        }
-        else if(Auth::guard('driver')->attempt(['email' => $request->email, 'password' => $request->password], true)) {
-            $user = Auth::guard('driver')->user();
-            $token=$user->createToken('api_token')->plainTextToken;
-            return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"user"=>$user],200);
-        }
+        
         return response()->json(['success'=>false,'message' => 'Wrong credentials'], 401);
     }
-    public function createMerchant(array $data){
-        try{
-            $user = User::create(array_merge($data,['user_id' => 'UR'.rand(100, 999).time(),'password' => bcrypt($data['password'])]));
-            return $user;
-        }
-        catch(Exception $e){
-            return $e;
-        }
-    }
-    public function createDriver(array $data){
-        try{
-            $user = Driver::create(array_merge($data,['driver_id' => rand(),'password' => bcrypt($data['password'])]));
-            return $user;
-        }
-        catch(Exception $e){
-            return $e;
-        }
+    public function merchant_registration_request_validate($user_type){
+        return Validator::make($request->all(), [
+            'shop_name' => 'sometimes|nullable',
+            'address' => 'sometimes|nullable',
+            'NID'=> 'required|string|max:10|min:10',
+            'BIN'=> 'sometimes|required|max:13|min:13',
+        ]);
     }
     public function register(Request $request) {
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|between:2,100',
             'last_name' => 'required|string|between:2,100',
-            'email' => 'required|string|email|max:100|unique:users,email|unique:drivers,email|unique:admins,email',
-            "phone" => 'required|string|max:11|min:11|unique:users,phone|unique:drivers,phone|unique:admins,phone',
+            'email' => 'required|string|email|max:100|unique:users',
+            "phone" => 'required|string|max:11|min:11|unique:users,phone',
             'password' => 'required|string|min:6',
-            'shop_name' => 'sometimes|nullable',
-            'address' => 'sometimes|nullable',
             'type'=> 'required|string'
         ]);
         if($validator->fails()){
@@ -87,15 +65,19 @@ class AuthController extends Controller
         
         try{
             $response='';
+            $associate = '';
             switch($request->type){
                 case 'merchant':
-                    $response=$this->createMerchant($request->all());
+                    $associate = Merchant::create($request->all());
+                    
                 case 'driver':
-                    $response=$this->createDriver($request->except('shop_name','address'));
+                    $associate = Driver::create();
             }
+            $user = User::create(array_merge($request->all(),['password' => bcrypt($request->password)]));
+            $user->inheritable()->associate($associate)->save();
             return response()->json([
                 'success' => true,
-                'data' => $response,
+                'data' => $user,
             ], 201);
         }
         catch (Exception $e){

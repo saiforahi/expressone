@@ -16,7 +16,7 @@ class CreateAdminsTable extends Migration
         Schema::create('admins', function (Blueprint $table) {
             $table->id();
             $table->enum('type',['admin','unit-admin']);
-            $table->string('units')->comment('string(separated by comma) of units hold by unit-admin (if type is unit-admin)');
+            $table->string('units')->nullable()->comment('string(separated by comma) of units hold by unit-admin (if type is unit-admin)');
             $table->enum('is_active',['active','inactive']);
             $table->timestamps();
         });

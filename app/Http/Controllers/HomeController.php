@@ -129,36 +129,8 @@ class HomeController extends Controller
         $cod_type = 0;
         $cod_amount = 0;
 
-        $zone = Area::find($request->area);
-        $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
-        if (!$shipping) {
-            return ['status' => 'error', 'message' => 'Sorry, not any shipping rate set this zone'];
-        }
-        if ($shipping->cod == 1) {
-            $cod_type = 1;
-            if (!$request->parcel_value) {
-                // return ['status' => 'error', 'message' => 'Please declared your parcel value first.'];
-                $cod_amount = 0;
-            } else {
-                $cod_amount = (int)(((int)$request->parcel_value / 100) * $shipping->cod_value);
-            }
-        }
+        $unit = Unit::find($request->unit);
 
-
-        $weight = (float)$request->weight;
-        if ($weight > $shipping->max_weight) {
-            $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-            if ((int)$ExtraWeight < $ExtraWeight) {
-                $ExtraWeight = (int)$ExtraWeight + 1;
-            }
-            $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-        } else {
-            $price = (int)$shipping->max_price;
-        }
-
-
-        $total_price = $price + $cod_amount + (int)$request->parcel_value;
-
-        return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
+        return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_amount];
     }
 }
