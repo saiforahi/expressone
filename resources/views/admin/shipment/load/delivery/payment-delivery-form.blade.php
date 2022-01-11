@@ -2,7 +2,7 @@
     
     @foreach ($shipments as $shipment)
     @php
-        $check = \App\Shipment_delivery_payment::where('shipment_id',$shipment->id);
+        $check = \App\ShipmentPayment::where('shipment_id',$shipment->id);
     @endphp
     @if($check->count() <1)
         <div class="form-group">

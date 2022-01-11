@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         // Relation::morphMap([
         //     'merchants' => 'App\Models\Merchant',
         //     'admins' => 'App\Models\Admin',
-        //     'drivers' => 'App\Models\Driver',
+        //     'drivers' => 'App\Models\Courier',
         // ]);
     }
 }

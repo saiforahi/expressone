@@ -386,12 +386,12 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 });
 
 
-Route::get('driver/login', 'Driver\AuthController@index');
-Route::post('driver/login', 'Driver\AuthController@login')->name('driver.login');
-Route::post('driver/register', 'Driver\AuthController@store')->name('driver.register');
-Route::post('driver/logout', 'Driver\AuthController@logout')->name('driver.logout');
+Route::get('driver/login', 'Courier\AuthController@index');
+Route::post('driver/login', 'Courier\AuthController@login')->name('driver.login');
+Route::post('driver/register', 'Courier\AuthController@store')->name('driver.register');
+Route::post('driver/logout', 'Courier\AuthController@logout')->name('driver.logout');
 
-Route::group(['middleware' => 'auth:driver', 'namespace' => 'Driver', 'prefix' => 'driver'], function () {
+Route::group(['middleware' => 'auth:driver', 'namespace' => 'Courier', 'prefix' => 'driver'], function () {
     Route::get('/', 'DashboardController@index')->name('driver.dashboard');
     Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-driver-shipments');
     Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-driver-shipments');

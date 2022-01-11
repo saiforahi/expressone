@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Driver;
+namespace App\Http\Controllers\Courier;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

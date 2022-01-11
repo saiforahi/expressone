@@ -5,7 +5,7 @@ use App\Area;
 use App\Http\Controllers\Controller;
 use App\Shipment;
 use App\ShippingPrice;
-use App\Shipment_delivery_payment;
+use App\ShipmentPayment;
 use Illuminate\Http\Request;
 use Auth;
 use PDF;
@@ -288,7 +288,7 @@ class ShipmentController extends Controller
 
     function show_payment(Shipment $shipment)
     {
-        $payments =  Shipment_delivery_payment::where('shipment_id', $shipment->id)->get();
+        $payments =  ShipmentPayment::where('shipment_id', $shipment->id)->get();
         return view('dashboard.include.shipment-delivery-payment', compact('payments'));
     }
     function edit(Shipment $shipment)

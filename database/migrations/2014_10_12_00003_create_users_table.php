@@ -15,7 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->nullableMorphs('inheritable');
+            // $table->nullableMorphs('inheritable');
             $table->string('first_name');
             $table->string('last_name');
             $table->ipAddress('ip')->nullable();
@@ -23,8 +23,16 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('password');
-            
-            $table->string('image')->nullable();
+            $table->string('shop_name')->nullable();
+            $table->integer('nid_no')->nullable()->comment('National ID card number');
+            $table->integer('BIN')->nullable()->comment('Business Identification number');
+            $table->string('bank_name')->nullable();
+            $table->string('bank_br_name')->nullable();
+            $table->string('bank_acc_name')->nullable();
+            $table->bigInteger('bank_acc_no')->nullable();
+            $table->string('address')->nullable();
+            $table->string('website_link')->nullable();
+    
             $table->enum('status',['0','1'])->default(1);
             $table->tinyInteger('is_verified')->default(0);
             $table->rememberToken();

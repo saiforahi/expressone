@@ -27,7 +27,7 @@
         </select>
     </div> 
     <div class="col-md-2">
-        @php $drivers = \App\Driver::where('status','1')->get(); @endphp
+        @php $drivers = \App\Courier::where('status','1')->get(); @endphp
 
         <select class="form-control select2" name="driver_id" onchange="get_driver()">
             <option value="">Search By Rider</option>

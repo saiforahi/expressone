@@ -9,7 +9,7 @@ use App\Hub;
 use App\Driver_return_shipment_box;
 use App\Hub_shipment_box;
 use App\Driver_hub_shipment_box;
-use App\Driver;
+use App\Courier;
 use App\Driver_shipment_delivery;
 use App\Return_shipment_box;
 use App\Hold_shipment;
@@ -82,7 +82,7 @@ class HoldShipmentController extends Controller
             ]);
         }
     }
-    public function move_to_hold_shipmentRider(Driver $driver)
+    public function move_to_hold_shipmentRider(Courier $driver)
     {
         $dds = Driver_shipment_delivery::where(['driver_id'=>$driver->id,'type'=>'hold'])->get();
         foreach($dds as $dd){
@@ -176,7 +176,7 @@ class HoldShipmentController extends Controller
         }
     }
     // save shipment info at return_shipments (left to right) with driver id
-    function move_to_return_shipment_withRider(Driver $driver){
+    function move_to_return_shipment_withRider(Courier $driver){
         $dds = Driver_shipment_delivery::where(['driver_id'=>$driver->id,'type'=>'return'])->get();
         foreach($dds as $dd){
             $shipment = Shipment::where('id',$dd->shipment_id)->first();
@@ -385,7 +385,7 @@ class HoldShipmentController extends Controller
         }else{
             $boxes = Return_shipment_box::where(['hub_id'=>$hub->id,'status'=>'transit'])->get(); 
         }
-        $drivers = Driver::orderBy('first_name')->get();
+        $drivers = Courier::orderBy('first_name')->get();
         // dd($drivers);
         return view('admin.shipment.hold.agent.driver-side',compact('drivers','boxes'));
     }

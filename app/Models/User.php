@@ -24,16 +24,15 @@ class User extends Authenticatable
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i:s A',
         'updated_at' => 'datetime:Y-m-d h:i:s A',
-        'email_verified_at' => 'datetime:Y-m-d h:i:s A',
     ];
 
-    public function inheritable(){
-        return $this->morphTo();
-    }
-    public function merchants(){
-        return $this->morphTo()->where('inheritable_type', Merchant::class);
-    }
-    public function morphClass(){
-        return $this->hasOne(get_class($this->inheritable),'id','inheritable_id'); 
-    }
+    // public function inheritable(){
+    //     return $this->morphTo();
+    // }
+    // public function merchants(){
+    //     return $this->morphTo()->where('inheritable_type', Merchant::class);
+    // }
+    // public function morphClass(){
+    //     return $this->hasOne(get_class($this->inheritable),'id','inheritable_id'); 
+    // }
 }

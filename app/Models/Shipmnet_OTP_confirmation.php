@@ -16,7 +16,7 @@ class Shipmnet_OTP_confirmation extends Model
     }
 
     function driver(){
-        return $this->belongsTo(Driver::class);
+        return $this->belongsTo(Courier::class);
     }
 
 }

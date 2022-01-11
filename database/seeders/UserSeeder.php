@@ -17,29 +17,33 @@ class UserSeeder extends Seeder
     {
 
         // create demo users
-        $admin= \App\Models\Admin::create([
-            'type'=>'admin',
-        ]);
-        $user = \App\Models\User::create([
-            'first_name' => 'Demo Super',
+        $admin = \App\Models\Admin::create([
+            'first_name' => 'Super',
             'last_name'=> 'Admin',
             'email' => 'admin@email.com',
             'phone'=> '01XXXXXXXXX',
             'password' => Hash::make('12345678'),
         ]);
-        $user->inheritable()->associate($admin)->save();
+        
 
         //merchant
-        $merchant= \App\Models\Merchant::create([
-            'shop_name'=>'ABC Shop',
-        ]);
-        $user = \App\Models\User::create([
-            'first_name' => 'Demo Merchant',
+        $merchant = \App\Models\User::create([
+            'first_name' => 'Demo',
             'last_name'=> 'Merchant',
             'email' => 'merchant@email.com',
             'phone'=> '01XXXXXXXXX',
             'password' => Hash::make('12345678'),
         ]);
-        $user->inheritable()->associate($merchant)->save();
+
+        //merchant
+        $courier = \App\Models\Courier::create([
+            'first_name' => 'Demo',
+            'last_name'=> 'Courier',
+            'email' => 'courier@email.com',
+            'phone'=> '01XXXXXXXXX',
+            'employee_id' => '1',
+            'password' => Hash::make('12345678'),
+        ]);
+        
     }
 }

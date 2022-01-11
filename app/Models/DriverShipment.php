@@ -1,13 +1,13 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
-class Driver_shipment extends Model
+class DriverShipment extends Model
 {
     protected $fillable = ['driver_id', 'shipment_id', 'admin_id', 'note', 'status'];
     protected $table = 'driver_shipment';
     public function driver()
     {
-        return $this->belongsTo(Driver::class);
+        return $this->belongsTo(Courier::class);
     }
     public function shipment()
     {

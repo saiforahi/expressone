@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Driver;
+namespace App\Http\Controllers\Courier;
 
-use App\Driver;
+use App\Courier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +47,7 @@ class AuthController extends Controller
             'password' => 'required|min:3|max:20',
         ]);
 
-        $driver = Driver::create([
+        $driver = Courier::create([
             'driver_id' => rand(),
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,

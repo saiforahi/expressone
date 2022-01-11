@@ -34,5 +34,13 @@ class Shipment extends Model
     {
         return $this->belongsToMany(Hub::class);
     }
-
+    // public function inheritable(){
+    //     return $this->morphTo();
+    // }
+    // public function merchants(){
+    //     return $this->morphTo()->where('inheritable_type', Merchant::class);
+    // }
+    // public function morphClass(){
+    //     return $this->hasOne(get_class($this->inheritable),'id','inheritable_id'); 
+    // }
 }

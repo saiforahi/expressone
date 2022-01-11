@@ -66,10 +66,10 @@
                         <div class="widget-content-left">
                             <div class="btn-group">
                                 <a class="p-0 btn">
-                                    <img width="48" height="48" class="rounded-circle" src="{{Auth::user()->image==null? asset('images/user.png'):asset('storage/user/'.Auth::user()->image)}}"
+                                    <img width="48" height="48" class="rounded-circle" src="{{Auth::guard('user')->user()->image==null? asset('images/user.png'):asset('storage/user/'.Auth::guard('user')->user()->image)}}"
                                          alt="">
-                                    {{Auth::user()->first_name}}
-                                    {{Auth::user()->last_name}}
+                                    {{Auth::guard('user')->user()->first_name}}
+                                    {{Auth::guard('user')->user()->last_name}}
                                 </a>
                             </div>
                         </div>
