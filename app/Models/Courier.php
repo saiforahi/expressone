@@ -14,6 +14,9 @@ class Courier extends Authenticatable
     protected $fillable = [
         'first_name', 'last_name','email', 'phone', 'ip','password','status','is_active','joining_date','nid_no','employee_id'
     ];
+    protected $hidden = [
+        'password'
+    ];
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i:s A',
         'updated_at' => 'datetime:Y-m-d h:i:s A',

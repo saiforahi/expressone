@@ -13,6 +13,9 @@ class Admin extends Authenticatable
     protected $fillable = [
         'type', 'units','is_active','first_name', 'last_name','email', 'phone', 'ip','password','status'
     ];
+    protected $hidden = [
+        'password'
+    ];
     // public function user(){
     //     return $this->morphOne(User::class, 'inheritable');
     // }
