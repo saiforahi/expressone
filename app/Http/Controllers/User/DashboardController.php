@@ -1,11 +1,9 @@
 <?php
 
 namespace App\Http\Controllers\User;
-
-use App\Area;
-use App\User;
-use App\Shipment;
-use App\ShippingCharge;
+use App\Models\Area;
+use App\Models\User;
+use App\Models\Shipment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -59,7 +57,7 @@ class DashboardController extends Controller
             'password' => 'required|max:20|confirmed',
         ]);
 
-        $admin = user::where('id', $request->id)->first();
+        $admin = User::where('id', $request->id)->first();
         if (!empty($admin)) {
             if ($admin && Hash::check($request->old_password, $admin->password)) {
                 $admin->password = Hash::make($request->password);

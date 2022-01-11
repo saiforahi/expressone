@@ -8,7 +8,7 @@ use App\Models\Admin_hub;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\Session\Session;
+use Illuminate\Support\Facades\Session;
 
 class DashboardController extends Controller
 {

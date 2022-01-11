@@ -3,7 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Frontend\HomeController;
+
 use App\Http\Controllers\Admin\ShippingChargeController;
+use App\Http\Controllers\Driver\AuthController;
+use App\Http\Controllers\Driver\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -396,13 +399,13 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::get('prepare-shipment-details/{id}', 'ShipmentController@PrepareShipmentEdit')->name('PrepareShipmentEdit');
 });
 
-Route::get('driver/login', [DriverAuthController::class,'index']);
-Route::post('driver/login', [DriverAuthController::class,'login'])->name('driver.login');
+Route::get('driver/login', [AuthController::class,'index']);
+Route::post('driver/login', [AuthController::class,'login'])->name('driver.login');
 Route::post('driver/register', 'Driver\AuthController@store')->name('driver.register');
 Route::post('driver/logout', 'Driver\AuthController@logout')->name('driver.logout');
 
 Route::group(['middleware' => 'auth:driver', 'namespace' => 'Driver', 'prefix' => 'driver'], function () {
-    Route::get('/', [DriverDashboardController::class,'index'])->name('driver.dashboard');
+    Route::get('/', [DashboardController::class,'index'])->name('driver.dashboard');
     Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-driver-shipments');
     Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-driver-shipments');
 
