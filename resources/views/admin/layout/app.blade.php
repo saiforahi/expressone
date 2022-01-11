@@ -53,7 +53,6 @@
     <link href="{{ asset('build/css/custom.css') }}" rel="stylesheet">
     <link href="{{ asset('build/css/util.css') }}" rel="stylesheet">
 </head>
-
 <body class="nav-md">
     <div class="container body">
         <div class="main_container">
@@ -109,8 +108,6 @@
     <!-- starrr -->
     <script src="{{ asset('_vendors/starrr/dist/starrr.js') }}"></script>
     <script src="{{ asset('_vendors/print/jquery.printPage.js') }}"></script>
-    {{-- Button --}}
-
     <!-- Datatables -->
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap.min.js" referrerpolicy="no-referrer"></script>
@@ -118,7 +115,7 @@
     <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datatables-buttons/2.2.0/js/buttons.flash.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datatables-buttons/2.2.0/js/buttons.html5.min.js"></script>
-    <script src="{{ asset('_vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datatables-buttons/2.2.0/js/buttons.print.min.js"></script>
     <script src="{{ asset('_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
     <script src="{{ asset('_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('_vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
