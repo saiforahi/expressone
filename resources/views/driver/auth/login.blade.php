@@ -17,7 +17,6 @@
     <!-- Custom Theme Style -->
     <link href="{{ asset('build/css/custom.min.css') }}" rel="stylesheet">
 </head>
-
 <body class="login">
     <div>
         <a class="hiddenanchor" id="signup"></a>
