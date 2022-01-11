@@ -51,11 +51,15 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
         }
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], true)) {
-            $user = Auth::user();
-            $token=$user->createToken('api_token')->plainTextToken;
-            return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"user"=>$user],200);
+        
+        foreach(config('auth.guards') as $guard=>$value){
+            if (Auth::guard($guard)->attempt(['email' => $request->email, 'password' => $request->password])) {
+                $user = Auth::guard($guard)->user();
+                $token=$user->createToken('api_token')->plainTextToken;
+                return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"data"=>$user],200);
+            }
         }
+        
         return response()->json(['success'=>false,'message' => 'Wrong credentials'], 401);
     }
     
