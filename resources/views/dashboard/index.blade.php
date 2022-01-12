@@ -11,7 +11,7 @@
                     </div>
                     <div class="widget-content-right">
                         <?php $shipments = \DB::table('shipments')
-                            ->where('user_id', Auth::guard('user')->user()->id)
+                            ->where('merchant_id', Auth::guard('user')->user()->id)
                             ->count(); ?>
                         <div class="widget-numbers text-white"><span> {{ $shipments }}</span></div>
                     </div>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="widget-content-right">
                         <?php $delivered = \DB::table('shipments')
-                            ->where('user_id', Auth::guard('user')->user()->id)
+                            ->where('merchant_id', Auth::guard('user')->user()->id)
                             ->where('shipping_status', '6')
                             ->orWhere('shipping_status', '6.5')
                             ->count(); ?>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="widget-content-right">
                         <?php $rejected = \DB::table('shipments')
-                            ->where('user_id', Auth::guard('user')->user()->id)
+                            ->where('merchant_id', Auth::guard('user')->user()->id)
                             ->where('shipping_status', '5')
                             ->count(); ?>
                         <div class="widget-numbers text-white"><span> {{ $rejected }}</span></div>

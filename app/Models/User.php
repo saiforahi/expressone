@@ -7,13 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
+use App\Models\Merchant;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,HasRoles;
 
     protected $fillable = [
-        'user_id', 'first_name', 'last_name','shop_name', 'email', 'phone', 'password','address','area_id','website_link','image','status','is_verified'
+        'first_name', 'last_name','email', 'phone', 'ip','password','image','status','is_verified'
     ];
 
     protected $hidden = [
@@ -22,10 +24,15 @@ class User extends Authenticatable
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i:s A',
         'updated_at' => 'datetime:Y-m-d h:i:s A',
-        'email_verified_at' => 'datetime:Y-m-d h:i:s A',
     ];
 
-    function area(){
-    	return $this->belongsTo(Area::class);
-    }
+    // public function inheritable(){
+    //     return $this->morphTo();
+    // }
+    // public function merchants(){
+    //     return $this->morphTo()->where('inheritable_type', Merchant::class);
+    // }
+    // public function morphClass(){
+    //     return $this->hasOne(get_class($this->inheritable),'id','inheritable_id'); 
+    // }
 }

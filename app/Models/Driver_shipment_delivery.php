@@ -10,7 +10,7 @@ class Driver_shipment_delivery extends Model
     protected $table = 'driver_shipment_delivery';
 
     function driver(){
-        return $this->belongsTo(Driver::class);
+        return $this->belongsTo(Courier::class);
     }
 
     function shipment(){

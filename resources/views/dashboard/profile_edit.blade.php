@@ -81,9 +81,9 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="position-relative form-group">
-                                    <label for="national_id" class="">NID</label>
+                                    <label for="national_id" class="">nid_no</label>
                                     <input name="national_id" value="{{ Auth::guard('user')->user()->national_id }}"
-                                        type="number" class="form-control" required placeholder="Enter NID No" readonly>
+                                        type="number" class="form-control" required placeholder="Enter nid_no No" readonly>
                                 </div>
                             </div>
                             <div class="col-md-4">

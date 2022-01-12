@@ -128,7 +128,7 @@ class ShipmentController extends Controller
         $shipments = Shipment::where('user_id', $id)->where(['status' => $status, 'shipping_status' => $shipping_status])->get();
         // dd($shipments);
         $user = User::find($id);
-        $drivers = Driver::orderBy('first_name')->get();
+        $drivers = Courier::orderBy('first_name')->get();
         return view('admin.shipment.shipment-more', compact('shipments', 'drivers', 'user'));
     }
 
@@ -219,7 +219,7 @@ class ShipmentController extends Controller
     {
         $shipments = Shipment::where('user_id', $user_id)->where(['status' => 2])->get();
         $user = User::find($user_id);
-        $drivers = Driver::orderBy('first_name')->get();
+        $drivers = Courier::orderBy('first_name')->get();
         return view('admin.shipment.cencelled-shipments', compact('shipments', 'drivers', 'user'));
     }
 
@@ -578,7 +578,7 @@ class ShipmentController extends Controller
         } else {
             $boxes = Hub_shipment_box::where(['hub_id' => $hub->id, 'status' => 'on-delivery'])->get();
         }
-        $drivers = Driver::orderBy('first_name')->get();
+        $drivers = Courier::orderBy('first_name')->get();
         return view('admin.shipment.load.agent-dispatch.driver-side', compact('drivers', 'boxes'));
     }
     //ajax call
@@ -653,7 +653,7 @@ class ShipmentController extends Controller
             'status' => 'assigned'
         ])->get();
 
-        $driver = Driver::find($request->driver_id)->first();
+        $driver = Courier::find($request->driver_id)->first();
 
         foreach ($driver_hub_shipmentBox as $row) {
             $customer_message = 'Dear ' . $row->shipment->name . ', Your parcel on ' . basic_information()->website_link . ' is on delivery. ' . $driver->first_name . ' ' . $driver->last_name . ' (' . $driver->phone . ') will carry your parcel.';
@@ -776,7 +776,7 @@ class ShipmentController extends Controller
         return view('admin.shipment.includes.delivery-parcels', compact('shipments'));
     }
 
-    function driver_shipment_search(Driver $driver)
+    function driver_shipment_search(Courier $driver)
     {
         $driver_shipment = Driver_shipment::where('driver_id', $driver->id)->select('shipment_id')->groupBy('shipment_id')->pluck('shipment_id')->toArray();
         $shipments = Shipment::whereIn('id', $driver_shipment)->get();
@@ -892,13 +892,13 @@ class ShipmentController extends Controller
     function save_delivery_payment(Request $request)
     {
         foreach ($request->shipment_ids as $key => $shipment_id) {
-            $count = Shipment_delivery_payment::where('shipment_id', $shipment_id)->count();
+            $count = \App\ShipmentPayment::where('shipment_id', $shipment_id)->count();
             $data = [
                 'shipment_id' => $shipment_id,
                 'admin_id' => Auth::guard('admin')->user()->id, 'amount' => $request->amount[$key],
             ];
             if ($count < 1) {
-                Shipment_delivery_payment::create($data);
+                \App\ShipmentPayment::create($data);
             }
         }
         return back()->with('message', 'Shipment Payment for delivery is successfully saved!');
@@ -1042,7 +1042,7 @@ class ShipmentController extends Controller
 
         Return_shipment::where('shipment_id', $request->id)->delete();
 
-        Shipment_delivery_payment::where('shipment_id', $request->id)->delete();
+        ShipmentPayment::where('shipment_id', $request->id)->delete();
 
         // shipment_opt_confirmations
         Shipmnet_OTP_confirmation::where('shipment_id', $request->id)->delete();

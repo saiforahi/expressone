@@ -152,3 +152,14 @@ if (! function_exists('custom_asset')) {
         //return app('url')->asset('public/'.$path, $secure);
     }
 }
+
+if (! function_exists('random_unique_string_generate')) {
+    function random_unique_string_generate($model,$field)
+    {
+        $value=substr(md5(mt_rand()), 0, 7);
+        while($model::where($field,$value)->exists()){
+            $value=substr(md5(mt_rand()), 0, 7);
+        }
+        return 'ex1'.$value;
+    }
+}

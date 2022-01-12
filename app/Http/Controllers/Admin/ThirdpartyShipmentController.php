@@ -10,7 +10,7 @@ use App\Hub;
 use App\Hub_shipment;
 use App\Hub_shipment_box;
 use App\Driver_hub_shipment_box;
-use App\Driver;
+use App\Courier;
 use App\Driver_return_shipment_box;
 use App\ShippingPrice;
 use App\Reconcile_shipment;
@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 use Session; use Auth;use PDF;
 use App\Events\ShipmentMovement;
 use App\Events\SendingSMS;
-use App\Shipment_delivery_payment;
+use App\ShipmentPayment;
 use App\Thirdparty_shipment;
 
 class ThirdpartyShipmentController extends Controller

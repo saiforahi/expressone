@@ -81,27 +81,27 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <?php $areas = \DB::table('areas')->get(); ?>
+                            <?php $units = \DB::table('units')->get(); ?>
                             <div class="position-relative form-group">
-                                <label for="shop_name" class="">Area belongs To</label>
+                                <label for="shop_name" class="">Unit belongs To</label>
                                 <select class="form-control select2" name="area_id" required="">
-                                    <option value="">Select Area</option>
-                                    @foreach ($areas as $area)
-                                        <option @if ($area->id == Auth::guard('user')->user()->area_id) selected @endif value="{{ $area->id }}">{{ $area->name }}</option> @endforeach </select>
+                                    <option value="">Select Unit</option>
+                                    @foreach ($units as $unit)
+                                        <option @if ($unit->id == Auth::guard('user')->user()->area_id) selected @endif value="{{ $unit->id }}">{{ $unit->name }}</option> @endforeach </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="national_id" class="">NID</label>
-                                <input name="national_id" value="{{ Auth::guard('user')->user()->national_id }}"
-                                    type="number" class="form-control" required placeholder="Enter NID No">
+                                <label for="nid_no" class="">nid_no</label>
+                                <input name="nid_no" value="{{ Auth::guard('user')->user()->nid_no }}"
+                                    type="text" class="form-control" required placeholder="Enter nid_no No">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="national_id" class="">BIN</label>
-                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="number"
-                                    class="form-control" required placeholder="Enter bin no">
+                                <label for="BIN" class="">BIN</label>
+                                <input name="BIN" value="{{ Auth::guard('user')->user()->BIN }}" type="text"
+                                    class="form-control" placeholder="Enter BIN no">
                             </div>
                         </div>
                         <div class="col-md-4">

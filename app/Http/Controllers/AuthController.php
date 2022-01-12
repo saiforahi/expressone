@@ -71,12 +71,12 @@ class AuthController extends Controller
                 return redirect()->intended('/dashboard');
             } else {
                 return redirect()->route('verify-user');
-                dd('check email');
             }
         }
         $request->session()->flash('login_error', 'Wrong information or this account not login.');
         return back()->withInput($request->only('email', 'remember'));
     }
+    
 
     public function verify()
     {

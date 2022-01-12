@@ -147,7 +147,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Driver note at delivery time</h4>
+                <h4 class="modal-title">Courier note at delivery time</h4>
             </div>
             <div class="modal-body"><textarea class="deliveryNote form-control">Working...</textarea></div>
         </div>
