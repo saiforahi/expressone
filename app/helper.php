@@ -27,13 +27,13 @@ function get_zone($id)
 }
 
 function hub_from_area($id){
-    $area = Area::find($id);
+    $area = Unit::find($id);
     return Hub::where('id',$area->hub_id)->first();
 }
 
 function is_user_filled($id){
     $user = User::find($id);
-    if(empty($user->shop_name) || empty($user->address) || empty($user->area_id)){
+    if(empty($user->shop_name) || empty($user->address) || empty($user->unit_id)){
         request()->session()->flash('message', 'Please complete your profile first!');
         return 0;
     }else return 1;

@@ -51,12 +51,12 @@
                             <tr>
                                 <td>National ID:</td>
                                 <td><button
-                                        class="btn btn-primary">{{ Auth::guard('user')->user()->national_id }}</button>
+                                        class="btn btn-primary">{{ Auth::guard('user')->user()->nid_no }}</button>
                                 </td>
                             </tr>
                             <tr>
                                 <td>BIN:</td>
-                                <td><button class="btn btn-success">{{ Auth::guard('user')->user()->bin_no }}</button>
+                                <td><button class="btn btn-success">{{ Auth::guard('user')->user()->BIN }}</button>
                                 </td>
                             </tr>
                             <tr>

@@ -77,24 +77,24 @@
                                 <label for="shop_name" class="">Shop Name</label>
                                 <input name="shop_name" id="shop_name"
                                     value="{{ Auth::guard('user')->user()->shop_name }}" type="text"
-                                    class="form-control" required max="255">
+                                    class="form-control" required max="255" placeholder="Shop name">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <?php $units = \DB::table('units')->get(); ?>
                             <div class="position-relative form-group">
                                 <label for="shop_name" class="">Unit belongs To</label>
-                                <select class="form-control select2" name="area_id" required="">
+                                <select class="form-control select2" name="unit_id" required="">
                                     <option value="">Select Unit</option>
                                     @foreach ($units as $unit)
-                                        <option @if ($unit->id == Auth::guard('user')->user()->area_id) selected @endif value="{{ $unit->id }}">{{ $unit->name }}</option> @endforeach </select>
+                                        <option @if ($unit->id == Auth::guard('user')->user()->unit_id) selected @endif value="{{ $unit->id }}">{{ $unit->name }}</option> @endforeach </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="nid_no" class="">nid_no</label>
+                                <label for="nid_no" class="">Nantion ID</label>
                                 <input name="nid_no" value="{{ Auth::guard('user')->user()->nid_no }}"
-                                    type="text" class="form-control" required placeholder="Enter nid_no No">
+                                    type="text" class="form-control" required placeholder="Enter nid no">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -136,7 +136,7 @@
                             <div class="position-relative form-group"><label for="address"
                                     class="">Address</label><input name="address" id="address"
                                     value="{{ Auth::guard('user')->user()->address }}" type="text"
-                                    class="form-control" required max="255">
+                                    class="form-control" required max="255" placeholder="Your Address">
                             </div>
                         </div>
                         <div class="col-md-4">

@@ -19,10 +19,10 @@
         </select>
     </div>
     <div class="col-md-3">
-        <select class="form-control select2" name="merchant_id" id="merchant_id" onchange="get_merchant()">
+        <select class="form-control select2" name="user_id" id="user_id" onchange="get_merchant()">
             <option value="">Search By merchant</option>
             @foreach($users as $user)
-            <option @if(request()->merchant_id==$user->id)selected @endif value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
+            <option @if(request()->user_id==$user->id)selected @endif value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
             @endforeach
         </select>
     </div> 

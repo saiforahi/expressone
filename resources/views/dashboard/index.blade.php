@@ -11,7 +11,7 @@
                     </div>
                     <div class="widget-content-right">
                         <?php $shipments = \DB::table('shipments')
-                            ->where('merchant_id', Auth::guard('user')->user()->id)
+                            ->where('user_id', Auth::guard('user')->user()->id)
                             ->count(); ?>
                         <div class="widget-numbers text-white"><span> {{ $shipments }}</span></div>
                     </div>
@@ -27,7 +27,7 @@
                     </div>
                     <div class="widget-content-right">
                         <?php $delivered = \DB::table('shipments')
-                            ->where('merchant_id', Auth::guard('user')->user()->id)
+                            ->where('user_id', Auth::guard('user')->user()->id)
                             ->where('shipping_status', '6')
                             ->orWhere('shipping_status', '6.5')
                             ->count(); ?>
@@ -45,7 +45,7 @@
                     </div>
                     <div class="widget-content-right">
                         <?php $rejected = \DB::table('shipments')
-                            ->where('merchant_id', Auth::guard('user')->user()->id)
+                            ->where('user_id', Auth::guard('user')->user()->id)
                             ->where('shipping_status', '5')
                             ->count(); ?>
                         <div class="widget-numbers text-white"><span> {{ $rejected }}</span></div>
@@ -69,8 +69,7 @@
                                 <th>Tracking No.</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Customer</th>
-                                <th class="text-center">COD Amt.</th>
-                                <th class="text-center">Wgt. charge</th>
+                                <th class="text-center">COD Amount</th>
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
@@ -108,18 +107,15 @@
 
                                     </td>
                                     <td class="" style="font-size: 13px">
-                                        <i class="fa fa-user mr-1" aria-hidden="true"></i>{{ $shipments['name'] }}<br>
+                                        <i class="fa fa-user mr-1" aria-hidden="true"></i>{{ $shipments['recipient'] }}<br>
                                         <i class="fa fa-phone-square mr-1"
                                             aria-hidden="true"></i>{{ $shipments['phone'] }}
                                     </td>
 
                                     <td>
-                                        {{ $shipments['cod_amount'] }}
+                                        {{ $shipments['amount'] }}
                                     </td>
 
-                                    <td>
-                                        {{ $shipments['weight_charge'] }}
-                                    </td>
                                     <td>
                                         @if ($shipments['status'] == 1 && $shipments['shipping_status'] == 0)
                                             <form style="display: inline-block" class="form-delete" method="post"

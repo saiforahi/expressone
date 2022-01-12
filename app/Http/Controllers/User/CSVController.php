@@ -42,7 +42,7 @@ class CSVController extends Controller
                     'name' => $line[1],
                     'phone' => $line[2],
                     'address' => $line[3],
-                    'cod_amount' => $line[4],
+                    'amount' => $line[4],
                     'weight_charge' => $line[5],
                     'merchant_note' => $line[6]
                 );
@@ -72,7 +72,7 @@ class CSVController extends Controller
             $insert->name =  $line['name'];
             $insert->phone =  $line['phone'];
             $insert->address = $line['address'];
-            $insert->cod_amount = $line['cod_amount'];
+            $insert->amount = $line['amount'];
             //$insert->delivery_charge = $line['delivery_charge'];
             $insert->weight_charge = $line['weight_charge'];
             $insert->merchant_note = $line['merchant_note'];
@@ -86,14 +86,14 @@ class CSVController extends Controller
         // exit;
         Session::flash('message', 'CSV-file data has been uploaded to database successfully');
         Session::forget('csv_data');
-        return redirect()->route('user.dashboard');
+        return redirect()->route('merchantShipments');
     }
     public function store(Request $request)
     {
         $price = 0;
         $total_price = 0;
         $cod_type = 0;
-        $cod_amount = 0;
+        $amount = 0;
         foreach (Session::get('csv_data') as $key => $line) {
             $zone = Area::find($request->area[$key]);
             $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
@@ -116,7 +116,7 @@ class CSVController extends Controller
                     if (!$request->parcel_value[$key]) {
                         return response()->json(['status' => 'error', 'errors' => ['message' => 'Please declared your parcel value first.']], 422);
                     } else {
-                        $cod_amount = ((int) $request->parcel_value[$key] / 100) * $shipping->cod_value;
+                        $amount = ((int) $request->parcel_value[$key] / 100) * $shipping->cod_value;
                     }
                 }
                 $weight = (float) $request->weight[$key];
@@ -129,7 +129,7 @@ class CSVController extends Controller
                 } else {
                     $price = (int) $shipping->max_price;
                 }
-                $total_price = $price + $cod_amount + (int) $request->parcel_value[$key];
+                $total_price = $price + $amount + (int) $request->parcel_value[$key];
             } else {
                 $total_price = $price = 0;
             }
@@ -155,7 +155,7 @@ class CSVController extends Controller
             $new_id = Shipment::all()->first();
             $insert->tracking_code = rand();
             $insert->cod = $cod_type;
-            $insert->cod_amount = $cod_amount;
+            $insert->amount = $amount;
             $insert->price = $price;
             $insert->total_price = $total_price;
             $insert->save();

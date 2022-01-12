@@ -19,7 +19,7 @@
                 <td></td>
             </tr>
             <tr>
-                <td>Price: {{$shipment->cod_amount}}</td>
+                <td>Price: {{$shipment->amount}}</td>
                 <td></td>
                 <td class="text-right">
                     Weight: <input style="width:100px" type="number" id="weight{{$key}}" value="{{$shipment->weight}}">

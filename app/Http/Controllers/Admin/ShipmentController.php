@@ -66,7 +66,7 @@ class ShipmentController extends Controller
         //     $price = (int)$shipping->max_price;
         // }
         $price = $shipment->delivery_charge;
-        $total_price = $shipment->cod_amount;
+        $total_price = $shipment->amount;
         return view('admin.shipment.includes.shipment-view', compact('shipment', 'price', 'total_price'));
     }
     function shipment_detail(Shipment $shipment)
@@ -96,7 +96,7 @@ class ShipmentController extends Controller
     {
         $zone = Area::find($shipment->area_id);
         $shipping = '';
-        $total_price = $price = (int) $shipment->cod_amount;
+        $total_price = $price = (int) $shipment->amount;
 
         return view('admin.shipment.includes.pos_printing', compact('shipment', 'price', 'total_price', 'shipping'));
     }
@@ -137,7 +137,7 @@ class ShipmentController extends Controller
     {
         $total_price = 0;
         $cod_type = 0;
-        $cod_amount = 0;
+        $amount = 0;
 
         $checkInvoice = Shipment::where('invoice_id', $request->invoice_id)->count();
         if ($checkInvoice > 0 && $checkInvoice != null) {
@@ -159,7 +159,7 @@ class ShipmentController extends Controller
             'delivery_type' => $request->delivery_type,
             'tracking_code' => rand(),
             'cod' => $cod_type,
-            'cod_amount' => $cod_amount,
+            'amount' => $amount,
             'price' => 0,
             'total_price' => $total_price,
             'shipping_status' => 2
@@ -348,7 +348,7 @@ class ShipmentController extends Controller
         // dd($shipments);
         Shipment::where('status', 1)->select('user_id')->groupBy('user_id')->pluck('user_id')->toArray();
         foreach ($shipments as $key => $shipment) {
-            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->cod_amount, $shipment->weight, ''];
+            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->amount, $shipment->weight, ''];
         }
         $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'COD Amount', 'Weight', 'Product Selling Price'];
         return self::getCsv($columnNames, $rows, date('d/m/Y h i s') . '.csv');
@@ -735,8 +735,8 @@ class ShipmentController extends Controller
             $shipments = $shipments->where('id', $shipment);
         }
 
-        if ($request->merchant_id) {
-            $shipments = $shipments->where('user_id', $request->merchant_id);
+        if ($request->user_id) {
+            $shipments = $shipments->where('user_id', $request->user_id);
         }
 
         if ($request->driver_id) {
@@ -759,7 +759,7 @@ class ShipmentController extends Controller
             $shipments =  $shipments->whereBetween('created_at', [$date1 . " 00:00:00", $date2 . " 23:59:59"]);
         }
 
-        // if(!$request->area_id && !$request->phone && !$request->hub_id && !$request->merchant_id && !$request->driver_id && !$request->invoice_id && !$request->status){
+        // if(!$request->area_id && !$request->phone && !$request->hub_id && !$request->user_id && !$request->driver_id && !$request->invoice_id && !$request->status){
         //     $shipments =  $shipments->latest()->paginate(30);
         // }
 
@@ -822,7 +822,7 @@ class ShipmentController extends Controller
             // dd('driver');
             $shipments = Shipment::where('id', $driver_shipment)
                 ->whereBetween('created_at', [$date1 . " 00:00:00", $date2 . " 23:59:59"])
-                ->orWhere('user_id', $request->merchant_id)
+                ->orWhere('user_id', $request->user_id)
                 ->orWhere('phone', $request->phone)
                 ->orWhere('shipping_status', $request->status)
                 ->orWhereIn('invoice_id', explode(',', $request->invoice_id))
@@ -841,7 +841,7 @@ class ShipmentController extends Controller
             $shipments = Shipment::whereIn('id', $shipment)
                 ->whereBetween('created_at', [$date1 . " 00:00:00", $date2 . " 23:59:59"])
                 ->orWhere('area_id', $request->area_id)
-                ->orWhere('user_id', $request->merchant_id)
+                ->orWhere('user_id', $request->user_id)
                 ->orWhere('phone', $request->phone)
                 ->orWhere('shipping_status', $request->status)
                 ->orWhereIn('invoice_id', explode(',', $request->invoice_id))
@@ -851,7 +851,7 @@ class ShipmentController extends Controller
             return view('admin.shipment.includes.delivery-parcels', compact('shipments'));
         }
 
-        if ($request->phone == null && $request->merchant_id == null && $request->driver_id == null && $request->status == null && $request->area_id == null && $request->hub_id == null && $request->agent == null && $request->invoice_id == null) {
+        if ($request->phone == null && $request->user_id == null && $request->driver_id == null && $request->status == null && $request->area_id == null && $request->hub_id == null && $request->agent == null && $request->invoice_id == null) {
 
             $shipments = Shipment::whereBetween('created_at', [$date1 . " 00:00:00", $date2 . " 23:59:59"])->get();
             return view('admin.shipment.includes.delivery-parcels', compact('shipments'));
@@ -859,7 +859,7 @@ class ShipmentController extends Controller
 
         $shipments = Shipment::whereBetween('created_at', [$date1 . " 00:00:00", $date2 . " 23:59:59"])
             ->orWhere('area_id', $request->area_id)
-            ->orWhere('user_id', $request->merchant_id)
+            ->orWhere('user_id', $request->user_id)
             ->orWhere('phone', $request->phone)
             ->orWhere('shipping_status', $request->status)
             ->orWhereIn('invoice_id', explode(',', $request->invoice_id))
@@ -877,7 +877,7 @@ class ShipmentController extends Controller
     {
         foreach (explode(',', $shipment_ids) as $key => $id) {
             $shipment = Shipment::find($id);
-            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->cod_amount, $shipment->weight, ''];
+            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->amount, $shipment->weight, ''];
         }
         $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'COD Amount', 'Weight', 'Product Selling Price'];
         return self::getCsv($columnNames, $rows, date('d-m-Y - ') . COUNT(explode(',', $shipment_ids)) . '-parcels.csv');
@@ -945,7 +945,7 @@ class ShipmentController extends Controller
 
         if ($type == 'csv') {
             foreach ($shipments as $key => $shipment) {
-                $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->cod_amount, '', ''];
+                $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->amount, '', ''];
             }
             $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'COD Amount', 'Instruction', 'Product Selling Price'];
             return self::getCsv($columnNames, $rows, $bulk_id . '.csv');
@@ -1070,7 +1070,7 @@ class ShipmentController extends Controller
 
             // dd($shipments);
             foreach ($shipments as $key => $shipment) {
-                $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->cod_amount, $shipment->weight, ''];
+                $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->amount, $shipment->weight, ''];
             }
             $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'COD Amount', 'Weight', 'Product Selling Price'];
 
@@ -1086,7 +1086,7 @@ class ShipmentController extends Controller
             ->where('time_starts', '>=', $date)->get();
 
         foreach ($shipments as $key => $shipment) {
-            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->cod_amount, $shipment->weight, ''];
+            $rows[] =  [$shipment->invoice_id, $shipment->name, $shipment->phone, $shipment->address, $shipment->zip_code, $shipment->amount, $shipment->weight, ''];
         }
         $columnNames = ['Invoice', 'Customer Name', 'Contact No.', 'Customer Address', 'Post Code', 'Price', 'Weight', 'Product Selling Price'];
         return self::getCsv($columnNames, $rows, date('d/m/Y h i s') . '.csv');

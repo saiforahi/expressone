@@ -59,9 +59,9 @@
                             <div class="form-row">
                                 <div class="col cod_target text-left">
                                     <label for="parcel_value">COD amount</label>
-                                    <input type="number" class="form-control cod_amount" data-key="{{ $key }}"
-                                        name="cod_amount[]" id="cod_amount{{ $key }}"
-                                        value="{{ $line['cod_amount'] }}">
+                                    <input type="number" class="form-control amount" data-key="{{ $key }}"
+                                        name="amount[]" id="amount{{ $key }}"
+                                        value="{{ $line['amount'] }}">
                                 </div>
                                 <div class="col cod_target text-left">
                                     <label for="delivery_charge">Delivery Charge</label>
@@ -280,7 +280,7 @@
                         if (data.cod == 1) {
                             $('.codHas' + key).show();
                             $('#NotFoundState1' + key).text('Price + ' + data.cod_rate + '% COD');
-                            $('#NotFoundState21' + key).text(data.price + ' + ' + data.cod_amount);
+                            $('#NotFoundState21' + key).text(data.price + ' + ' + data.amount);
                         } else $('.codHas' + key).hide();
                     }
                 }

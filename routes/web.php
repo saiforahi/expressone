@@ -355,9 +355,10 @@ Route::post('/register', [App\Http\Controllers\AuthController::class,'registerSt
 Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout'])->name('logout');
 
 Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
-    Route::get('/dashboard', [App\Http\Controllers\User\DashboardController::class,'index'])->name('user.dashboard');
+    Route::get('/all-shipment', [App\Http\Controllers\User\DashboardController::class,'index'])->name('merchantShipments');
     Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
-    Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
+    //Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
+    Route::get('/shipment-pdf/{id}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
     Route::get('/shipment-invoice/{id}', 'ShipmentController@shipmentInvoice')->name('shipmentInvoice');
     Route::get('/shipment-cnote/{shipment}', 'ShipmentController@shipmentConsNote')->name('merchant.shipmentCn');
     Route::delete('/shipment-delete/{id}', '\App\Http\Controllers\User\ShipmentController@shipmentDelete')->name('shipment.delete');

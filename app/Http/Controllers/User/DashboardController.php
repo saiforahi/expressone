@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Models\Area;
+use App\Models\Unit;
 use App\Models\User;
 use App\Models\Shipment;
-use App\Models\ShippingCharge;
 use Illuminate\Http\Request;
+use App\Models\ShippingCharge;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -19,11 +20,10 @@ class DashboardController extends Controller
     }
     public function index()
     {
-        // dd(Auth::user()->morphClass);
-        // dd(Auth::user()->inheritable->getMorphClass());
-        $shipment = Shipment::orderBy('created_at', 'DESC')->where('merchant_id', Auth::guard('user')->user()->id)->get()->toArray();
+        $shipment = Shipment::orderBy('created_at', 'DESC')->where('user_id', Auth::guard('user')->user()->id)->get()->toArray();
         $shippingCharges =  DB::table('shipping_charges')->select('id', 'consignment_type', 'shipping_amount')->get();
         return view('dashboard.index', compact('shipment', 'shippingCharges'));
+        
     }
 
     public function account()
@@ -86,18 +86,17 @@ class DashboardController extends Controller
 
     public function ProfileEdit()
     {
-        $areas = Area::all();
+        $areas = Unit::all();
         return view('dashboard.profile_edit', compact('areas'));
     }
 
     public function ProfileUpdate(Request $request)
     {
-
+        
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         $request->validate([
             'first_name' => 'required|min:3|max:50',
             'last_name' => 'required|min:3|max:50',
-            //'phone' => ['required', 'regex:/^(?:\+88|01)?(?:\d{11}|\d{13})$'],
             'phone' => ['required', 'regex:/(^(\+8801|8801|01|008801))[1|3-9]{1}(\d){8}$/'],
             'nid_no' => 'required',
             'BIN' => 'required',
@@ -109,7 +108,6 @@ class DashboardController extends Controller
             'bank_acc_name' => 'required|max:255',
             'bank_acc_no' => 'required|numeric'
         ]);
-
         $register_user = User::find($request->id);
         $register_user->first_name = $request->first_name;
         $register_user->last_name = $request->last_name;
@@ -118,15 +116,14 @@ class DashboardController extends Controller
         $register_user->BIN = $request->BIN;
         $register_user->shop_name = $request->shop_name;
         $register_user->address = $request->address;
-        $register_user->area_id = $request->area_id;
+        $register_user->unit_id = $request->unit_id;
         $register_user->website_link = $request->website_link;
         $register_user->bank_name = $request->bank_name;
         $register_user->bank_br_name = $request->bank_br_name;
         $register_user->bank_acc_name = $request->bank_acc_name;
         $register_user->bank_acc_no = $request->bank_acc_no;
-        
         $register_user->save();
-        $request->session()->flash('message', 'Profile update successfully');
-        return redirect('/profile');
+        //dd('okay');
+        return redirect()->route('merchantShipments')->with('success','Profile update successfully');
     }
 }

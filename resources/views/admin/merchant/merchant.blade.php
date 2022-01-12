@@ -69,13 +69,13 @@
                                             </th>
                                             <th scope="row">
                                                 @if ($users->is_verified == 1)
-                                                    <a atitle="Change" merchant_id="{{ $users->id }}"
+                                                    <a atitle="Change" user_id="{{ $users->id }}"
                                                         class="text-success merchant_status"
                                                         id="merchant_{{ $users->id }}" href="javascript:void(0)">
                                                         Verified
                                                     </a>
                                                 @else
-                                                    <a title="Change" merchant_id="{{ $users->id }}"
+                                                    <a title="Change" user_id="{{ $users->id }}"
                                                         class="text-danger merchant_status"
                                                         id="merchant_{{ $users->id }}" href="javascript:void(0)">
                                                         Not Verified
@@ -287,22 +287,22 @@
             //Update merchant verify status
             $(".merchant_status").click(function() {
                 var is_verified = $(this).text();
-                var merchant_id = $(this).attr("merchant_id");
+                var user_id = $(this).attr("user_id");
                 $.ajax({
                     type: 'post',
                     url: '/admin/update-merchant-verify',
                     data: {
                         is_verified: is_verified,
-                        merchant_id: merchant_id
+                        user_id: user_id
                     },
                     success: function(resp) {
                         //alert(resp)
                         if (resp['is_verified'] == 0) {
-                            $("#merchant_" + merchant_id).html(
+                            $("#merchant_" + user_id).html(
                                 "<a href='javascript:void(0)' class='merchant_status'>Not verified</a>"
                             )
                         } else if (resp['is_verified'] == 1) {
-                            $("#merchant_" + merchant_id).html(
+                            $("#merchant_" + user_id).html(
                                 "<a href='javascript:void(0)' class='merchant_status'>Verified</a>"
                             )
                         }

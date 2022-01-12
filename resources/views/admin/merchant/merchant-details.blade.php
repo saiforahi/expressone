@@ -86,8 +86,8 @@
                                         <th scope="row">
                                             Invoice ID: {{$shipment->invoice_id}} <br>
                                             Shipment Type : @if($shipment->delivery_type=='1') Regular Delivery @else Express Delivery @endif <br>
-                                            Price: {{$shipment->cod_amount}}
-                                            ( @if(($shipment->cod_amount-$shipment->delivery_charge) <=0) Paid by merchant @else Pay by customer @endif ) <br>
+                                            Price: {{$shipment->amount}}
+                                            ( @if(($shipment->amount-$shipment->delivery_charge) <=0) Paid by merchant @else Pay by customer @endif ) <br>
                                             Tracking code: <a href="/tracking?code={{$shipment->tracking_code}}" target="_blank">{{$shipment->tracking_code}}</a> <br>
                                             Status: @include('admin.shipment.status',['status'=>$shipment->status,'shipping_status'=>$shipment->shipping_status]) <br>
                                             Date: {{date('M d, Y',strtotime($shipment->created_at))}}

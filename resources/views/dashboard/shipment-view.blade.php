@@ -43,7 +43,7 @@
                                 <td>{{ $shipment->name }}</td>
                                 <td>{{ $shipment->phone }}</td>
                                 <td>{{ $shipment->address }}</td>
-                                <td>{{ $shipment->cod_amount }}</td>
+                                <td>{{ $shipment->amount }}</td>
                                 <td>
                                     @if ($shipment->delivery_charge == null)
                                         0

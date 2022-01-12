@@ -20,7 +20,7 @@ class CreateShipmentPaymentsTable extends Migration
             $table->string('tracking_code')->unique();
             $table->string('invoice_no')->unique();
             $table->unsignedBigInteger('admin_id');
-            $table->float('cod_amount',8,2)->nullable();
+            $table->float('amount',8,2)->nullable();
             $table->float('delivery_charge',8,2)->nullable();
             $table->integer('weight_charge')->nullable();
             $table->float('outstanding_amount',8,2)->nullable();

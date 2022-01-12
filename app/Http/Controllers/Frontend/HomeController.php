@@ -132,10 +132,10 @@ class HomeController extends Controller
         $price = 0;
         $total_price = 0;
         $cod_type = 0;
-        $cod_amount = 0;
+        $amount = 0;
 
         $unit = Unit::find($request->unit);
 
-        return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_amount];
+        return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'amount' => $amount, 'cod_rate' => $shipping->amount];
     }
 }

@@ -56,13 +56,13 @@
                                             </td>
                                             <td style="width:10%">
                                                 Weight: {{$shipment->weight}} KG<br>
-                                                COD Amount: {{$shipment->cod_amount}}<br>
+                                                COD Amount: {{$shipment->amount}}<br>
                                                 Delivery Charge: {{$shipment->delivery_charge}}<br>
                                                 @if($shipment->cod !=0)
                                                     COD: Applied<br>
-                                                    COD value:{{$shipment->cod_amount}}% @endif
+                                                    COD value:{{$shipment->amount}}% @endif
 
-                                                @if(($shipment->cod_amount - $shipment->delivery_charge) <0) Pay by merchant @else Pay by Customer @endif
+                                                @if(($shipment->amount - $shipment->delivery_charge) <0) Pay by merchant @else Pay by Customer @endif
                                             </td>
                                             <td>
                                                 @if($shipment->shipping_status>5)
@@ -305,13 +305,13 @@
 
         function get_merchant() {
             let url = window.location.href;
-            let merchant_id = $('#merchant_id').val();
+            let user_id = $('#user_id').val();
             url = new URL(url);
-            if (window.location.href.indexOf("merchant_id") > -1) {
-                url.searchParams.set('merchant_id', merchant_id);
+            if (window.location.href.indexOf("user_id") > -1) {
+                url.searchParams.set('user_id', user_id);
                 window.location.replace(url.href);
             } else {
-                url.searchParams.append('merchant_id', merchant_id);
+                url.searchParams.append('user_id', user_id);
                 window.location.replace(url.href);
             }
         }

@@ -1,11 +1,8 @@
 <?php
 
 namespace Database\Seeders;
-
 use Illuminate\Database\Seeder;
-
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\PermissionRegistrar;
 class UserSeeder extends Seeder
 {
     /**
@@ -24,8 +21,6 @@ class UserSeeder extends Seeder
             'phone'=> '01XXXXXXXXX',
             'password' => Hash::make('12345678'),
         ]);
-        
-
         //merchant
         $merchant = \App\Models\User::create([
             'first_name' => 'Demo',

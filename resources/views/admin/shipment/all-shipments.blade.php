@@ -28,7 +28,7 @@
                     <td>{{$shipment->name}} - {{$shipment->phone}}</td>
                     <td>{{$shipment->user->first_name.' '.$shipment->user->last_name}}</td>
                     <td>
-                      @if(($shipment->cod_amount-$shipment->delivery_charge) <=0)Pay by merchnat @else Pay by Customer @endif <b>({{$shipment->cod_amount}})</b>
+                      @if(($shipment->amount-$shipment->delivery_charge) <=0)Pay by merchnat @else Pay by Customer @endif <b>({{$shipment->amount}})</b>
                     </td>
                     <td> {{$shipment->area->name}} </td>
                     <td> <a target="_blank" href="/tracking?code={{$shipment->tracking_code}}">{{$shipment->tracking_code}} </a></td>

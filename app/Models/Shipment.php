@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Shipment extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['invoice_id', 'tracking_code', 'recipient', 'added_by', 'cod_amount', 'shipping_charge_id', 'weight', 'weight_charge', 'delivery_charge', 'parcel_type', 'delivery_type', 'note', 'amount', 'shipping_status', 'status', 'delivery_location_id', 'pickup_location_id'];
+    //protected $fillable = ['invoice_id', 'tracking_code', 'recipient', 'added_by_id', 'amount', 'shipping_charge_id', 'weight', 'weight_charge', 'delivery_charge', 'parcel_type', 'delivery_type', 'note', 'amount', 'shipping_status', 'status', 'delivery_location_id', 'pickup_location_id'];
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i:s A',
         'updated_at' => 'datetime:Y-m-d h:i:s A',
@@ -16,14 +16,23 @@ class Shipment extends Model
         'time_starts' => 'datetime:Y-m-d h:i:s A',
         'customer' => 'array',
     ];
-    // relationships
-    function area()
+    /**
+     * Get the user that owns the Shipment
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
     {
-        return $this->belongsTo(Area::class);
+        return $this->belongsTo(Unit::class);
     }
-    function owner()
+    /**
+     * Get the user that owns the Shipment
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
     {
-        return $this->belongsTo(User::class,'');
+        return $this->belongsTo(User::class);
     }
     function zone()
     {

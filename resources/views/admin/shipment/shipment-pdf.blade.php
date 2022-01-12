@@ -58,8 +58,8 @@
             </tr>
             <tr>
                 <td style="width:20%">Price </td>
-                <td> @if (($shipment->cod_amount-$shipment->delivery_charge) <=0)Pay by merchant @else Pay by customer @endif
-                    ( {{ $shipment->cod_amount }} Tk)</td>
+                <td> @if (($shipment->amount-$shipment->delivery_charge) <=0)Pay by merchant @else Pay by customer @endif
+                    ( {{ $shipment->amount }} Tk)</td>
             </tr>
             <tr>
                 <td style="width:20%">Phone </td>

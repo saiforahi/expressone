@@ -29,8 +29,8 @@
                                         Delivery type: @if($shipment->delivery_type=='1') Regular @else Express @endif delivery
                                     </td>
                                     <td>{{$shipment->user->first_name}} {{$shipment->user->last_name}}</td>
-                                    <td> @if(($shipment->cod_amount-$shipment->delivery_charge) <=0) Pay by merchant @else Pay by customer @endif
-                                        ({{$shipment->cod_amount}}) <br>
+                                    <td> @if(($shipment->amount-$shipment->delivery_charge) <=0) Pay by merchant @else Pay by customer @endif
+                                        ({{$shipment->amount}}) <br>
                                         Status: {{$box->status}}
                                     </td>
                                 </tr>

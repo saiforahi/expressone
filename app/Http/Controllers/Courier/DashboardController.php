@@ -64,9 +64,9 @@ class DashboardController extends Controller
                     return $data;
                 })
                 ->addColumn('amount', function ($driverShipment) {
-                    if($driverShipment->shipment->cod_amount==0){
-                        $data = 'Pay by merchant ('.$driverShipment->shipment->cod_amount.')';
-                    }else {$data = 'Pay by customer ('.$driverShipment->shipment->cod_amount.')';}
+                    if($driverShipment->shipment->amount==0){
+                        $data = 'Pay by merchant ('.$driverShipment->shipment->amount.')';
+                    }else {$data = 'Pay by customer ('.$driverShipment->shipment->amount.')';}
                     return $data;
                 })
                 ->addColumn('area', function ($driverShipment) {
@@ -98,9 +98,9 @@ class DashboardController extends Controller
             return $data;
         })
         ->addColumn('amount', function ($driverShipment) {
-            if($driverShipment->shipment->cod_amount==0){
-                $data = 'Pay by merchant ('.$driverShipment->shipment->cod_amount.')';
-            }else {$data = 'Pay by customer ('.$driverShipment->shipment->cod_amount.')';}
+            if($driverShipment->shipment->amount==0){
+                $data = 'Pay by merchant ('.$driverShipment->shipment->amount.')';
+            }else {$data = 'Pay by customer ('.$driverShipment->shipment->amount.')';}
             return $data;
         })
         ->addColumn('area', function ($driverShipment) {
@@ -164,9 +164,9 @@ class DashboardController extends Controller
                 return $data;
             })
             ->addColumn('amount', function ($shipment) {
-                if($shipment->cod_amount==0){
-                    $data = 'Pay by merchant ('.$shipment->cod_amount.')';
-                }else {$data = 'Pay by customer ('.$shipment->cod_amount.')';}
+                if($shipment->amount==0){
+                    $data = 'Pay by merchant ('.$shipment->amount.')';
+                }else {$data = 'Pay by customer ('.$shipment->amount.')';}
                 return $data;
             })
             ->addColumn('area', function ($shipment) {

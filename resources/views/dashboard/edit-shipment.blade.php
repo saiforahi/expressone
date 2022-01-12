@@ -37,8 +37,8 @@
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="name">Customer Name</label>
-                            <input type="text" id="name" class="form-control" name="name" placeholder="Customer Name"
-                                value="{{ $shipment->name }}">
+                            <input type="text" class="form-control" name="recipient" placeholder="Customer Name"
+                                value="{{ $shipment->recipient }}">
                         </div>
                         <div class="col text-left">
                             <label for="usr3">Phone Number</label>
@@ -49,16 +49,16 @@
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="address">Address</label>
-                            <input type="text" id="address" class="form-control" name="address"
+                            <input type="text" class="form-control" name="address"
                                 placeholder="Customer Address" value="{{ $shipment->address }}">
                         </div>
                     </div>
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label for="exampleFormControlSelect1">Area</label>
-                            <select class="form-control" name="area_id">
+                            <select class="form-control" name="unit_id">
                                 @foreach ($area as $a)
-                                    <option value="{{ $a->id }}" @if ($a->id == $shipment->area_id)
+                                    <option value="{{ $a->id }}" @if ($a->id == $shipment->unit_id)
                                         selected
                                 @endif >{{ $a->name }}</option>
                                 @endforeach
@@ -68,17 +68,10 @@
                     </div>
                     <h5 class="card-title mt-4">Shipment Details:</h5>
                     <div class="form-row my-4">
-                        @if ($shipment->weight_charge !== null)
-                            <div class="col text-left">
-                                <label class="" for="weight">Weight charge</label>
-                                <input type="number" id="weight_charge" class="form-control" name="weight_charge"
-                                    value="{{ $shipment->weight_charge }}">
-                            </div>
-                        @endif
                         <div class="col text-left">
-                            <label for="cod_amount">COD Amount</label>
-                            <input type="number" id="cod_amount" class="form-control" name="cod_amount"
-                                value="{{ $shipment->cod_amount }}">
+                            <label for="amount">COD Amount</label>
+                            <input type="number" id="amount" class="form-control" name="amount"
+                                value="{{ $shipment->amount }}">
                         </div>
 
                         <div class="col text-left">

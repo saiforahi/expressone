@@ -21,12 +21,12 @@
       </td>
       <td style="width:10%">
         Weight: {{$shipment->weight}} KG<br>
-        Price: {{$shipment->cod_amount}}<br>
+        Price: {{$shipment->amount}}<br>
         @if($shipment->cod !=0)
         COD: Applied<br>
         COD value:{{$shipment->cod_value}}% @endif
 
-        @if(($shipment->cod_amount-$shipment->delivery_charge) <=0) Pay by merchant @else Pay by Customer @endif
+        @if(($shipment->amount-$shipment->delivery_charge) <=0) Pay by merchant @else Pay by Customer @endif
       </td>
       <td>
         @if($shipment->shipping_status>5)

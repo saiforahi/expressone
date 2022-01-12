@@ -69,8 +69,8 @@ class MerchantController extends Controller
             } else {
                 $is_verified = 1;
             }
-            User::where('id', $data['merchant_id'])->update(['is_verified' => $is_verified]);
-            return response()->json(['is_verified' => $is_verified, 'merchant_id' => $data['merchant_id']]);
+            User::where('id', $data['user_id'])->update(['is_verified' => $is_verified]);
+            return response()->json(['is_verified' => $is_verified, 'user_id' => $data['user_id']]);
         }
     }
 }

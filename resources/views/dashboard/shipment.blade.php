@@ -32,31 +32,32 @@
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="main-card mb-3 card card-body">
-                <form id="upload_form" method="post" action="{{ route('PrepareShipmentSubmit') }}"> {{ csrf_field() }}
-                    <h5 class="card-title">Customer Details:</h5>
+                <form id="upload_form" method="post" action="{{ route('PrepareShipmentSubmit') }}">
+                    @csrf
+                    <h5 class="card-title">Recipient Details:</h5>
                     <div class="form-row my-4">
                         <div class="col text-left">
-                            <label class="" for="name">Customer Name</label>
-                            <input type="text" id="name" class="form-control" name="name" placeholder="Customer Name">
+                            <label for="name">Recipient Name</label>
+                            <input type="text" class="form-control" name="recipient" placeholder="Recipient name">
                         </div>
                         <div class="col text-left">
                             <label for="usr3">Phone Number</label>
-                            <input type="text" class="form-control" name="phone" placeholder="Customer phone">
+                            <input type="text" class="form-control" name="phone" placeholder="Recipient phone">
                         </div>
                     </div>
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="address">Address</label>
                             <input type="text" id="address" class="form-control" name="address"
-                                placeholder="Customer Address">
+                                placeholder="Recipient Address">
                         </div>
 
                         <div class="col text-left">
                             <label for="area">Area</label>
-                            <select class="form-control select2" name="area" id="area">
+                            <select class="form-control select2" name="unit_id">
                                 <option value="" selected disabled>Select area</option>
-                                @foreach ($area as $areas)
-                                    <option value="{{ $areas->id }}">{{ $areas->name }}</option>
+                                @foreach ($units as $unit)
+                                    <option value="{{ $unit->id }}">{{ $unit->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -78,7 +79,7 @@
                     <div class="form-row my-4">
                         <div class="col text-left">
                             <label class="" for="weight">COD Amount</label>
-                            <input type="number" id="cod_amount" class="form-control" name="cod_amount" value="1">
+                            <input type="number" id="amount" class="form-control" name="amount" value="1">
                         </div>
 
                         <div class="col text-left">
@@ -86,15 +87,6 @@
                             <input type="number" class="form-control" name="weight_charge" value="0"
                                 placeholder="Enter weight charge">
 
-                        </div>
-
-                        <div class="col cod_target text-left">
-                            <label for="parcel_value">Declared Parcel Value</label>
-                            <input type="number" id="parcel_value" class="form-control" name="parcel_value"
-                                placeholder="Enter Parcel Value">
-                            <div class="w-100">
-                                <small>My parcel value is <span class="parcel_value_info">0</span> Taka</small>
-                            </div>
                         </div>
                     </div>
                     <div class="form-row my-4">
@@ -197,7 +189,7 @@
                         if (data.cod == 1) {
                             $('.codHas').show();
                             $('#NotFoundState1').text('Price + ' + data.cod_rate + '% COD');
-                            $('#NotFoundState21').text(data.price + ' + ' + data.cod_amount);
+                            $('#NotFoundState21').text(data.price + ' + ' + data.amount);
                         } else $('.codHas').hide();
                     }
                 }
@@ -256,7 +248,7 @@
         //                             confirmButtonText: 'Ok'
         //                         })
         //                     } else {
-        //                         var url = '{{ route('user.dashboard') }}';
+        //                         var url = '{{ route('merchantShipments') }}';
         //                         window.location.href = url;
         //                     }
         //                 }

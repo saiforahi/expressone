@@ -45,7 +45,7 @@ class CSVController extends Controller
                 'address'=>$line[4],
                 'delivery_area'=>$line[5],
                 'consignment_type'=>$line[6],
-                'cod_amount'=>$line[7],
+                'amount'=>$line[7],
                 'delivery_charge'=>$line[8],
                 'weight_charge'=> $line[9]
                );
@@ -116,7 +116,7 @@ class CSVController extends Controller
     {
         dd($request->all());
         $price = 0; $total_price = 0;
-        $cod_type = 0; $cod_amount = 0;
+        $cod_type = 0; $amount = 0;
         // dd($request->all());
         foreach(Session::get('csv_data') as $key=>$line){
             $zone = Area::find($request->area[$key]);
@@ -134,7 +134,7 @@ class CSVController extends Controller
             //         if (!$request->parcel_value[$key]) {
             //             return response()->json(['status' => 'error', 'errors' => ['message' => 'Please declared your parcel value first.']], 422);
             //         } else {
-            //             $cod_amount = ((int)$request->parcel_value[$key] / 100) * $shipping->cod_value;
+            //             $amount = ((int)$request->parcel_value[$key] / 100) * $shipping->cod_value;
             //         }
             //     }
 
@@ -148,7 +148,7 @@ class CSVController extends Controller
             //     } else {
             //         $price = (int)$shipping->max_price;
             //     }
-            //     $total_price = $price + $cod_amount + (int)$request->parcel_value[$key];
+            //     $total_price = $price + $amount + (int)$request->parcel_value[$key];
             // }else{
             //     $total_price = $price = 0;
             // }
@@ -174,7 +174,7 @@ class CSVController extends Controller
             // $new_id = Shipment::all()->first();
             // $insert->tracking_code = rand();
             // $insert->cod = $cod_type;
-            // $insert->cod_amount = $cod_amount;
+            // $insert->amount = $amount;
             // $insert->price = $price;
             // $insert->total_price = $total_price;
             // $insert->shipping_status = $request->type;
@@ -187,7 +187,7 @@ class CSVController extends Controller
     // public function store(Request $request)
     // {
     //     $price = 0; $total_price = 0;
-    //     $cod_type = 0; $cod_amount = 0;
+    //     $cod_type = 0; $amount = 0;
     //     // dd($request->all());
     //     foreach(Session::get('csv_data') as $key=>$line){
     //         $zone = Area::find($request->area[$key]);
@@ -205,7 +205,7 @@ class CSVController extends Controller
     //                 if (!$request->parcel_value[$key]) {
     //                     return response()->json(['status' => 'error', 'errors' => ['message' => 'Please declared your parcel value first.']], 422);
     //                 } else {
-    //                     $cod_amount = ((int)$request->parcel_value[$key] / 100) * $shipping->cod_value;
+    //                     $amount = ((int)$request->parcel_value[$key] / 100) * $shipping->cod_value;
     //                 }
     //             }
 
@@ -219,7 +219,7 @@ class CSVController extends Controller
     //             } else {
     //                 $price = (int)$shipping->max_price;
     //             }
-    //             $total_price = $price + $cod_amount + (int)$request->parcel_value[$key];
+    //             $total_price = $price + $amount + (int)$request->parcel_value[$key];
     //         }else{
     //             $total_price = $price = 0;
     //         }
@@ -245,7 +245,7 @@ class CSVController extends Controller
     //         $new_id = Shipment::all()->first();
     //         $insert->tracking_code = rand();
     //         $insert->cod = $cod_type;
-    //         $insert->cod_amount = $cod_amount;
+    //         $insert->amount = $amount;
     //         $insert->price = $price;
     //         $insert->total_price = $total_price;
     //         $insert->shipping_status = $request->type;

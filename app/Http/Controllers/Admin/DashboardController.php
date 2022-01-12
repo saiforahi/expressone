@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Hub;
 use App\Models\Admin;
-use App\Models\Admin_hub;
+use App\Models\Admin_Unit;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -14,16 +14,16 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $hub = Admin_hub::where('admin_id', Auth::guard('admin')->user()->id)->first();
+        $hub = Admin_Unit::where('admin_id', Auth::guard('admin')->user()->id)->first();
         if ($hub != null) {
-            Session::put('admin_hub', $hub);
+            Session::put('admin_unitb', $hub);
         }
         return view('admin.dashboard');
     }
 
     public function admin_changes_hub(Hub $hub)
     {
-        Session::put('admin_hub', $hub);
+        Session::put('Admin_Unit', $hub);
         return back();
     }
 
@@ -32,9 +32,9 @@ class DashboardController extends Controller
         //
     }
 
-    public function get_admin_hub_ids(Admin $admin)
+    public function get_Admin_Unit_ids(Admin $admin)
     {
-        $hubs = \App\Models\Admin_hub::where('admin_id', $admin->id)->get();
+        $hubs = Admin_Unit::where('admin_id', $admin->id)->get();
         $ids = array();
         foreach ($hubs as $key => $value) {
             $ids[] = $value->hub_id;

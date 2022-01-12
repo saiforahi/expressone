@@ -39,7 +39,7 @@
                         <td>1</td>
                         <td>@if ($shipment->delivery_type == '1') Regular @else Express @endif</td>
                         <td>{{ $shipment->weight }} Kg</td>
-                        <td>{{ $shipment->cod_amount }}</td>
+                        <td>{{ $shipment->amount }}</td>
                     </tr>
                     <tr class="tabletitle" style="border-bottom:1px solid silver">
                         <td></td>

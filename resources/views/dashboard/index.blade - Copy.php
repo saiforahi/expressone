@@ -113,7 +113,7 @@
                                     </td>
 
                                     <td>
-                                        {{ $shipment->cod_amount }}
+                                        {{ $shipment->amount }}
                                     </td>
 
                                     <td>

@@ -60,15 +60,15 @@
         </tr>
         <tr>
             <td>{{ $shipment->invoice_id }}</td>
-            <td>{{ $shipment->name }}</td>
+            <td>{{ $shipment->recipient }}</td>
             <td>{{ $shipment->phone }}</td>
             <td>{{ $shipment->user->shop_name }}</td>
-            <td>{{ $shipment->cod_amount }}</td>
-            <td> {{ $shipment->area->hub->name }} </td>
+            <td>{{ $shipment->amount }}</td>
+            <td> {{ $shipment->unit->name }} </td>
         </tr>
         <tr>
             <th colspan="2">Total Price <b>1</b></th>
-            <th colspan="4" class="text-center">New worth of parcels: {{ $shipment->cod_amount }}</th>
+            <th colspan="4" class="text-center">New worth of parcels: {{ $shipment->amount }}</th>
         </tr>
     </table>
 

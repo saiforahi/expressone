@@ -64,7 +64,7 @@
                                             {{ $key + 1 }}
                                         </th>
                                         <th scope="row">Name: {{ $shipment->name }} <br>Price:
-                                            {{ $shipment->cod_amount }}
+                                            {{ $shipment->amount }}
                                         </th>
 
                                         <th scope="row"><i class="fa fa-phone"></i> {{ $shipment->phone }}<br>
