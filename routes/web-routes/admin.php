@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Admin\AreaController;
 use App\Models\Shipment;
 use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
@@ -59,15 +58,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
 
     Route::get('/admin-change-hub/{hub}', [AdminDashboardController::class,'admin_changes_hub'])->name('admin-change-hub');
     Route::get('/get-admin-hub-ids/{admin}', 'DashboardController@get_admin_hub_ids')->name('get-admin-hub-ids');
-    Route::get('/unit', [App\Http\Controllers\Admin\AreaController::class,'unit'])->name('unit');
-    Route::post('/zone', [App\Http\Controllers\Admin\AreaController::class,'unitStore'])->name('zone.store');
-    Route::get('/get-units', [App\Http\Controllers\Admin\AreaController::class,'unitGet'])->name('AdminUnitsGet');
+    Route::get('/zone', 'AreaController@zone')->name('zone');
+    Route::post('/zone', 'AreaController@zoneStore')->name('zone.store');
+    Route::get('/get-zone', 'AreaController@zoneGet')->name('AdminZoneGet');
     Route::post('/zone-update', 'AreaController@zoneUpdate')->name('zone.update');
     Route::post('/zone-delete', 'AreaController@zoneDelete')->name('zone.delete');
     Route::get('/get-zone-single', 'AreaController@zoneGetSingle')->name('zone.single');
 
-    Route::get('/point', [App\Http\Controllers\Admin\AreaController::class,'index'])->name('point');
-    Route::post('/point', 'AreaController@hubStore')->name('point.store');
+    Route::get('/hub', 'AreaController@index')->name('hub');
+    Route::post('/hub', 'AreaController@hubStore')->name('point.store');
     Route::get('/get-hub', 'AreaController@hubGet')->name('AdminHubGet');
     Route::post('/hub-update', 'AreaController@hubUpdate')->name('hub.update');
     Route::post('/hub-delete', 'AreaController@hubDelete')->name('hub.delete');
@@ -75,8 +74,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/get-hub-select', 'AreaController@SelectHub')->name('SelectHub');
     Route::get('/delete-hub/{hub}', 'AreaController@delete_hub')->name('deleet-hub');
 
-    Route::get('/location', [AreaController::class,'area'])->name('location');
-    Route::post('/location', 'AreaController@areaStore')->name('area.store');
+    Route::get('/area', 'AreaController@area')->name('area');
+    Route::post('/area', 'AreaController@areaStore')->name('area.store');
     Route::get('/get-area', 'AreaController@areaGet')->name('AdminAreaGet');
     Route::post('/area-update', 'AreaController@areaUpdate')->name('area.update');
     Route::get('/area-delete/{area}', 'AreaController@areaDelete')->name('area.delete');
@@ -341,83 +340,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('shipping-charges', [ShippingChargeController::class, 'index'])->name('shippingCharges');
 });
 
-/*
-|--------------------------------------------------------------------------
-| User Route
-|--------------------------------------------------------------------------
-*/
-Route::get('/login', [App\Http\Controllers\AuthController::class,'index'])->name('login');
-Route::get('/verify', [App\Http\Controllers\AuthController::class,'verify'])->name('verify-user');
-Route::post('/verify', [App\Http\Controllers\AuthController::class,'verify_code'])->name('verify-user-code');
-Route::post('/verification.resend', [App\Http\Controllers\AuthController::class,'send_verification_code'])->name('verification.resend');
 
-Route::post('/login', [App\Http\Controllers\AuthController::class,'login'])->name('login.store');
-Route::get('/register', [App\Http\Controllers\AuthController::class,'register'])->name('register');
-Route::post('/register', [App\Http\Controllers\AuthController::class,'registerStore'])->name('register.store');
-Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout'])->name('logout');
 
-Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
-    Route::get('/dashboard', [App\Http\Controllers\User\DashboardController::class,'index'])->name('user.dashboard');
-    Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
-    Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
-    Route::get('/shipment-invoice/{id}', 'ShipmentController@shipmentInvoice')->name('shipmentInvoice');
-    Route::get('/shipment-cnote/{shipment}', 'ShipmentController@shipmentConsNote')->name('merchant.shipmentCn');
-    Route::delete('/shipment-delete/{id}', '\App\Http\Controllers\User\ShipmentController@shipmentDelete')->name('shipment.delete');
-    Route::post('set-shipping-charge/{id}', [ShippingChargeController::class, 'setShippingCharge'])->name('setShippingCharge');
-    //Profile
-    Route::get('/profile', [MerchantDashboardController::class,'profile'])->name('profile');
-    Route::get('/profile-edit', [MerchantDashboardController::class,'ProfileEdit'])->name('ProfileEdit');
-    Route::post('/profile-update', [MerchantDashboardController::class,'ProfileUpdate'])->name('ProfileUpdate');
-    //Account
-    Route::get('/account', [MerchantDashboardController::class,'account'])->name('account');
-    Route::post('/change-email', [MerchantDashboardController::class,'ChangeMail'])->name('ChangeMail');
-    Route::post('/change-password', [MerchantDashboardController::class,'ChangePassword'])->name('ChangePassword');
-    //Merchant Shipment
-    Route::get('/prepare-shipment', 'ShipmentController@index')->name('merhcant_shipments');
-    Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
-    Route::post('shipment-save', 'ShipmentController@shipmentSave')->name('PrepareShipmentSubmit');
-    Route::get('/edit-shipment/{shipment}', 'ShipmentController@edit')->name('editShipment');
-    Route::post('/update-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
-    //Merchant Payment routes
-    Route::get('payments', 'ShipmentController@payments')->name('payments');
-    Route::get('payments-load', 'ShipmentController@payments_loading')->name('payments-load');
-    Route::get('/show-payment/{shipment}', 'ShipmentController@show_payment')->name('payments-show');
-    //Merchant CSV
-    Route::get('/csv-upload', 'CSVController@create')->name('csv-upload');
-    Route::post('/csv-upload', 'CSVController@get_csv_data')->name('get-csv');
-    Route::get('/csv-temporary', 'CSVController@show')->name('csv-temporary');
-    Route::post('/csv-temporary', 'CSVController@store_new')->name('csv-save');
-    Route::get('prepare-shipment-details/{id}', 'ShipmentController@PrepareShipmentEdit')->name('PrepareShipmentEdit');
-});
 
-Route::get('driver/login', [CourierAuthController::class,'index']);
-Route::post('driver/login', [CourierAuthController::class,'login'])->name('driver.login');
-Route::post('driver/register', 'Courier\AuthController@store')->name('driver.register');
-Route::post('driver/logout', 'Courier\AuthController@logout')->name('driver.logout');
-
-Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix' => 'courier'], function () {
-    Route::get('/', [CourierDashboardController::class,'index'])->name('driver.dashboard');
-    Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-driver-shipments');
-    Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-driver-shipments');
-
-    Route::get('/shipments', 'ShipmentController@index')->name('driverShipments.index');
-    Route::get('/my-shipments/{type}', 'ShipmentController@my_shipments')->name('my-shipments');
-    Route::get('/shipping-details/{id}/{status}', 'ShipmentController@show')->name('shipping-details');
-
-    Route::get('/cencell-parcel/{id}', 'ShipmentController@cencel_parcel')->name('cancel-parcel');
-    Route::get('/receive-shipment/{id}', 'ShipmentController@receive_parcel')->name('receive-parcel');
-    Route::get('/receive-all-shipment/{user}', 'ShipmentController@receive_all_parcel')->name('receive-all-parcel');
-
-    Route::get('/my-parcels/{type}', 'ShipmentController@my_parcels')->name('my-parcel');
-    Route::get('/agent-dispatch', 'ShipmentController@agent_dispatch')->name('box-for-delivery');
-    Route::get('/shipment-info/{shipment}', 'ShipmentController@shipment_info')->name('shipment-info');
-    Route::post('/shipment-delivery', 'ShipmentController@delivery_report')->name('shipment-delivery');
-
-    Route::get('/return-agent-dispatch', 'ShipmentController@return_agent_dispatch')->name('return-box-for-delivery');
-    Route::post('/return-shipment-delivery', 'ShipmentController@return_delivery_report')->name('return-shipment-delivery');
-    Route::post('/confirm-otp', 'ShipmentController@otp_confirmation')->name('confirm-opt');
-});
-
-Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
-    Lfm::routes();
-});

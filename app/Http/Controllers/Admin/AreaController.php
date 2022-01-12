@@ -2,25 +2,29 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Area;
+use App\Models\Area;
 use App\Http\Controllers\Controller;
 use App\Hub;
+use App\Models\Location;
+use App\Models\Point;
+use App\Models\Unit;
 use App\Zone;
 use Illuminate\Http\Request;
 use Session;
-use DataTables;
+// use DataTables;
+use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
 class AreaController extends Controller
 {
     public function index()
     {
-        $zone = Zone::all();
-        return view('admin.area.hub', compact('zone'));
+        $zone = Unit::all();
+        return view('admin.area.unit', compact('unit'));
     }
 
     public function hubGet()
     {
-        return DataTables::of(Hub::orderBy('id', 'DESC')->get())->addColumn('action', function ($country) {
+        return FacadesDataTables::of(Point::orderBy('id', 'DESC')->get())->addColumn('action', function ($country) {
             return '
             <div class="btn-group  btn-group-sm">
                 <button class="btn btn-success edit" id="' . $country->id . '" type="button"><i class="mdi mdi-table-edit m-r-3"></i>Edit</button>
@@ -33,18 +37,18 @@ class AreaController extends Controller
                 return "<button type = 'button' id = '$country->id' class='btn btn-info btn-xs Change'> Inactive</button>";
             }
         })->addColumn('zone', function ($country) {
-            return Zone::where('id', $country->zone_id)->pluck('name')->first();
+            return Unit::where('id', $country->zone_id)->pluck('name')->first();
         })->rawColumns(['status', 'action'])->make(true);
     }
 
     public function hubUpdate(Request $request)
     {
         if ($request->action == 'inactive') {
-            $insert = Hub::find($request->id);
+            $insert = Point::find($request->id);
             $insert->status = 0;
             $insert->save();
         } else {
-            $insert = Hub::find($request->id);
+            $insert = Point::find($request->id);
             $insert->status = 1;
             $insert->save();
         }
@@ -58,9 +62,9 @@ class AreaController extends Controller
         ]);
 
         if ($request->id == '') {
-            $insert = new Hub();
+            $insert = new Point();
         } else {
-            $insert = Hub::find($request->id);
+            $insert = Point::find($request->id);
         }
         $insert->zone_id = $request->zone_id;
         $insert->name = $request->name;
@@ -71,56 +75,56 @@ class AreaController extends Controller
 
     public function hubGetSingle(Request $request)
     {
-        return Hub::findOrFail($request->id);
+        return Point::findOrFail($request->id);
     }
 
     public function SelectHub(Request $request)
     {
-        $earth = Hub::where('zone_id', $request->id)->where('status', 1)->get();
+        $earth = Point::where('zone_id', $request->id)->where('status', 1)->get();
         return json_encode($earth);
     }
 
-    public function delete_hub(Hub $hub)
+    public function delete_point(Point $point)
     {
-        if (\Auth::guard('admin')->user()->role_id != '1') return 0;
-        $area = Area::where('hub_id', $hub->id)->count();
+        if (auth()->guard('admin')->user()->type == 'admin') return 0;
+        $area = Location::where('hub_id', $point->id)->count();
         if ($area > 0) return 0;
-        $hub->delete();
+        $point->delete();
         return 1;
     }
 
 
-    public function zone()
+    public function unit()
     {
-        return view('admin.area.zone');
+        return view('admin.area.unit');
     }
 
-    public function zoneGet()
+    public function unitGet()
     {
-        return DataTables::of(Zone::orderBy('id', 'DESC'))->addColumn('action', function ($country) {
+        return FacadesDataTables::of(Unit::orderBy('created_at'))->addColumn('action', function ($unit) {
             return '<div class="btn-group  btn-group-sm">
-                <button class="btn btn-success edit" id="' . $country->id . '" type="button"><i class="mdi mdi-table-edit m-r-3"></i>Edit</button>
-                <button class="btn btn-danger delete" id="' . $country->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>
+                <button class="btn btn-success edit" id="' . $unit->id . '" type="button"><i class="mdi mdi-table-edit m-r-3"></i>Edit</button>
+                <button class="btn btn-danger delete" id="' . $unit->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>
             </div> ';
-        })->addColumn('status', function ($country) {
-            if ($country->status == 1) {
-                return "<button type = 'button' id = '$country->id' class='btn btn-success btn-xs Change'> Active</button>";
+        })->addColumn('status', function ($unit) {
+            if ($unit->status == 1) {
+                return "<button type = 'button' id = '$unit->id' class='btn btn-success btn-xs Change'> Active</button>";
             } else {
-                return "<button type = 'button' id = '$country->id' class='btn btn-info btn-xs Change'> Inactive</button>";
+                return "<button type = 'button' id = '$unit->id' class='btn btn-info btn-xs Change'> Inactive</button>";
             }
         })->rawColumns(['status', 'action'])->make(true);
     }
 
-    public function zoneStore(Request $request)
+    public function unitStore(Request $request)
     {
         $this->validate($request, [
             'name' => 'Required|max:255|unique:zones,name,' . $request->id,
         ]);
 
         if ($request->id == '') {
-            $insert = new Zone();
+            $insert = new Unit();
         } else {
-            $insert = Zone::find($request->id);
+            $insert = Unit::find($request->id);
         }
         $insert->name = $request->name;
         $insert->save();
@@ -128,14 +132,14 @@ class AreaController extends Controller
         return 1;
     }
 
-    public function zoneUpdate(Request $request)
+    public function unitUpdate(Request $request)
     {
         if ($request->action == 'inactive') {
-            $insert = Zone::find($request->id);
+            $insert = Unit::find($request->id);
             $insert->status = 0;
             $insert->save();
         } else {
-            $insert = Zone::find($request->id);
+            $insert = Unit::find($request->id);
             $insert->status = 1;
             $insert->save();
         }
@@ -143,25 +147,25 @@ class AreaController extends Controller
 
     public function zoneDelete(Request $request)
     {
-        $hub = Hub::where('zone_id', $request->id)->count();
+        $hub = Point::where('unit_id', $request->id)->count();
         if ($hub > 0) {
             echo 'Foreign key integrated';
             return false;
         } else {
-            Zone::where('id', $request->id)->delete();
+            Unit::where('id', $request->id)->delete();
             return true;
         }
     }
 
     public function zoneGetSingle(Request $request)
     {
-        return Zone::findOrFail($request->id);
+        return Unit::findOrFail($request->id);
     }
 
-    public function area()
+    public function location()
     {
-        $zone = Zone::latest()->get();
-        return view('admin.area.area', compact('zone'));
+        $units = Unit::latest()->get();
+        return view('admin.area.area', compact('units'));
     }
 
     function areaGetSingle(Request $request)
@@ -191,7 +195,7 @@ class AreaController extends Controller
 
     public function areaGet()
     {
-        return DataTables::of(Area::orderBy('id', 'DESC'))->addColumn('action', function ($country) {
+        return Data::of(Location::orderBy('id', 'DESC'))->addColumn('action', function ($country) {
             return '
             <div class="btn-group  btn-group-sm text-right">
                 <button class="btn btn-info btn-xs edit" id="' . $country->id . '"><i class="fa fa-edit"></i> Edit</button>
@@ -211,22 +215,22 @@ class AreaController extends Controller
         })->rawColumns(['status', 'action'])->make(true);
     }
 
-    public function areaUpdate(Request $request)
+    public function locationUpdate(Request $request)
     {
         if ($request->action == 'inactive') {
-            $insert = Area::find($request->id);
+            $insert = Location::find($request->id);
             $insert->status = 0;
             $insert->save();
         } else {
-            $insert = Area::find($request->id);
+            $insert = Location::find($request->id);
             $insert->status = 1;
             $insert->save();
         }
     }
 
-    public function areaDelete(Area $area)
+    public function locationDelete(Location $location)
     {
-        $area->delete();
+        $location->delete();
         return true;
     }
 

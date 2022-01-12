@@ -100,14 +100,15 @@ class DashboardController extends Controller
             //'phone' => ['required', 'regex:/^(?:\+88|01)?(?:\d{11}|\d{13})$'],
             'phone' => ['required', 'regex:/(^(\+8801|8801|01|008801))[1|3-9]{1}(\d){8}$/'],
             'nid_no' => 'required',
-            'BIN' => 'required',
+            'bin_no' => 'required',
             'shop_name' => 'required|min:3',
             'address' => 'required|max:255',
             'website_link' => 'required|regex:' . $regex,
             'bank_name' => 'required|min:3',
             'bank_br_name' => 'required|max:100',
             'bank_acc_name' => 'required|max:255',
-            'bank_acc_no' => 'required|numeric'
+            'bank_acc_no' => 'required|numeric',
+            'unit_id' => 'required|exists:units,id'
         ]);
 
         $register_user = User::find($request->id);
@@ -115,10 +116,10 @@ class DashboardController extends Controller
         $register_user->last_name = $request->last_name;
         $register_user->phone = $request->phone;
         $register_user->nid_no = $request->nid_no;
-        $register_user->BIN = $request->BIN;
+        $register_user->bin_no = $request->bin_no;
         $register_user->shop_name = $request->shop_name;
         $register_user->address = $request->address;
-        $register_user->area_id = $request->area_id;
+        $register_user->unit_id = $request->unit_id;
         $register_user->website_link = $request->website_link;
         $register_user->bank_name = $request->bank_name;
         $register_user->bank_br_name = $request->bank_br_name;

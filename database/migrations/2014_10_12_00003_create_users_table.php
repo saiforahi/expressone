@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->string('bank_br_name')->nullable();
             $table->string('bank_acc_name')->nullable();
             $table->bigInteger('bank_acc_no')->nullable();
+            $table->unsignedBigInteger('unit_id')->nullable();
             $table->string('address')->nullable();
             $table->string('website_link')->nullable();
     

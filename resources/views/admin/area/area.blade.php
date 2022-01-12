@@ -72,23 +72,23 @@
                                 {{ csrf_field() }}
                                 <input type="hidden" value="" name="id" id="area_id">
                                 <div class="form-group has-feedback">
-                                    <label for="zone_id">Shipping distribution zone:</label>
-                                    <select class="col-md-7 col-xs-12 select2_single" name="zone_id" id="zone_id">
+                                    <label for="unit_id">Delivery Unit:</label>
+                                    <select class="col-md-7 col-xs-12 select2_single" name="unit_id" id="unit_id">
                                         <option></option>
-                                        @foreach ($zone as $zones)
-                                            <option value="{{ $zones->id }}">{{ $zones->name }}</option>
+                                        @foreach ($units as $unit)
+                                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group has-feedback">
-                                    <label for="zone_id">Hub:</label>
-                                    <select class="col-md-7 col-xs-12 select2_single" name="hub_id" id="hub_id" required>
+                                    <label for="point_id">Point:</label>
+                                    <select class="col-md-7 col-xs-12 select2_single" name="point_id" id="point_id" required>
                                         <option></option>
                                     </select>
                                 </div>
                                 <div class="form-group has-feedback">
-                                    <label for="code">Area Name:</label>
-                                    <input type="text" class="form-control" placeholder="Area name" name="name" id="name"
+                                    <label for="code">Location:</label>
+                                    <input type="text" class="form-control" placeholder="Location" name="location" id="location"
                                         value="">
                                 </div>
                                 <hr>

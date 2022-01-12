@@ -1,15 +1,15 @@
 @extends('admin.layout.app')
-@section('title','Shipping Distribution Zone')
+@section('title','Delivery Unit')
 @section('content')
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Shipping Distribution Zone Manage</h3>
+                    <h3>Delivery Unit Manage</h3>
                 </div>
                 <div class="title_right">
                     <button type="button" class="btn btn-info btn-sm add-zone pull-right">
-                        <i class="fa fa-plus fs-13 m-r-3"></i> Add New Zone
+                        <i class="fa fa-plus fs-13 m-r-3"></i> Add New Unit
                     </button>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                                 <table class="table table-striped table-bordered">
                                     <thead>
                                     <tr class="bg-dark">
-                                        <th>Shipping Distribution Zone</th>
+                                        <th>Delivery Unit</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -71,8 +71,8 @@
                                 {{csrf_field()}}
                                 <input type="hidden" value="" name="id" id="zone_id">
                                 <div class="form-group has-feedback">
-                                    <label for="code">Zone Name:</label>
-                                    <input type="text" class="form-control" placeholder="Distribution zone name"
+                                    <label for="code">Unit Name:</label>
+                                    <input type="text" class="form-control" placeholder="Delivery Unit name"
                                            name="name" id="name"
                                            value="">
                                 </div>
@@ -171,7 +171,7 @@
                 },
 
                 serverSide: true,
-                ajax: "{{route('AdminZoneGet')}}",
+                ajax: "{{route('AdminUnitsGet')}}",
                 order: [ [0, 'desc'] ],
                 columns: [
                     {data: 'name'},
@@ -184,7 +184,7 @@
                 $('#zone_id').val('');
                 $('#myModal').modal('show');
                 $('#upload_form').trigger("reset");
-                $('.modal-header').html('New Zone Entry');
+                $('.modal-header').html('New Unit Entry');
             });
 
             $('#upload_form').on('submit', function () {
@@ -298,7 +298,7 @@
 
             $(document).on('click', '.edit', function () {
                 $('#myModal').modal('show');
-                $('.modal-header').html('Zone Information Update');
+                $('.modal-header').html('Unit Information Update');
                 $("#upload_form").trigger("reset");
                 let id = $(this).attr('id');
                 $.ajax({

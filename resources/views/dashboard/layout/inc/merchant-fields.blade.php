@@ -47,16 +47,16 @@
                     <div class="form-row">
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="exampleEmail11" class="">First Name</label><input
-                                    name="first_name" id="exampleEmail11"
+                                <label for="first_name" class="">First Name</label><input
+                                    name="first_name" id="first_name"
                                     value="{{ Auth::guard('user')->user()->first_name }}" type="text" required
                                     max="100" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="examplePassword11" class="">Last
-                                    Name</label><input name="last_name" id="examplePassword11"
+                                <label for="last_name" class="">Last
+                                    Name</label><input name="last_name" id="last_name"
                                     value="{{ Auth::guard('user')->user()->last_name }}" type="text" required
                                     max="100" class="form-control">
                             </div>
@@ -84,23 +84,23 @@
                             <?php $units = \DB::table('units')->get(); ?>
                             <div class="position-relative form-group">
                                 <label for="shop_name" class="">Unit belongs To</label>
-                                <select class="form-control select2" name="area_id" required="">
+                                <select class="form-control select2" name="unit_id" required="">
                                     <option value="">Select Unit</option>
                                     @foreach ($units as $unit)
-                                        <option @if ($unit->id == Auth::guard('user')->user()->area_id) selected @endif value="{{ $unit->id }}">{{ $unit->name }}</option> @endforeach </select>
+                                        <option @if ($unit->id == Auth::guard('user')->user()->unit_id) selected @endif value="{{ $unit->id }}">{{ $unit->name }}</option> @endforeach </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="nid_no" class="">nid_no</label>
+                                <label for="nid_no" class="">NID</label>
                                 <input name="nid_no" value="{{ Auth::guard('user')->user()->nid_no }}"
-                                    type="text" class="form-control" required placeholder="Enter nid_no No">
+                                    type="text" class="form-control" required placeholder="Enter NID No">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="BIN" class="">BIN</label>
-                                <input name="BIN" value="{{ Auth::guard('user')->user()->BIN }}" type="text"
+                                <label for="bin_no" class="">BIN</label>
+                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="text"
                                     class="form-control" placeholder="Enter BIN no">
                             </div>
                         </div>

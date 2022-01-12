@@ -51,7 +51,7 @@
                             <tr>
                                 <td>National ID:</td>
                                 <td><button
-                                        class="btn btn-primary">{{ Auth::guard('user')->user()->national_id }}</button>
+                                        class="btn btn-primary">{{ Auth::guard('user')->user()->nid_no }}</button>
                                 </td>
                             </tr>
                             <tr>

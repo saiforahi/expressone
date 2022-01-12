@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Unit_Shipment extends Model
+class UnitShipment extends Model
 {
     protected $fillable = ['shipment_id','unit_id','admin_id','status'];
     protected $table = 'unit_shipment';

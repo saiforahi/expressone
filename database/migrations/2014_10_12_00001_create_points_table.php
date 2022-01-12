@@ -17,10 +17,12 @@ class CreatePointsTable extends Migration
         Schema::create('points', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('unit_id');
             $table->boolean('status')->default(1);
+            $table->foreign('unit_id')->references('id')->on('units');
             $table->timestamps();
         });
-        Point::create(['name' => 'Dhaka','status'=> 1]);
+        Point::create(['name' => 'Dhaka','unit_id'=> 1,'status'=> 1]);
     }
 
     /**

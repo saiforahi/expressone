@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Unit extends Model
 {
-    protected $fillable = ['name','point_id','status'];
+    protected $fillable = ['name','status'];
     protected $table="units";
     // relation 
     public function employees()
@@ -14,8 +14,8 @@ class Unit extends Model
     	return $this->hasMany(Employee::class);
     }
     
-    function zone(){
-    	return $this->belongsTo(Zone::class);
+    function points(){
+    	return $this->belongsTo(Point::class);
     }
 
     function shipments(){

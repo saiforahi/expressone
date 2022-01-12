@@ -33,6 +33,9 @@ class UserSeeder extends Seeder
             'email' => 'merchant@email.com',
             'phone'=> '01XXXXXXXXX',
             'password' => Hash::make('12345678'),
+            'is_verified'=>1,
+            'nid_no'=>'1234567898',
+            'bin_no'=>'1234564534563'
         ]);
 
         //merchant

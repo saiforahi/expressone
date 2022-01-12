@@ -14,11 +14,16 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $hub = Admin_hub::where('admin_id',Auth::guard('admin')->user()->id)->first();
-        if($hub!=null){
-            Session::put('admin_hub',$hub);
+        // $salesToday = \DB::table('driver_hub_shipment_box')
+        //             ->where('status', 'partial')
+        //             ->orWhere('status', 'delivery')
+        //             ->whereDate('created_at', \Carbon\Carbon::today())
+        //             ->count();
+        $unit = Unit::where('admin_id',Auth::guard('admin')->user()->id)->first();
+        if($unit!=null){
+            Session::put('admin_unit',$unit);
         }
-        return view('admin.dashboard');
+        return view('admin.dashboard')->with('salesToday','');
     }
 
     public function admin_changes_hub(Hub $hub)

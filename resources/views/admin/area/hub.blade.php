@@ -198,7 +198,7 @@
                     }, function () {
                         setTimeout(function () {
                             $.ajax({
-                                url: "{{ route('hub.store') }}", method: "POST",
+                                url: "{{ route('point.store') }}", method: "POST",
                                 cache: false, contentType: false, processData: false,
                                 data: form, dataType: 'json',
                                 error: function (data) {
@@ -243,7 +243,7 @@
                     }, function () {
                         setTimeout(function () {
                             $.ajax({
-                                url: "{{ route('hub.store') }}", method: "POST",
+                                url: "{{ route('point.store') }}", method: "POST",
                                 cache: false,contentType: false,
                                 processData: false, data: form, dataType: 'json',
                                 error: function (data) {

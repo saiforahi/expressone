@@ -123,8 +123,8 @@ class HoldShipmentController extends Controller
             $bulk_id_init = Hub_shipment_box::select('id')->where('hub_id',$holdShipment->hub_id)->first();
             if($bulk_id_init==null) $bulk_id = 1; else $bulk_id = $bulk_id_init->id;
 
-            if(Session::get('admin_hub') !=null)
-            $boxByHub_id = Session::get('admin_hub')->hub_id;
+            if(Session::get('admin_unit') !=null)
+            $boxByHub_id = Session::get('admin_unit')->hub_id;
             else $boxByHub_id = null;
 
             $box = Hub_shipment_box::create([

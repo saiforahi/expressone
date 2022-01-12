@@ -48,7 +48,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/get-zone-single', 'AreaController@zoneGetSingle')->name('zone.single');
 
     Route::get('/hub', 'AreaController@index')->name('hub');
-    Route::post('/hub', 'AreaController@hubStore')->name('hub.store');
+    Route::post('/hub', 'AreaController@hubStore')->name('point.store');
     Route::get('/get-hub', 'AreaController@hubGet')->name('AdminHubGet');
     Route::post('/hub-update', 'AreaController@hubUpdate')->name('hub.update');
     Route::post('/hub-delete', 'AreaController@hubDelete')->name('hub.delete');

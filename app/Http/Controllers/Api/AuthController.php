@@ -17,6 +17,7 @@ class AuthController extends Controller
         'last_name' => 'required|string|between:2,100',
         'email' => 'required|string|email|max:100',
         "phone" => 'required|string|max:11|min:11',
+        'phone' => ['required', 'regex:/(^(\+8801|8801|01|008801))[1|3-9]{1}(\d){8}$/','max:11','min:11'],
         'password' => 'required|string|min:8',
     ];
     protected $merchant_reg_rules=[
