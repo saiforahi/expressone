@@ -56,6 +56,7 @@ class AuthController extends Controller
             if (Auth::guard($guard)->attempt(['email' => $request->email, 'password' => $request->password])) {
                 $user = Auth::guard($guard)->user();
                 $token=$user->createToken('api_token')->plainTextToken;
+                $user['guard'] = active_guard();
                 return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"data"=>$user],200);
             }
         }

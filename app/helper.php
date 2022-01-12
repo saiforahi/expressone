@@ -162,3 +162,14 @@ if (! function_exists('random_unique_string_generate')) {
         return 'ex1'.$value;
     }
 }
+
+if (! function_exists('active_guard')) {
+    function active_guard()
+    {
+        foreach(array_keys(config('auth.guards')) as $guard){
+    
+            if(auth()->guard($guard)->check()) return $guard;
+        }
+        return null;
+    }
+}
