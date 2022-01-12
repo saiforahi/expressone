@@ -39,6 +39,6 @@ class CreateShipmentPaymentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shipment_delivery_payments');
+        Schema::dropIfExists('shipment_payments');
     }
 }

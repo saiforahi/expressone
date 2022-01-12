@@ -20,7 +20,7 @@ class CreateShippingChargesTable extends Migration
             $table->double('shipping_amount', 10, 2);
             $table->timestamps();
         });
-        ShippingCharge::create(['consignment_type' => 'Regular','shipping_amount'=> 50]);
+        ShippingCharge::create(['consignment_type' => 'Priority','shipping_amount'=> 50]);
         ShippingCharge::create(['consignment_type' => 'Express','shipping_amount'=> 80]);
     }
 

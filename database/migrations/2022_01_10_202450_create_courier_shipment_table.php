@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDriverShipmentTable extends Migration
+class CreateCourierShipmentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,16 @@ class CreateDriverShipmentTable extends Migration
      */
     public function up()
     {
-        Schema::create('driver_shipment', function (Blueprint $table) {
+        Schema::create('courier_shipment', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('driver_id');
+            $table->unsignedBigInteger('courier_id');
             $table->unsignedBigInteger('shipment_id');
             $table->unsignedBigInteger('admin_id');
             $table->text('note')->nullable();
             $table->enum('status',['pending','delivered','lost','received','cancelled'])->default('pending');
-            $table->foreign('driver_id')->references('id')->on('users');
+            $table->foreign('courier_id')->references('id')->on('couriers');
             $table->foreign('shipment_id')->references('id')->on('shipments');
-            $table->foreign('admin_id')->references('id')->on('users');
+            $table->foreign('admin_id')->references('id')->on('admins');
             $table->timestamps();
         });
     }
@@ -34,6 +34,6 @@ class CreateDriverShipmentTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('driver_shipment');
+        Schema::dropIfExists('courier_shipment');
     }
 }

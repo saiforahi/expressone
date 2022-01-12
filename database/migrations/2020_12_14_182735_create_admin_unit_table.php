@@ -30,6 +30,6 @@ class CreateAdminUnitTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admin_hub');
+        Schema::dropIfExists('admin_unit');
     }
 }

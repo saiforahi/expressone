@@ -38,10 +38,10 @@ class CreateShipmentsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('merchant_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('shipping_charge_id')->references('id')->on('shipping_charges')->onDelete('cascade');
-            $table->foreign('delivery_location_id')->references('id')->on('locations')->onDelete('cascade');
-            $table->foreign('pickup_location_id')->references('id')->on('locations')->onDelete('cascade');
+            $table->foreign('merchant_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('shipping_charge_id')->references('id')->on('shipping_charges')->onDelete('set null');
+            $table->foreign('delivery_location_id')->references('id')->on('locations')->onDelete('set null');
+            $table->foreign('pickup_location_id')->references('id')->on('locations')->onDelete('set null');
         });
     }
 

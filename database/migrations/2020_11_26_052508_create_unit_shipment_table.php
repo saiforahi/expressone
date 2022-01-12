@@ -23,7 +23,7 @@ class CreateUnitShipmentTable extends Migration
 
             $table->foreign('shipment_id')->references('id')->on('shipments');
             $table->foreign('unit_id')->references('id')->on('units');
-            $table->foreign('admin_id')->references('id')->on('users');
+            $table->foreign('admin_id')->references('id')->on('admins');
             $table->timestamps();
         });
     }

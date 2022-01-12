@@ -29,7 +29,7 @@ class AuthController extends Controller
         if (Auth::guard('user')->check()) {
             return Redirect('/dashboard');
         }
-        return view('auth.register');
+        return view('user.auth.register');
     }
 
     public function registerStore(Request $request)
@@ -40,10 +40,12 @@ class AuthController extends Controller
             'email' => 'required|email|max:100|unique:users,email',
             'phone' => 'required|max:15',
             'password' => 'required|max:20|min:8|confirmed',
+            'id_type'=> 'required|string',
+            'id_no'=> 'required|string'
         ]);
 
         $user = User::create([
-            'user_id' => 'UR' . rand(100, 999) . time(),
+            // 'user_id' => 'UR' . rand(100, 999) . time(),
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
@@ -52,7 +54,15 @@ class AuthController extends Controller
             'address' => $request->address,
             'password' => Hash::make($request->password),
         ]);
-        return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to be verified');
+        if($request->id_type == 'NID'){
+            $user->nid_no = $request->id_no;
+        }
+        else{
+            $user->bin_no = $request->id_no;
+            
+        }
+        $user->save();
+        return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
         // // Auth::guard('user')->login($user);
         // Session::put('verification_email', $request->email);
         // // dd(Session::get('verification_email'));
