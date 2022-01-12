@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\User;
-use App\Models\Driver;
+use App\Courier;
 use App\Driver_shipment;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
@@ -16,7 +16,7 @@ class DriverController extends Controller
 {
     public function index()
     {
-        $driver = Driver::orderBy('id', 'DESC')->get();
+        $driver = Courier::orderBy('id', 'DESC')->get();
         return view('admin.driver.driver', compact('driver'));
     }
 
@@ -35,7 +35,7 @@ class DriverController extends Controller
             'password' => 'required|max:20|min:6|confirmed',
         ]);
 
-        $register_user = new Driver();
+        $register_user = new Courier();
         $register_user->driver_id = 'DR' . rand(100, 999) . time();
         $register_user->first_name = $request->first_name;
         $register_user->last_name = $request->last_name;
@@ -43,7 +43,8 @@ class DriverController extends Controller
         $register_user->phone = $request->phone;
         $register_user->password = Hash::make($request->password);
         $register_user->save();
-        Session::flash('message', 'Driver add successfully');
+
+        Session::flash('message', 'Courier add successfully');
         return redirect('/admin/driver-list');
     }
 
@@ -64,14 +65,14 @@ class DriverController extends Controller
 
     public function destroy($id)
     {
-        Driver::find($id)->delete();
-        Session::flash('message', 'Driver Delete successfully');
+        Courier::find($id)->delete();
+        Session::flash('message', 'Courier Delete successfully');
         return redirect('/admin/driver-list');
     }
 
 
     public function assigned_shipments($id){
-        Session::flash('message', 'Driver assigned shipments');
+        Session::flash('message', 'Courier assigned shipments');
         $shipments = Driver_shipment::where('driver_id',$id)->get();
         //dd($shipments);
         return view('admin.driver.shipments', compact('shipments'));

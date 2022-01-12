@@ -50,9 +50,9 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
-        'driver' => [
+        'courier' => [
             'driver' => 'session',
-            'provider' => 'drivers',
+            'provider' => 'couriers',
         ],
 
         'api' => [
@@ -89,9 +89,9 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
-        'drivers' => [
+        'couriers' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Driver::class,
+            'model' => App\Models\Courier::class,
         ],
 
         // 'users' => [
@@ -128,8 +128,8 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        'drivers' => [
-            'provider' => 'drivers',
+        'couriers' => [
+            'provider' => 'couriers',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

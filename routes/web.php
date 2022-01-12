@@ -5,19 +5,8 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Frontend\HomeController;
 
 use App\Http\Controllers\Admin\ShippingChargeController;
-use App\Http\Controllers\Driver\AuthController;
-use App\Http\Controllers\Driver\DashboardController;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\Courier\AuthController as CourierAuthController;
+use App\Http\Controllers\Courier\DashboardController as CourierDashboardController;
 //To clear all cache
 Route::get('cc', function () {
     Artisan::call('cache:clear');
@@ -101,7 +90,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/shipping-price-set-edit', 'ShippingPriceController@shippingPriceEdit')->name('shippingPrice.edit');
     Route::get('/delete-shipping-price/{shipping_price}', 'ShippingPriceController@destroy')->name('delete-shipping-price');
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
-    //Admin Driver  list
+    //Admin Courier  list
     Route::resource('/driver-list', 'DriverController');
     Route::get('/driver-shipments/{id}', 'DriverController@assigned_shipments')->name('admin-driverShipments');
     //Shipping List
@@ -399,13 +388,13 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::get('prepare-shipment-details/{id}', 'ShipmentController@PrepareShipmentEdit')->name('PrepareShipmentEdit');
 });
 
-Route::get('driver/login', [AuthController::class,'index']);
-Route::post('driver/login', [AuthController::class,'login'])->name('driver.login');
-Route::post('driver/register', 'Driver\AuthController@store')->name('driver.register');
-Route::post('driver/logout', 'Driver\AuthController@logout')->name('driver.logout');
+Route::get('driver/login', [CourierAuthController::class,'index']);
+Route::post('driver/login', [CourierAuthController::class,'login'])->name('driver.login');
+Route::post('driver/register', 'Courier\AuthController@store')->name('driver.register');
+Route::post('driver/logout', 'Courier\AuthController@logout')->name('driver.logout');
 
-Route::group(['middleware' => 'auth:driver', 'namespace' => 'Driver', 'prefix' => 'driver'], function () {
-    Route::get('/', [DashboardController::class,'index'])->name('driver.dashboard');
+Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix' => 'courier'], function () {
+    Route::get('/', [CourierDashboardController::class,'index'])->name('driver.dashboard');
     Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-driver-shipments');
     Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-driver-shipments');
 

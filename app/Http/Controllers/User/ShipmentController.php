@@ -8,7 +8,7 @@ use App\ShippingPrice;
 use App\ShippingCharge;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use App\Shipment_delivery_payment;
+use App\ShipmentPayment;
 use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -291,7 +291,7 @@ class ShipmentController extends Controller
 
     function show_payment(Shipment $shipment)
     {
-        $payments =  Shipment_delivery_payment::where('shipment_id', $shipment->id)->get();
+        $payments =  ShipmentPayment::where('shipment_id', $shipment->id)->get();
         return view('dashboard.include.shipment-delivery-payment', compact('payments'));
     }
     function edit(Shipment $shipment)

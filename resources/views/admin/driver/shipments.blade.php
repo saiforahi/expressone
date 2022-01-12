@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title','Driver List')
+@section('title','Courier List')
 @section('content')
     <div class="right_col" role="main">
         <div class="">

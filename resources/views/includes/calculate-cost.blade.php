@@ -29,12 +29,12 @@
                         <div class="form-group wow fadeInUp" data-wow-offset="50" data-wow-delay=".20s">
                             <div class="col-sm-3"><label class="title-2"> location: </label></div>
                             <div class="col-sm-9">
-                                <?php $areas = \DB::table('areas')->get(); ?>
+                                <?php $units = \DB::table('units')->get(); ?>
                                 <div class="form-group">
                                     <select id="area" class="selectpicker form-control" data-live-search="true" data-width="100%"
                                             data-toggle="tooltip" title="select Area">
-                                        @foreach($areas as $area)
-                                        <option value="{{$area->id}}">{{$area->name}}</option> @endforeach
+                                        @foreach($units as $unit)
+                                        <option value="{{$unit->id}}">{{$unit->name}}</option> @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
         });
 
         function calculate() {
-            let area = $("#area").val();
+            let unit = $("#unit").val();
             let weight = $("#weight").val();
             let delivery_type = $('#delivery_type').val();
             $.ajax({
@@ -109,7 +109,7 @@
                 type: 'get',
                 data: {
                     _token: CSRF_TOKEN,
-                    area: area, weight: weight,
+                    unit: unit, weight: weight,
                     parcel_value: 0,
                     delivery_type: delivery_type
                 },
