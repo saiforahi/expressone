@@ -194,16 +194,16 @@
             }
 
         </style>
-        <link href="{{ asset('vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
-        <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/select2.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/bootstrap4-select2.css') }}">
+        <link href="{{ asset('_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
+        <link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/bootstrap4-select2.css') }}">
     @endpush
 
 @endsection
 
 @push('script')
-    <script src="{{ asset('vendors/sweetalert/sweetalert.js') }}"></script>
-    <script src="{{ asset('vendors/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ asset('_vendors/sweetalert/sweetalert.js') }}"></script>
+    <script src="{{ asset('_vendors/select2/dist/js/select2.min.js') }}"></script>
     <script>
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         $(document).ready(function() {

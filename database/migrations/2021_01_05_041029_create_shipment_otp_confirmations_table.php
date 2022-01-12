@@ -19,7 +19,6 @@ class CreateShipmentOtpConfirmationsTable extends Migration
             $table->string('collected_by');
             $table->unsignedBigInteger('shipment_id');
             $table->unsignedBigInteger('driver_id');
-            
             $table->foreign('shipment_id')->references('id')->on('shipments');
             $table->foreign('driver_id')->references('id')->on('users');
             $table->timestamps();

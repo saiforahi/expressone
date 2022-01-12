@@ -25,7 +25,7 @@
             <td></td><td class="text-right hub0">Hub: {{hub_from_area($shipment->area_id)->name}}</td>
           </tr>
           <tr>
-            <td colspan="3">Address: {{$shipment->address}} </td>  
+            <td colspan="3">Address: {{$shipment->address}} </td>
           </tr>
           <tr class="text-right">
             <td class="text-left" style="width:50%">Date: <small>{{date('M d, Y',strtotime($shipment->created_at))}} (<b class="text-info">{{$shipment->created_at->diffForHumans()}}</b>)</small></td>
@@ -39,9 +39,7 @@
   @endif
   @endforeach
 @endforeach
-
 @if($num == 0) <p class="text-danger">No data found yet</p> @endif
-
 <script type="text/javascript">
   function moveToDriverAssign(box_id,shipment_id){
     $('.addBtn'+shipment_id).prop('disabled',true);

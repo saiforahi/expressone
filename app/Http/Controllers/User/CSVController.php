@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Area;
 use App\Zone;
-use App\Shipment;
+use App\Models\Area;
 use App\ShippingPrice;
+use App\Models\Shipment;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -56,7 +56,7 @@ class CSVController extends Controller
         return redirect('/csv-temporary');
     }
 
-    function show()
+    public function show()
     {
         if (!Session::has('csv_data')) {
             Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!');

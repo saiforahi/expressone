@@ -1,4 +1,3 @@
-
 <div class="table-responsive">
     <table class="table table-striped table-bordered">
         <thead>
@@ -20,16 +19,12 @@
         @endforeach
     </table>
 </div>
-
-
 <script >
-
     function checkAll() {
         if($('#all').prop("checked") == true){
             $('.checkbox').prop('checked',true)
         }else if($('#all').prop("checked") == false){
             $('.checkbox').prop('checked',false)
-        }        
+        }
     }
-
 </script>

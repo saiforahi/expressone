@@ -96,40 +96,40 @@
 @endsection
 @push('style')
     <style type="text/css">.table-responsive{min-height:400px }</style>
-    <link href="{{asset('vendors/sweetalert/sweetalert.css')}}" rel="stylesheet"/>
+    <link href="{{asset('_vendors/sweetalert/sweetalert.css')}}" rel="stylesheet"/>
     <!-- Datatables -->
-    <link href="{{asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    <link href="{{asset('_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
           rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    <link href="{{asset('_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
           rel="stylesheet">
-    <link href="{{asset('vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}" rel="stylesheet">
-   
-    <link rel="stylesheet" href="{{asset('vendors/select2/dist/css/select2.min.css')}}">
-    <link rel="stylesheet" href="{{asset('vendors/select2/dist/css/bootstrap4-select2.css')}}">
+    <link href="{{asset('_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{asset('_vendors/select2/dist/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{asset('_vendors/select2/dist/css/bootstrap4-select2.css')}}">
 @endpush
 @push('scripts')
     <!-- Datatables -->
-    <script src="{{asset('vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
-    <script src="{{asset('vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
-    <script src="{{asset('vendors/jszip/dist/jszip.min.js')}}"></script>
-    <script src="{{asset('vendors/pdfmake/build/pdfmake.min.js')}}"></script>
-    <script src="{{asset('vendors/pdfmake/build/vfs_fonts.js')}}"></script>
-    <script src="{{asset('vendors/select2/dist/js/select2.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+    <script src="{{asset('_vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+    <script src="{{asset('_vendors/jszip/dist/jszip.min.js')}}"></script>
+    <script src="{{asset('_vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+    <script src="{{asset('_vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+    <script src="{{asset('_vendors/select2/dist/js/select2.min.js')}}"></script>
     <script>
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-      
+
         $(document).ready(function () {
         	$('.top_search').on('click',function(){
         		 $('#cat_form')[0].reset();
@@ -137,7 +137,7 @@
         	})
         	//add
             $('#cat_form').on('submit', function(event){
-				event.preventDefault(); 
+				event.preventDefault();
 			   	$("[type='submit']").html('<i class="fa fa-spinner fa-pulse fa-spin fa-fw"></i><span class="sr-only"></span> Loading...');
 			    $("[type='submit']").prop('disabled',true);
 
@@ -148,7 +148,7 @@
 				     	$('.result').html(data);
                         $('.add_cat').modal('hide');$('#cat_form')[0].reset();
 				        $('#dataTable').DataTable().ajax.reload();
-				     	
+
 				     	$("[type='submit']").html('<i class="fa fa-check"></i> Save Category');
 			    		$("[type='submit']").prop('disabled',false);
 				    }
@@ -189,7 +189,7 @@
             });
 
             $('#edit_cat').on('submit', function(event){
-                event.preventDefault(); 
+                event.preventDefault();
                 $("[type='submit']").html('<i class="fa fa-spinner fa-pulse fa-spin fa-fw"></i><span class="sr-only"></span> Loading...');
                 $("[type='submit']").prop('disabled',true);
 
@@ -200,7 +200,7 @@
                         $('.result2').html(data);
                         $('.add_cat').modal('hide');$('#cat_form')[0].reset();
                         $('#dataTable').DataTable().ajax.reload();
-                        
+
                         $("[type='submit']").html('<i class="fa fa-edit"></i> Edit Category');
                         $("[type='submit']").prop('disabled',false);
                     }

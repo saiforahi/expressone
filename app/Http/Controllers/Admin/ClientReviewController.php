@@ -1,17 +1,19 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use Validator;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-//use this library for uploading image
+use App\Models\Client_review;
 use Illuminate\Http\UploadedFile;
+//use this library for uploading image
+use App\Http\Controllers\Controller;
 //user this intervention image library to resize/crop image
-use Intervention\Image\Facades\Image; 
+use Illuminate\Support\Facades\File;
 // import the Intervention Image Manager Class
 use Intervention\Image\ImageManager;
-use App\Client_review;
-use DataTables;
+use Intervention\Image\Facades\Image;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
+
 class ClientReviewController extends Controller
 {
     /**
@@ -36,12 +38,12 @@ class ClientReviewController extends Controller
         ->addColumn('action', function ($row) {
             $data = '<div class="btn-group  btn-group-sm">
                 <button class="btn btn-success edit" id="' . $row->id . '" type="button"><i class="mdi mdi-table-edit m-r-3"></i>Edit</button>';
-          
+
             $data .=' <button class="btn btn-danger delete" id="' . $row->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>';
-            
-            $data .='</div>';  return $data; 
+
+            $data .='</div>';  return $data;
         })
-        ->addColumn('commenter', function ($row) {  
+        ->addColumn('commenter', function ($row) {
             if($row->photo==null) $src= 'images/user.png';
             else $src= $row->photo;
 
@@ -64,7 +66,7 @@ class ClientReviewController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = $this->fields(); 
+        $validator = $this->fields();
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
@@ -99,7 +101,7 @@ class ClientReviewController extends Controller
      */
     public function update(Request $request)
     {
-        $validator = $this->fields(); 
+        $validator = $this->fields();
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
@@ -139,12 +141,12 @@ class ClientReviewController extends Controller
 
     function storeImage($client_review,$type=null){
         if (request()->has('photo')) {
-            $fileName = rand().'.'.request()->photo->extension();  
+            $fileName = rand().'.'.request()->photo->extension();
             request()->photo->move('images/reviews/', $fileName);
             Image::make('images/reviews/'.$fileName)->fit(100,100)->save();
             $client_review->update(['photo'=>'images/reviews/'.$fileName]);
             if ($type=='update') {
-                \File::delete(request()->oldLogo);
+                File::delete(request()->oldLogo);
             }
         }
     }

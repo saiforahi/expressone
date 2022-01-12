@@ -46,7 +46,6 @@
                                 </thead>
                             </table>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -71,7 +70,6 @@
         </div>
       </div>
     </div>
-
     <div class="modal fade edit_employee" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -94,52 +92,20 @@
         </div>
       </div>
     </div>
-
 @endsection
 @push('style')
     <style type="text/css">.table-responsive{min-height:400px }</style>
-    <link href="{{asset('ass_vendors/sweetalert/sweetalert.css')}}" rel="stylesheet"/>
-    <!-- Datatables -->
-    <link href="{{asset('ass_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('ass_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}" rel="stylesheet">
-    <link href="{{asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
-          rel="stylesheet">
-    <link href="{{asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
-          rel="stylesheet">
-    <link href="{{asset('ass_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('ass_vendors/select2/dist/css/select2.min.css')}}">
-    <link rel="stylesheet" href="{{asset('ass_vendors/select2/dist/css/bootstrap4-select2.css')}}">
 @endpush
 @push('scripts')
-    <!-- Datatables -->
-    <script src="{{asset('ass_vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
-    <script src="{{asset('ass_vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/jszip/dist/jszip.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/pdfmake/build/pdfmake.min.js')}}"></script>
-    <script src="{{asset('ass_vendors/pdfmake/build/vfs_fonts.js')}}"></script>
-    <script src="{{asset('ass_vendors/select2/dist/js/select2.min.js')}}"></script>
-
     <script>
         $('select:not(.normal)').each(function () { $(this).select2({ dropdownParent: $(this).parent() });});
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-
         $(document).ready(function () {
         	//add
             $('#employee_form').on('submit', function(event){
 				event.preventDefault();
 			   	$("[type='submit']").html('<i class="fa fa-spinner fa-pulse fa-spin fa-fw"></i><span class="sr-only"></span> Loading...');
 			    $("[type='submit']").prop('disabled',true);
-
 			   	$.ajax({
 			    	url:"{{ route('save-admin') }}",
 			    	method:"post",
@@ -163,11 +129,9 @@
 				     	$("[type='submit']").html('<i class="fa fa-check"></i> Save admin');
 			    		$("[type='submit']").prop('disabled',false);
 				     	$('.form_result').html(html);
-
 				    }
 			   	});
 			});
-
             // get data
             $(function () { table.ajax.reload(); });
             let table = $('.table').DataTable({
@@ -184,7 +148,6 @@
                     {data: 'action', orderable: false, searchable: false, class:'text-right'}
                 ]
             });
-
             // show edit data
             $('#dataTable').on('click', '.edit' ,function(e){
                 let id = $(this).attr('id')
@@ -203,20 +166,15 @@
                         $('[name=oldLogo]').val(data.image).trigger('change');
                     }
                 });
-
                 $.get( "/admin/get-admin-hub-ids/"+id, function( data ) {
                     var selectedValues = data.split(',');
                     $(".select2").val(selectedValues).trigger('change');
                 });
-
-
             });
-
             $('#edit_employee').on('submit', function(event){
                 event.preventDefault();
                 $("[type='submit']").html('<i class="fa fa-spinner fa-pulse fa-spin fa-fw"></i><span class="sr-only"></span> Loading...');
                 $("[type='submit']").prop('disabled',true);
-
                 $.ajax({
                     url:"{{ route('update-admin') }}",
                     method:"post",
@@ -243,7 +201,6 @@
                     }
                 });
             });
-
             // delete data
             $('#dataTable').on('click', '.delete' ,function(e){
                if(confirm('Are you sure to remove the admin record??')){
@@ -258,7 +215,5 @@
                }
             });
         });
-
     </script>
-
 @endpush

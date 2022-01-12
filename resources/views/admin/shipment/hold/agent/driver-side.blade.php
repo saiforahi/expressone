@@ -27,7 +27,7 @@
             <td></td><td class="text-right hub0">Hub: {{hub_from_area($shipment->area_id)->name}}</td>
           </tr>
           <tr>
-            <td colspan="3">Address: {{$shipment->address}} </td>  
+            <td colspan="3">Address: {{$shipment->address}} </td>
           </tr>
           <tr class="text-right">
             <td class="text-left" style="width:50%">Date: <small>{{date('M d, Y',strtotime($shipment->created_at))}} (<b class="text-info">{{$shipment->created_at->diffForHumans()}}</b>)</small></td>
@@ -46,7 +46,6 @@
 @else
   <button class="btn btn-sm btn-info pull-right assignBoxBtn"  data-toggle="modal" data-target="#assignBox"> Assing to rider </button>
 @endif
-
 <!-- Modal to assign to driver -->
 <div id="assignBox" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -61,15 +60,12 @@
             <div class="row">
             <button type="submit" class="pull-right btn btn-info btn-sm submit"> <i class="fa fa-truck"></i> Assign for Delivery</button>
             </div>
-        </form> 
+        </form>
          <div class="get row"></div>
       </div>
     </div>
-
   </div>
 </div>
-
-
 <script type="text/javascript">
   function moveToAgentDispatch(box_id,shipment_id){
     $('.addBtn'+shipment_id).html('Moving...');
@@ -85,11 +81,8 @@
           alert(" Can't do because: " + error);
         },
     });
-
   }
-
   function assingDriver(){ $('.assignBox').modal('show');}
-
   $("#assignToDriverTT").submit(function(e) {
     e.preventDefault(); var form = $(this);  var url = form.attr('action');
     $('.submit').prop('disabled',true);

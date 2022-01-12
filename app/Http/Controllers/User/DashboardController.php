@@ -62,7 +62,7 @@ class DashboardController extends Controller
             'password' => 'required|max:20|confirmed',
         ]);
 
-        $admin = user::where('id', $request->id)->first();
+        $admin = User::where('id', $request->id)->first();
         if (!empty($admin)) {
             if ($admin && Hash::check($request->old_password, $admin->password)) {
                 $admin->password = Hash::make($request->password);

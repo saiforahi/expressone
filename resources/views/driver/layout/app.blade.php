@@ -9,33 +9,34 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>@yield('title') - {{ basic_information()->website_title }}</title>
     <!-- Bootstrap -->
-    <link href="{{ asset('ass_vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <!-- Font Awesome -->
-    <link href="{{ asset('ass_vendors/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css">
     <!-- NProgress -->
-    <link href="{{ asset('ass_vendors/nprogress/nprogress.css') }}" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
     <!-- jQuery custom content scroller -->
-    <link href="{{ asset('ass_vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css') }}"
+    <link href="{{ asset('_vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.min.css') }}"
         rel="stylesheet" />
     <!-- bootstrap-progressbar -->
-    <link href="{{ asset('ass_vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css') }}"
+    <link href="{{ asset('_vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css') }}"
         rel="stylesheet">
     <!-- JQVMap -->
-    <link href="{{ asset('ass_vendors/jqvmap/dist/jqvmap.min.css') }}" rel="stylesheet" />
+    <link href="{{ asset('_vendors/jqvmap/dist/jqvmap.min.css') }}" rel="stylesheet" />
     <!-- iCheck -->
-    <link href="{{ asset('ass_vendors/iCheck/skins/flat/green.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/iCheck/skins/flat/green.css') }}" rel="stylesheet">
     <!-- bootstrap-wysiwyg -->
-    <link href="{{ asset('ass_vendors/google-code-prettify/bin/prettify.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/google-code-prettify/bin/prettify.min.css') }}" rel="stylesheet">
     <!-- Select2 -->
-    <link href="{{ asset('ass_vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/select2/dist/css/select2.min.css') }}" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css"
         rel="stylesheet" />
     <!-- Switchery -->
-    <link href="{{ asset('ass_vendors/switchery/dist/switchery.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/switchery/dist/switchery.min.css') }}" rel="stylesheet">
     <!-- starrr -->
-    <link href="{{ asset('ass_vendors/starrr/dist/starrr.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/starrr/dist/starrr.css') }}" rel="stylesheet">
     <!-- bootstrap-daterangepicker -->
-    <link href="{{ asset('ass_vendors/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+    <link href="{{ asset('_vendors/bootstrap-daterangepicker/daterangepicker.css') }}" rel="stylesheet">
     <link href="//cdn.materialdesignicons.com/3.8.95/css/materialdesignicons.min.css" rel="stylesheet">
     @stack('style')
     <!-- Custom Theme Style -->
@@ -55,45 +56,45 @@
 
 
     <!-- jQuery -->
-    <script src="{{ asset('ass_vendors/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('_vendors/jquery/dist/jquery.min.js') }}"></script>
     <!-- Bootstrap -->
-    <script src="{{ asset('ass_vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('_vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <!-- FastClick -->
-    <script src="{{ asset('ass_vendors/fastclick/lib/fastclick.js') }}"></script>
+    <script src="{{ asset('_vendors/fastclick/lib/fastclick.js') }}"></script>
     <!-- NProgress -->
-    <script src="{{ asset('ass_vendors/nprogress/nprogress.js') }}"></script>
+    <script src="{{ asset('_vendors/nprogress/nprogress.js') }}"></script>
     <!-- jQuery custom content scroller -->
-    <script src="{{ asset('ass_vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+    <script src="{{ asset('_vendors/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}"></script>
     <!-- bootstrap-progressbar -->
-    <script src="{{ asset('ass_vendors/bootstrap-progressbar/bootstrap-progressbar.min.js') }}"></script>
+    <script src="{{ asset('_vendors/bootstrap-progressbar/bootstrap-progressbar.min.js') }}"></script>
     <!-- iCheck -->
-    <script src="{{ asset('ass_vendors/Chart.js/dist/Chart.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/iCheck/icheck.min.js') }}"></script>
+    <script src="{{ asset('_vendors/Chart.js/dist/Chart.min.js') }}"></script>
+    <script src="{{ asset('_vendors/iCheck/icheck.min.js') }}"></script>
     <!-- bootstrap-daterangepicker -->
-    <script src="{{ asset('ass_vendors/moment/min/moment.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
+    <script src="{{ asset('_vendors/moment/min/moment.min.js') }}"></script>
+    <script src="{{ asset('_vendors/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
     <!-- bootstrap-wysiwyg -->
-    <script src="{{ asset('ass_vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/jquery.hotkeys/jquery.hotkeys.js') }}"></script>
-    <script src="{{ asset('ass_vendors/google-code-prettify/src/prettify.js') }}"></script>
+    <script src="{{ asset('_vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js') }}"></script>
+    <script src="{{ asset('_vendors/jquery.hotkeys/jquery.hotkeys.js') }}"></script>
+    <script src="{{ asset('_vendors/google-code-prettify/src/prettify.js') }}"></script>
     <!-- jQuery Tags Input -->
-    <script src="{{ asset('ass_vendors/jquery.tagsinput/src/jquery.tagsinput.js') }}"></script>
+    <script src="{{ asset('_vendors/jquery.tagsinput/src/jquery.tagsinput.js') }}"></script>
     <!-- Switchery -->
-    <script src="{{ asset('ass_vendors/switchery/dist/switchery.min.js') }}"></script>
+    <script src="{{ asset('_vendors/switchery/dist/switchery.min.js') }}"></script>
     <!-- Select2 -->
-    <script src="{{ asset('ass_vendors/select2/dist/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('_vendors/select2/dist/js/select2.full.min.js') }}"></script>
     <!-- Parsley -->
-    <script src="{{ asset('ass_vendors/parsleyjs/dist/parsley.min.js') }}"></script>
+    <script src="{{ asset('_vendors/parsleyjs/dist/parsley.min.js') }}"></script>
     <!-- Autosize -->
-    <script src="{{ asset('ass_vendors/autosize/dist/autosize.min.js') }}"></script>
+    <script src="{{ asset('_vendors/autosize/dist/autosize.min.js') }}"></script>
     <!-- JQVMap -->
-    <script src="{{ asset('ass_vendors/jqvmap/dist/jquery.vmap.js') }}"></script>
-    <script src="{{ asset('ass_vendors/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
-    <script src="{{ asset('ass_vendors/jqvmap/examples/js/jquery.vmap.sampledata.js') }}"></script>
+    <script src="{{ asset('_vendors/jqvmap/dist/jquery.vmap.js') }}"></script>
+    <script src="{{ asset('_vendors/jqvmap/dist/maps/jquery.vmap.world.js') }}"></script>
+    <script src="{{ asset('_vendors/jqvmap/examples/js/jquery.vmap.sampledata.js') }}"></script>
     <!-- jQuery autocomplete -->
-    <script src="{{ asset('ass_vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js') }}"></script>
+    <script src="{{ asset('_vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js') }}"></script>
     <!-- starrr -->
-    <script src="{{ asset('ass_vendors/starrr/dist/starrr.js') }}"></script>
+    <script src="{{ asset('_vendors/starrr/dist/starrr.js') }}"></script>
     @stack('scripts')
     <style type="text/css">
         #datatable-buttons_filter {

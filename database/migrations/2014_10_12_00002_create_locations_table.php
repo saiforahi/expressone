@@ -25,7 +25,6 @@ class CreateLocationsTable extends Migration
             $table->foreign('unit_id')->references('id')->on('units');
             $table->timestamps();
         });
-
         // \App\Area::create([ 'name' =>'Mirpur','zone_id'=>1,'hub_id'=>'1']);
         // \App\Area::create([ 'name' =>'Uttara','zone_id'=>2,'hub_id'=>'2']);
         // \App\Area::create([ 'name' =>'Kaliayour','zone_id'=>3,'hub_id'=>'3']);

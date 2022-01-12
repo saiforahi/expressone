@@ -15,7 +15,7 @@
 							<a href="#" class="btn csv_file btn-sm btn-default" disabled onclick="get_csv()">Download CSV</a>
 							<a href="#" onclick="get_pdf()" class="btn btn-sm pdf_file btn-default" disabled>Download PDF</a>
 						</div>
-						
+
 					</div><br>
 					<div class="row download-result"></div>
 				</div>
@@ -26,7 +26,7 @@
 @endsection
 
 @push('scripts')
-<script src="{{asset('vendors/select2/dist/js/select2.min.js')}}"></script>
+<script src="{{asset('_vendors/select2/dist/js/select2.min.js')}}"></script>
 <script>
 	function get_shipment(bulk_id){
 		$('.download-result').html('<p class="text-center text-warning">Loading...</p>');
@@ -63,7 +63,7 @@
 		    if(keycode == '13'){
 		        get_shipment( $(this).val() );
 		    }
-		});		
+		});
 	});
 </script>
 @endpush

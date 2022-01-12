@@ -19,7 +19,6 @@ class CreateReturnShipmentsTable extends Migration
             $table->unsignedBigInteger('unit_id');
             $table->unsignedBigInteger('admin_id');
             $table->string('status')->default('pending');
-
             $table->foreign('shipment_id')->references('id')->on('shipments');
             $table->foreign('unit_id')->references('id')->on('units');
             $table->foreign('admin_id')->references('id')->on('users');

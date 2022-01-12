@@ -1,11 +1,12 @@
 <?php
 
-use App\Models\BasicInformation;
-use App\Models\Shipment;
-use App\Models\Zone;
+use App\Models\Hub;
 use App\Models\Area;
 use App\Models\User;
+use App\Models\Zone;
+use App\Models\Shipment;
 use App\Models\Driver_shipment;
+use App\Models\BasicInformation;
 
 function basic_information()
 {
@@ -27,7 +28,7 @@ function get_zone($id)
 
 function hub_from_area($id){
     $area = Area::find($id);
-    return \App\Hub::where('id',$area->hub_id)->first();
+    return Hub::where('id',$area->hub_id)->first();
 }
 
 function is_user_filled($id){
@@ -49,7 +50,7 @@ function driver_shipments($driver_id, $user_id)
     $num = array();
     foreach ($shipments as $key => $shipment) {
         $num[] = Driver_shipment::where(['driver_id'=>Auth::guard('driver')->user()->id,'shipment_id'=>$shipment->id])->count();
-    } 
+    }
     return COUNT($num);
 }
 
@@ -60,7 +61,7 @@ function pick_shipments($driver_id, $user_id)
     $num = array();
     foreach ($shipments as $key => $shipment) {
         $num[] = Driver_shipment::where(['driver_id'=>Auth::guard('driver')->user()->id,'shipment_id'=>$shipment->id])->count();
-    } 
+    }
     return COUNT($num);
 }
 
@@ -87,50 +88,50 @@ function hub_shipment_count($hub_id,$status){
 
 function hubAt_hub_shipment_box($hub_id){
     // return $hub_id;
-    return \App\Hub_shipment_box::where(['hub_id'=>$hub_id,'status'=>'dispatch'])->count();
+    return Hub_shipment_box::where(['hub_id'=>$hub_id,'status'=>'dispatch'])->count();
 }
 
 // helper function for agent-dispatch on logistic
 function is_assigned2Driver($box_id, $shipment_id,$status){
-    return \App\Driver_hub_shipment_box::where([
+    return App\Driver_hub_shipment_box::where([
         'hub_shipment_box_id'=>$box_id,'shipment_id'=>$shipment_id,'status'=>$status
     ])->count();
 }
 
 function is_avail_agentSide($box_id, $shipment_id){
-    $query = \App\Driver_hub_shipment_box::where([
+    $query = Driver_hub_shipment_box::where([
         'hub_shipment_box_id'=>$box_id,'shipment_id'=>$shipment_id
     ])->get(); return $query->count();
 }
 
 function is_in_reconcile_shipments($shipment_id){
-    $q = \App\Reconcile_shipment::where(['shipment_id'=>$shipment_id,'status'=>'pending']);
+    $q = Reconcile_shipment::where(['shipment_id'=>$shipment_id,'status'=>'pending']);
     if($q->count() >0) return false; else return true;
 }
 
 function is_admin_allow($admin_id, $route){
     return  \DB::table('admin_roles')
      ->where('admin_id', '=', $admin_id)
-     ->where('route', '=', $route)->count();   
+     ->where('route', '=', $route)->count();
 }
 
 function return_hub_count($hub_id,$status){
-    return \App\Return_shipment::where(['hub_id'=>$hub_id,'status'=>$status])->count();
+    return Return_shipment::where(['hub_id'=>$hub_id,'status'=>$status])->count();
 }
 
 function returnAt_return_shipment_box($hub_id){
     // return $hub_id;
-    $data = \App\Return_shipment_box::select('shipment_ids')->where(['hub_id'=>$hub_id,'status'=>'dispatch'])->pluck('shipment_ids')->first();
+    $data = Return_shipment_box::select('shipment_ids')->where(['hub_id'=>$hub_id,'status'=>'dispatch'])->pluck('shipment_ids')->first();
     return COUNT(explode(',',$data));
 }
 
 function is_return_avail_agentSide($box_id, $shipment_id){
-    $query = \App\Driver_return_shipment_box::where([
+    $query = Driver_return_shipment_box::where([
         'return_shipment_box_id'=>$box_id,'shipment_id'=>$shipment_id
     ])->get(); return $query->count();
 }
 function is_return_assigned2Driver($box_id, $shipment_id,$status){
-    return \App\Driver_return_shipment_box::where([
+    return Driver_return_shipment_box::where([
         'return_shipment_box_id'=>$box_id,'shipment_id'=>$shipment_id,'status_in'=>'assigning'
     ])->count();
 }
@@ -140,7 +141,7 @@ function checkAdminAccess($route){
     if(Auth::guard('admin')->user()->role_id ==1)  {
         return 1;
     }
-    $access = \App\Admin_role::where('admin_id',Auth::guard('admin')->user()->id)->where('route',$route);
+    $access = Admin_role::where('admin_id',Auth::guard('admin')->user()->id)->where('route',$route);
     return $access->count();
 }
 

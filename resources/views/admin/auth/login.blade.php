@@ -8,14 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login  </title>
     <!-- Bootstrap -->
-    <link href="{{url('ass_vendors/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <!-- Font Awesome -->
-    <link href="{{asset('ass_vendors/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css">
     <!-- NProgress -->
-    <link href="{{asset('ass_vendors/nprogress/nprogress.css')}}" rel="stylesheet">
-    <!-- Animate.css -->
-    <link href="{{asset('ass_vendors/animate.css/animate.min.css')}}" rel="stylesheet">
-    <!-- Custom Theme Style -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"></script>
     <link href="{{asset('build/css/custom.min.css')}}" rel="stylesheet">
 </head>
 <body class="login">
