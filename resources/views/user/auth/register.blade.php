@@ -7,8 +7,8 @@
                 <div class="row">
                     <div class="col-sm-8 pull-left">
                         <div class="title-wrap">
-                            <h2 class="section-title no-margin"> Merchant Register</h2>
-                            <p class="fs-16 no-margin"> Create your account</p>
+                            <h2 class="section-title no-margin">Merchant Registration</h2>
+                            <p class="fs-16 no-margin">Create your account</p>
                         </div>
                     </div>
                     <div class="col-sm-4">
@@ -146,7 +146,7 @@
                                 </div> --}}
                                 
                             </form>
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div class="form-group col-md-3">
                                     <button type="button" onclick="event.preventDefault();document.getElementById('reg_form').submit();" class="form-control" style="background-color: #EB058D;border-radius: 80px; color:#fff;">Register</button>
                                 </div>
