@@ -19,14 +19,14 @@ class AuthController extends Controller
         "phone" => 'required|string|max:11|min:11',
         'phone' => ['required', 'regex:/(^(\+8801|8801|01|008801))[1|3-9]{1}(\d){8}$/','max:11','min:11'],
         'password' => 'required|string|min:8',
+        'id_type'=> 'required|string',
+        'id_no'=> 'required|string|max:13|min:10',
     ];
     protected $merchant_reg_rules=[
         'email' => 'unique:users',
         "phone" => 'unique:users',
         'shop_name' => 'sometimes|nullable',
         'address' => 'sometimes|nullable',
-        'nid_no'=> 'sometimes|required|string|max:10|min:10',
-        'bin_no'=> 'sometimes|required|string|max:13|min:13',
     ];
     public function __construct() {
         $this->middleware('auth:sanctum', ['except' => ['login','register']]);
@@ -87,7 +87,13 @@ class AuthController extends Controller
                     $user = Courier::create(array_merge($request->all(),['employee_id'=>random_unique_string_generate(Courier::class,'employee_id'),'password' => bcrypt($request->password)]));
                     break;
             }
-            
+            if($request->id_type == 'NID'){
+                $user->nid_no = $request->id_no;
+            }
+            else{
+                $user->bin_no = $request->id_no;
+            }
+            $user->save();
             return response()->json([
                 'success' => true,
                 'message'=> 'Registration Successful',

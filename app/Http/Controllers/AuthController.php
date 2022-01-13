@@ -59,7 +59,6 @@ class AuthController extends Controller
         }
         else{
             $user->bin_no = $request->id_no;
-            
         }
         $user->save();
         return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');

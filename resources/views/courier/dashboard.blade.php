@@ -1,4 +1,4 @@
-@extends('driver.layout.app')
+@extends('courier.layout.app')
 @section('content')
     <?php if(request()->r=='') $type='delivery'; else $type=request()->r;?>
     <div class="right_col" role="main">
