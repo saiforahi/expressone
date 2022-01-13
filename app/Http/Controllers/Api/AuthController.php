@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Validator;
+use Auth;
 use App\Models\User;
 use App\Models\Courier;
 use App\Models\Merchant;
-use Auth;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -52,7 +52,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
         }
-        
+
         foreach(config('auth.guards') as $guard=>$value){
             if (Auth::guard($guard)->attempt(['email' => $request->email, 'password' => $request->password])) {
                 $user = Auth::guard($guard)->user();
@@ -61,16 +61,16 @@ class AuthController extends Controller
                 return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"data"=>$user],200);
             }
         }
-        
+
         return response()->json(['success'=>false,'message' => 'Wrong credentials'], 401);
     }
-    
+
     public function register(Request $request) {
-        $validator=Validator::make($request->all(),$this->general_reg_rules); 
+        $validator=Validator::make($request->all(),$this->general_reg_rules);
         if($validator->fails()){                                            //validating general registration rules
             return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
         }
-        
+
         try{
             $response='';
             $user = '';
@@ -82,12 +82,12 @@ class AuthController extends Controller
                     }
                     $user = User::create(array_merge($request->all(),['password' => bcrypt($request->password)]));
                     break;
-                    
+
                 case 'courier':  //courier creation
                     $user = Courier::create(array_merge($request->all(),['employee_id'=>random_unique_string_generate(Courier::class,'employee_id'),'password' => bcrypt($request->password)]));
                     break;
             }
-            
+
             return response()->json([
                 'success' => true,
                 'message'=> 'Registration Successful',

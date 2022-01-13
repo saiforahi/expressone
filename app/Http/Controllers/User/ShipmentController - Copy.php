@@ -63,7 +63,7 @@ class ShipmentController extends Controller
 
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
     }
-    public function PrepareShipmentSubmit(Request $request)
+    public function shipmentSave(Request $request)
     {
         $messages = [
             "name.required" => "Please enter customer name.",

@@ -31,85 +31,77 @@
             </div>
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
-            <div class="main-card mb-3 card card-body">
-                <form id="upload_form" method="post" action="{{ route('shipmentSave') }}"> {{ csrf_field() }}
+            <form id="upload_form" method="post" action="{{ route('shipmentSave') }}">
+                @csrf
+                <div class="main-card mb-3 card card-body">
                     <h5 class="card-title">Customer Details:</h5>
-                    <div class="form-row my-4">
+                    <div class="form-row">
                         <div class="col text-left">
-                            <label class="" for="name">Customer Name</label>
-                            <input type="text" id="name" class="form-control" name="name" placeholder="Customer Name">
+                            <label class="" for="name">Customer Name</label> <span class="text-danger">*</span>
+                            <input type="text" class="form-control" name="name" placeholder="Customer Name" required>
                         </div>
                         <div class="col text-left">
-                            <label for="usr3">Phone Number</label>
-                            <input type="text" class="form-control" name="phone" placeholder="Customer phone">
+                            <label for="usr3">Phone Number</label> <span class="text-danger">*</span>
+                            <input type="text" class="form-control" name="phone" placeholder="Customer phone" required>
                         </div>
-                    </div>
-                    <div class="form-row my-4">
                         <div class="col text-left">
-                            <label class="" for="address">Address</label>
+                            <label class="" for="address">Address</label> <span class="text-danger">*</span>
                             <input type="text" id="address" class="form-control" name="address"
-                                placeholder="Customer Address">
+                                placeholder="Customer Address" required>
                         </div>
-
-                        <div class="col text-left">
-                            <label for="area">Area</label>
-                            <select class="form-control select2" name="area" id="area">
-                                <option value="" selected disabled>Select area</option>
-                                @foreach ($area as $areas)
-                                    <option value="{{ $areas->id }}">{{ $areas->name }}</option>
-                                @endforeach
+                    </div>
+                </div>
+                <div class="main-card mb-3 card card-body">
+                    <h5 class="card-title">Shipment Details:</h5>
+                    <div class="form-row">
+                        <div class="col-md-4 text-left">
+                            <label for="exampleFormControlSelect1">Parcel type</label> <span class="text-danger">*</span>
+                            <select class="form-control" name="parcel_type">
+                                <option>Select Type</option>
+                                <option>Express</option>
+                                <option>Regular</option>
                             </select>
                         </div>
-                        <div class="col text-left">
-                            <label for="area">Shipping/Consignment Note Type</label>
-                            <select class="form-control" name="shipping_charge_id">
-                                <option value="" selected disabled>Select Shipping Method</option>
-                                @foreach ($shippingCharges as $shippingCharge)
-                                    <option value="{{ $shippingCharge->id }}">
-                                        {{ $shippingCharge->consignment_type }}
-                                        -{{ $shippingCharge->shipping_amount }}
-
-                                    </option>
-                                @endforeach
+                        <div class="col-md-4 text-left">
+                            <label>Delivery location</label> <span class="text-danger">*</span>
+                            <select class="form-control" name="delivery_location_id">
+                                <option>Select location </option>
+                                <option>Mohakhali</option>
+                                <option>Banani</option>
                             </select>
                         </div>
-                    </div>
-                    <h5 class="card-title mt-4">Shipment Details:</h5>
-                    <div class="form-row my-4">
-                        <div class="col text-left">
-                            <label class="" for="weight">COD Amount</label>
-                            <input type="number" id="cod_amount" class="form-control" name="cod_amount" value="1">
+                        <div class="col-md-4 text-left">
+                            <label>Pickup Location</label> <span class="text-danger">*</span>
+                            <select class="form-control" name="pickup_location_id">
+                                <option>Select location </option>
+                                <option>Gulshan</option>
+                                <option>Badda</option>
+                            </select>
                         </div>
-
-                        <div class="col text-left">
-                            <label class="" for="delivery_charge">Weight Charge</label>
-                            <input type="number" class="form-control" name="weight_charge" value="0"
-                                placeholder="Enter weight charge">
-
+                        <div class="col-md-4 text-left">
+                            <label>Shipping Type</label> <span class="text-danger">*</span>
+                            <select class="form-control" id="exampleFormControlSelect1">
+                                <option>Select type</option>
+                                <option>Express</option>
+                                <option>Regular</option>
+                            </select>
                         </div>
-
-                        <div class="col cod_target text-left">
-                            <label for="parcel_value">Declared Parcel Value</label>
-                            <input type="number" id="parcel_value" class="form-control" name="parcel_value"
-                                placeholder="Enter Parcel Value">
-                            <div class="w-100">
-                                <small>My parcel value is <span class="parcel_value_info">0</span> Taka</small>
-                            </div>
+                        <div class="col-md-4 text-left">
+                            <label>Weight</label>
+                            <input type="number" name="weight" placeholder="Enter weight" class="form-control">
                         </div>
-                    </div>
-                    <div class="form-row my-4">
-                        <div class="col text-left">
-                            <label for="merchant_note">Merchant Note</label>
-                            <textarea id="merchant_note" class="form-control" rows="3" name="merchant_note"></textarea>
+                        <div class="col-md-4 text-left">
+                            <label>Note</label>
+                            <input type="text" name="note" placeholder="Enter note" class="form-control">
                         </div>
                     </div>
-                    <div class="col text-right">
-                        <button type="submit" id="submit_button" class="btn btn-success rounded my-4">
-                            <i class="fa fa-check"></i> Shipping Submit
-                        </button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="col text-right">
+                    <button type="submit" id="submit_button" class="btn btn-success rounded my-4">
+                        <i class="fa fa-check"></i> Shipment Submit
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection

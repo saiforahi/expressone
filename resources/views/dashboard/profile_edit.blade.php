@@ -44,8 +44,8 @@
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <form method="post" action="{{ route('ProfileUpdate') }}" enctype="multipart/form-data">
-                        {{ csrf_field() }}
+                    <form method="post" action="{{ route('ProfileUpdate') }}">
+                        @csrf
                         <input type="hidden" name="id" value="{{ Auth::guard('user')->user()->id }}">
                         <div class="row justify-content-center mb-4">
                             <div class="col-md-3 col-12" onclick="chooseFile()" style="cursor: pointer">
@@ -79,18 +79,12 @@
                                         class="form-control">
                                 </div>
                             </div>
+
                             <div class="col-md-4">
                                 <div class="position-relative form-group">
-                                    <label for="national_id" class="">nid_no</label>
-                                    <input name="national_id" value="{{ Auth::guard('user')->user()->national_id }}"
-                                        type="number" class="form-control" required placeholder="Enter nid_no No" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="position-relative form-group">
-                                    <label for="national_id" class="">BIN</label>
-                                    <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="number"
-                                        class="form-control" required placeholder="Enter bin no" readonly>
+                                    <label>{{ Auth::guard('user')->user()->id_type }}-No</label>
+                                    <input name="id_value" value="{{ Auth::guard('user')->user()->id_value }}" type="number"
+                                        class="form-control" placeholder="Enter bin no" readonly>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -131,11 +125,11 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="position-relative form-group">
-                                    <label for="shop_name" class="">Area belongs To</label>
-                                    <select class="form-control select2" name="area_id" required="">
+                                    <label>Area belongs To</label>
+                                    <select class="form-control select2" name="unit_id" required="">
                                         <option value="">Select Area</option>
                                         @foreach ($areas as $area)
-                                            <option @if ($area->id == Auth::guard('user')->user()->area_id) selected @endif value="{{ $area->id }}">{{ $area->name }}</option> @endforeach </select>
+                                            <option @if ($area->id == Auth::guard('user')->user()->unit_id) selected @endif value="{{ $area->id }}">{{ $area->name }}</option> @endforeach </select>
                                 </div>
                             </div>
 

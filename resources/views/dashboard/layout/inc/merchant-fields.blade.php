@@ -22,7 +22,6 @@
         </div>
     </div>
 </div>
-
 <div class="tab-content">
     @if ($errors->any())
         @foreach ($errors->all() as $error)
@@ -41,8 +40,8 @@
     <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
         <div class="main-card mb-3 card">
             <div class="card-body">
-                <form method="post" action="{{ route('ProfileUpdate') }}" enctype="multipart/form-data">
-                    {{ csrf_field() }}
+                <form method="post" action="{{ route('ProfileUpdate') }}">
+                    @csrf
                     <input type="hidden" name="id" value="{{ Auth::guard('user')->user()->id }}">
                     <div class="form-row">
                         <div class="col-md-4">
@@ -71,11 +70,12 @@
                         </div>
 
                     </div>
+
                     <div class="form-row">
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="shop_name" class="">Shop Name</label>
-                                <input name="shop_name" id="shop_name"
+                                <input name="shop_name"
                                     value="{{ Auth::guard('user')->user()->shop_name }}" type="text"
                                     class="form-control" required max="255">
                             </div>
@@ -90,18 +90,12 @@
                                         <option @if ($unit->id == Auth::guard('user')->user()->unit_id) selected @endif value="{{ $unit->id }}">{{ $unit->name }}</option> @endforeach </select>
                             </div>
                         </div>
+
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="nid_no" class="">NID</label>
-                                <input name="nid_no" value="{{ Auth::guard('user')->user()->nid_no }}"
-                                    type="text" class="form-control" required placeholder="Enter NID No">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="position-relative form-group">
-                                <label for="bin_no" class="">BIN</label>
-                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="text"
-                                    class="form-control" placeholder="Enter BIN no">
+                                <label>{{ Auth::guard('user')->user()->id_type }}-Number</label>
+                                <input name="id_value" value="{{ Auth::guard('user')->user()->id_value }}" type="text"
+                                    class="form-control" placeholder="Enter Identity Value">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -156,16 +150,3 @@
     </div>
 
 </div>
-
-<script src="{{ asset('ass_vendors/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
-<link href="{{ asset('ass_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/bootstrap4-select2.css') }}">
-<script src="{{ asset('ass_vendors/sweetalert/sweetalert.js') }}"></script>
-<script src="{{ asset('ass_vendors/select2/dist/js/select2.min.js') }}"></script>
-<script type="text/javascript">
-    $('.select2').select2({
-        theme: "bootstrap",
-        width: '100%'
-    });
-</script>

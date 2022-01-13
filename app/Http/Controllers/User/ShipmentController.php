@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\User;
 
 use App\Area;
-use App\Shipment;
+use App\Models\Unit;
 use App\ShippingPrice;
-use App\ShippingCharge;
-use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
+use App\Models\Shipment;
 use App\ShipmentPayment;
+use Illuminate\Http\Request;
+use App\Models\ShippingCharge;
+use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade as PDF;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -19,10 +19,10 @@ class ShipmentController extends Controller
 {
     public function index()
     {
-        $data['area'] = Area::where('status', 1)->get();
+        $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
         //dd($data['shippingCharges']);
-        return view('dashboard.shipment', $data);
+        return view('dashboard.shipment-create', $data);
     }
 
     public function rateCheck(Request $request)
@@ -34,8 +34,8 @@ class ShipmentController extends Controller
         if (!$request->area) {
             return ['status' => 'error', 'message' => 'Please select the area first.'];
         }
-        $zone = Area::find($request->area);
-        $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
+        $zone = Unit::find($request->area);
+
         if (!$shipping) {
             return ['status' => 'error', 'message' => 'Sorry, not any shipping rate set this zone'];
         }
@@ -70,77 +70,39 @@ class ShipmentController extends Controller
     }
     public function shipmentSave(Request $request)
     {
+        echo '<pre>';
+        echo '======================<br>';
+        print_r($request->all());
+        echo '<br>======================<br>';
+        exit();
         $messages = [
             "name.required" => "Please enter customer name.",
             "phone.required" => "Please enter customer phone number.",
             "address.required" => "Please enter customer address.",
-            "cod_amount.required" => "Please enter cod_amount",
-            "area.required" => "Please select customer area",
+            "amount.required" => "Please enter amount",
             "shipping_charge_id.required" => "Please select shipping charge",
         ];
         $request->validate([
             'name' => 'required|max:100',
             'phone' => 'required|max:20',
             'address' => 'required|max:255',
-            "cod_amount" => 'required',
-            'area' => 'required',
+            "amount" => 'required',
             'shipping_charge_id' => 'required'
         ], $messages);
-
-        $price = 0;
-        $total_price = 0;
-        $cod_type = 0;
-        $cod_amount = $request->cod_amount;
-        $zone = Area::find($request->area);
-        $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
-        // if (!$shipping) {
-        //     return response()->json(['status' => 'error', 'errors' => ['message' => 'Sorry, not any shipping rate set this zone']], 422);
-        // }
-        // if ($shipping->cod == 1) {
-        //     $cod_type = 1;
-        //     if (!$request->parcel_value) {
-        //         // return response()->json(['status' => 'error', 'errors' => ['message' => 'Please declared your parcel value first.']], 422);
-        //         $cod_amount = 0;
-        //     } else {
-        //         $cod_amount = ((int)$request->parcel_value / 100) * $shipping->cod_value;
-        //     }
-        // }
-
-
-        // $weight = (float)$request->weight;
-        // if ($weight > $shipping->max_weight) {
-        //     $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-        //     if ((int)$ExtraWeight < $ExtraWeight) {
-        //         $ExtraWeight = (int)$ExtraWeight + 1;
-        //     }
-        //     $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-        // } else {
-        //     $price = (int)$shipping->max_price;
-        // }
-        // $total_price = $price + $cod_amount + (int)$request->parcel_value;
 
         $insert = new Shipment();
         $insert->name = $request->name;
         $insert->phone = $request->phone;
         $insert->address = $request->address;
-        $insert->cod_amount = $request->cod_amount;
-        $insert->area_id = $request->area;
+        $insert->amount = $request->cod_amount;
         $insert->shipping_charge_id = $request->shipping_charge_id;
-        $insert->parcel_value = $request->parcel_value;
-        $insert->weight_charge = $request->weight_charge;
+        $insert->weight = $request->weight;
         $insert->invoice_id = rand(1111, 9999);
         $insert->tracking_code = rand(1100, 9999);
-        $insert->merchant_note = $request->merchant_note;
-        $insert->weight = $request->weight;
-        $insert->delivery_type = $request->delivery_type;
+        $insert->note = $request->note;
         $insert->user_id = Auth::guard('user')->user()->id;
-        $insert->zone_id = $zone->zone_id;
-        $insert->price = $cod_amount;
+        $insert->added_by_id = 1; //Auth::guard('admin')->admin()->id;
         $insert->save();
-        $output = array(
-            'done' => 'done',
-        );
-        // return json_encode($output);
         return back()->with('message', 'Shipment has been saved successfully!');
     }
     public function PrepareShipmentEdit($id)

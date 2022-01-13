@@ -1,18 +1,18 @@
 <?php
 
-use App\Http\Controllers\Admin\AreaController;
 use App\Models\Shipment;
 use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\Admin\AreaController;
+use App\Http\Controllers\User\ShipmentController as MerchantShipment;
 use App\Http\Controllers\Admin\ShippingChargeController;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Courier\AuthController as CourierAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Courier\DashboardController as CourierDashboardController;
 use App\Http\Controllers\User\DashboardController as MerchantDashboardController;
+use App\Http\Controllers\Courier\DashboardController as CourierDashboardController;
 //To clear all cache
-Route::get('clear', function () {
+Route::get('cc', function () {
     Artisan::call('optimize:clear');
     // Artisan::call('config:clear');
     // Artisan::call('config:cache');
@@ -21,11 +21,11 @@ Route::get('clear', function () {
     // Artisan::call('route:cache');
     return "Cleared!";
 });
-Route::get('/', [HomeController::class,'index'])->name('home');
-Route::get('/about', [HomeController::class,'about'])->name('about');
-Route::get('/team', [HomeController::class,'team'])->name('team');
-Route::get('/mission', [HomeController::class,'mission'])->name('mission');
-Route::get('/vision', [HomeController::class,'vision'])->name('vision');
+Route::get('/', [\App\Http\Controllers\HomeController::class,'index'])->name('home');
+Route::get('/about', [\App\Http\Controllers\HomeController::class,'about'])->name('about');
+Route::get('/team', [\App\Http\Controllers\HomeController::class,'team'])->name('team');
+Route::get('/mission', [\App\Http\Controllers\HomeController::class,'mission'])->name('mission');
+Route::get('/vision', [\App\Http\Controllers\HomeController::class,'vision'])->name('vision');
 Route::get('/promise', 'HomeController@promise')->name('promise');
 Route::get('/history', 'HomeController@history')->name('history');
 Route::get('/tracking', 'HomeController@tracking')->name('tracking');
@@ -373,9 +373,9 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::post('/change-email', [MerchantDashboardController::class,'ChangeMail'])->name('ChangeMail');
     Route::post('/change-password', [MerchantDashboardController::class,'ChangePassword'])->name('ChangePassword');
     //Merchant Shipment
-    Route::get('/prepare-shipment', 'ShipmentController@index')->name('merhcant_shipments');
+    Route::get('/prepare-shipment', [MerchantShipment::class,'index'])->name('merhcant_shipments');
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
-    Route::post('shipment-save', 'ShipmentController@shipmentSave')->name('PrepareShipmentSubmit');
+    Route::post('shipment-save', [MerchantShipment::class,'shipmentSave'])->name('shipmentSave');
     Route::get('/edit-shipment/{shipment}', 'ShipmentController@edit')->name('editShipment');
     Route::post('/update-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
     //Merchant Payment routes
