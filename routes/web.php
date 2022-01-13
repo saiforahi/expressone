@@ -350,7 +350,7 @@ Route::get('/login', [App\Http\Controllers\AuthController::class,'index'])->name
 Route::get('/verify', [App\Http\Controllers\AuthController::class,'verify'])->name('verify-user');
 Route::post('/verify', [App\Http\Controllers\AuthController::class,'verify_code'])->name('verify-user-code');
 Route::post('/verification.resend', [App\Http\Controllers\AuthController::class,'send_verification_code'])->name('verification.resend');
-
+//Merchant
 Route::post('/login', [App\Http\Controllers\AuthController::class,'login'])->name('login.store');
 Route::get('/register', [App\Http\Controllers\AuthController::class,'register'])->name('register');
 Route::post('/register', [App\Http\Controllers\AuthController::class,'registerStore'])->name('register.store');

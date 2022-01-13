@@ -24,7 +24,6 @@ class UserSeeder extends Seeder
             'phone'=> '01XXXXXXXXX',
             'password' => Hash::make('12345678'),
         ]);
-        
 
         //merchant
         $merchant = \App\Models\User::create([

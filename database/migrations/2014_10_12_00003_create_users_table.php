@@ -19,7 +19,6 @@ class CreateUsersTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->ipAddress('ip')->nullable();
-            
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('password');
@@ -33,11 +32,9 @@ class CreateUsersTable extends Migration
             $table->unsignedBigInteger('unit_id')->nullable();
             $table->string('address')->nullable();
             $table->string('website_link')->nullable();
-    
             $table->enum('status',['0','1'])->default(1);
             $table->tinyInteger('is_verified')->default(0);
             $table->rememberToken();
-            
             $table->timestamps();
         });
     }

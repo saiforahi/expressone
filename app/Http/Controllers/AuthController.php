@@ -9,6 +9,7 @@ use App\Models\Mail_configuration;
 use Illuminate\Http\Request;
 use App\Mail\UserRegistrationMail;
 use App\Mail\UserVerificationMail;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -44,29 +45,29 @@ class AuthController extends Controller
             'id_no'=> 'required|string'
         ]);
 
-        $user = User::create([
-            // 'user_id' => 'UR' . rand(100, 999) . time(),
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'shop_name' => $request->shop_name,
-            'address' => $request->address,
-            'password' => Hash::make($request->password),
-        ]);
-        if($request->id_type == 'NID'){
-            $user->nid_no = $request->id_no;
+        try{
+            $user = User::create([
+                // 'user_id' => 'UR' . rand(100, 999) . time(),
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'shop_name' => $request->shop_name,
+                'address' => $request->address,
+                'password' => Hash::make($request->password),
+            ]);
+            if($request->id_type == 'NID'){
+                $user->nid_no = $request->id_no;
+            }
+            else{
+                $user->bin_no = $request->id_no;
+            }
+            $user->save();
+            return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
         }
-        else{
-            $user->bin_no = $request->id_no;
+        catch(Exception $e){
+            return redirect()->back()->with('error', 'Something went wrong, please try again later..');
         }
-        $user->save();
-        return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
-        // // Auth::guard('user')->login($user);
-        // Session::put('verification_email', $request->email);
-        // // dd(Session::get('verification_email'));
-        // $this->send_verification_code();
-        // return redirect('/verify');
     }
 
     public function login(Request $request)
@@ -86,6 +87,7 @@ class AuthController extends Controller
         return back()->withInput($request->only('email', 'remember'));
     }
     
+
 
     public function verify()
     {

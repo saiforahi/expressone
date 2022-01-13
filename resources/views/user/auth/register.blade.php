@@ -27,7 +27,7 @@
                     <div class="regi_form_wrapper">
                         <div class="quote_form">
                             @include('flash.message')
-                            <form class="row" action="{{ route('register.store') }}" method="post">
+                            <form class="row" id="reg_form" action="{{ route('register.store') }}" method="post">
                                 @csrf
                                 <div class="form-group col-md-4">
                                     <label class="title-2">First name:</label>
@@ -148,7 +148,7 @@
                             </form>
                             <div class="row">
                                 <div class="form-group col-md-3">
-                                    <button type="submit" class="form-control" style="background-color: #EB058D;border-radius: 80px; color:#fff;">Register</button>
+                                    <button type="button" onclick="event.preventDefault();document.getElementById('reg_form').submit();" class="form-control" style="background-color: #EB058D;border-radius: 80px; color:#fff;">Register</button>
                                 </div>
                             </div>
                         </div>
