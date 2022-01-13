@@ -10,6 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Courier\AuthController as CourierAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Courier\DashboardController as CourierDashboardController;
+use App\Http\Controllers\TestController;
 use App\Http\Controllers\User\DashboardController as MerchantDashboardController;
 //To clear all cache
 Route::get('clear', function () {
@@ -21,6 +22,7 @@ Route::get('clear', function () {
     // Artisan::call('route:cache');
     return "Cleared!";
 });
+Route::get('test',[TestController::class,'index']);
 Route::get('/', [HomeController::class,'index'])->name('home');
 Route::get('/about', [HomeController::class,'about'])->name('about');
 Route::get('/team', [HomeController::class,'team'])->name('team');

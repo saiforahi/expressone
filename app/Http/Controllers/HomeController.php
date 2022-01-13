@@ -9,8 +9,9 @@ use App\Models\Blog;
 use App\Models\Blog_category;
 use App\Models\Area;
 use App\Models\ShippingPrice;
-
+use App\Models\Unit;
 use Validator;
+
 class HomeController extends Controller
 {
 
@@ -131,6 +132,6 @@ class HomeController extends Controller
 
         $unit = Unit::find($request->unit);
 
-        return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_amount];
+        return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => ''];
     }
 }

@@ -52,14 +52,8 @@
                 <div class="tile-stats">
                     <div class="icon"><i class="fa fa-user-plus"></i>
                     </div>
-                    <?php $admins = \DB::table('admins')
-                        ->where('type', 'admin')
-                        ->select('id')
-                        ->count(); ?>
-                    <?php $employees = \DB::table('admins')
-                        ->where('type', '!=', 'admin')
-                        ->select('id')
-                        ->count(); ?>
+                    <?php $admins = \DB::table('admins')->select('id')->count(); ?>
+                    <?php $employees = \App\Models\Admin::role('unit-admin')->select('id')->count(); ?>
                     <div class="count">{{ sprintf('%02d', $admins) }} / {{ sprintf('%02d', $employees) }}</div>
 
                     <h3>Employees</h3>

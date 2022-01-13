@@ -17,6 +17,7 @@ class Admin extends Authenticatable
     protected $hidden = [
         'password'
     ];
+    protected $guard_name = 'admin';
     // public function user(){
     //     return $this->morphOne(User::class, 'inheritable');
     // }
