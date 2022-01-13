@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Default Hash driver
+    | Default Hash Courier
     |--------------------------------------------------------------------------
     |
     | This option controls the default hash driver that will be used to hash

@@ -25,7 +25,7 @@
             @include('dashboard.layout.inc.sidebar')
             <div class="app-main__outer">
                 <div class="app-main__inner">
-                    @if (is_user_filled(Auth::guard('user')->user()->id) == 0)
+                    @if (is_user_filled(Auth::user()->id) == 0)
                         @include('dashboard.layout.inc.merchant-fields')
                     @else
                         @yield('content')

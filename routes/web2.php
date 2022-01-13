@@ -48,7 +48,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/get-zone-single', 'AreaController@zoneGetSingle')->name('zone.single');
 
     Route::get('/hub', 'AreaController@index')->name('hub');
-    Route::post('/hub', 'AreaController@hubStore')->name('hub.store');
+    Route::post('/hub', 'AreaController@hubStore')->name('point.store');
     Route::get('/get-hub', 'AreaController@hubGet')->name('AdminHubGet');
     Route::post('/hub-update', 'AreaController@hubUpdate')->name('hub.update');
     Route::post('/hub-delete', 'AreaController@hubDelete')->name('hub.delete');
@@ -386,12 +386,12 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 });
 
 
-Route::get('driver/login', 'driver\AuthController@index');
-Route::post('driver/login', 'driver\AuthController@login')->name('driver.login');
-Route::post('driver/register', 'driver\AuthController@store')->name('driver.register');
-Route::post('driver/logout', 'driver\AuthController@logout')->name('driver.logout');
+Route::get('driver/login', 'Courier\AuthController@index');
+Route::post('driver/login', 'Courier\AuthController@login')->name('driver.login');
+Route::post('driver/register', 'Courier\AuthController@store')->name('driver.register');
+Route::post('driver/logout', 'Courier\AuthController@logout')->name('driver.logout');
 
-Route::group(['middleware' => 'auth:driver', 'namespace' => 'driver', 'prefix' => 'driver'], function () {
+Route::group(['middleware' => 'auth:driver', 'namespace' => 'Courier', 'prefix' => 'driver'], function () {
     Route::get('/', 'DashboardController@index')->name('driver.dashboard');
     Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-driver-shipments');
     Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-driver-shipments');

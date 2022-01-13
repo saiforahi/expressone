@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\User;
+
 use App\Models\CmsPage;
-use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\User_verification;
+use App\Models\Mail_configuration;
+use Illuminate\Http\Request;
 use App\Mail\UserRegistrationMail;
 use App\Mail\UserVerificationMail;
-use App\Models\Mail_configuration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -28,7 +29,7 @@ class AuthController extends Controller
         if (Auth::guard('user')->check()) {
             return Redirect('/dashboard');
         }
-        return view('auth.register');
+        return view('user.auth.register');
     }
 
     public function registerStore(Request $request)
@@ -39,24 +40,26 @@ class AuthController extends Controller
             'email' => 'required|email|max:100|unique:users,email',
             'phone' => 'required|max:15',
             'password' => 'required|max:20|min:8|confirmed',
+            'id_type' => 'required|string',
+            'id_value' => 'required'
         ]);
-
-        $user = User::create([
-            'user_id' => 'UR' . rand(100, 999) . time(),
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'shop_name' => $request->shop_name,
-            'address' => $request->address,
-            'password' => Hash::make($request->password),
-        ]);
-        return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to be verified');
-        // // Auth::guard('user')->login($user);
-        // Session::put('verification_email', $request->email);
-        // // dd(Session::get('verification_email'));
-        // $this->send_verification_code();
-        // return redirect('/verify');
+        //Save Merchant
+        try {
+            $user = new User();
+            $user->first_name = $request->first_name;
+            $user->last_name = $request->last_name;
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->shop_name = $request->shop_name;
+            $user->address = $request->address;
+            $user->password = Hash::make($request->password);
+            $user->id_type = $request->id_type;
+            $user->id_value = $request->id_value;
+            $user->save();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+        return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
     }
 
     public function login(Request $request)
@@ -70,12 +73,12 @@ class AuthController extends Controller
                 return redirect()->intended('/dashboard');
             } else {
                 return redirect()->route('verify-user');
-                dd('check email');
             }
         }
         $request->session()->flash('login_error', 'Wrong information or this account not login.');
         return back()->withInput($request->only('email', 'remember'));
     }
+
 
     public function verify()
     {
@@ -112,7 +115,8 @@ class AuthController extends Controller
     public function send_verification_code()
     {
         // dd(Session::get('verification_email'));
-        $subject = 'Verification code | ' .basic_information()->company_name;
+        $subject = 'Verification code | ' . basic_information()->company_name;
+
         $code = rand();
         $user = User::where('email', Session::get('verification_email'))->first();
         $add = User_verification::create([

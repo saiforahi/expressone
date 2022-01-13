@@ -1,25 +1,31 @@
 <?php
 
-use App\Shipment;
+use App\Http\Controllers\Admin\AreaController;
+use App\Models\Shipment;
 use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Admin\ShippingChargeController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Courier\AuthController as CourierAuthController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Courier\DashboardController as CourierDashboardController;
+use App\Http\Controllers\User\DashboardController as MerchantDashboardController;
 //To clear all cache
-Route::get('/clear', function () {
-    Artisan::call('cache:clear');
-    Artisan::call('config:clear');
-    Artisan::call('config:cache');
-    Artisan::call('view:clear');
+Route::get('clear', function () {
     Artisan::call('optimize:clear');
-    Artisan::call('route:cache');
+    // Artisan::call('config:clear');
+    // Artisan::call('config:cache');
+    // Artisan::call('view:clear');
+    // Artisan::call('optimize:clear');
+    // Artisan::call('route:cache');
     return "Cleared!";
 });
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('/about', 'HomeController@about')->name('about');
-Route::get('/team', 'HomeController@team')->name('team');
-Route::get('/mission', 'HomeController@mission')->name('mission');
-Route::get('/vision', 'HomeController@vision')->name('vision');
+Route::get('/', [HomeController::class,'index'])->name('home');
+Route::get('/about', [HomeController::class,'about'])->name('about');
+Route::get('/team', [HomeController::class,'team'])->name('team');
+Route::get('/mission', [HomeController::class,'mission'])->name('mission');
+Route::get('/vision', [HomeController::class,'vision'])->name('vision');
 Route::get('/promise', 'HomeController@promise')->name('promise');
 Route::get('/history', 'HomeController@history')->name('history');
 Route::get('/tracking', 'HomeController@tracking')->name('tracking');
@@ -39,29 +45,29 @@ Route::get('/pricing', 'HomeController@pricing')->name('pricing');
 | Admin Route
 |--------------------------------------------------------------------------
 */
-Route::get('admin/login', 'Admin\AuthController@index');
-Route::post('admin/login', 'Admin\AuthController@login')->name('admin.login');
-Route::post('admin/register', 'Admin\AuthController@store')->name('admin.register');
-Route::post('admin/logout', 'Admin\AuthController@logout')->name('admin.logout');
+Route::get('admin/login', [App\Http\Controllers\Admin\AuthController::class,'index']);
+Route::post('admin/login', [App\Http\Controllers\Admin\AuthController::class,'login'])->name('admin.login');
+Route::post('admin/register', [App\Http\Controllers\Admin\AuthController::class,'store'])->name('admin.register');
+Route::post('admin/logout', [App\Http\Controllers\Admin\AuthController::class,'logout'])->name('admin.logout');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function () {
-    Route::get('/', 'DashboardController@index')->name('admin-dashboard');
+    Route::get('/', [App\Http\Controllers\Admin\DashboardController::class,'index'])->name('admin-dashboard');
     Route::get('/basic-information', 'BasicInformationController@index')->name('basic-information');
     Route::post('/basic-information', 'BasicInformationController@update')->name('basic-information.update');
     Route::post('/add-merchant-verify-message', 'BasicInformationController@addVerifyMsg')->name('addVerifyMsg');
     Route::post('/update-verify-message/{id}', 'BasicInformationController@updateVerifyMsg')->name('updateVerifyMsg');
 
-    Route::get('/admin-change-hub/{hub}', 'DashboardController@admin_changes_hub')->name('admin-change-hub');
+    Route::get('/admin-change-hub/{hub}', [AdminDashboardController::class,'admin_changes_hub'])->name('admin-change-hub');
     Route::get('/get-admin-hub-ids/{admin}', 'DashboardController@get_admin_hub_ids')->name('get-admin-hub-ids');
-    Route::get('/zone', 'AreaController@zone')->name('zone');
-    Route::post('/zone', 'AreaController@zoneStore')->name('zone.store');
-    Route::get('/get-zone', 'AreaController@zoneGet')->name('AdminZoneGet');
+    Route::get('/unit', [App\Http\Controllers\Admin\AreaController::class,'unit'])->name('unit');
+    Route::post('/zone', [App\Http\Controllers\Admin\AreaController::class,'unitStore'])->name('zone.store');
+    Route::get('/get-units', [App\Http\Controllers\Admin\AreaController::class,'unitGet'])->name('AdminUnitsGet');
     Route::post('/zone-update', 'AreaController@zoneUpdate')->name('zone.update');
     Route::post('/zone-delete', 'AreaController@zoneDelete')->name('zone.delete');
     Route::get('/get-zone-single', 'AreaController@zoneGetSingle')->name('zone.single');
 
-    Route::get('/hub', 'AreaController@index')->name('hub');
-    Route::post('/hub', 'AreaController@hubStore')->name('hub.store');
+    Route::get('/point', [App\Http\Controllers\Admin\AreaController::class,'index'])->name('point');
+    Route::post('/point', 'AreaController@hubStore')->name('point.store');
     Route::get('/get-hub', 'AreaController@hubGet')->name('AdminHubGet');
     Route::post('/hub-update', 'AreaController@hubUpdate')->name('hub.update');
     Route::post('/hub-delete', 'AreaController@hubDelete')->name('hub.delete');
@@ -69,8 +75,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/get-hub-select', 'AreaController@SelectHub')->name('SelectHub');
     Route::get('/delete-hub/{hub}', 'AreaController@delete_hub')->name('deleet-hub');
 
-    Route::get('/area', 'AreaController@area')->name('area');
-    Route::post('/area', 'AreaController@areaStore')->name('area.store');
+    Route::get('/location', [AreaController::class,'area'])->name('location');
+    Route::post('/location', 'AreaController@areaStore')->name('area.store');
     Route::get('/get-area', 'AreaController@areaGet')->name('AdminAreaGet');
     Route::post('/area-update', 'AreaController@areaUpdate')->name('area.update');
     Route::get('/area-delete/{area}', 'AreaController@areaDelete')->name('area.delete');
@@ -86,7 +92,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/shipping-price-set-edit', 'ShippingPriceController@shippingPriceEdit')->name('shippingPrice.edit');
     Route::get('/delete-shipping-price/{shipping_price}', 'ShippingPriceController@destroy')->name('delete-shipping-price');
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
-    //Admin Driver  list
+    //Admin Courier  list
     Route::resource('/driver-list', 'DriverController');
     Route::get('/driver-shipments/{id}', 'DriverController@assigned_shipments')->name('admin-driverShipments');
     //Shipping List
@@ -340,18 +346,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
 | User Route
 |--------------------------------------------------------------------------
 */
-Route::get('/login', 'AuthController@index')->name('login');
-Route::get('/verify', 'AuthController@verify')->name('verify-user');
-Route::post('/verify', 'AuthController@verify_code')->name('verify-user-code');
-Route::post('/verification.resend', 'AuthController@send_verification_code')->name('verification.resend');
-
-Route::post('/login', 'AuthController@login')->name('login.store');
-Route::get('/register', 'AuthController@register')->name('register');
-Route::post('/register', 'AuthController@registerStore')->name('register.store');
-Route::post('/logout', 'AuthController@logout')->name('logout');
+Route::get('/login', [App\Http\Controllers\AuthController::class,'index'])->name('login');
+Route::get('/verify', [App\Http\Controllers\AuthController::class,'verify'])->name('verify-user');
+Route::post('/verify', [App\Http\Controllers\AuthController::class,'verify_code'])->name('verify-user-code');
+Route::post('/verification.resend', [App\Http\Controllers\AuthController::class,'send_verification_code'])->name('verification.resend');
+//Merchant
+Route::post('/login', [App\Http\Controllers\AuthController::class,'login'])->name('login.store');
+Route::get('/register', [App\Http\Controllers\AuthController::class,'register'])->name('register');
+Route::post('/register', [App\Http\Controllers\AuthController::class,'registerStore'])->name('register.store');
+Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout'])->name('logout');
 
 Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
-    Route::get('/dashboard', 'DashboardController@index')->name('user.dashboard');
+    Route::get('/dashboard', [App\Http\Controllers\User\DashboardController::class,'index'])->name('user.dashboard');
     Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
     Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
     Route::get('/shipment-invoice/{id}', 'ShipmentController@shipmentInvoice')->name('shipmentInvoice');
@@ -359,13 +365,13 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::delete('/shipment-delete/{id}', '\App\Http\Controllers\User\ShipmentController@shipmentDelete')->name('shipment.delete');
     Route::post('set-shipping-charge/{id}', [ShippingChargeController::class, 'setShippingCharge'])->name('setShippingCharge');
     //Profile
-    Route::get('/profile', 'DashboardController@profile')->name('profile');
-    Route::get('/profile-edit', 'DashboardController@ProfileEdit')->name('ProfileEdit');
-    Route::post('/profile-update', 'DashboardController@ProfileUpdate')->name('ProfileUpdate');
+    Route::get('/profile', [MerchantDashboardController::class,'profile'])->name('profile');
+    Route::get('/profile-edit', [MerchantDashboardController::class,'ProfileEdit'])->name('ProfileEdit');
+    Route::post('/profile-update', [MerchantDashboardController::class,'ProfileUpdate'])->name('ProfileUpdate');
     //Account
-    Route::get('/account', 'DashboardController@account')->name('account');
-    Route::post('/change-email', 'DashboardController@ChangeMail')->name('ChangeMail');
-    Route::post('/change-password', 'DashboardController@ChangePassword')->name('ChangePassword');
+    Route::get('/account', [MerchantDashboardController::class,'account'])->name('account');
+    Route::post('/change-email', [MerchantDashboardController::class,'ChangeMail'])->name('ChangeMail');
+    Route::post('/change-password', [MerchantDashboardController::class,'ChangePassword'])->name('ChangePassword');
     //Merchant Shipment
     Route::get('/prepare-shipment', 'ShipmentController@index')->name('merhcant_shipments');
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
@@ -384,13 +390,13 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::get('prepare-shipment-details/{id}', 'ShipmentController@PrepareShipmentEdit')->name('PrepareShipmentEdit');
 });
 
-Route::get('driver/login', 'Driver\AuthController@index');
-Route::post('driver/login', 'Driver\AuthController@login')->name('driver.login');
-Route::post('driver/register', 'Driver\AuthController@store')->name('driver.register');
-Route::post('driver/logout', 'Driver\AuthController@logout')->name('driver.logout');
+Route::get('driver/login', [CourierAuthController::class,'index']);
+Route::post('driver/login', [CourierAuthController::class,'login'])->name('driver.login');
+Route::post('driver/register', 'Courier\AuthController@store')->name('driver.register');
+Route::post('driver/logout', 'Courier\AuthController@logout')->name('driver.logout');
 
-Route::group(['middleware' => 'auth:driver', 'namespace' => 'Driver', 'prefix' => 'driver'], function () {
-    Route::get('/', 'DashboardController@index')->name('driver.dashboard');
+Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix' => 'courier'], function () {
+    Route::get('/', [CourierDashboardController::class,'index'])->name('driver.dashboard');
     Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-driver-shipments');
     Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-driver-shipments');
 

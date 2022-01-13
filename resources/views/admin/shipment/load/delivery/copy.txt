@@ -6,7 +6,7 @@
 
         Assigned by: {{$admin->last_name.' '.$admin->last_name}} <br>
 
-        driver: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$driverAssign->user_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
+        Courier: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$driverAssign->user_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
       </td>
       <td>{{date('M d, y',strtotime($driverAssign->created_at))}} <br>
         {{date('H:i:s',strtotime($driverAssign->created_at))}}</td>
@@ -22,7 +22,7 @@
 
         Assigned by: {{$admin->last_name.' '.$admin->last_name}} <br>
 
-        driver: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$driverReceive->user_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
+        Courier: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$driverReceive->user_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
       </td>
       <td>{{date('M d, y',strtotime($driverReceive->created_at))}} <br>
         {{date('H:i:s',strtotime($driverReceive->created_at))}}</td>
@@ -32,18 +32,18 @@
     @if($dispatch !=null)
     <tr>
       <th scope="row">Status: {{$dispatch->status}}<br>
-        Performed by:
+        Performed by: 
         <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$dispatch->user_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
       </th>
       <td>{{date('M d, y',strtotime($dispatch->created_at))}} <br>
         {{date('H:i:s',strtotime($dispatch->created_at))}}</td>
       <td>{{$dispatch->note}}</td>
     </tr>@endif
-
+    
     @if($transit !=null)
     <tr>
       <th scope="row">Status: {{$transit->status}}<br>
-        Performed by:
+        Performed by: 
         <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$transit->user_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
       </th>
       <td>{{date('M d, y',strtotime($transit->created_at))}} <br>
@@ -54,7 +54,7 @@
     @if($outForDelivery !=null)
     <tr>
       <th scope="row">Status: {{$outForDelivery->status}}<br>
-        Performed by:
+        Performed by: 
         <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$outForDelivery->user_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
       </th>
       <td>{{date('M d, y',strtotime($outForDelivery->created_at))}} <br>
@@ -65,7 +65,7 @@
     @if($assignDriver !=null)
     <tr>
       <th scope="row">Status: {{$assignDriver->status}}<br>
-        Performed by:
+        Performed by: 
         <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$assignDriver->user_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
       </th>
       <td>{{date('M d, y',strtotime($assignDriver->created_at))}} <br>
@@ -76,7 +76,7 @@
     @if($deliverReport !=null)
     <tr>
       <th scope="row">Status: {{$deliverReport->status}}<br>
-        Performed by:
+        Performed by: 
         <?php $name = \DB::table('drivers')->select('first_name','last_name')->where('id',$deliverReport->user_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
       </th>
       <td>{{date('M d, y',strtotime($deliverReport->created_at))}} <br>

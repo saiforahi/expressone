@@ -81,9 +81,9 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="position-relative form-group">
-                                    <label for="national_id" class="">NID</label>
+                                    <label for="national_id" class="">nid_no</label>
                                     <input name="national_id" value="{{ Auth::guard('user')->user()->national_id }}"
-                                        type="number" class="form-control" required placeholder="Enter NID No" readonly>
+                                        type="number" class="form-control" required placeholder="Enter nid_no No" readonly>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -164,13 +164,13 @@
     </div>
 @endsection
 @push('style')
-    <link href="{{ asset('_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/bootstrap4-select2.css') }}">
+    <link href="{{ asset('ass_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/bootstrap4-select2.css') }}">
 @endpush
 @push('script')
-    <script src="{{ asset('_vendors/sweetalert/sweetalert.js') }}"></script>
-    <script src="{{ asset('_vendors/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/sweetalert/sweetalert.js') }}"></script>
+    <script src="{{ asset('ass_vendors/select2/dist/js/select2.min.js') }}"></script>
     <script type="text/javascript">
         $('.select2').select2({
             theme: "bootstrap",

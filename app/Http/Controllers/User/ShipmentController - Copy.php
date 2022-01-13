@@ -1,14 +1,16 @@
 <?php
+
 namespace App\Http\Controllers\User;
-use App\Models\Area;
-use App\Models\Shipment;
-use Illuminate\Http\Request;
-use App\Models\ShippingPrice;
-use Barryvdh\DomPDF\PDF as PDF;
+use App\Area;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Yajra\DataTables\Facades\DataTables;
-use App\Models\Shipment_delivery_payment;
+use App\Shipment;
+use App\ShippingPrice;
+use App\ShipmentPayment;
+use Illuminate\Http\Request;
+use Auth;
+use PDF;
+use DataTables;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ShipmentController extends Controller
 {
@@ -150,7 +152,7 @@ class ShipmentController extends Controller
     {
         $earth = new Earth();
         $earth = $earth->getCountries()->toArray();
-        $address = Address::all();
+        $address = address::all();
         $shipment = shipment::where('user_id', session('user-id'))->where('id', $id)->first();
         if ($shipment->status == 1) {
             return redirect('dashboard');
@@ -286,7 +288,7 @@ class ShipmentController extends Controller
 
     function show_payment(Shipment $shipment)
     {
-        $payments =  Shipment_delivery_payment::where('shipment_id', $shipment->id)->get();
+        $payments =  ShipmentPayment::where('shipment_id', $shipment->id)->get();
         return view('dashboard.include.shipment-delivery-payment', compact('payments'));
     }
     function edit(Shipment $shipment)

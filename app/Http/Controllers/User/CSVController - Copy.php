@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Models\Shipment;
-use App\Models\ShippingPrice;
-use App\Models\Zone;
-use App\Models\Area;
+use App\Shipment;
+use App\ShippingPrice;
+use App\Zone;
+use App\Area;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;

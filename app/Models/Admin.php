@@ -1,75 +1,23 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\Hash;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\HasApiTokens;
-use Route;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Admin extends Authenticatable
 {
-    use Notifiable, HasApiTokens;
+    use HasFactory, HasApiTokens,HasRoles;
 
-    protected $guard = 'admin';
-    protected $fillable = ['role_id', 'first_name', 'last_name', 'email', 'phone', 'password', 'address', 'hub_id', 'image'];
-
+    protected $fillable = [
+        'type', 'units','is_active','first_name', 'last_name','email', 'phone', 'ip','password','status'
+    ];
     protected $hidden = [
-        'password', 'remember_token',
+        'password'
     ];
-    protected $casts = [
-        'created_at' => 'datetime:Y-m-d h:i:s A',
-        'updated_at' => 'datetime:Y-m-d h:i:s A',
-    ];
-
-    function admin_routes()
-    {
-        $name = '/admin';
-        $routeCollection = Route::getRoutes(); // RouteCollection object
-        $routes = $routeCollection->getRoutes(); // array of route objects
-        $grouped_routes = array_filter($routes, function ($route) use ($name) {
-            $action = $route->getAction();
-
-            if (isset($action['prefix'])) {
-                // for the first level groups, $action['group_name'] will be a string
-                // for nested groups, $action['group_name'] will be an array
-                if (is_array($action['prefix'])) {
-                    return in_array($name, $action['prefix']);
-                } else {
-                    return $action['prefix'] == $name;
-                }
-            }
-            return false;
-        });
-
-        foreach ($grouped_routes as $key => $router) {
-            $newRouter = str_replace('admin/', '', $router->uri);
-            // echo $newRouter.'<br/>';
-            $result = explode('/', $newRouter);
-
-
-            if (isset($result[1])) {
-                $result = $result[0] . '/' . $result[1];
-            } else $result =  $result[0];
-            $commonRoutes[] = $result;
-        }
-        return array_unique($commonRoutes);
-    }
-
-    // relation
-    public function hub()
-    {
-        return $this->belongsTo(Hub::class);
-    }
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
-    }
-
-    function hubs()
-    {
-        return $this->belongsToMany(Hub::class);
-    }
+    // public function user(){
+    //     return $this->morphOne(User::class, 'inheritable');
+    // }
 }

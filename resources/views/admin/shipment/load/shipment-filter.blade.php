@@ -1,6 +1,6 @@
 <?php $allStatus = [
   '0'=>'Label created','1'=>'Pickup (driver end)','2'=>'Pickup (admin end)','3'=>'Dispatch center',
-  '3'=>'In transit','4'=>'Out for delivery','5'=>'Delivered'];
+  '3'=>'In transit','4'=>'Out for delivery','5'=>'Delivered']; 
   $zones = \DB::table('zones')->select('id','name')->get(); ?>
 
 <form class="col-md-12 col-sm-12  form-group pull-right">@csrf

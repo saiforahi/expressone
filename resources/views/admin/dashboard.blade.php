@@ -28,13 +28,11 @@
                 <div class="tile-stats">
                     <div class="icon"><i class="fa fa-truck"></i>
                     </div>
-                    <?php $drivers = \DB::table('drivers')
-                        ->select('id')
-                        ->count(); ?>
-                    <div class="count">{{ sprintf('%02d', $drivers) }}</div>
+                    <?php $couriers = \DB::table('couriers')->select('id')->count(); ?>
+                    <div class="count">{{ sprintf('%02d', $couriers) }}</div>
 
-                    <h3>Riders</h3>
-                    <p><a href="/admin/driver-list/">Riders total data-record</a></p>
+                    <h3>Couriers</h3>
+                    <p><a href="/admin/driver-list/">Couriers total data-record</a></p>
                 </div>
             </div>
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
@@ -47,7 +45,7 @@
                     <div class="count">{{ sprintf('%02d', $users) }}</div>
 
                     <h3>Merchants</h3>
-                    <p><a href="/admin/driver-list/">Riders total data-record</a></p>
+                    <p><a href="/admin/driver-list/">Merchants total data-record</a></p>
                 </div>
             </div>
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
@@ -55,11 +53,11 @@
                     <div class="icon"><i class="fa fa-user-plus"></i>
                     </div>
                     <?php $admins = \DB::table('admins')
-                        ->where('role_id', 1)
+                        ->where('type', 'admin')
                         ->select('id')
                         ->count(); ?>
                     <?php $employees = \DB::table('admins')
-                        ->where('role_id', '!=', 1)
+                        ->where('type', '!=', 'admin')
                         ->select('id')
                         ->count(); ?>
                     <div class="count">{{ sprintf('%02d', $admins) }} / {{ sprintf('%02d', $employees) }}</div>
@@ -124,11 +122,6 @@
                                 <p>Orders, today</p>
                             </div>
                             <div class="col-md-3">
-                                <?php $salesToday = \DB::table('driver_hub_shipment_box')
-                                    ->where('status', 'partial')
-                                    ->orWhere('status', 'delivery')
-                                    ->whereDate('created_at', \Carbon\Carbon::today())
-                                    ->count(); ?>
                                 <strong>{{ sprintf('%02d', $salesToday) }}</strong><br>
                                 <p>Sales, Today</p>
                             </div>
@@ -139,7 +132,7 @@
                                 <strong>{{ sprintf('%02d', $orderYesterday) }}</strong><br>
                                 <p>Orders, yesterday</p>
                             </div>
-                            <div class="col-md-3">
+                            {{-- <div class="col-md-3">
                                 <?php $salesYesterday = \DB::table('driver_hub_shipment_box')
                                     ->where('status', 'partial')
                                     ->orWhere('status', 'delivery')
@@ -147,7 +140,7 @@
                                     ->count(); ?>
                                 <strong>{{ sprintf('%02d', $salesYesterday) }}</strong><br>
                                 <p>Sales, yesterday</p>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>

@@ -72,23 +72,23 @@
                                 {{ csrf_field() }}
                                 <input type="hidden" value="" name="id" id="area_id">
                                 <div class="form-group has-feedback">
-                                    <label for="zone_id">Shipping distribution zone:</label>
-                                    <select class="col-md-7 col-xs-12 select2_single" name="zone_id" id="zone_id">
+                                    <label for="unit_id">Delivery Unit:</label>
+                                    <select class="col-md-7 col-xs-12 select2_single" name="unit_id" id="unit_id">
                                         <option></option>
-                                        @foreach ($zone as $zones)
-                                            <option value="{{ $zones->id }}">{{ $zones->name }}</option>
+                                        @foreach ($units as $unit)
+                                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group has-feedback">
-                                    <label for="zone_id">Hub:</label>
-                                    <select class="col-md-7 col-xs-12 select2_single" name="hub_id" id="hub_id" required>
+                                    <label for="point_id">Point:</label>
+                                    <select class="col-md-7 col-xs-12 select2_single" name="point_id" id="point_id" required>
                                         <option></option>
                                     </select>
                                 </div>
                                 <div class="form-group has-feedback">
-                                    <label for="code">Area Name:</label>
-                                    <input type="text" class="form-control" placeholder="Area name" name="name" id="name"
+                                    <label for="code">Location:</label>
+                                    <input type="text" class="form-control" placeholder="Location" name="location" id="location"
                                         value="">
                                 </div>
                                 <hr>
@@ -110,33 +110,33 @@
     </div>
 @endsection
 @push('style')
-    <link href="{{ asset('_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
+    <link href="{{ asset('ass_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
     <!-- Datatables -->
-    <link href="{{ asset('_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}"
+    <link href="{{ asset('ass_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}"
         rel="stylesheet">
-    <link href="{{ asset('_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 @endpush
 @push('scripts')
     <!-- Datatables -->
-    <script src="{{ asset('_vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
-    <script src="{{ asset('_vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
-    <script src="{{ asset('_vendors/jszip/dist/jszip.min.js') }}"></script>
-    <script src="{{ asset('_vendors/pdfmake/build/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('_vendors/pdfmake/build/vfs_fonts.js') }}"></script>
-    <script src="{{ asset('_vendors/sweetalert/sweetalert.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/jszip/dist/jszip.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/pdfmake/build/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('ass_vendors/sweetalert/sweetalert.js') }}"></script>
 
     <script>
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');

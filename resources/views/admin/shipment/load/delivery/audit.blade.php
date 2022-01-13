@@ -25,7 +25,7 @@
 
         Assigned by: {{$admin->last_name.' '.$admin->last_name}} <br>
 
-        driver: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$log->user_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
+        Courier: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$log->user_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
       </td>
       <td>{{date('M d, y',strtotime($log->created_at))}} <br>
         {{date('H:i:s',strtotime($log->created_at))}}</td>
@@ -50,6 +50,6 @@
       <td>@if($log->note==null)N/A @else {{$log->note}} @endif</td>
     </tr>
     @endforeach
-
+    
   </tbody>
 </table>

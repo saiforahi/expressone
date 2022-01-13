@@ -39,7 +39,7 @@
                                 <div class="email">{{ $shipment->phone }}</div>
                             </div>
                             <div class="col invoice-details">
-                                <h4 class="invoice-id">Tracking no: {{ $shipment->tracking_code }}</h4>
+                                <h4 class="invoice-id">Traching no: {{ $shipment->tracking_code }}</h4>
                                 <div class="date font-weight-bold">Date of CN Print: {{ date('F j, Y H:i:s') }}</div>
                             </div>
                         </div>

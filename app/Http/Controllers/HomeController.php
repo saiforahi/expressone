@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Message;
-use App\Shipment;
-use App\Blog;
-use App\Blog_category;
-use App\Area;
-use App\ShippingPrice;
+use App\Models\Message;
+use App\Models\Shipment;
+use App\Models\Blog;
+use App\Models\Blog_category;
+use App\Models\Area;
+use App\Models\ShippingPrice;
 
 use Validator;
 class HomeController extends Controller
@@ -16,55 +16,55 @@ class HomeController extends Controller
 
     public function index()
     {
-        $banner = \App\Slider::where('status','1')->first();
-        $about = \App\About::where('id','1')->first();
-        return view('frontend.index',compact('banner','about'));
+        $banner = \App\Models\Slider::where('status','1')->first();
+        $about = \App\Models\About::where('id','1')->first();
+        return view('index',compact('banner','about'));
     }
 
     public function about()
     {
-        $about = \App\About::where('id','1')->first();
-        $abouts = \App\About::where('id','!=','1')->where('status','1')->get();
-        return view('frontend.about',compact('about','abouts'));
+        $about = \App\Models\About::where('id','1')->first();
+        $abouts = \App\Models\About::where('id','!=','1')->where('status','1')->get();
+        return view('about',compact('about','abouts'));
     }
     public function team()
     {
-        $about = \App\Team::where('id','1')->first();
-        $abouts = \App\Team::where('id','!=','1')->where('status','1')->get();
-        return view('frontend.team',compact('about','abouts'));
+        $about = \App\Models\Team::where('id','1')->first();
+        $abouts = \App\Models\Team::where('id','!=','1')->where('status','1')->get();
+        return view('team',compact('about','abouts'));
     }
     public function promise()
     {
-        $about = \App\Promise::where('id','1')->first();
-        $abouts = \App\Promise::where('id','!=','1')->where('status','1')->get();
-        return view('frontend.promise',compact('about','abouts'));
+        $about = \App\Models\Promise::where('id','1')->first();
+        $abouts = \App\Models\Promise::where('id','!=','1')->where('status','1')->get();
+        return view('promise',compact('about','abouts'));
     }
     public function vision()
     {
-        $about = \App\Vision::where('id','1')->first();
-        $abouts = \App\Vision::where('id','!=','1')->where('status','1')->get();
-        return view('frontend.vision',compact('about','abouts'));
+        $about = \App\Models\Vision::where('id','1')->first();
+        $abouts = \App\Models\Vision::where('id','!=','1')->where('status','1')->get();
+        return view('vision',compact('about','abouts'));
     }
     public function mission()
     {
-        $about = \App\Mission::where('id','1')->first();
-        $abouts = \App\Mission::where('id','!=','1')->where('status','1')->get();
-        return view('frontend.mission',compact('about','abouts'));
+        $about = \App\Models\Mission::where('id','1')->first();
+        $abouts = \App\Models\Mission::where('id','!=','1')->where('status','1')->get();
+        return view('mission',compact('about','abouts'));
     }
     public function history()
     {
-        $about = \App\History::where('id','1')->first();
-        $abouts = \App\History::where('id','!=','1')->where('status','1')->get();
-        return view('frontend.history',compact('about','abouts'));
+        $about = \App\Models\History::where('id','1')->first();
+        $abouts = \App\Models\History::where('id','!=','1')->where('status','1')->get();
+        return view('history',compact('about','abouts'));
     }
 
     function pricing(){
-        return view('frontend.pricing');
+        return view('pricing');
     }
 
     public function tracking()
     {
-        return view('frontend.tracking');
+        return view('tracking');
     }
     public function track_order(Request $request){
         // dd($request->all());
@@ -75,7 +75,7 @@ class HomeController extends Controller
 
     public function contact()
     {
-        return view('frontend.contact');
+        return view('contact');
     }
 
     function save_contact(Request $request){
@@ -91,14 +91,14 @@ class HomeController extends Controller
         $featuresPhotos = Blog::select('photo','id')->inRandomOrder()->limit(9)->get();
         // dd($featuresPhotos);
         $blogs = Blog::latest()->paginate(10);
-        return view('frontend.blog',compact('blogs','categories','featuresPhotos'));
+        return view('blog',compact('blogs','categories','featuresPhotos'));
     }
 
     function category_post(Blog_category $blog_category){
         $categories = Blog_category::orderBy('name')->get();
         $featuresPhotos = Blog::select('photo','id')->inRandomOrder()->limit(9)->get();
         $blogs = Blog::where('blog_category_id',$blog_category->id)->paginate(10);
-        return view('frontend.blog',compact('blogs','categories','featuresPhotos'));
+        return view('blog',compact('blogs','categories','featuresPhotos'));
     }
 
     function seach_blog(Request $request){
@@ -110,7 +110,7 @@ class HomeController extends Controller
            ->where('title', 'LIKE', "%{$keyword}%")
            ->orWhere('description', 'LIKE', "%{$keyword}%")
            ->paginate(10);
-        return view('frontend.blog',compact('blogs','categories','featuresPhotos'));
+        return view('blog',compact('blogs','categories','featuresPhotos'));
     }
 
     function fields(){
@@ -129,31 +129,8 @@ class HomeController extends Controller
         $cod_type = 0;
         $cod_amount = 0;
 
-        $zone = Area::find($request->area);
-        $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
-        if (!$shipping) {
-            return ['status' => 'error', 'message' => 'Sorry, not any shipping rate set this zone'];
-        }
-        if ($shipping->cod == 1) {
-            $cod_type = 1;
-            if (!$request->parcel_value) {
-                // return ['status' => 'error', 'message' => 'Please declared your parcel value first.'];
-                $cod_amount = 0;
-            } else {
-                $cod_amount = (int)(((int)$request->parcel_value / 100) * $shipping->cod_value);
-            }
-        }
-        $weight = (float)$request->weight;
-        if ($weight > $shipping->max_weight) {
-            $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-            if ((int)$ExtraWeight < $ExtraWeight) {
-                $ExtraWeight = (int)$ExtraWeight + 1;
-            }
-            $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-        } else {
-            $price = (int)$shipping->max_price;
-        }
-        $total_price = $price + $cod_amount + (int)$request->parcel_value;
-        return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
+        $unit = Unit::find($request->unit);
+
+        return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_amount];
     }
 }

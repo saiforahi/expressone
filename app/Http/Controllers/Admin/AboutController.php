@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
-use App\Team;
-use Validator;
-use App\Models\Vision;
-use DataTables;
-use App\Models\About;
-use App\Models\Mission;
-use App\Models\Promise;
-use App\Models\History;
-use Illuminate\Http\Request;
+namespace App\Http\Controllers\admin;
+
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\About;
+use App\History;
+use App\Mission;
+use App\Promise;
+use App\Team;
+use App\Vision;
+use Session;
+use DataTables;
+use Validator;
 
 class AboutController extends Controller
 {

@@ -47,16 +47,16 @@
                     <div class="form-row">
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="exampleEmail11" class="">First Name</label><input
-                                    name="first_name" id="exampleEmail11"
+                                <label for="first_name" class="">First Name</label><input
+                                    name="first_name" id="first_name"
                                     value="{{ Auth::guard('user')->user()->first_name }}" type="text" required
                                     max="100" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="examplePassword11" class="">Last
-                                    Name</label><input name="last_name" id="examplePassword11"
+                                <label for="last_name" class="">Last
+                                    Name</label><input name="last_name" id="last_name"
                                     value="{{ Auth::guard('user')->user()->last_name }}" type="text" required
                                     max="100" class="form-control">
                             </div>
@@ -81,27 +81,27 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <?php $areas = \DB::table('areas')->get(); ?>
+                            <?php $units = \DB::table('units')->get(); ?>
                             <div class="position-relative form-group">
-                                <label for="shop_name" class="">Area belongs To</label>
-                                <select class="form-control select2" name="area_id" required="">
-                                    <option value="">Select Area</option>
-                                    @foreach ($areas as $area)
-                                        <option @if ($area->id == Auth::guard('user')->user()->area_id) selected @endif value="{{ $area->id }}">{{ $area->name }}</option> @endforeach </select>
+                                <label for="shop_name" class="">Unit belongs To</label>
+                                <select class="form-control select2" name="unit_id" required="">
+                                    <option value="">Select Unit</option>
+                                    @foreach ($units as $unit)
+                                        <option @if ($unit->id == Auth::guard('user')->user()->unit_id) selected @endif value="{{ $unit->id }}">{{ $unit->name }}</option> @endforeach </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="national_id" class="">NID</label>
-                                <input name="national_id" value="{{ Auth::guard('user')->user()->national_id }}"
-                                    type="number" class="form-control" required placeholder="Enter NID No">
+                                <label for="nid_no" class="">NID</label>
+                                <input name="nid_no" value="{{ Auth::guard('user')->user()->nid_no }}"
+                                    type="text" class="form-control" required placeholder="Enter NID No">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="national_id" class="">BIN</label>
-                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="number"
-                                    class="form-control" required placeholder="Enter bin no">
+                                <label for="bin_no" class="">BIN</label>
+                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="text"
+                                    class="form-control" placeholder="Enter BIN no">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -157,12 +157,12 @@
 
 </div>
 
-<script src="{{ asset('_vendors/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
-<link href="{{ asset('_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/bootstrap4-select2.css') }}">
-<script src="{{ asset('_vendors/sweetalert/sweetalert.js') }}"></script>
-<script src="{{ asset('_vendors/select2/dist/js/select2.min.js') }}"></script>
+<script src="{{ asset('ass_vendors/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
+<link href="{{ asset('ass_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/bootstrap4-select2.css') }}">
+<script src="{{ asset('ass_vendors/sweetalert/sweetalert.js') }}"></script>
+<script src="{{ asset('ass_vendors/select2/dist/js/select2.min.js') }}"></script>
 <script type="text/javascript">
     $('.select2').select2({
         theme: "bootstrap",

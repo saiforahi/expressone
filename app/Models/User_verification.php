@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
 
 class User_verification extends Model
 {
-
+    
     protected $fillable = [ 'user_id', 'verification_code', 'status'];
 
 

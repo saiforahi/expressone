@@ -3,16 +3,14 @@
         <div class="nav toggle">
             <a id="menu_toggle"><i class="fa fa-bars"></i></a>
         </div>
-
         <div class="nav toggle" style="border-bottom:1px solid silver;text-align:center; margin-top:3px;width:auto;">
-            @if(Auth::guard('admin')->user()->role_id !=1)
-            <?php $hubs = \App\Admin_hub::where('admin_id',Auth::guard('admin')->user()->id)->get();?>
+            @if(Auth::guard('admin')->user()->type =='unit-admin')
+            <?php $units = \App\Models\Unit::where('admin_id',Auth::guard('admin')->user()->id)->get();?>
                 <select style="padding:3px" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
                     @foreach($hubs as $row)
-                    <option @if(\Session::get('admin_hub')->id==$row->hub_id) selected @endif value="/admin/admin-change-hub/{{$row->hub_id}}">{{$row->hub->name}}</option> @endforeach
+                    <option @if(\Session::get('admin_unit')->id==$row->hub_id) selected @endif value="/admin/admin-change-hub/{{$row->hub_id}}">{{$row->hub->name}}</option> @endforeach
                 </select>
-
-            @else <b class="text-success"><span class="fa fa-check"></span> Super-admin</b> @endif
+            @else <b class="text-success"><span class="fa fa-check"></span>Super-admin</b> @endif
         </div>
 
         <ul class="nav navbar-nav navbar-right" style="width:61%">
@@ -26,8 +24,7 @@
                     <li><a href=""> Profile</a></li>
                     <li>
                         <a class="dropdown-item" href="{{ route('admin.logout') }}"
-                           onclick="event.preventDefault(); document.getElementById('frm-logout').submit();"><i
-                                class="fa fa-sign-out pull-right"></i> Log Out</a>
+                           onclick="event.preventDefault(); document.getElementById('frm-logout').submit();"><i class="fa fa-sign-out pull-right"></i>Log Out</a>
                     </li>
                 </ul>
             </li>

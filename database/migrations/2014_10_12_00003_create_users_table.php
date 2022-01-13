@@ -15,21 +15,26 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id');
+            // $table->nullableMorphs('inheritable');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('shop_name')->nullable();
+            $table->ipAddress('ip')->nullable();
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('password');
+            $table->string('shop_name')->nullable();
+            $table->string('id_type')->comment('Identity types = NID, Passport, BIN etc');
+            $table->string('id_value')->unique()->nullable()->comment('National ID/BIN');
+            $table->string('bank_name')->nullable();
+            $table->string('bank_br_name')->nullable();
+            $table->string('bank_acc_name')->nullable();
+            $table->bigInteger('bank_acc_no')->nullable();
+            $table->unsignedBigInteger('unit_id')->nullable();
             $table->string('address')->nullable();
-            $table->unsignedBigInteger('area_id')->nullable();
             $table->string('website_link')->nullable();
-            $table->string('image')->nullable();
             $table->enum('status',['0','1'])->default(1);
             $table->tinyInteger('is_verified')->default(0);
             $table->rememberToken();
-            $table->foreign('area_id')->references('id')->on('areas');
             $table->timestamps();
         });
     }

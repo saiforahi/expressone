@@ -14,14 +14,14 @@
                 <ul class="nav side-menu">
                     <li><a href="{{ url('/driver')}}"><i class="fa fa-dashboard"></i> Dashboard</a>
                     </li>
-
+                    
                     <li><a><i class="fa mdi mdi-cube-send"></i> Logistics <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="{{route('driverShipments.index')}}">Pickup</a></li>
                             <li><a href="/driver/agent-dispatch">Delivery Parcels</a></li>
                             <li><a href="/driver/my-shipments/hold">Hold Deliveries</a></li>
                             <li><a href="/driver/my-shipments/return">Return Deliveries</a></li>
-
+                            
                         </ul>
                     </li>
 
