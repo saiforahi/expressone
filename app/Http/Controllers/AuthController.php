@@ -9,6 +9,7 @@ use App\Models\Mail_configuration;
 use Illuminate\Http\Request;
 use App\Mail\UserRegistrationMail;
 use App\Mail\UserVerificationMail;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -40,26 +41,33 @@ class AuthController extends Controller
             'email' => 'required|email|max:100|unique:users,email',
             'phone' => 'required|max:15',
             'password' => 'required|max:20|min:8|confirmed',
-            'id_type' => 'required|string',
-            'id_value' => 'required'
+            'id_type'=> 'required|string',
+            'id_no'=> 'required|string'
         ]);
-        //Save Merchant
-        try {
-            $user = new User();
-            $user->first_name = $request->first_name;
-            $user->last_name = $request->last_name;
-            $user->email = $request->email;
-            $user->phone = $request->phone;
-            $user->shop_name = $request->shop_name;
-            $user->address = $request->address;
-            $user->password = Hash::make($request->password);
-            $user->id_type = $request->id_type;
-            $user->id_value = $request->id_value;
+
+        try{
+            $user = User::create([
+                // 'user_id' => 'UR' . rand(100, 999) . time(),
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'shop_name' => $request->shop_name,
+                'address' => $request->address,
+                'password' => Hash::make($request->password),
+            ]);
+            if($request->id_type == 'NID'){
+                $user->nid_no = $request->id_no;
+            }
+            else{
+                $user->bin_no = $request->id_no;
+            }
             $user->save();
-        } catch (\Throwable $th) {
-            throw $th;
+            return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
         }
-        return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
+        catch(Exception $e){
+            return redirect()->back()->with('error', 'Something went wrong, please try again later..');
+        }
     }
 
     public function login(Request $request)
@@ -78,6 +86,7 @@ class AuthController extends Controller
         $request->session()->flash('login_error', 'Wrong information or this account not login.');
         return back()->withInput($request->only('email', 'remember'));
     }
+    
 
 
     public function verify()

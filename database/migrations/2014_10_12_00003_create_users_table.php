@@ -23,8 +23,8 @@ class CreateUsersTable extends Migration
             $table->string('phone');
             $table->string('password');
             $table->string('shop_name')->nullable();
-            $table->string('id_type')->comment('Identity types = NID, Passport, BIN etc');
-            $table->string('id_value')->unique()->nullable()->comment('National ID/BIN');
+            $table->string('nid_no')->unique()->nullable()->comment('National ID card number');
+            $table->string('bin_no')->unique()->nullable()->comment('Business Identification number');
             $table->string('bank_name')->nullable();
             $table->string('bank_br_name')->nullable();
             $table->string('bank_acc_name')->nullable();

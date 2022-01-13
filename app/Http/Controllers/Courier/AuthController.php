@@ -27,7 +27,7 @@ class AuthController extends Controller
             'password' => 'required|min:3'
         ],$messages);
 
-        if (Auth::guard('driver')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
+        if (Auth::guard('courier')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
 
             return redirect()->intended('/driver');
         }
@@ -56,12 +56,12 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        Auth::guard('driver')->login($driver);
+        Auth::guard('courier')->login($driver);
         return redirect()->intended('/driver');
     }
     public function logout(Request $request)
     {
-        Auth::guard('driver')->logout();
+        Auth::guard('courier')->logout();
         return redirect('driver/login');
     }
 }

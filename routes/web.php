@@ -392,7 +392,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 
 Route::get('driver/login', [CourierAuthController::class,'index']);
 Route::post('driver/login', [CourierAuthController::class,'login'])->name('driver.login');
-Route::post('driver/register', 'Courier\AuthController@store')->name('driver.register');
+Route::post('driver/register', [CourierAuthController::class,'store'])->name('driver.register');
 Route::post('driver/logout', 'Courier\AuthController@logout')->name('driver.logout');
 
 Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix' => 'courier'], function () {

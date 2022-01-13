@@ -25,7 +25,6 @@ class UserSeeder extends Seeder
             'password' => Hash::make('12345678'),
         ]);
 
-
         //merchant
         $merchant = \App\Models\User::create([
             'first_name' => 'Demo',
@@ -34,8 +33,8 @@ class UserSeeder extends Seeder
             'phone'=> '01XXXXXXXXX',
             'password' => Hash::make('12345678'),
             'is_verified'=>1,
-            'id_type'=>'BIN',
-            'id_value'=>'12345678'
+            'nid_no'=>'1234567898',
+            'bin_no'=>'1234564534563'
         ]);
 
         //merchant
@@ -47,6 +46,6 @@ class UserSeeder extends Seeder
             'employee_id' => '1',
             'password' => Hash::make('12345678'),
         ]);
-
+        
     }
 }
