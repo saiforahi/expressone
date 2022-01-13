@@ -13,6 +13,7 @@ use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Nette\Utils\Random;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ShipmentController extends Controller
@@ -21,7 +22,14 @@ class ShipmentController extends Controller
     {
         $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
-        //dd($data['shippingCharges']);
+        $data['invoice_id'] = Shipment::select('id')->orderBy('id', 'desc')->first();
+        if ($data['invoice_id'] == null) {
+            $firstInvoice = 1111;
+            $data['invoiceId'] = $firstInvoice + 1;
+        } else {
+            $invoice_id = Shipment::select('id')->orderBy('id', 'desc')->first()->invoice_id;
+            $data['invoiceNo'] = $invoice_id + 1;
+        }
         return view('dashboard.shipment-create', $data);
     }
 
@@ -97,9 +105,8 @@ class ShipmentController extends Controller
         $insert->amount = $request->cod_amount;
         $insert->shipping_charge_id = $request->shipping_charge_id;
         $insert->weight = $request->weight;
-        $insert->invoice_id = rand(1111, 9999);
-        $insert->tracking_code = rand(1100, 9999);
         $insert->note = $request->note;
+        $insert->tracking_code = uniqid();
         $insert->user_id = Auth::guard('user')->user()->id;
         $insert->added_by_id = 1; //Auth::guard('admin')->admin()->id;
         $insert->save();

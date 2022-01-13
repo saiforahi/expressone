@@ -7,7 +7,7 @@
                 <div class="page-title-icon">
                     <i class="fa fa-location-arrow text-success" aria-hidden="true"></i>
                 </div>
-                <div>Prepare Shipment
+                <div>Prepare Shipment <button class="btn btn-info">{{ $invoiceId }}</button>
                     <div class="page-title-subheading">Fill in your details to prepare the shipment label
                     </div>
                 </div>
@@ -32,12 +32,15 @@
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <form id="upload_form" method="post" action="{{ route('shipmentSave') }}">
+                {{-- invoice no --}}
+                <input type="hidden" value="{{ $invoiceId }}" name="invoice_id">
                 @csrf
                 <div class="main-card mb-3 card card-body">
                     <h5 class="card-title">Customer Details:</h5>
                     <div class="form-row">
                         <div class="col text-left">
-                            <label class="" for="name">Customer Name</label> <span class="text-danger">*</span>
+                            <label class="" for="name">Customer Name</label> <span
+                                class="text-danger">*</span>
                             <input type="text" class="form-control" name="name" placeholder="Customer Name" required>
                         </div>
                         <div class="col text-left">
@@ -45,7 +48,8 @@
                             <input type="text" class="form-control" name="phone" placeholder="Customer phone" required>
                         </div>
                         <div class="col text-left">
-                            <label class="" for="address">Address</label> <span class="text-danger">*</span>
+                            <label class="" for="address">Address</label> <span
+                                class="text-danger">*</span>
                             <input type="text" id="address" class="form-control" name="address"
                                 placeholder="Customer Address" required>
                         </div>
