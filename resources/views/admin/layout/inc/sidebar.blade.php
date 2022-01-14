@@ -15,19 +15,21 @@
                 <ul class="nav side-menu">
                     <li><a href="{{ route('admin-dashboard') }} "><i class="fa fa-dashboard"></i>Dashboard</a>
                     </li>
-                    <li><a><i class="fa mdi mdi-google-maps"></i>Area Manage<span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">
-                            @if (Auth::guard('admin')->user()->type == 'admin')
+                    @role('super-admin|admin')
+                        <li><a><i class="fa mdi mdi-google-maps"></i>Area Manage<span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+
                                 <li><a href="{{ route('unit') }}">Unit</a></li>
-                            @endif
-                            @if (Auth::guard('admin')->user()->type == 'admin')
                                 <li><a href="{{ route('point') }}">Point (District)</a></li>
-                            @endif
-                            @if (Auth::guard('admin')->user()->type == 'admin')
                                 <li><a href="{{ route('location') }}">Location (Area)</a></li>
-                            @endif
-                        </ul>
-                    </li>
+
+                            </ul>
+                        </li>
+                        <li><a href="{{ route('shippingCharges') }}"><i class="fa mdi mdi-table"></i>Shipping Charge</a>
+                        </li>
+                        <li><a href="{{ route('all-shipments') }}"><i class="fa mdi mdi-export"></i>All shipments</a>
+                        </li>
+                    @endrole
                     {{-- <li><a><i class="fa fa-money"></i> Shipping Price <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             @if (checkAdminAccess('shipping-price-set') != 0)
@@ -35,17 +37,6 @@
                             @endif
                         </ul>
                     </li> --}}
-
-                    @if (Auth::guard('admin')->user()->type == 'admin')
-                        <li><a href="{{ route('shippingCharges') }}"><i class="fa mdi mdi-table"></i>Shipping Charge</a>
-                        </li>
-                    @endif
-                    @if (Auth::guard('admin')->user()->type == 'admin')
-                        <li><a href="{{ route('all-shipments') }}"><i class="fa mdi mdi-export"></i>All shipments</a>
-                        </li>
-                    @endif
-
-
                     <li><a><i class="fa mdi mdi-cube-send"></i> Logistics <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             @if (Auth::guard('admin')->user()->type == 'admin')

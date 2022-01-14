@@ -9,8 +9,10 @@ use App\Http\Controllers\User\ShipmentController as MerchantShipment;
 use App\Http\Controllers\Admin\ShippingChargeController;
 use App\Http\Controllers\Courier\AuthController as CourierAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\User\DashboardController as MerchantDashboardController;
 use App\Http\Controllers\Courier\DashboardController as CourierDashboardController;
+use App\Http\Controllers\TestController;
+use App\Http\Controllers\User\DashboardController as MerchantDashboardController;
+
 //To clear all cache
 Route::get('cc', function () {
     Artisan::call('optimize:clear');
@@ -21,11 +23,12 @@ Route::get('cc', function () {
     // Artisan::call('route:cache');
     return "Cleared!";
 });
-Route::get('/', [\App\Http\Controllers\HomeController::class,'index'])->name('home');
-Route::get('/about', [\App\Http\Controllers\HomeController::class,'about'])->name('about');
-Route::get('/team', [\App\Http\Controllers\HomeController::class,'team'])->name('team');
-Route::get('/mission', [\App\Http\Controllers\HomeController::class,'mission'])->name('mission');
-Route::get('/vision', [\App\Http\Controllers\HomeController::class,'vision'])->name('vision');
+Route::get('test',[TestController::class,'index']);
+Route::get('/', [HomeController::class,'index'])->name('home');
+Route::get('/about', [HomeController::class,'about'])->name('about');
+Route::get('/team', [HomeController::class,'team'])->name('team');
+Route::get('/mission', [HomeController::class,'mission'])->name('mission');
+Route::get('/vision', [HomeController::class,'vision'])->name('vision');
 Route::get('/promise', 'HomeController@promise')->name('promise');
 Route::get('/history', 'HomeController@history')->name('history');
 Route::get('/tracking', 'HomeController@tracking')->name('tracking');

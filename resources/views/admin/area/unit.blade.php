@@ -9,7 +9,7 @@
                 </div>
                 <div class="title_right">
                     <button type="button" class="btn btn-info btn-sm add-zone pull-right">
-                        <i class="fa fa-plus fs-13 m-r-3"></i> Add New Unit
+                        <i class="fa fa-plus fs-13 m-r-3"></i>Add New Unit
                     </button>
                 </div>
             </div>
