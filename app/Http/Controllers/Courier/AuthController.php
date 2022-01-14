@@ -12,7 +12,7 @@ class AuthController extends Controller
 {
     public function index()
     {
-        return view('driver.auth.login');
+        return view('courier.auth.login');
     }
     public function login(Request $request)
     {

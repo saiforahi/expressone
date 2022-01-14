@@ -23,7 +23,7 @@ Route::get('cc', function () {
     // Artisan::call('route:cache');
     return "Cleared!";
 });
-Route::get('test',[TestController::class,'index']);
+Route::get('test',[TestController::class,'index']); //testing route
 Route::get('/', [HomeController::class,'index'])->name('home');
 Route::get('/about', [HomeController::class,'about'])->name('about');
 Route::get('/team', [HomeController::class,'team'])->name('team');
@@ -54,7 +54,7 @@ Route::post('admin/register', [App\Http\Controllers\Admin\AuthController::class,
 Route::post('admin/logout', [App\Http\Controllers\Admin\AuthController::class,'logout'])->name('admin.logout');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function () {
-    Route::get('/', [App\Http\Controllers\Admin\DashboardController::class,'index'])->name('admin-dashboard');
+    Route::get('/', [AdminDashboardController::class,'index'])->name('admin-dashboard');
     Route::get('/basic-information', 'BasicInformationController@index')->name('basic-information');
     Route::post('/basic-information', 'BasicInformationController@update')->name('basic-information.update');
     Route::post('/add-merchant-verify-message', 'BasicInformationController@addVerifyMsg')->name('addVerifyMsg');
@@ -393,10 +393,10 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
     Route::get('prepare-shipment-details/{id}', 'ShipmentController@PrepareShipmentEdit')->name('PrepareShipmentEdit');
 });
 
-Route::get('driver/login', [CourierAuthController::class,'index']);
-Route::post('driver/login', [CourierAuthController::class,'login'])->name('driver.login');
-Route::post('driver/register', [CourierAuthController::class,'store'])->name('driver.register');
-Route::post('driver/logout', 'Courier\AuthController@logout')->name('driver.logout');
+Route::get('courier/login', [CourierAuthController::class,'index'])->name('courier.login.show');
+Route::post('courier/login', [CourierAuthController::class,'login'])->name('courier.login');
+Route::post('courier/register', [CourierAuthController::class,'store'])->name('courier.register');
+Route::post('courier/logout', [CourierAuthController::class,'logout'])->name('courier.logout');
 
 Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix' => 'courier'], function () {
     Route::get('/', [CourierDashboardController::class,'index'])->name('driver.dashboard');

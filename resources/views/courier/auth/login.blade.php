@@ -27,7 +27,7 @@
     <div class="login_wrapper">
         <div class="animate form login_form">
             <section class="login_content">
-                <form action="{{ route('driver.login') }}" method="post">
+                <form action="{{ route('courier.login') }}" method="post">
                     <h1>Login Form</h1>
                     @csrf
                     <div>
@@ -78,7 +78,7 @@
 
         <div id="register" class="animate form registration_form">
             <section class="login_content">
-                <form action="{{ route('driver.register') }}" method="post">
+                <form action="{{ route('courier.register') }}" method="post">
                     @csrf
                     <h1>Create Account</h1>
                     @if ($errors->any())
