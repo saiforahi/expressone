@@ -29,7 +29,7 @@ class AuthController extends Controller
 
         if (Auth::guard('courier')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
 
-            return redirect()->intended('/driver');
+            return redirect()->route('courier.dashboard');
         }
 
         return back()->withInput($request->only('email', 'remember'))->withErrors([
@@ -57,11 +57,11 @@ class AuthController extends Controller
         ]);
 
         Auth::guard('courier')->login($driver);
-        return redirect()->intended('/driver');
+        return redirect()->route('courier.dashboard');
     }
     public function logout(Request $request)
     {
         Auth::guard('courier')->logout();
-        return redirect('driver/login');
+        return redirect('courier/login');
     }
 }
