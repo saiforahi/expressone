@@ -1,23 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\User;
-use App\Area;
-use App\Http\Controllers\Controller;
+namespace App\Http\Controllers\Merchant;
+
+use App\Model\Area;
 use App\Shipment;
 use App\ShippingPrice;
-use App\ShipmentPayment;
+use App\ShippingCharge;
 use Illuminate\Http\Request;
-use Auth;
-use PDF;
-use DataTables;
+use Yajra\DataTables\DataTables;
+use App\ShipmentPayment;
+use Barryvdh\DomPDF\Facade as PDF;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ShipmentController extends Controller
 {
     public function index()
     {
-        $area = Area::where('status', 1)->get();
-        return view('dashboard.shipment', compact('area'));
+        $data['area'] = Area::where('status', 1)->get();
+        $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
+        //dd($data['shippingCharges']);
+        return view('dashboard.shipment', $data);
     }
 
     public function rateCheck(Request $request)
@@ -63,34 +68,29 @@ class ShipmentController extends Controller
 
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
     }
-    public function PrepareShipmentSubmit(Request $request)
+    public function shipmentSave(Request $request)
     {
         $messages = [
             "name.required" => "Please enter customer name.",
             "phone.required" => "Please enter customer phone number.",
             "address.required" => "Please enter customer address.",
-            //"weight.required" => "Parcel weight required",
-            "parcel_value.max" => "The value of parcel must be 7 character",
+            "cod_amount.required" => "Please enter cod_amount",
             "area.required" => "Please select customer area",
+            "shipping_charge_id.required" => "Please select shipping charge",
         ];
-
         $request->validate([
             'name' => 'required|max:100',
             'phone' => 'required|max:20',
             'address' => 'required|max:255',
+            "cod_amount" => 'required',
             'area' => 'required',
-            //'zip_code' => 'max:10',
-            'parcel_value' => 'max:7',
-            'invoice_id' => 'max:20',
-            'merchant_note' => 'max:255',
-            //'weight' => 'required|max:5',
-            'delivery_type' => 'required',
+            'shipping_charge_id' => 'required'
         ], $messages);
 
         $price = 0;
         $total_price = 0;
         $cod_type = 0;
-        $cod_amount = 0;
+        $cod_amount = $request->cod_amount;
         $zone = Area::find($request->area);
         $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
         // if (!$shipping) {
@@ -120,31 +120,26 @@ class ShipmentController extends Controller
         // $total_price = $price + $cod_amount + (int)$request->parcel_value;
 
         $insert = new Shipment();
-        $insert->user_id = Auth::guard('user')->user()->id;
-        $insert->zone_id = $zone->zone_id;
-        $insert->area_id = $request->area;
         $insert->name = $request->name;
         $insert->phone = $request->phone;
         $insert->address = $request->address;
-        $insert->zip_code = $request->zip_code;
+        $insert->cod_amount = $request->cod_amount;
+        $insert->area_id = $request->area;
+        $insert->shipping_charge_id = $request->shipping_charge_id;
         $insert->parcel_value = $request->parcel_value;
-        $insert->invoice_id = $request->invoice_id;
+        $insert->weight_charge = $request->weight_charge;
+        $insert->invoice_id = rand(1111, 9999);
+        $insert->tracking_code = rand(1100, 9999);
         $insert->merchant_note = $request->merchant_note;
         $insert->weight = $request->weight;
         $insert->delivery_type = $request->delivery_type;
-        $insert->delivery_type = $request->delivery_type;
-        $new_id = Shipment::all()->first();
-        $insert->tracking_code = rand();
-        $insert->cod = $cod_type;
-        $insert->cod_amount = $cod_amount;
-        $insert->price = $price;
-        $insert->total_price = $total_price;
+        $insert->user_id = Auth::guard('user')->user()->id;
+        $insert->zone_id = $zone->zone_id;
+        $insert->price = $cod_amount;
         $insert->save();
-
         $output = array(
             'done' => 'done',
         );
-
         // return json_encode($output);
         return back()->with('message', 'Shipment has been saved successfully!');
     }
@@ -187,7 +182,7 @@ class ShipmentController extends Controller
         $zone = Area::find($shipment->area_id);
         $price = $shipment->delivery_charge;
         $total_price = $shipment->cod_amount;
-        return view('dashboard.shipmentCNote', compact('shipment','zone','price','total_price'));
+        return view('dashboard.shipmentCNote', compact('shipment', 'zone', 'price', 'total_price'));
     }
     function shipment_pdf_old(Shipment $shipment)
     {
@@ -216,12 +211,20 @@ class ShipmentController extends Controller
         $data = [
             'shipment' => $shipment,
             'price' => $price,
-            'total_price'=>$total_price
-          ];
+            'total_price' => $total_price
+        ];
         //$pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping', 'qrcode'));
-        $mpdf = PDF::loadView('dashboard.shipment-pdf', $data)->save('Invoice-' . $shipment->invoice_id . '.pdf');
+        $mpdf = PDF::loadView('dashboard.shipment-pdf', $data);
         // $mpdf->Output('Invoice-' . $shipment->invoice_id . '.pdf', 'D');
-        // return $pdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
+        return $mpdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
+    }
+    function shipmentInvoice($id)
+    {
+        $data['title'] = "Invoice";
+        $data['shipment'] = Shipment::findOrFail($id);
+        set_time_limit(300);
+        $pdf = PDF::loadView('dashboard.shipment_pdf', $data);
+        return $pdf->stream();
     }
 
     function payments()
@@ -294,18 +297,19 @@ class ShipmentController extends Controller
     function edit(Shipment $shipment)
     {
         $title = "Update Shipment";
-        $area = Area::where('status', 1)->select('name','id')->get();
-        return view('dashboard.edit-shipment', compact('shipment', 'title', 'area'));
+        $area = Area::where('status', 1)->select('name', 'id')->get();
+        $shippingCharges = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
+        return view('dashboard.edit-shipment', compact('shipment', 'title', 'area', 'shippingCharges'));
     }
     function update(Shipment $shipment, Request $request)
     {
         if ($request->isMethod('post')) {
             $dataSet = $request->all();
+
             $rules = [
                 "name.required" => "Please enter customer name.",
                 "phone.required" => "Please enter customer phone number.",
                 "address.required" => "Please enter customer address.",
-                "parcel_value.required" => "Please enter parcel value",
                 "cod_amount.required" => "Please enter cod_amount",
                 "area_id.required" => "Please select area"
             ];
@@ -314,7 +318,7 @@ class ShipmentController extends Controller
                 'name.required' => 'Name is required',
                 'phone.email' => 'Phone is required',
                 'address.required' => 'Address is required',
-                'parcel_value.required' => 'Parcel value is required',
+
                 'cod_amount.required' => 'Parcel enter COD amount',
                 'area_id.required' => 'Please select area'
             ];
@@ -324,7 +328,6 @@ class ShipmentController extends Controller
             $shipment->phone = $dataSet['phone'];
             $shipment->address = $dataSet['address'];
             $shipment->cod_amount = $dataSet['cod_amount'];
-            $shipment->parcel_value = $dataSet['parcel_value'];
             $shipment->invoice_id = $dataSet['invoice_id'];
             $shipment->area_id = $dataSet['area_id'];
             $shipment->merchant_note = $dataSet['merchant_note'];
