@@ -1,16 +1,16 @@
 @extends('admin.layout.app')
-@section('title', 'Shipping Area')
+@section('title', 'Delivery Locations')
 @section('content')
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Area Manage</h3>
+                    <h3>Manage Delivery Locations</h3>
                 </div>
                 <div class="title_right">
                     <div class="form-group pull-right top_search">
                         <button type="button" class="btn btn-info btn-sm add-hub">
-                            <i class="fa fa-plus fs-13 m-r-3"></i> Add New Area
+                            <i class="fa fa-plus fs-13 m-r-3"></i> Add New Location
                         </button>
                     </div>
                 </div>
@@ -39,9 +39,9 @@
                                 <table class="table table-striped table-bordered">
                                     <thead>
                                         <tr class="bg-dark">
-                                            <th>Area Name</th>
-                                            <th>Hub</th>
-                                            <th>Shipping Distribution Zone</th>
+                                            <th>Location Name</th>
+                                            <th>Delivery Point</th>
+                                            <th>Delivery Unit</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -70,11 +70,12 @@
                             <form id="upload_form" autocomplete="off" method="post"
                                 class="form-horizontal form-label-left input_mask">
                                 {{ csrf_field() }}
-                                <input type="hidden" value="" name="id" id="area_id">
+                                <input type="hidden" value="" name="id" id="location_id">
                                 <div class="form-group has-feedback">
                                     <label for="unit_id">Delivery Unit:</label>
                                     <select class="col-md-7 col-xs-12 select2_single" name="unit_id" id="unit_id">
-                                        <option></option>
+                                        <option>Select Unit</option>
+                                        <?php $units = \App\Models\Unit::all();?>
                                         @foreach ($units as $unit)
                                             <option value="{{ $unit->id }}">{{ $unit->name }}</option>
                                         @endforeach
@@ -83,12 +84,12 @@
                                 <div class="form-group has-feedback">
                                     <label for="point_id">Point:</label>
                                     <select class="col-md-7 col-xs-12 select2_single" name="point_id" id="point_id" required>
-                                        <option></option>
+                                        
                                     </select>
                                 </div>
                                 <div class="form-group has-feedback">
                                     <label for="code">Location:</label>
-                                    <input type="text" class="form-control" placeholder="Location" name="location" id="location"
+                                    <input type="text" class="form-control" placeholder="Location" name="name" id="name"
                                         value="">
                                 </div>
                                 <hr>
@@ -148,7 +149,7 @@
             if ($(this).hasClass("btn-success")) {
                 action = 'inactive';
                 $.ajax({
-                    url: '{{ route('area.update') }}',
+                    url: '{{ route('location.update') }}',
                     type: 'post',
                     data: {
                         _token: CSRF_TOKEN,
@@ -163,7 +164,7 @@
             } else {
                 action = 'active';
                 $.ajax({
-                    url: '{{ route('area.update') }}',
+                    url: '{{ route('location.update') }}',
                     type: 'post',
                     data: {
                         _token: CSRF_TOKEN,
@@ -180,10 +181,10 @@
         });
 
         $(document).ready(function() {
-            $('#zone_id').on('change', function() {
+            $('#unit_id').on('change', function() {
                 let id = $(this).val();
                 $.ajax({
-                    url: "{{ route('SelectHub') }}",
+                    url: "{{ route('select.point') }}",
                     type: 'post',
                     data: {
                         _token: CSRF_TOKEN,
@@ -191,12 +192,12 @@
                     },
                     dataType: 'json',
                     success: function(data) {
-                        $('#hub_id').html('').append($('<option>', {
+                        $('#point_id').html('').append($('<option>', {
                             value: '',
-                            text: 'Select Hub'
+                            text: 'Select Point'
                         }));
                         data.forEach(function(element) {
-                            $('#hub_id').append($('<option>', {
+                            $('#point_id').append($('<option>', {
                                 value: element.id,
                                 text: element.name
                             }));
@@ -215,16 +216,16 @@
                 },
 
                 serverSide: true,
-                ajax: "{{ route('AdminAreaGet') }}",
+                ajax: "{{ route('AdminLocationGet') }}",
                 order: [
                     [0, 'desc']
                 ],
                 columns: [{
                         data: 'name'
                     }, {
-                        data: 'hub'
+                        data: 'point'
                     }, {
-                        data: 'zone'
+                        data: 'unit'
                     },
                     {
                         data: 'status',
@@ -242,20 +243,20 @@
 
 
             $(document).on('click', '.add-hub', function() {
-                $('#hub_id').val('').trigger('change');
-                $('#zone_id').val('').trigger('change');
+                $('#point_id').val('').trigger('change');
+                $('#unit_id').val('').trigger('change');
                 $('#myModal').modal('show');
                 $('#upload_form').trigger("reset");
-                $('.modal-header').html('New Area Entry');
+                $('.modal-header').html('New Location Entry');
             });
 
             $('#upload_form').on('submit', function() {
                 event.preventDefault();
                 let form = new FormData(this);
-                let id = $('#hub_id').val();
+                let id = $('#location_id').val();
                 if (id === '') {
                     swal({
-                        title: "Are you sure want to add area?",
+                        title: "Are you sure want to add Location?",
                         text: "If all information is correct, press ok.",
                         type: "info",
                         showCancelButton: true,
@@ -264,7 +265,7 @@
                     }, function() {
                         setTimeout(function() {
                             $.ajax({
-                                url: "{{ route('area.store') }}",
+                                url: "{{ route('location.store') }}",
                                 method: "POST",
                                 cache: false,
                                 contentType: false,
@@ -303,13 +304,12 @@
                                 },
                                 success: function(data) {
                                     if (data == 1) {
-                                        swal("Area add successfully");
+                                        swal("Location added successfully");
                                         $("#upload_form").trigger("reset");
                                         $('#myModal').modal('hide');
                                         table.ajax.reload();
                                     } else {
-                                        swal(
-                                            "Something wrong, please try again later!");
+                                        swal("Something wrong, please try again later!");
                                         $("#upload_form").trigger("reset");
                                         $('#myModal').modal('hide');
                                     }
@@ -319,7 +319,7 @@
                     });
                 } else {
                     swal({
-                        title: "Are you sure want to update area?",
+                        title: "Are you sure want to update Location?",
                         text: "If all information is correct, press ok.",
                         type: "info",
                         showCancelButton: true,
@@ -328,7 +328,7 @@
                     }, function() {
                         setTimeout(function() {
                             $.ajax({
-                                url: "{{ route('area.store') }}",
+                                url: "{{ route('location.store') }}",
                                 method: "POST",
                                 cache: false,
                                 contentType: false,
@@ -367,7 +367,7 @@
                                 },
                                 success: function(data) {
                                     if (data == 1) {
-                                        swal("Area update successfully");
+                                        swal("Location update successfully");
                                         $("#upload_form").trigger("reset");
                                         $('#myModal').modal('hide');
                                         table.ajax.reload();
@@ -387,20 +387,20 @@
 
             $(document).on('click', '.edit', function() {
                 $('#myModal').modal('show');
-                $('.modal-header').html('Area Information Update');
+                $('.modal-header').html('Location Information Update');
                 $("#upload_form").trigger("reset");
                 let id = $(this).attr('id');
                 $.ajax({
-                    url: "{{ route('area.single') }}",
+                    url: "{{ route('location.single') }}",
                     type: 'get',
                     data: {
                         id: id
                     },
                     dataType: 'json',
                     success: function(data) {
-                        $('#area_id').val(data.id);
-                        $('#hub_id').val(data.hub_id).trigger('change');
-                        $('#zone_id').val(data.zone_id).trigger('change');
+                        $('#location_id').val(data.id);
+                        $('#unit_id').val(data.point.unit_id).trigger('change');
+                        $('#point_id').val(data.point.id);
                         $('#name').val(data.name);
                     }
                 });
@@ -409,16 +409,16 @@
             $(document).on('click', '.delete', function() {
                 let id = $(this).attr('id');
                 // alert(id) ; return false;
-                if (confirm('Are you sure to delete the area??')) {
+                if (confirm('Are you sure to delete the location??')) {
                     $.ajax({
-                        url: "/admin/area-delete/" + id,
+                        url: "/admin/location-delete/" + id,
                         type: 'get',
                         dataType: 'json',
                         success: function(data) {
                             if (data) {
                                 swal({
                                     title: "Deleted",
-                                    text: 'Area has been deleted',
+                                    text: 'Location has been deleted',
                                     type: 'success',
                                     confirmButtonText: 'Ok'
                                 });
@@ -426,7 +426,7 @@
                             } else {
                                 swal({
                                     title: "Something went wroing",
-                                    text: 'Area unable to delete',
+                                    text: 'Location unable to delete',
                                     type: 'error',
                                     confirmButtonText: 'Ok'
                                 });

@@ -69,7 +69,7 @@
                             <form id="upload_form" autocomplete="off" method="post"
                                   class="form-horizontal form-label-left input_mask">
                                 {{csrf_field()}}
-                                <input type="hidden" value="" name="id" id="zone_id">
+                                <input type="hidden" value="" name="id" id="unit_id">
                                 <div class="form-group has-feedback">
                                     <label for="code">Unit Name:</label>
                                     <input type="text" class="form-control" placeholder="Delivery Unit name"
@@ -136,7 +136,7 @@
             if ($(this).hasClass("btn-success")) {
                 action = 'inactive';
                 $.ajax({
-                    url: '{{route('zone.update')}}',
+                    url: '{{route('unit.update')}}',
                     type: 'post',
                     data: {_token: CSRF_TOKEN, id: id, action: action},
                     success: function (response) {
@@ -147,7 +147,7 @@
             } else {
                 action = 'active';
                 $.ajax({
-                    url: '{{route('zone.update')}}',
+                    url: '{{route('unit.update')}}',
                     type: 'post',
                     data: {_token: CSRF_TOKEN, id: id, action: action},
                     success: function (response) {
@@ -181,7 +181,7 @@
             });
 
             $(document).on('click', '.add-zone', function () {
-                $('#zone_id').val('');
+                $('#unit_id').val('');
                 $('#myModal').modal('show');
                 $('#upload_form').trigger("reset");
                 $('.modal-header').html('New Unit Entry');
@@ -190,10 +190,10 @@
             $('#upload_form').on('submit', function () {
                 event.preventDefault();
                 let form = new FormData(this);
-                let id = $('#zone_id').val();
+                let id = $('#unit_id').val();
                 if (id === '') {
                     swal({
-                        title: "Are you sure want to add zone?",
+                        title: "Confirm to add new unit?",
                         text: "If all information is correct, press ok.",
                         type: "info",
                         showCancelButton: true,
@@ -202,7 +202,7 @@
                     }, function () {
                         setTimeout(function () {
                             $.ajax({
-                                url: "{{ route('zone.store') }}",
+                                url: "{{ route('unit.store') }}",
                                 method: "POST",
                                 cache: false,
                                 contentType: false,
@@ -233,7 +233,7 @@
                                 },
                                 success: function (data) {
                                     if (data == 1) {
-                                        swal("Zone add successfully");
+                                        swal("Unit added successfully");
                                         $("#upload_form").trigger("reset");
                                         $('#myModal').modal('hide');
                                         table.ajax.reload();
@@ -248,7 +248,7 @@
                     });
                 } else {
                     swal({
-                        title: "Are you sure want to update zone?",
+                        title: "Confirmation",
                         text: "If all information is correct, press ok.",
                         type: "info",
                         showCancelButton: true,
@@ -257,7 +257,7 @@
                     }, function () {
                         setTimeout(function () {
                             $.ajax({
-                                url: "{{ route('zone.store') }}",
+                                url: "{{ route('unit.store') }}",
                                 method: "POST",cache: false,
                                 contentType: false, processData: false,
                                 data: form, dataType: 'json',
@@ -280,7 +280,7 @@
                                 },
                                 success: function (data) {
                                     if (data == 1) {
-                                        swal("Zone update successfully");
+                                        swal("Unit updated successfully");
                                         $("#upload_form").trigger("reset");
                                         $('#myModal').modal('hide');
                                         table.ajax.reload();
@@ -302,10 +302,10 @@
                 $("#upload_form").trigger("reset");
                 let id = $(this).attr('id');
                 $.ajax({
-                    url: "{{ route('zone.single') }}",
+                    url: "{{ route('unit.single') }}",
                     type: 'get',data: {id: id}, dataType: 'json',
                     success: function (data) {
-                        $('#zone_id').val(data.id);
+                        $('#unit_id').val(data.id);
                         $('#name').val(data.name);
                     }
                 });
@@ -315,13 +315,13 @@
                 let id = $(this).attr('id');
                 if(confirm('Are  you sure to delete the record?')){
                     $.ajax({
-                        url: "{{ route('zone.delete') }}",
+                        url: "{{ route('unit.delete') }}",
                         type: 'post', data: {_token: CSRF_TOKEN,id: id},
                         dataType: 'json',
                         success: function (data) {
                             if (data == '1') {
                                 swal({
-                                    title: "Deleted", text: 'Zone was deleted',
+                                    title: "Deleted", text: 'Unit was deleted',
                                     type: 'success', confirmButtonText: 'Ok'
                                 });
                                 table.ajax.reload();

@@ -10,38 +10,38 @@ use App\Models\Point;
 use App\Models\Unit;
 use App\Zone;
 use Illuminate\Http\Request;
-use Session;
-// use DataTables;
+use Spatie\Permission\Models\Role;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Yajra\DataTables\Facades\DataTables as FacadesDataTables;
 
 class AreaController extends Controller
 {
     public function index()
     {
-        $zone = Unit::all();
-        return view('admin.area.unit', compact('unit'));
+        $point = Point::all();
+        return view('admin.area.point', compact('point'));
     }
 
-    public function hubGet()
+    public function get_points()
     {
-        return FacadesDataTables::of(Point::orderBy('id', 'DESC')->get())->addColumn('action', function ($country) {
+        return FacadesDataTables::of(Point::orderBy('id', 'DESC')->get())->addColumn('action', function ($point) {
             return '
             <div class="btn-group  btn-group-sm">
-                <button class="btn btn-success edit" id="' . $country->id . '" type="button"><i class="mdi mdi-table-edit m-r-3"></i>Edit</button>
-                <button class="btn btn-danger delete" id="' . $country->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>
+                <button class="btn btn-success edit" id="' . $point->id . '" type="button"><i class="mdi mdi-table-edit m-r-3"></i>Edit</button>
+                <button class="btn btn-danger delete" id="' . $point->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>
               </div>';
-        })->addColumn('status', function ($country) {
-            if ($country->status == 1) {
-                return "<button type = 'button' id = '$country->id' class='btn btn-success btn-xs Change'> Active</button>";
+        })->addColumn('status', function ($point) {
+            if ($point->status == 1) {
+                return "<button type = 'button' id = '$point->id' class='btn btn-success btn-xs Change'> Active</button>";
             } else {
-                return "<button type = 'button' id = '$country->id' class='btn btn-info btn-xs Change'> Inactive</button>";
+                return "<button type = 'button' id = '$point->id' class='btn btn-info btn-xs Change'> Inactive</button>";
             }
-        })->addColumn('zone', function ($country) {
-            return Unit::where('id', $country->zone_id)->pluck('name')->first();
+        })->addColumn('unit', function ($point) {
+            return Unit::where('id', $point->unit_id)->pluck('name')->first();
         })->rawColumns(['status', 'action'])->make(true);
     }
 
-    public function hubUpdate(Request $request)
+    public function update_point(Request $request)
     {
         if ($request->action == 'inactive') {
             $insert = Point::find($request->id);
@@ -54,11 +54,11 @@ class AreaController extends Controller
         }
     }
 
-    public function hubStore(Request $request)
+    public function point_create(Request $request)
     {
         $this->validate($request, [
-            'zone_id' => 'Required',
-            'name' => 'Required|max:255|unique:hubs,name,' . $request->id,
+            'unit_id' => 'Required',
+            'name' => 'Required|max:255|unique:points,name,' . $request->id,
         ]);
 
         if ($request->id == '') {
@@ -66,29 +66,29 @@ class AreaController extends Controller
         } else {
             $insert = Point::find($request->id);
         }
-        $insert->zone_id = $request->zone_id;
+        $insert->unit_id = $request->unit_id;
         $insert->name = $request->name;
         $insert->save();
 
         return 1;
     }
 
-    public function hubGetSingle(Request $request)
+    public function point_details(Request $request)
     {
         return Point::findOrFail($request->id);
     }
 
-    public function SelectHub(Request $request)
+    public function select_point(Request $request)
     {
-        $earth = Point::where('zone_id', $request->id)->where('status', 1)->get();
-        return json_encode($earth);
+        $points = Point::where('unit_id', $request->id)->where('status', 1)->get();
+        return json_encode($points);
     }
 
     public function delete_point(Point $point)
     {
-        if (auth()->guard('admin')->user()->type == 'admin') return 0;
-        $area = Location::where('hub_id', $point->id)->count();
-        if ($area > 0) return 0;
+        if (!auth()->guard('admin')->user()->hasRole(Role::where('name','super-admin')->first()->id)) return 0;
+        $locations = Location::where('point_id', $point->id)->count();
+        if ($locations > 0) return 0;
         $point->delete();
         return 1;
     }
@@ -99,7 +99,7 @@ class AreaController extends Controller
         return view('admin.area.unit');
     }
 
-    public function unitGet()
+    public function get_units()
     {
         return FacadesDataTables::of(Unit::orderBy('created_at'))->addColumn('action', function ($unit) {
             return '<div class="btn-group  btn-group-sm">
@@ -115,10 +115,10 @@ class AreaController extends Controller
         })->rawColumns(['status', 'action'])->make(true);
     }
 
-    public function unitStore(Request $request)
+    public function unit_store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'Required|max:255|unique:zones,name,' . $request->id,
+            'name' => 'Required|max:255|unique:units,name',
         ]);
 
         if ($request->id == '') {
@@ -132,7 +132,7 @@ class AreaController extends Controller
         return 1;
     }
 
-    public function unitUpdate(Request $request)
+    public function unit_update(Request $request)
     {
         if ($request->action == 'inactive') {
             $insert = Unit::find($request->id);
@@ -145,7 +145,7 @@ class AreaController extends Controller
         }
     }
 
-    public function zoneDelete(Request $request)
+    public function unit_delete(Request $request)
     {
         $hub = Point::where('unit_id', $request->id)->count();
         if ($hub > 0) {
@@ -157,65 +157,64 @@ class AreaController extends Controller
         }
     }
 
-    public function zoneGetSingle(Request $request)
+    public function unit_detail(Request $request)
     {
         return Unit::findOrFail($request->id);
     }
 
     public function location()
     {
-        $units = Unit::latest()->get();
-        return view('admin.area.area', compact('units'));
+        $locations = Location::latest()->get();
+        return view('admin.area.location', compact('locations'));
     }
 
-    function areaGetSingle(Request $request)
+    function location_detail(Request $request)
     {
-        return Area::findOrFail($request->id);
+        return Location::with('point')->findOrFail($request->id);
     }
-    public function areaStore(Request $request)
+    public function location_store(Request $request)
     {
         // dd($request)
         $this->validate($request, [
-            'zone_id' => 'required', 'hub_id' => 'required',
-            'name' => 'required|max:255|unique:areas,name,' . $request->id,
+            'point_id' => 'required|exists:points,id', 
+            'name' => 'required|max:255|unique:locations,name',
         ]);
 
         if ($request->id == '') {
-            $insert = new Area();
+            $insert = new Location();
         } else {
-            $insert = Area::find($request->id);
+            $insert = Location::find($request->id);
         }
-        $insert->zone_id = $request->zone_id;
-        $insert->hub_id = $request->hub_id;
+        $insert->point_id = $request->point_id;
         $insert->name = $request->name;
         $insert->save();
 
         return 1;
     }
 
-    public function areaGet()
+    public function get_locations()
     {
-        return Data::of(Location::orderBy('id', 'DESC'))->addColumn('action', function ($country) {
+        return FacadesDataTables::of(Location::orderBy('id', 'DESC'))->addColumn('action', function ($country) {
             return '
             <div class="btn-group  btn-group-sm text-right">
                 <button class="btn btn-info btn-xs edit" id="' . $country->id . '"><i class="fa fa-edit"></i> Edit</button>
                 <button class="btn btn-danger btn-xs delete" id="' . $country->id . '"><i class="fa fa-trash"></i> Delete</button>
             </div>
             ';
-        })->addColumn('status', function ($country) {
-            if ($country->status == 1) {
-                return "<button type = 'button' id = '$country->id' class='btn btn-success btn-xs Change'> Active</button>";
+        })->addColumn('status', function ($location) {
+            if ($location->status == 1) {
+                return "<button type = 'button' id = '$location->id' class='btn btn-success btn-xs Change'> Active</button>";
             } else {
-                return "<button type = 'button' id = '$country->id' class='btn btn-info btn-xs Change'> Inactive</button>";
+                return "<button type = 'button' id = '$location->id' class='btn btn-info btn-xs Change'> Inactive</button>";
             }
-        })->addColumn('zone', function ($country) {
-            return Zone::where('id', Hub::where('id', $country->hub_id)->pluck('zone_id')->first())->pluck('name')->first();
-        })->addColumn('hub', function ($country) {
-            return Hub::where('id', $country->hub_id)->pluck('name')->first();
+        })->addColumn('unit', function ($location) {
+            return Unit::where('id', Point::where('id', $location->point_id)->pluck('unit_id')->first())->pluck('name')->first();
+        })->addColumn('point', function ($location) {
+            return Point::where('id', $location->point_id)->pluck('name')->first();
         })->rawColumns(['status', 'action'])->make(true);
     }
 
-    public function locationUpdate(Request $request)
+    public function location_update(Request $request)
     {
         if ($request->action == 'inactive') {
             $insert = Location::find($request->id);
@@ -228,7 +227,7 @@ class AreaController extends Controller
         }
     }
 
-    public function locationDelete(Location $location)
+    public function location_delete(Location $location)
     {
         $location->delete();
         return true;

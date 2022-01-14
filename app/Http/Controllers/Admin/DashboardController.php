@@ -8,7 +8,6 @@ use App\Models\Admin_Unit;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\Session\Session;
 
 class DashboardController extends Controller
 {
@@ -21,7 +20,7 @@ class DashboardController extends Controller
         //             ->count();
         $unit = Unit::where('admin_id',Auth::guard('admin')->user()->id)->first();
         if($unit!=null){
-            Session::put('admin_unit',$unit);
+            session(['admin_unit'=>$unit]);
         }
         return view('admin.dashboard')->with('salesToday','');
     }

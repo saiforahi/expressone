@@ -8,7 +8,7 @@ use App\Models\Unit;
 
 class Location extends Model
 {
-    protected $fillable = ['name','point_id','unit_id','status'];
+    protected $fillable = ['name','point_id','status'];
     protected $table="locations";
     // relation 
     function shipments(){

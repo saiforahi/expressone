@@ -17,13 +17,10 @@ class CreateLocationsTable extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('point_id');
-            $table->unsignedBigInteger('unit_id');
-       
             $table->boolean('status')->default(1);
+            $table->timestamps();
 
             $table->foreign('point_id')->references('id')->on('points');
-            $table->foreign('unit_id')->references('id')->on('units');
-            $table->timestamps();
         });
 
         // \App\Area::create([ 'name' =>'Mirpur','zone_id'=>1,'hub_id'=>'1']);

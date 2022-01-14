@@ -5,12 +5,12 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Hub Manage</h3>
+                    <h3>Manage Delivery Points</h3>
                 </div>
                 <div class="title_right">
                     <div class="col-md-4 col-sm-4 form-group pull-right top_search">
                         <button type="button" class="btn btn-info btn-sm add-hub">
-                            <i class="fa fa-plus fs-13 m-r-3"></i> Add New Hub
+                            <i class="fa fa-plus fs-13 m-r-3"></i> Add New Point
                         </button>
                     </div>
                 </div>
@@ -39,8 +39,8 @@
                                 <table class="table table-striped table-bordered">
                                     <thead>
                                     <tr class="bg-dark">
-                                        <th>Hub Name</th>
-                                        <th>Shipping Distribution Zone</th>
+                                        <th>Point Name</th>
+                                        <th>Shipping Distribution Unit</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -68,19 +68,20 @@
                             <form id="upload_form" autocomplete="off" method="post"
                                   class="form-horizontal form-label-left input_mask">
                                 {{csrf_field()}}
-                                <input type="hidden" value="" name="id" id="hub_id">
+                                <input type="hidden" value="" name="id" id="point_id">
                                 <div class="form-group has-feedback">
-                                    <label for="zone_id">Shipping distribution zone:</label>
-                                    <select class="col-md-7 col-xs-12 select2_single" name="zone_id" id="zone_id">
+                                    <label for="unit_id">Shipping distribution Unit:</label>
+                                    <select class="col-md-7 col-xs-12 select2_single" name="unit_id" id="unit_id">
                                         <option></option>
-                                        @foreach($zone as $zones)
-                                            <option value="{{$zones->id}}">{{$zones->name}}</option>
+                                        <?php $units = \App\Models\Unit::all();?>
+                                        @foreach($units as $unit)
+                                            <option value="{{$unit->id}}">{{$unit->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group has-feedback">
-                                    <label for="code">Hub Name:</label>
-                                    <input type="text" class="form-control" placeholder="Hub name"
+                                    <label for="code">Point Name:</label>
+                                    <input type="text" class="form-control" placeholder="Point name"
                                            name="name" id="name"
                                            value="">
                                 </div>
@@ -139,7 +140,7 @@
             if ($(this).hasClass("btn-success")) {
                 action = 'inactive';
                 $.ajax({
-                    url: '{{route('hub.update')}}',
+                    url: '{{route('point.update')}}',
                     type: 'post',
                     data: {_token: CSRF_TOKEN, id: id, action: action},
                     success: function (response) {
@@ -150,7 +151,7 @@
             } else {
                 action = 'active';
                 $.ajax({
-                    url: '{{route('hub.update')}}',
+                    url: '{{route('point.update')}}',
                     type: 'post',
                     data: {_token: CSRF_TOKEN, id: id, action: action},
                     success: function (response) {
@@ -169,29 +170,29 @@
                     processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>'
                 },
                 serverSide: true,
-                ajax: "{{route('AdminHubGet')}}",
+                ajax: "{{route('AdminPointGet')}}",
                 order: [ [0, 'desc'] ],
                 columns: [
                     {data: 'name'},
-                    {data: 'zone'},
+                    {data: 'unit'},
                     {data: 'status', orderable: false, searchable: false},
                     {data: 'action', orderable: false, searchable: false, class:'text-right'}
                 ]
             });
            $(document).on('click', '.add-hub', function () {
-                $('#hub_id').val('');
-                $('#zone_id').val('').trigger('change');
+                $('#point_id').val('');
+                $('#unit_id').val('').trigger('change');
                 $('#myModal').modal('show');
                 $('#upload_form').trigger("reset");
-                $('.modal-header').html('New Hub Entry');
+                $('.modal-header').html('New Point Entry');
             });
             $('#upload_form').on('submit', function () {
                 event.preventDefault();
                 let form = new FormData(this);
-                let id = $('#hub_id').val();
+                let id = $('#point_id').val();
                 if (id === '') {
                     swal({
-                        title: "Are you sure want to add hub?",
+                        title: "Proceed to add a new point?",
                         text: "If all information is correct, press ok.",
                         type: "info", showCancelButton: true,
                         closeOnConfirm: false, showLoaderOnConfirm: true
@@ -221,7 +222,7 @@
                                 },
                                 success: function (data) {
                                     if (data == 1) {
-                                        swal("Hub add successfully");
+                                        swal("Point added successfully");
                                         $("#upload_form").trigger("reset");
                                         $('#myModal').modal('hide');
                                         table.ajax.reload();
@@ -236,7 +237,7 @@
                     });
                 } else {
                     swal({
-                        title: "Are you sure want to update hub?",
+                        title: "Are you sure want to update point?",
                         text: "If all information is correct, press ok.",
                         type: "info", showCancelButton: true,
                         closeOnConfirm: false, showLoaderOnConfirm: true
@@ -270,7 +271,7 @@
                                 },
                                 success: function (data) {
                                     if (data == 1) {
-                                        swal("Hub update successfully");
+                                        swal("Point updated successfully");
                                         $("#upload_form").trigger("reset");
                                         $('#myModal').modal('hide');
                                         table.ajax.reload();
@@ -287,15 +288,15 @@
             });
             $(document).on('click', '.edit', function () {
                 $('#myModal').modal('show');
-                $('.modal-header').html('Hub Information Update');
+                $('.modal-header').html('Point Information Update');
                 $("#upload_form").trigger("reset");
                 let id = $(this).attr('id');
                 $.ajax({
-                    url: "{{ route('hub.single') }}",
+                    url: "{{ route('point.single') }}",
                     type: 'get',data: {id: id}, dataType: 'json',
                     success: function (data) {
-                        $('#hub_id').val(data.id);
-                        $('#zone_id').val(data.zone_id).trigger('change');
+                        $('#point_id').val(data.id);
+                        $('#unit_id').val(data.unit_id).trigger('change');
                         $('#name').val(data.name);
                     }
                 });
@@ -303,26 +304,31 @@
             $(document).on('click', '.delete', function () {
                 let id = $(this).attr('id');
                 // alert(id) ; return false;
-                if(confirm('Are you sure to delete??')){
+                swal({
+                    title: "Confirmation",
+                    text: "Proceed to delete this point?",
+                    type: "warning", showCancelButton: true,
+                    closeOnConfirm: false, showLoaderOnConfirm: true
+                },function(){
                     $.ajax({
-                        url: "/admin/delete-hub/"+id,
+                        url: "/admin/delete-point/"+id,
                         type: 'get',dataType: 'json',
                         success: function (data) {
                             if(data){
                                 swal({
-                                    title: "Deleted", text: 'Hub was deleted',
+                                    title: "Deleted", text: 'Point has been deleted',
                                     type: 'success', confirmButtonText: 'Ok'
                                 });
                                 table.ajax.reload();
                             }else{
                                 swal({
-                                    title: "Something went wroing", text: 'Hub unable to deleted',
+                                    title: "Something went wroing", text: 'This point can not be deleted',
                                     type: 'error', confirmButtonText: 'Ok'
                                 });
                             }
                         }
                     });
-                }
+                })
             });
         });
     </script>

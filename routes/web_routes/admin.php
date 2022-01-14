@@ -24,27 +24,26 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/admin-change-hub/{hub}', [AdminDashboardController::class,'admin_changes_hub'])->name('admin-change-hub');
     Route::get('/get-admin-hub-ids/{admin}', 'DashboardController@get_admin_hub_ids')->name('get-admin-hub-ids');
     Route::get('/unit', [App\Http\Controllers\Admin\AreaController::class,'unit'])->name('unit');
-    Route::post('/zone', [App\Http\Controllers\Admin\AreaController::class,'unitStore'])->name('zone.store');
-    Route::get('/get-units', [App\Http\Controllers\Admin\AreaController::class,'unitGet'])->name('AdminUnitsGet');
-    Route::post('/zone-update', 'AreaController@zoneUpdate')->name('zone.update');
-    Route::post('/zone-delete', 'AreaController@zoneDelete')->name('zone.delete');
-    Route::get('/get-zone-single', 'AreaController@zoneGetSingle')->name('zone.single');
+    Route::post('/unit', [App\Http\Controllers\Admin\AreaController::class,'unit_store'])->name('unit.store');
+    Route::get('/get-units', [App\Http\Controllers\Admin\AreaController::class,'get_units'])->name('AdminUnitsGet');
+    Route::post('/unit-update', [App\Http\Controllers\Admin\AreaController::class,'unit_update'])->name('unit.update');
+    Route::post('/unit-delete', [App\Http\Controllers\Admin\AreaController::class,'unit_delete'])->name('unit.delete');
+    Route::get('/get-unit-single', [App\Http\Controllers\Admin\AreaController::class,'unit_detail'])->name('unit.single');
 
     Route::get('/point', [App\Http\Controllers\Admin\AreaController::class,'index'])->name('point');
-    Route::post('/point', 'AreaController@hubStore')->name('point.store');
-    Route::get('/get-hub', 'AreaController@hubGet')->name('AdminHubGet');
-    Route::post('/hub-update', 'AreaController@hubUpdate')->name('hub.update');
-    Route::post('/hub-delete', 'AreaController@hubDelete')->name('hub.delete');
-    Route::get('/get-hub-single', 'AreaController@hubGetSingle')->name('hub.single');
-    Route::post('/get-hub-select', 'AreaController@SelectHub')->name('SelectHub');
-    Route::get('/delete-hub/{hub}', 'AreaController@delete_hub')->name('deleet-hub');
+    Route::post('/point', [App\Http\Controllers\Admin\AreaController::class,'point_create'])->name('point.store');
+    Route::get('/get-points', [App\Http\Controllers\Admin\AreaController::class,'get_points'])->name('AdminPointGet');
+    Route::post('/point-update', [App\Http\Controllers\Admin\AreaController::class,'update_point'])->name('point.update');
+    Route::get('/get-point-single', [App\Http\Controllers\Admin\AreaController::class,'point_details'])->name('point.single');
+    Route::post('/get-point-select', [App\Http\Controllers\Admin\AreaController::class,'select_point'])->name('select.point');
+    Route::get('/delete-point/{point}', [App\Http\Controllers\Admin\AreaController::class,'delete_point'])->name('point.delete');
 
-    Route::get('/location', [AreaController::class,'area'])->name('location');
-    Route::post('/location', 'AreaController@areaStore')->name('area.store');
-    Route::get('/get-area', 'AreaController@areaGet')->name('AdminAreaGet');
-    Route::post('/area-update', 'AreaController@areaUpdate')->name('area.update');
-    Route::get('/area-delete/{area}', 'AreaController@areaDelete')->name('area.delete');
-    Route::get('/get-area-single', 'AreaController@areaGetSingle')->name('area.single');
+    Route::get('/location', [AreaController::class,'location'])->name('location');
+    Route::post('/location', [AreaController::class,'location_store'])->name('location.store');
+    Route::get('/get-locations', [AreaController::class,'get_locations'])->name('AdminLocationGet');
+    Route::post('/location-update', [AreaController::class,'location_update'])->name('location.update');
+    Route::get('/location-delete/{location}', [AreaController::class,'location_delete'])->name('location.delete');
+    Route::get('/get-location-single', [AreaController::class,'location_detail'])->name('location.single');
 
     Route::get('/merchant-list', 'MerchantController@index')->name('merchant.list');
     Route::get('/merchant-details/{user}', 'MerchantController@show')->name('merchant.details');
