@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Merchant;
 
 use App\Models\Area;
 use App\Models\Unit;

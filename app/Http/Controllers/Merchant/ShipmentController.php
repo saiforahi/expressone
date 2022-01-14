@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Merchant;
 
-use App\Area;
-use App\Models\Unit;
+use App\Model\Area;
+use App\Shipment;
 use App\ShippingPrice;
 use App\Models\Shipment;
 use App\ShipmentPayment;

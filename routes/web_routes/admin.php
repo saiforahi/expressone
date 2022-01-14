@@ -1,44 +1,9 @@
 <?php
 
-use App\Models\Shipment;
-use UniSharp\LaravelFilemanager\Lfm;
+use App\Http\Controllers\Admin\AreaController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Admin\ShippingChargeController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Courier\AuthController as CourierAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Courier\DashboardController as CourierDashboardController;
-use App\Http\Controllers\User\DashboardController as MerchantDashboardController;
-//To clear all cache
-Route::get('clear', function () {
-    Artisan::call('optimize:clear');
-    // Artisan::call('config:clear');
-    // Artisan::call('config:cache');
-    // Artisan::call('view:clear');
-    // Artisan::call('optimize:clear');
-    // Artisan::call('route:cache');
-    return "Cleared!";
-});
-Route::get('/', [HomeController::class,'index'])->name('home');
-Route::get('/about', [HomeController::class,'about'])->name('about');
-Route::get('/team', [HomeController::class,'team'])->name('team');
-Route::get('/mission', [HomeController::class,'mission'])->name('mission');
-Route::get('/vision', [HomeController::class,'vision'])->name('vision');
-Route::get('/promise', 'HomeController@promise')->name('promise');
-Route::get('/history', 'HomeController@history')->name('history');
-Route::get('/tracking', 'HomeController@tracking')->name('tracking');
-Route::get('/track-shipment', 'HomeController@track_order')->name('track-shipment');
-Route::get('/contact', 'HomeController@contact')->name('contact');
-Route::post('/contact', 'HomeController@save_contact')->name('save-contact');
-Route::get('/blog', 'HomeController@blog')->name('blog');
-Route::get('/blog-info/{blog}', 'HomeController@show_blog')->name('show-blog');
-Route::get('/blog-category/{blog_category}', 'HomeController@category_post')->name('category-post');
-Route::get('/blog-search', 'HomeController@seach_blog')->name('search-post');
-// ajax call
-Route::get('/check-rate', 'HomeController@rateCheck')->name('rate.check');
-Route::get('/pricing', 'HomeController@pricing')->name('pricing');
-
 /*
 |--------------------------------------------------------------------------
 | Admin Route
@@ -50,7 +15,7 @@ Route::post('admin/register', [App\Http\Controllers\Admin\AuthController::class,
 Route::post('admin/logout', [App\Http\Controllers\Admin\AuthController::class,'logout'])->name('admin.logout');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function () {
-    Route::get('/', [App\Http\Controllers\Admin\DashboardController::class,'index'])->name('admin-dashboard');
+    Route::get('/', [AdminDashboardController::class,'index'])->name('admin-dashboard');
     Route::get('/basic-information', 'BasicInformationController@index')->name('basic-information');
     Route::post('/basic-information', 'BasicInformationController@update')->name('basic-information.update');
     Route::post('/add-merchant-verify-message', 'BasicInformationController@addVerifyMsg')->name('addVerifyMsg');
@@ -58,15 +23,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
 
     Route::get('/admin-change-hub/{hub}', [AdminDashboardController::class,'admin_changes_hub'])->name('admin-change-hub');
     Route::get('/get-admin-hub-ids/{admin}', 'DashboardController@get_admin_hub_ids')->name('get-admin-hub-ids');
-    Route::get('/zone', 'AreaController@zone')->name('zone');
-    Route::post('/zone', 'AreaController@zoneStore')->name('zone.store');
-    Route::get('/get-zone', 'AreaController@zoneGet')->name('AdminZoneGet');
+    Route::get('/unit', [App\Http\Controllers\Admin\AreaController::class,'unit'])->name('unit');
+    Route::post('/zone', [App\Http\Controllers\Admin\AreaController::class,'unitStore'])->name('zone.store');
+    Route::get('/get-units', [App\Http\Controllers\Admin\AreaController::class,'unitGet'])->name('AdminUnitsGet');
     Route::post('/zone-update', 'AreaController@zoneUpdate')->name('zone.update');
     Route::post('/zone-delete', 'AreaController@zoneDelete')->name('zone.delete');
     Route::get('/get-zone-single', 'AreaController@zoneGetSingle')->name('zone.single');
 
-    Route::get('/hub', 'AreaController@index')->name('hub');
-    Route::post('/hub', 'AreaController@hubStore')->name('point.store');
+    Route::get('/point', [App\Http\Controllers\Admin\AreaController::class,'index'])->name('point');
+    Route::post('/point', 'AreaController@hubStore')->name('point.store');
     Route::get('/get-hub', 'AreaController@hubGet')->name('AdminHubGet');
     Route::post('/hub-update', 'AreaController@hubUpdate')->name('hub.update');
     Route::post('/hub-delete', 'AreaController@hubDelete')->name('hub.delete');
@@ -74,8 +39,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/get-hub-select', 'AreaController@SelectHub')->name('SelectHub');
     Route::get('/delete-hub/{hub}', 'AreaController@delete_hub')->name('deleet-hub');
 
-    Route::get('/area', 'AreaController@area')->name('area');
-    Route::post('/area', 'AreaController@areaStore')->name('area.store');
+    Route::get('/location', [AreaController::class,'area'])->name('location');
+    Route::post('/location', 'AreaController@areaStore')->name('area.store');
     Route::get('/get-area', 'AreaController@areaGet')->name('AdminAreaGet');
     Route::post('/area-update', 'AreaController@areaUpdate')->name('area.update');
     Route::get('/area-delete/{area}', 'AreaController@areaDelete')->name('area.delete');
@@ -339,7 +304,4 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::match(['get', 'post'], 'add-edit-shipping-charge/{id?}', [ShippingChargeController::class, 'addEditCharge'])->name('addEditCharge');
     Route::get('shipping-charges', [ShippingChargeController::class, 'index'])->name('shippingCharges');
 });
-
-
-
 
