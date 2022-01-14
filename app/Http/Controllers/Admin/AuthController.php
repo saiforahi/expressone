@@ -49,7 +49,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
         Auth::guard('admin')->login($admin);
-        return redirect()->intended('/admin');
+        return redirect()->route('admin.dashboard');
     }
     public function logout(Request $request)
     {

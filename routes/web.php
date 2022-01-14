@@ -399,11 +399,11 @@ Route::post('courier/register', [CourierAuthController::class,'store'])->name('c
 Route::post('courier/logout', [CourierAuthController::class,'logout'])->name('courier.logout');
 
 Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix' => 'courier'], function () {
-    Route::get('/', [CourierDashboardController::class,'index'])->name('driver.dashboard');
-    Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-driver-shipments');
-    Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-driver-shipments');
+    Route::get('/', [CourierDashboardController::class,'index'])->name('courier.dashboard');
+    Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-courier-shipments');
+    Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-courier-shipments');
 
-    Route::get('/shipments', 'ShipmentController@index')->name('driverShipments.index');
+    Route::get('/shipments', 'ShipmentController@index')->name('courierShipments.index');
     Route::get('/my-shipments/{type}', 'ShipmentController@my_shipments')->name('my-shipments');
     Route::get('/shipping-details/{id}/{status}', 'ShipmentController@show')->name('shipping-details');
 
