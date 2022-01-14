@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Admin;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +23,7 @@ class AuthController extends Controller
             'password' => 'required|min:3'
         ],$messages);
         if (Auth::guard('admin')->attempt(['email' => $request->name, 'password' => $request->password], $request->get('remember'))) {
-            return redirect()->intended('/admin');
+            return redirect()->route('admin-dashboard');
         }
         return back()->withInput($request->only('name', 'remember'))->withErrors([
             'name' => 'Wrong information or this account can not login.',
