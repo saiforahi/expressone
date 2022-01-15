@@ -11,6 +11,7 @@ class Courier extends Authenticatable
 {
     use HasFactory, HasApiTokens;
     protected $table="couriers";
+    protected $guard_name = 'courier';
     protected $fillable = [
         'first_name', 'last_name','email', 'phone', 'ip','password','status','is_active','joining_date','nid_no','employee_id'
     ];
@@ -21,6 +22,9 @@ class Courier extends Authenticatable
         'created_at' => 'datetime:Y-m-d h:i:s A',
         'updated_at' => 'datetime:Y-m-d h:i:s A',
     ];
+    public function guard_name(){
+        return $this->guard_name;
+    }
     // public function user(){
     //     return $this->morphOne(User::class, 'inheritable');
     // }

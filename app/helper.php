@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Admin;
 use App\Models\BasicInformation;
+use App\Models\Courier;
 use App\Models\CourierShipment;
 use App\Models\Shipment;
 use App\Models\Unit;
@@ -105,7 +107,28 @@ if (! function_exists('custom_asset')) {
         //return app('url')->asset('public/'.$path, $secure);
     }
 }
-
+if (! function_exists('check_if_email_exists')) {
+    function check_if_email_exists($email)
+    {
+        return Admin::where('email',$email)->exists() | User::where('email',$email)->exists() | Courier::where('email',$email)->exists();
+    }
+}
+if (! function_exists('get_first_user_by_email')) {
+    function get_first_user_by_email($email)
+    {
+        $user = null;
+        if(Admin::where('email',$email)->exists()){
+            $user = Admin::where('email',$email)->first();
+        }
+        else if(User::where('email',$email)->exists()){
+            $user = User::where('email',$email)->first();
+        }
+        else if(Courier::where('email',$email)->exists()){
+            $user = Courier::where('email',$email)->first();
+        }
+        return  $user;
+    }
+}
 if (! function_exists('random_unique_string_generate')) {
     function random_unique_string_generate($model,$field)
     {
