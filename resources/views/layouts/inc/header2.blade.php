@@ -81,7 +81,7 @@
                     </div>
                 @else
                     <div class="col-md-3 col-sm-3 text-right hidden-xs white-clr">
-                        <a href="{{route('user.dashboard')}}" class="sign-in fs-12 black-bg" style="background-color: #EB058D;border-radius: 10px"> Merchant Dashboard </a>
+                        <a href="{{route('merchant.dashboard')}}" class="sign-in fs-12 black-bg" style="background-color: #EB058D;border-radius: 10px"> Merchant Dashboard </a>
                     </div>
                 @endif
 

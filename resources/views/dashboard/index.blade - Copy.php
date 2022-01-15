@@ -57,7 +57,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="main-card mb-3 card">
-                <div class="card-header"> Your Shipment</div> <br>
+                <div class="card-header"> Your Shipment</div> <a  href="" class="btn btn-success">Add New Shipment</a> <br>
                 <div class="container-fluid table-responsive">
                     <table id="dashboardDatatable"
                         class="align-middle mb-0 table table-borderless table-striped table-hover text-center">

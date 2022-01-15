@@ -57,7 +57,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="main-card mb-3 card">
-                <div class="card-header"> Your Shipment</div> <br>
+                <div class="card-header"> Your Shipment &nbsp; <a href="{{ route('merchant.addShipment') }}"
+                        class="btn btn-success"><i class="fa fa-plus-circle"></i> Add New Shipment</a> </div> <br>
                 <div class="container-fluid table-responsive">
                     <table id="dashboardDatatable"
                         class="align-middle mb-0 table table-borderless table-striped table-hover text-center">
@@ -69,8 +70,8 @@
                                 <th>Tracking No.</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Customer</th>
-                                <th class="text-center">COD Amt.</th>
-                                <th class="text-center">Wgt. charge</th>
+                                <th class="text-center">COD Amount</th>
+                                <th class="text-center">Weight</th>
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
@@ -98,27 +99,26 @@
                                         @include('dashboard.include.shipping-status',
                                         ['status'=>$shipments['status'],'shipping_status'=>$shipments['shipping_status']])
                                     </td>
-                                    <td><a style="color: #495057;text-decoration: none"
-                                            href="/tracking?code={{ $shipments['tracking_code'] }}"
+                                    <td><a href="/tracking?code={{ $shipments['tracking_code'] }}"
                                             target="_blank">{{ $shipments['tracking_code'] }}
                                         </a></td>
                                     <td class="text-center">
-                                        <p style="color: black;font-size: 15px" class="mb-0">
+                                        <p class="mb-0">
                                             {{ date('F j, Y', strtotime($shipments['updated_at'])) }} </p>
 
                                     </td>
-                                    <td class="" style="font-size: 13px">
-                                        <i class="fa fa-user mr-1" aria-hidden="true"></i>{{ $shipments['name'] }}<br>
-                                        <i class="fa fa-phone-square mr-1"
-                                            aria-hidden="true"></i>{{ $shipments['phone'] }}
+                                    <td style="font-size: 13px">
+                                        @foreach ($shipments['recipient'] as $customer)
+                                            {{ $customer }} <br>
+                                        @endforeach
                                     </td>
 
                                     <td>
-                                        {{ $shipments['cod_amount'] }}
+                                        {{ $shipments['amount'] }}
                                     </td>
 
                                     <td>
-                                        {{ $shipments['weight_charge'] }}
+                                        {{ $shipments['weight'] }}
                                     </td>
                                     <td>
                                         @if ($shipments['status'] == 1 && $shipments['shipping_status'] == 0)
@@ -131,7 +131,7 @@
                                                     <i class="fa fa-trash text-white"></i>
                                                 </button>
                                             </form>
-                                            <a href="{{ route('editShipment', $shipments['id']) }}"
+                                            <a href="{{ route('merchant.addShipment', $shipments['id']) }}"
                                                 class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i></a>
                                         @endif
                                         <a href="/shipment-info/{{ $shipments['id'] }}"

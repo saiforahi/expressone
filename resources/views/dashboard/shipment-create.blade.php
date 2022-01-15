@@ -7,7 +7,7 @@
                 <div class="page-title-icon">
                     <i class="fa fa-location-arrow text-success" aria-hidden="true"></i>
                 </div>
-                <div>Prepare Shipment <button class="btn btn-info">{{ $invoiceId }}</button>
+                <div>Prepare Shipment
                     <div class="page-title-subheading">Fill in your details to prepare the shipment label
                     </div>
                 </div>
@@ -31,9 +31,9 @@
             </div>
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
-            <form id="upload_form" method="post" action="{{ route('shipmentSave') }}">
+            <form id="upload_form" method="post" action="{{ route('merchant.addShipment') }}">
                 {{-- invoice no --}}
-                <input type="hidden" value="{{ $invoiceId }}" name="invoice_id">
+                <input type="hidden" value="{{ $invoice_id }}" name="invoice_id">
                 @csrf
                 <div class="main-card mb-3 card card-body">
                     <h5 class="card-title">Customer Details:</h5>
@@ -59,40 +59,30 @@
                     <h5 class="card-title">Shipment Details:</h5>
                     <div class="form-row">
                         <div class="col-md-4 text-left">
-                            <label for="exampleFormControlSelect1">Parcel type</label> <span class="text-danger">*</span>
-                            <select class="form-control" name="parcel_type">
-                                <option>Select Type</option>
-                                <option>Express</option>
-                                <option>Regular</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 text-left">
-                            <label>Delivery location</label> <span class="text-danger">*</span>
-                            <select class="form-control" name="delivery_location_id">
-                                <option>Select location </option>
-                                <option>Mohakhali</option>
-                                <option>Banani</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4 text-left">
                             <label>Pickup Location</label> <span class="text-danger">*</span>
                             <select class="form-control" name="pickup_location_id">
-                                <option>Select location </option>
-                                <option>Gulshan</option>
-                                <option>Badda</option>
+                                <option>Select location</option>
+                                @foreach ($locations as $loc)
+                                <option value="{{ $loc->id }}">{{ $loc->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-4 text-left">
                             <label>Shipping Type</label> <span class="text-danger">*</span>
-                            <select class="form-control" id="exampleFormControlSelect1">
+                            <select class="form-control" name="shipping_charge_id">
                                 <option>Select type</option>
-                                <option>Express</option>
-                                <option>Regular</option>
+                                @foreach ($shippingCharges as $charge)
+                                <option value="{{ $charge->id }}">{{ $charge->consignment_type }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-4 text-left">
                             <label>Weight</label>
                             <input type="number" name="weight" placeholder="Enter weight" class="form-control">
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <label>Amount</label>
+                            <input type="number" name="amount" placeholder="Enter amount" class="form-control" min="10">
                         </div>
                         <div class="col-md-4 text-left">
                             <label>Note</label>
@@ -215,7 +205,7 @@
         //             showCancelButton: true
         //         }, function () {
         //             $.ajax({
-        //                 url: "{{ route('shipmentSave') }}",
+        //                 url: "{{ route('merchant.addShipment') }}",
         //                 type: 'post',
         //                 processData: false,
         //                 contentType: false,
@@ -252,7 +242,7 @@
         //                             confirmButtonText: 'Ok'
         //                         })
         //                     } else {
-        //                         var url = '{{ route('user.dashboard') }}';
+        //                         var url = '{{ route('merchant.dashboard') }}';
         //                         window.location.href = url;
         //                     }
         //                 }

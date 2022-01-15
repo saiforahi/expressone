@@ -354,7 +354,7 @@ Route::post('/logout', 'AuthController@logout')->name('logout');
 
 Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 
-    Route::get('/dashboard', 'DashboardController@index')->name('user.dashboard');
+    Route::get('/dashboard', 'DashboardController@index')->name('merchant.dashboard');
     Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
     Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
 
@@ -369,7 +369,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 
     Route::get('/prepare-shipment', 'ShipmentController@index')->name('PrepareShipment');
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
-    Route::post('prepare-shipment-submit', 'ShipmentController@shipmentSave')->name('shipmentSave');
+    Route::post('prepare-shipment-submit', 'ShipmentController@merchant.addShipment')->name('merchant.addShipment');
     Route::get('/edit-shipment/{shipment}', 'ShipmentController@edit')->name('editShipment');
     Route::post('/edit-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
 

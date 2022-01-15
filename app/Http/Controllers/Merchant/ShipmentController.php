@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Merchant;
 
 use App\Model\Area;
-use App\Shipment;
+use App\Models\Unit;
 use App\ShippingPrice;
+use App\Models\Location;
 use App\Models\Shipment;
 use App\ShipmentPayment;
 use Illuminate\Http\Request;
@@ -13,8 +14,6 @@ use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Nette\Utils\Random;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ShipmentController extends Controller
 {
@@ -22,17 +21,61 @@ class ShipmentController extends Controller
     {
         $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
-        $data['invoice_id'] = Shipment::select('id')->orderBy('id', 'desc')->first();
-        if ($data['invoice_id'] == null) {
-            $firstInvoice = 1111;
-            $data['invoiceId'] = $firstInvoice + 1;
-        } else {
-            $invoice_id = Shipment::select('id')->orderBy('id', 'desc')->first()->invoice_id;
-            $data['invoiceNo'] = $invoice_id + 1;
-        }
+        $data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
         return view('dashboard.shipment-create', $data);
     }
-
+    public function addEditShipment(Request $request, $id = null)
+    {
+        if ($id == "") {
+            // Add Shipment
+            $shipment = new Shipment();
+            $title = "Add Shipment";
+            $buttonText = "Save Shipment";
+            $message = "Shipment has been saved successfully!";
+        } else {
+            // Update Shipment
+            $shipment = Shipment::find($id);
+            //dd($shipment['recipient']['name']);
+            $title = "Edit Shipment";
+            $buttonText = "Update Shipment";
+            $message = "Shipment has been updated successfully!";
+        }
+        if ($request->isMethod('POST')) {
+            $data = $request->all();
+            $messages = [
+                "name.required" => "Please enter customer name.",
+                "phone.required" => "Please enter customer phone number.",
+                "address.required" => "Please enter customer address.",
+                "pickup_location_id.required" => "Please enter pickup_location_id.",
+                "shipping_charge_id.required" => "Please select shipping charge",
+                "amount.required" => "Please enter amount",
+            ];
+            $request->validate([
+                'name' => 'required|max:100',
+                'phone' => 'required|max:20',
+                'address' => 'required|max:255',
+                "amount" => 'required',
+                "shipping_charge_id" => 'required'
+            ], $messages);
+            $data = $request->only(['name', 'phone', 'address']);
+            $shipment['recipient'] =  $data;
+            $shipment->tracking_code = uniqid();
+            $shipment->amount = $request->cod_amount;
+            $shipment->shipping_charge_id = $request->shipping_charge_id;
+            $shipment->pickup_location_id = $request->pickup_location_id;
+            $shipment->weight = $request->weight;
+            $shipment->amount = $request->amount;
+            $shipment->note = $request->note;
+            $shipment->merchant_id = Auth::guard('user')->user()->id;
+            $shipment->added_by()->associate(Auth::guard('user')->user());
+            $shipment->save();
+            return redirect()->route('merchant.dashboard')->with('success', $message);
+        }
+        $data['area'] = Unit::where('status', 1)->get();
+        $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
+        $data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
+        return view('dashboard.addEditShipment', $data, compact('title', 'buttonText','shipment'));
+    }
     public function rateCheck(Request $request)
     {
         $price = 0;
@@ -76,42 +119,7 @@ class ShipmentController extends Controller
 
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
     }
-    public function shipmentSave(Request $request)
-    {
-        echo '<pre>';
-        echo '======================<br>';
-        print_r($request->all());
-        echo '<br>======================<br>';
-        exit();
-        $messages = [
-            "name.required" => "Please enter customer name.",
-            "phone.required" => "Please enter customer phone number.",
-            "address.required" => "Please enter customer address.",
-            "amount.required" => "Please enter amount",
-            "shipping_charge_id.required" => "Please select shipping charge",
-        ];
-        $request->validate([
-            'name' => 'required|max:100',
-            'phone' => 'required|max:20',
-            'address' => 'required|max:255',
-            "amount" => 'required',
-            'shipping_charge_id' => 'required'
-        ], $messages);
 
-        $insert = new Shipment();
-        $insert->name = $request->name;
-        $insert->phone = $request->phone;
-        $insert->address = $request->address;
-        $insert->amount = $request->cod_amount;
-        $insert->shipping_charge_id = $request->shipping_charge_id;
-        $insert->weight = $request->weight;
-        $insert->note = $request->note;
-        $insert->tracking_code = uniqid();
-        $insert->user_id = Auth::guard('user')->user()->id;
-        $insert->added_by_id = 1; //Auth::guard('admin')->admin()->id;
-        $insert->save();
-        return back()->with('message', 'Shipment has been saved successfully!');
-    }
     public function PrepareShipmentEdit($id)
     {
         $earth = new Earth();
@@ -287,7 +295,6 @@ class ShipmentController extends Controller
                 'name.required' => 'Name is required',
                 'phone.email' => 'Phone is required',
                 'address.required' => 'Address is required',
-
                 'cod_amount.required' => 'Parcel enter COD amount',
                 'area_id.required' => 'Please select area'
             ];
@@ -302,16 +309,18 @@ class ShipmentController extends Controller
             $shipment->merchant_note = $dataSet['merchant_note'];
             $shipment->delivery_type = 1;
             $shipment->update();
-            return redirect()->route('user.dashboard')->with('success', 'Shipment has been udated successfully!');
+            return redirect()->route('merchant.dashboard')->with('success', 'Shipment has been udated successfully!');
         }
-    }
-    public function destroy($id)
-    {
-        //
     }
     public function shipmentDelete($id)
     {
-        Shipment::find($id)->delete();
-        return back()->with('message', 'Shipment has been deleted successfully!');
+        try {
+            //code...
+            Shipment::find($id)->delete();
+            return back()->with('message', 'Shipment has been deleted successfully!');
+        } catch (\Throwable $th) {
+            throw $th;
+            return back()->with('message', 'Shipment has been deleted successfully!' . $th);
+        }
     }
 }
