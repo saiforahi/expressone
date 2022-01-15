@@ -27,6 +27,7 @@ class AuthController extends Controller
         "phone" => 'unique:users',
         'shop_name' => 'sometimes|nullable',
         'address' => 'sometimes|nullable',
+        'id_no'=> 'required|unique:users,nid_no,bin_no',
     ];
     public function __construct() {
         $this->middleware('auth:sanctum', ['except' => ['login','register']]);
@@ -84,6 +85,7 @@ class AuthController extends Controller
                     break;
 
                 case 'courier':  //courier creation
+                    $request->validate(['id_no'=>'required|unique:couriers,nid_no']);
                     $user = Courier::create(array_merge($request->all(),['employee_id'=>random_unique_string_generate(Courier::class,'employee_id'),'password' => bcrypt($request->password)]));
                     break;
             }
