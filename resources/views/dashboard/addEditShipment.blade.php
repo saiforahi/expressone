@@ -157,14 +157,11 @@
                 calculate();
             });
         });
-
-
         function calculate() {
             let area = $("#area").val();
             let weight = $("#weight").val();
             let parcel_value = $("#parcel_value").val();
             let delivery_type = $(".activating2").attr('id');
-
             $.ajax({
                 url: "{{ route('merchant.rate.check') }}",
                 type: 'post',

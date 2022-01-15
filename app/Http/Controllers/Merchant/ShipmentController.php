@@ -133,7 +133,6 @@ class ShipmentController extends Controller
     }
     function show(Shipment $shipment)
     {
-
         // $zone = Area::find($shipment->area_id);
         // $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
 
