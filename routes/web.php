@@ -9,7 +9,7 @@ use App\Http\Controllers\TestController;
 
 
 //To clear all cache
-Route::get('clear', function () {
+Route::get('cc', function () {
     Artisan::call('optimize:clear');
     return "Cleared!";
 });

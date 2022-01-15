@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Merchant\ShipmentController;
 use App\Http\Controllers\Merchant\ShippingChargeController;
-use App\Http\Controllers\Merchant\DashboardController as MerchantDashboardController;
+use App\Http\Controllers\Merchant\DashboardController;
 
 
 Route::get('/login', [App\Http\Controllers\AuthController::class,'index'])->name('login');
@@ -16,12 +17,11 @@ Route::post('/register', [App\Http\Controllers\AuthController::class,'registerSt
 Route::post('/logout', [App\Http\Controllers\AuthController::class,'logout'])->name('logout');
 
 Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function () {
-    Route::get('/dashboard', [App\Http\Controllers\Merchant\DashboardController::class,'index'])->name('user.dashboard');
+    Route::get('/dashboard', [DashboardController::class,'index'])->name('merchant.dashboard');
     Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
     Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
     Route::get('/shipment-invoice/{id}', 'ShipmentController@shipmentInvoice')->name('shipmentInvoice');
     Route::get('/shipment-cnote/{shipment}', 'ShipmentController@shipmentConsNote')->name('merchant.shipmentCn');
-    Route::delete('/shipment-delete/{id}', '\App\Http\Controllers\User\ShipmentController@shipmentDelete')->name('shipment.delete');
     Route::post('set-shipping-charge/{id}', [ShippingChargeController::class, 'setShippingCharge'])->name('setShippingCharge');
     //Profile
     Route::get('/profile', [MerchantDashboardController::class,'profile'])->name('profile');
@@ -32,11 +32,10 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function 
     Route::post('/change-email', [MerchantDashboardController::class,'ChangeMail'])->name('ChangeMail');
     Route::post('/change-password', [MerchantDashboardController::class,'ChangePassword'])->name('ChangePassword');
     //Merchant Shipment
-    Route::get('/prepare-shipment', 'ShipmentController@index')->name('merhcant_shipments');
+    Route::match(['get', 'post'], 'add-edit-shipment/{id?}', [ShipmentController::class, 'addEditShipment'])->name('merchant.addShipment');
+    Route::get('/shipments', [ShipmentController::class,'index'])->name('merhcant_shipments');
+    Route::delete('/shipment-delete/{id}', [ShipmentController::class,'shipmentDelete'])->name('shipment.delete');
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
-    Route::post('shipment-save', 'ShipmentController@shipmentSave')->name('PrepareShipmentSubmit');
-    Route::get('/edit-shipment/{shipment}', 'ShipmentController@edit')->name('editShipment');
-    Route::post('/update-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
     //Merchant Payment routes
     Route::get('payments', 'ShipmentController@payments')->name('payments');
     Route::get('payments-load', 'ShipmentController@payments_loading')->name('payments-load');

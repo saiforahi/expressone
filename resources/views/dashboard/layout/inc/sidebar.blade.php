@@ -35,7 +35,7 @@
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu">
                 <li>
-                    <a href="{{route('user.dashboard')}}" class="{{ (request()->is('dashboard')) ? 'mm-active' : '' }}">
+                    <a href="{{route('merchant.dashboard')}}" class="{{ (request()->is('dashboard')) ? 'mm-active' : '' }}">
                         <i class="metismenu-icon fa fa-tachometer"></i>
                         Merchant Dashboard
                     </a>

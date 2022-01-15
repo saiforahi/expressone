@@ -7,7 +7,7 @@
                 <div class="page-title-icon">
                     <i class="fa fa-location-arrow text-success" aria-hidden="true"></i>
                 </div>
-                <div>Prepare Shipment
+                <div>{{ $title }}
                     <div class="page-title-subheading">Fill in your details to prepare the shipment label
                     </div>
                 </div>
@@ -31,89 +31,84 @@
             </div>
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
-            <div class="main-card mb-3 card card-body">
-                <form id="upload_form" method="post" action="{{ route('merchant.addShipment') }}"> {{ csrf_field() }}
+            <form id="upload_form" method="post" action="{{ route('merchant.addShipment', $shipment['id']) }}">
+                @csrf
+                <div class="main-card mb-3 card card-body">
                     <h5 class="card-title">Customer Details:</h5>
-                    <div class="form-row my-4">
-                        <div class="col text-left">
-                            <label class="" for="name">Customer Name</label>
-                            <input type="text" id="name" class="form-control" name="name" placeholder="Customer Name">
-                        </div>
-                        <div class="col text-left">
-                            <label for="usr3">Phone Number</label>
-                            <input type="text" class="form-control" name="phone" placeholder="Customer phone">
-                        </div>
-                    </div>
-                    <div class="form-row my-4">
-                        <div class="col text-left">
-                            <label class="" for="address">Address</label>
-                            <input type="text" id="address" class="form-control" name="address"
-                                placeholder="Customer Address">
-                        </div>
-
-                        <div class="col text-left">
-                            <label for="area">Area</label>
-                            <select class="form-control select2" name="area" id="area">
-                                <option value="" selected disabled>Select area</option>
-                                @foreach ($area as $areas)
-                                    <option value="{{ $areas->id }}">{{ $areas->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col text-left">
-                            <label for="area">Shipping/Consignment Note Type</label>
-                            <select class="form-control" name="shipping_charge_id">
-                                <option value="" selected disabled>Select Shipping Method</option>
-                                @foreach ($shippingCharges as $shippingCharge)
-                                    <option value="{{ $shippingCharge->id }}">
-                                        {{ $shippingCharge->consignment_type }}
-                                        -{{ $shippingCharge->shipping_amount }}
-
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <h5 class="card-title mt-4">Shipment Details:</h5>
-                    <div class="form-row my-4">
-                        <div class="col text-left">
-                            <label class="" for="weight">COD Amount</label>
-                            <input type="number" id="cod_amount" class="form-control" name="cod_amount" value="1">
-                        </div>
-
-                        <div class="col text-left">
-                            <label class="" for="delivery_charge">Weight Charge</label>
-                            <input type="number" class="form-control" name="weight_charge" value="0"
-                                placeholder="Enter weight charge">
-
-                        </div>
-
-                        <div class="col cod_target text-left">
-                            <label for="parcel_value">Declared Parcel Value</label>
-                            <input type="number" id="parcel_value" class="form-control" name="parcel_value"
-                                placeholder="Enter Parcel Value">
-                            <div class="w-100">
-                                <small>My parcel value is <span class="parcel_value_info">0</span> Taka</small>
+                        {{-- Add recipient --}}
+                        <div class="form-row">
+                            <div class="col text-left">
+                                <label class="" for="name">Customer Name</label> <span
+                                    class="text-danger">*</span>
+                                <input type="text" class="form-control" name="name" placeholder="Customer Name" required value="{{ @old('recipient', $shipment['recipient']['name']) }}">
+                            </div>
+                            <div class="col text-left">
+                                <label for="usr3">Phone Number</label> <span class="text-danger">*</span>
+                                <input type="text" class="form-control" name="phone" placeholder="Customer phone"
+                                    required value="{{ @old('recipient', $shipment['recipient']['phone']) }}">
+                            </div>
+                            <div class="col text-left">
+                                <label class="" for="address">Address</label> <span
+                                    class="text-danger">*</span>
+                                <input type="text" class="form-control" name="address"
+                                    placeholder="Customer Address" required value="{{ @old('recipient', $shipment['recipient']['address']) }}">
                             </div>
                         </div>
-                    </div>
-                    <div class="form-row my-4">
-                        <div class="col text-left">
-                            <label for="merchant_note">Merchant Note</label>
-                            <textarea id="merchant_note" class="form-control" rows="3" name="merchant_note"></textarea>
+                </div>
+                {{-- Customer Details --}}
+                <div class="main-card mb-3 card card-body">
+                    <h5 class="card-title">Shipment Details:</h5>
+                    <div class="form-row">
+                        <div class="col-md-4 text-left">
+                            <label>Pickup Location</label> <span class="text-danger">*</span>
+                            <select class="form-control" name="pickup_location_id">
+                                <option>Select location</option>
+                                @foreach ($locations as $loc)
+                                    <option @if ($shipment['pickup_location_id'] == $loc->id)
+                                        selected @else ' '
+                                            @endif value="{{ $loc->id }}">{{ $loc->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <label>Shipping Type</label> <span class="text-danger">*</span>
+                            <select class="form-control" name="shipping_charge_id">
+                                <option>Select type</option>
+                                @foreach ($shippingCharges as $charge)
+                                    <option @if ($shipment['shipping_charge_id'] == $charge->id)
+                                    selected @else ' '
+                                        @endif value="{{ $charge->id }}">{{ $charge->consignment_type }}</option>
+                                @endforeach
+
+                            </select>
+
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <label>Weight</label>
+                            <input type="number" name="weight" placeholder="Enter weight" class="form-control"
+                                value="{{ @old('weight', $shipment['weight']) }}">
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <label>Amount</label>
+                            <input type="number" name="amount" placeholder="Enter amount" class="form-control" min="10"
+                                value="{{ @old('amount', $shipment['amount']) }}">
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <label>Note</label>
+                            <input type="text" name="note" placeholder="Enter note" class="form-control"
+                                value="{{ @old('note', $shipment['note']) }}">
                         </div>
                     </div>
-                    <div class="col text-right">
-                        <button type="submit" id="submit_button" class="btn btn-success rounded my-4">
-                            <i class="fa fa-check"></i> Shipping Submit
-                        </button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="col text-right">
+                    <button type="submit" id="submit_button" class="btn btn-success rounded my-4">
+                        <i class="fa fa-check"></i> {{ $buttonText }}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection
-
 @push('style')
     <style>
         .activating {
@@ -124,7 +119,6 @@
         .activating2 {
             border: 1px solid red !important;
         }
-
     </style>
     <link href="{{ asset('vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/select2.min.css') }}">
@@ -163,14 +157,11 @@
                 calculate();
             });
         });
-
-
         function calculate() {
             let area = $("#area").val();
             let weight = $("#weight").val();
             let parcel_value = $("#parcel_value").val();
             let delivery_type = $(".activating2").attr('id');
-
             $.ajax({
                 url: "{{ route('merchant.rate.check') }}",
                 type: 'post',

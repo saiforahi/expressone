@@ -2,60 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Message;
-use App\Models\Shipment;
-use App\Models\Blog;
-use App\Models\Blog_category;
-use App\Models\Area;
-use App\Models\ShippingPrice;
-use App\Models\Unit;
 use Validator;
+use App\Models\Area;
+use App\Models\Blog;
+use App\Models\Team;
+use App\Models\Unit;
+use App\Models\About;
+use App\Models\Slider;
+
+use App\Models\Vision;
+use App\Models\History;
+use App\Models\Message;
+use App\Models\Mission;
+use App\Models\Promise;
+use App\Models\Shipment;
+use Illuminate\Http\Request;
+use App\Models\Blog_category;
+use App\Models\ShippingPrice;
 
 class HomeController extends Controller
 {
 
     public function index()
     {
-        $banner = \App\Models\Slider::where('status','1')->first();
-        $about = \App\Models\About::where('id','1')->first();
+        $banner = Slider::where('status','1')->first();
+        $about = About::where('id','1')->first();
         return view('index',compact('banner','about'));
     }
 
     public function about()
     {
-        $about = \App\Models\About::where('id','1')->first();
-        $abouts = \App\Models\About::where('id','!=','1')->where('status','1')->get();
+        $about = About::where('id','1')->first();
+        $abouts = About::where('id','!=','1')->where('status','1')->get();
         return view('about',compact('about','abouts'));
     }
     public function team()
     {
-        $about = \App\Models\Team::where('id','1')->first();
-        $abouts = \App\Models\Team::where('id','!=','1')->where('status','1')->get();
+        $about = Team::where('id','1')->first();
+        $abouts = Team::where('id','!=','1')->where('status','1')->get();
         return view('team',compact('about','abouts'));
     }
     public function promise()
     {
-        $about = \App\Models\Promise::where('id','1')->first();
-        $abouts = \App\Models\Promise::where('id','!=','1')->where('status','1')->get();
+        $about = Promise::where('id','1')->first();
+        $abouts = Promise::where('id','!=','1')->where('status','1')->get();
         return view('promise',compact('about','abouts'));
     }
     public function vision()
     {
-        $about = \App\Models\Vision::where('id','1')->first();
-        $abouts = \App\Models\Vision::where('id','!=','1')->where('status','1')->get();
+        $about = Vision::where('id','1')->first();
+        $abouts = Vision::where('id','!=','1')->where('status','1')->get();
         return view('vision',compact('about','abouts'));
     }
     public function mission()
     {
-        $about = \App\Models\Mission::where('id','1')->first();
-        $abouts = \App\Models\Mission::where('id','!=','1')->where('status','1')->get();
+        $about = Mission::where('id','1')->first();
+        $abouts = Mission::where('id','!=','1')->where('status','1')->get();
         return view('mission',compact('about','abouts'));
     }
     public function history()
     {
-        $about = \App\Models\History::where('id','1')->first();
-        $abouts = \App\Models\History::where('id','!=','1')->where('status','1')->get();
+        $about = History::where('id','1')->first();
+        $abouts = History::where('id','!=','1')->where('status','1')->get();
         return view('history',compact('about','abouts'));
     }
 
@@ -129,7 +137,6 @@ class HomeController extends Controller
         $total_price = 0;
         $cod_type = 0;
         $cod_amount = 0;
-
         $unit = Unit::find($request->unit);
 
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => ''];

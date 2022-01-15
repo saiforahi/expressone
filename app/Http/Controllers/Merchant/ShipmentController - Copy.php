@@ -63,7 +63,7 @@ class ShipmentController extends Controller
 
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
     }
-    public function PrepareShipmentSubmit(Request $request)
+    public function addShipment(Request $request)
     {
         $messages = [
             "name.required" => "Please enter customer name.",
@@ -330,7 +330,7 @@ class ShipmentController extends Controller
             $shipment->merchant_note = $dataSet['merchant_note'];
             $shipment->delivery_type = 1;
             $shipment->update();
-            return redirect()->route('user.dashboard')->with('success', 'Shipment has been udated successfully!');
+            return redirect()->route('merchant.dashboard')->with('success', 'Shipment has been udated successfully!');
         }
     }
     public function destroy($id)

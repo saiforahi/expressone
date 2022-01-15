@@ -24,6 +24,9 @@ class User extends Authenticatable
         'updated_at' => 'datetime:Y-m-d h:i:s A',
     ];
 
+    public function shipments(){
+        return $this->morphMany(Shipment::class, 'added_by');
+    }
     // public function inheritable(){
     //     return $this->morphTo();
     // }
@@ -31,6 +34,6 @@ class User extends Authenticatable
     //     return $this->morphTo()->where('inheritable_type', Merchant::class);
     // }
     // public function morphClass(){
-    //     return $this->hasOne(get_class($this->inheritable),'id','inheritable_id'); 
+    //     return $this->hasOne(get_class($this->inheritable),'id','inheritable_id');
     // }
 }

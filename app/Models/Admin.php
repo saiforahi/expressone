@@ -18,7 +18,8 @@ class Admin extends Authenticatable
         'password'
     ];
     protected $guard_name = 'admin';
-    // public function user(){
-    //     return $this->morphOne(User::class, 'inheritable');
-    // }
+
+    public function shipments(){
+        return $this->morphMany(Shipment::class, 'added_by');
+    }
 }

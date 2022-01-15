@@ -34,7 +34,7 @@ function unit_from_location($id){
 
 function is_user_filled($id){
     $user = User::find($id);
-    if(empty($user->shop_name) || empty($user->address) || empty($user->unit_id) || (empty($user->nid_no) && empty($user->bin_no))){
+    if(empty($user->shop_name) || empty($user->address) || empty($user->unit_id) || (empty($user->id_value) && empty($user->id_type))){
         request()->session()->flash('message', 'Please complete your profile first!');
         return 0;
     }else return 1;
@@ -51,7 +51,7 @@ function driver_shipments($driver_id, $user_id)
     $num = array();
     foreach ($shipments as $key => $shipment) {
         $num[] = CourierShipment::where(['driver_id'=>auth()->guard('driver')->user()->id,'shipment_id'=>$shipment->id])->count();
-    } 
+    }
     return COUNT($num);
 }
 
@@ -62,7 +62,7 @@ function pick_shipments($driver_id, $user_id)
     $num = array();
     foreach ($shipments as $key => $shipment) {
         $num[] = CourierShipment::where(['driver_id'=> auth()->guard('driver')->user()->id,'shipment_id'=>$shipment->id])->count();
-    } 
+    }
     return COUNT($num);
 }
 
@@ -121,7 +121,7 @@ if (! function_exists('active_guard')) {
     function active_guard()
     {
         foreach(array_keys(config('auth.guards')) as $guard){
-    
+
             if(auth()->guard($guard)->check()) return $guard;
         }
         return null;

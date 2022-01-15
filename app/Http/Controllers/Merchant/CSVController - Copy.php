@@ -133,7 +133,7 @@ class CSVController extends Controller
         // exit;
         Session::flash('message', 'CSV-file data has been uploaded to database successfully');
         Session::forget('csv_data');
-        return redirect()->route('user.dashboard');
+        return redirect()->route('merchant.dashboard');
     }
     public function store(Request $request)
     {

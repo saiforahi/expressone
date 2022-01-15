@@ -3,28 +3,79 @@
 namespace App\Http\Controllers\Merchant;
 
 use App\Model\Area;
-use App\Shipment;
+use App\Models\Unit;
 use App\ShippingPrice;
-use App\ShippingCharge;
-use Illuminate\Http\Request;
-use Yajra\DataTables\DataTables;
+use App\Models\Location;
+use App\Models\Shipment;
 use App\ShipmentPayment;
+use Illuminate\Http\Request;
+use App\Models\ShippingCharge;
+use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade as PDF;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ShipmentController extends Controller
 {
     public function index()
     {
-        $data['area'] = Area::where('status', 1)->get();
+        $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
-        //dd($data['shippingCharges']);
-        return view('dashboard.shipment', $data);
+        $data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
+        return view('dashboard.shipment-create', $data);
     }
-
+    public function addEditShipment(Request $request, $id = null)
+    {
+        if ($id == "") {
+            // Add Shipment
+            $shipment = new Shipment();
+            $title = "Add Shipment";
+            $buttonText = "Save Shipment";
+            $message = "Shipment has been saved successfully!";
+        } else {
+            // Update Shipment
+            $shipment = Shipment::find($id);
+            //dd($shipment['recipient']['name']);
+            $title = "Edit Shipment";
+            $buttonText = "Update Shipment";
+            $message = "Shipment has been updated successfully!";
+        }
+        if ($request->isMethod('POST')) {
+            $data = $request->all();
+            $messages = [
+                "name.required" => "Please enter customer name.",
+                "phone.required" => "Please enter customer phone number.",
+                "address.required" => "Please enter customer address.",
+                "pickup_location_id.required" => "Please enter pickup_location_id.",
+                "shipping_charge_id.required" => "Please select shipping charge",
+                "amount.required" => "Please enter amount",
+            ];
+            $request->validate([
+                'name' => 'required|max:100',
+                'phone' => 'required|max:20',
+                'address' => 'required|max:255',
+                "amount" => 'required',
+                "shipping_charge_id" => 'required'
+            ], $messages);
+            $data = $request->only(['name', 'phone', 'address']);
+            $shipment['recipient'] =  $data;
+            $shipment->tracking_code = uniqid();
+            $shipment->amount = $request->cod_amount;
+            $shipment->shipping_charge_id = $request->shipping_charge_id;
+            $shipment->pickup_location_id = $request->pickup_location_id;
+            $shipment->weight = $request->weight;
+            $shipment->amount = $request->amount;
+            $shipment->note = $request->note;
+            $shipment->merchant_id = Auth::guard('user')->user()->id;
+            $shipment->added_by()->associate(Auth::guard('user')->user());
+            $shipment->save();
+            return redirect()->route('merchant.dashboard')->with('success', $message);
+        }
+        $data['area'] = Unit::where('status', 1)->get();
+        $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
+        $data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
+        return view('dashboard.addEditShipment', $data, compact('title', 'buttonText','shipment'));
+    }
     public function rateCheck(Request $request)
     {
         $price = 0;
@@ -34,8 +85,8 @@ class ShipmentController extends Controller
         if (!$request->area) {
             return ['status' => 'error', 'message' => 'Please select the area first.'];
         }
-        $zone = Area::find($request->area);
-        $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
+        $zone = Unit::find($request->area);
+
         if (!$shipping) {
             return ['status' => 'error', 'message' => 'Sorry, not any shipping rate set this zone'];
         }
@@ -68,81 +119,7 @@ class ShipmentController extends Controller
 
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
     }
-    public function shipmentSave(Request $request)
-    {
-        $messages = [
-            "name.required" => "Please enter customer name.",
-            "phone.required" => "Please enter customer phone number.",
-            "address.required" => "Please enter customer address.",
-            "cod_amount.required" => "Please enter cod_amount",
-            "area.required" => "Please select customer area",
-            "shipping_charge_id.required" => "Please select shipping charge",
-        ];
-        $request->validate([
-            'name' => 'required|max:100',
-            'phone' => 'required|max:20',
-            'address' => 'required|max:255',
-            "cod_amount" => 'required',
-            'area' => 'required',
-            'shipping_charge_id' => 'required'
-        ], $messages);
 
-        $price = 0;
-        $total_price = 0;
-        $cod_type = 0;
-        $cod_amount = $request->cod_amount;
-        $zone = Area::find($request->area);
-        $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $request->delivery_type)->first();
-        // if (!$shipping) {
-        //     return response()->json(['status' => 'error', 'errors' => ['message' => 'Sorry, not any shipping rate set this zone']], 422);
-        // }
-        // if ($shipping->cod == 1) {
-        //     $cod_type = 1;
-        //     if (!$request->parcel_value) {
-        //         // return response()->json(['status' => 'error', 'errors' => ['message' => 'Please declared your parcel value first.']], 422);
-        //         $cod_amount = 0;
-        //     } else {
-        //         $cod_amount = ((int)$request->parcel_value / 100) * $shipping->cod_value;
-        //     }
-        // }
-
-
-        // $weight = (float)$request->weight;
-        // if ($weight > $shipping->max_weight) {
-        //     $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-        //     if ((int)$ExtraWeight < $ExtraWeight) {
-        //         $ExtraWeight = (int)$ExtraWeight + 1;
-        //     }
-        //     $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-        // } else {
-        //     $price = (int)$shipping->max_price;
-        // }
-        // $total_price = $price + $cod_amount + (int)$request->parcel_value;
-
-        $insert = new Shipment();
-        $insert->name = $request->name;
-        $insert->phone = $request->phone;
-        $insert->address = $request->address;
-        $insert->cod_amount = $request->cod_amount;
-        $insert->area_id = $request->area;
-        $insert->shipping_charge_id = $request->shipping_charge_id;
-        $insert->parcel_value = $request->parcel_value;
-        $insert->weight_charge = $request->weight_charge;
-        $insert->invoice_id = rand(1111, 9999);
-        $insert->tracking_code = rand(1100, 9999);
-        $insert->merchant_note = $request->merchant_note;
-        $insert->weight = $request->weight;
-        $insert->delivery_type = $request->delivery_type;
-        $insert->user_id = Auth::guard('user')->user()->id;
-        $insert->zone_id = $zone->zone_id;
-        $insert->price = $cod_amount;
-        $insert->save();
-        $output = array(
-            'done' => 'done',
-        );
-        // return json_encode($output);
-        return back()->with('message', 'Shipment has been saved successfully!');
-    }
     public function PrepareShipmentEdit($id)
     {
         $earth = new Earth();
@@ -156,7 +133,6 @@ class ShipmentController extends Controller
     }
     function show(Shipment $shipment)
     {
-
         // $zone = Area::find($shipment->area_id);
         // $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
 
@@ -318,7 +294,6 @@ class ShipmentController extends Controller
                 'name.required' => 'Name is required',
                 'phone.email' => 'Phone is required',
                 'address.required' => 'Address is required',
-
                 'cod_amount.required' => 'Parcel enter COD amount',
                 'area_id.required' => 'Please select area'
             ];
@@ -333,16 +308,18 @@ class ShipmentController extends Controller
             $shipment->merchant_note = $dataSet['merchant_note'];
             $shipment->delivery_type = 1;
             $shipment->update();
-            return redirect()->route('user.dashboard')->with('success', 'Shipment has been udated successfully!');
+            return redirect()->route('merchant.dashboard')->with('success', 'Shipment has been udated successfully!');
         }
-    }
-    public function destroy($id)
-    {
-        //
     }
     public function shipmentDelete($id)
     {
-        Shipment::find($id)->delete();
-        return back()->with('message', 'Shipment has been deleted successfully!');
+        try {
+            //code...
+            Shipment::find($id)->delete();
+            return back()->with('message', 'Shipment has been deleted successfully!');
+        } catch (\Throwable $th) {
+            throw $th;
+            return back()->with('message', 'Shipment has been deleted successfully!' . $th);
+        }
     }
 }
