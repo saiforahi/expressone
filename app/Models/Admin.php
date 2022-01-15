@@ -22,4 +22,7 @@ class Admin extends Authenticatable
     public function shipments(){
         return $this->morphMany(Shipment::class, 'added_by');
     }
+    public function guard_name(){
+        return $this->guard_name;
+    }
 }

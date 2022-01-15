@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api;
 use Auth;
 use App\Models\User;
 use App\Models\Courier;
-use App\Models\Merchant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -49,21 +50,19 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required|string|min:6',
         ]);
-
         if ($validator->fails()) {
             return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
         }
-
-        foreach(config('auth.guards') as $guard=>$value){
-            if (Auth::guard($guard)->attempt(['email' => $request->email, 'password' => $request->password])) {
-                $user = Auth::guard($guard)->user();
-                $token=$user->createToken('api_token')->plainTextToken;
-                $user['guard'] = active_guard();
-                return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"data"=>$user],200);
-            }
+        $user = get_first_user_by_email($request->email);
+        if (! $user || ! Hash::check($request->password, $user->password ) || !Auth::guard($user->guard_name())->attempt(['email' => $request->email, 'password' => $request->password])) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect'],
+            ]);
         }
-
-        return response()->json(['success'=>false,'message' => 'Wrong credentials'], 401);
+        $token=$user->createToken('api_token')->plainTextToken;
+        $user['guard'] = $user->guard_name();
+        return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"data"=>$user],200);
+        
     }
 
     public function register(Request $request) {

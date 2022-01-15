@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+    protected $guard_name = 'user';
     protected $fillable = [
         'first_name', 'last_name','email', 'phone', 'ip','password','image','status','is_verified','unit_id'
     ];
@@ -26,6 +26,9 @@ class User extends Authenticatable
 
     public function shipments(){
         return $this->morphMany(Shipment::class, 'added_by');
+    }
+    public function guard_name(){
+        return $this->guard_name;
     }
     // public function inheritable(){
     //     return $this->morphTo();
