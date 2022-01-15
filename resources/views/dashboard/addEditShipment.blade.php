@@ -54,7 +54,6 @@
                                     placeholder="Customer Address" required value="{{ @old('recipient', $shipment['recipient']['address']) }}">
                             </div>
                         </div>
-
                 </div>
                 {{-- Customer Details --}}
                 <div class="main-card mb-3 card card-body">
@@ -110,7 +109,6 @@
         </div>
     </div>
 @endsection
-
 @push('style')
     <style>
         .activating {
@@ -121,7 +119,6 @@
         .activating2 {
             border: 1px solid red !important;
         }
-
     </style>
     <link href="{{ asset('vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/select2.min.css') }}">
