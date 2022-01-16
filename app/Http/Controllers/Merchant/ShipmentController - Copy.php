@@ -234,7 +234,7 @@ class ShipmentController extends Controller
     {
         return DataTables::of(Shipment::orderBy('id', 'DESC'))
             ->addColumn('action', function ($shipment) {
-                return '<a href="/shipment-info/' . $shipment->id . '">View</a> |
+                return '<a href="/shipment-details/' . $shipment->id . '">View</a> |
             <button type="button" class="btnNew" id="' . $shipment->id . '">Payment</button>';
             })
             ->addColumn('id', function ($shipment) {

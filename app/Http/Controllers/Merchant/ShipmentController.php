@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Merchant;
-
 use App\Model\Area;
 use App\Models\Unit;
 use App\ShippingPrice;
@@ -85,8 +84,58 @@ class ShipmentController extends Controller
             $invoice_data = Shipment::orderBy('id', 'desc')->first()->invoice_id;
             $data['invoice_no'] = $invoice_data + 1;
         }
-        return view('dashboard.addEditShipment', $data, compact('title', 'buttonText','shipment','tracking_code'));
+        return view('dashboard.addEditShipment', $data, compact('title', 'buttonText', 'shipment', 'tracking_code'));
     }
+
+    function show(Shipment $shipment)
+    {
+        $title = "Shipment Details";
+        return view('dashboard.shipment-view', compact('shipment','title'));
+    }
+    function shipmentConsNote(Shipment $shipment)
+    {
+        $zone = Location::find($shipment->pickup_location_id);
+        $price = $shipment->delivery_charge;
+        $total_price = $shipment->cod_amount;
+        return view('dashboard.shipmentCNote', compact('shipment', 'zone', 'price', 'total_price'));
+    }
+
+    function shipment_pdf(Shipment $shipment)
+    {
+        $total_price = $price = $shipment->cod_amount;
+        $data = [
+            'shipment' => $shipment,
+            'price' => $price,
+            'total_price' => $total_price
+        ];
+        //$pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping', 'qrcode'));
+        $mpdf = PDF::loadView('dashboard.shipment-pdf', $data);
+        // $mpdf->Output('Invoice-' . $shipment->invoice_id . '.pdf', 'D');
+        return $mpdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
+    }
+
+    function shipmentInvoice($id)
+    {
+        $data['title'] = "Invoice";
+        $data['shipment'] = Shipment::findOrFail($id);
+        set_time_limit(300);
+        $pdf = PDF::loadView('dashboard.shipment_pdf', $data);
+        return $pdf->stream();
+    }
+
+    public function shipmentDelete($id)
+    {
+        try {
+            //code...
+            Shipment::find($id)->delete();
+            return back()->with('message', 'Shipment has been deleted successfully!');
+        } catch (\Throwable $th) {
+            throw $th;
+            return back()->with('message', 'Shipment has been deleted successfully!' . $th);
+        }
+    }
+
+
     public function rateCheck(Request $request)
     {
         $price = 0;
@@ -131,46 +180,9 @@ class ShipmentController extends Controller
         return ['status' => 'success', 'total_price' => $total_price, 'price' => $price, 'cod' => $cod_type, 'cod_amount' => $cod_amount, 'cod_rate' => $shipping->cod_value];
     }
 
-    public function PrepareShipmentEdit($id)
-    {
-        $earth = new Earth();
-        $earth = $earth->getCountries()->toArray();
-        $address = address::all();
-        $shipment = shipment::where('user_id', session('user-id'))->where('id', $id)->first();
-        if ($shipment->status == 1) {
-            return redirect('dashboard');
-        }
-        return view('dashboard.shipment_edit', compact('shipment', 'address', 'earth'));
-    }
-    function show(Shipment $shipment)
-    {
-        // $zone = Area::find($shipment->area_id);
-        // $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
 
-        // if ($shipping == null) {
-        //     dd('ShippingPrice missing');
-        // }
 
-        // $weight = (float)$shipment->weight;
-        // if ($weight > $shipping->max_weight) {
-        //     $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-        //     if ((int)$ExtraWeight < $ExtraWeight) {
-        //         $ExtraWeight = (int)$ExtraWeight + 1;
-        //     }
-        //     $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-        // } else {
-        //     $price = (int)$shipping->max_price;
-        // }
-        //$total_price = $price= 0;
-        return view('dashboard.shipment-view', compact('shipment'));
-    }
-    function shipmentConsNote(Shipment $shipment)
-    {
-        $zone = Area::find($shipment->area_id);
-        $price = $shipment->delivery_charge;
-        $total_price = $shipment->cod_amount;
-        return view('dashboard.shipmentCNote', compact('shipment', 'zone', 'price', 'total_price'));
-    }
+
     function shipment_pdf_old(Shipment $shipment)
     {
         $zone = Area::find($shipment->area_id);
@@ -192,39 +204,20 @@ class ShipmentController extends Controller
         $pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping'));
         return $pdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
     }
-    function shipment_pdf(Shipment $shipment)
-    {
-        $total_price = $price = $shipment->cod_amount;
-        $data = [
-            'shipment' => $shipment,
-            'price' => $price,
-            'total_price' => $total_price
-        ];
-        //$pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping', 'qrcode'));
-        $mpdf = PDF::loadView('dashboard.shipment-pdf', $data);
-        // $mpdf->Output('Invoice-' . $shipment->invoice_id . '.pdf', 'D');
-        return $mpdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
-    }
-    function shipmentInvoice($id)
-    {
-        $data['title'] = "Invoice";
-        $data['shipment'] = Shipment::findOrFail($id);
-        set_time_limit(300);
-        $pdf = PDF::loadView('dashboard.shipment_pdf', $data);
-        return $pdf->stream();
-    }
 
-    function payments()
+
+
+    public function payments()
     {
         // $shipment = Shipment::orderBy('id','DESC')->where('user_id', Auth::guard('user')->user()->id)->get();
         return view('dashboard.shipment-payment');
     }
 
-    function payments_loading()
+    public function payments_loading()
     {
         return DataTables::of(Shipment::orderBy('id', 'DESC'))
             ->addColumn('action', function ($shipment) {
-                return '<a href="/shipment-info/' . $shipment->id . '">View</a> |
+                return '<a href="/shipment-details/' . $shipment->id . '">View</a> |
             <button type="button" class="btnNew" id="' . $shipment->id . '">Payment</button>';
             })
             ->addColumn('id', function ($shipment) {
@@ -280,57 +273,5 @@ class ShipmentController extends Controller
     {
         $payments =  ShipmentPayment::where('shipment_id', $shipment->id)->get();
         return view('dashboard.include.shipment-delivery-payment', compact('payments'));
-    }
-    function edit(Shipment $shipment)
-    {
-        $title = "Update Shipment";
-        $area = Area::where('status', 1)->select('name', 'id')->get();
-        $shippingCharges = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
-        return view('dashboard.edit-shipment', compact('shipment', 'title', 'area', 'shippingCharges'));
-    }
-    function update(Shipment $shipment, Request $request)
-    {
-        if ($request->isMethod('post')) {
-            $dataSet = $request->all();
-
-            $rules = [
-                "name.required" => "Please enter customer name.",
-                "phone.required" => "Please enter customer phone number.",
-                "address.required" => "Please enter customer address.",
-                "cod_amount.required" => "Please enter cod_amount",
-                "area_id.required" => "Please select area"
-            ];
-            //Validation message
-            $customMessage = [
-                'name.required' => 'Name is required',
-                'phone.email' => 'Phone is required',
-                'address.required' => 'Address is required',
-                'cod_amount.required' => 'Parcel enter COD amount',
-                'area_id.required' => 'Please select area'
-            ];
-            $this->validate($request, $rules, $customMessage);
-            //Saving data
-            $shipment->name = $dataSet['name'];
-            $shipment->phone = $dataSet['phone'];
-            $shipment->address = $dataSet['address'];
-            $shipment->cod_amount = $dataSet['cod_amount'];
-            $shipment->invoice_id = $dataSet['invoice_id'];
-            $shipment->area_id = $dataSet['area_id'];
-            $shipment->merchant_note = $dataSet['merchant_note'];
-            $shipment->delivery_type = 1;
-            $shipment->update();
-            return redirect()->route('merchant.dashboard')->with('success', 'Shipment has been udated successfully!');
-        }
-    }
-    public function shipmentDelete($id)
-    {
-        try {
-            //code...
-            Shipment::find($id)->delete();
-            return back()->with('message', 'Shipment has been deleted successfully!');
-        } catch (\Throwable $th) {
-            throw $th;
-            return back()->with('message', 'Shipment has been deleted successfully!' . $th);
-        }
     }
 }

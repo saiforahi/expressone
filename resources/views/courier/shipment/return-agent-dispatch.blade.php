@@ -72,14 +72,14 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">Return Parcel Delivery Report</h4>
         </div>
-        <div class="modal-body"> 
+        <div class="modal-body">
             <form class="row" method="post" action="{{route('return-shipment-delivery')}}">@csrf
                 <div class="form-group">
                     <label class="col-md-3 col-sm-3  control-label"> <br/> Please check the Delivery report status & submit</label>
                     <div class="col-md-9 col-sm-9 ">
-                      
+
                           what should be the reporting here?
-                      
+
                     </div>
                 </div>
                 <div class="form-group">
@@ -135,7 +135,7 @@
                 $('#moreView').modal('show');
                 $('.details').html('Loading....');
                 $.ajax({
-                   type: "get",url: '/driver/shipment-info/'+id,
+                   type: "get",url: '/driver/shipment-details/'+id,
                    success: function(data){$('.details').html(data);}
                 });
             });

@@ -134,14 +134,12 @@
                                             <a href="{{ route('merchant.addShipment', $shipments['id']) }}"
                                                 class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i></a>
                                         @endif
-                                        <a href="/shipment-info/{{ $shipments['id'] }}"
+                                        <a href="/shipment-details/{{ $shipments['id'] }}"
                                             class="btn btn-primary btn-sm viewMore"><i class="fa fa-search-plus"></i></a>
                                         <a href="{{ route('pdf.shipment', $shipments['id']) }}"
                                             class="btn btn-info btn-sm">
                                             <i class="fa fa-file-pdf"></i></a>
-                                        <a href="{{ route('merchant.shipmentCn', $shipments['id']) }}"
-                                            class="btn btn-primary btn-sm">
-                                            <i class="fa fa-print"></i></a>
+
                                         <a target="_blank" href="{{ route('merchant.shipmentCn', $shipments['id']) }}"
                                             class="btn btn-primary btn-sm">
                                             CN</a>

@@ -133,7 +133,7 @@
                                             <a href="{{ route('editShipment', $shipment->id) }}"
                                                 class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i></a>
                                         @endif
-                                        <a href="/shipment-info/{{ $shipment->id }}"
+                                        <a href="/shipment-details/{{ $shipment->id }}"
                                             class="btn btn-primary btn-sm viewMore"><i class="fa fa-search-plus"></i></a>
                                         <a href="{{ route('pdf.shipment', $shipment->id) }}" class="btn btn-info btn-sm">
                                             <i class="fa fa-file-pdf"></i></a>
