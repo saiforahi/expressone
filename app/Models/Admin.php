@@ -25,4 +25,8 @@ class Admin extends Authenticatable
     public function guard__name(){
         return $this->guard_name;
     }
+
+    public function units(){
+        return $this->hasMany(Unit::class);
+    }
 }

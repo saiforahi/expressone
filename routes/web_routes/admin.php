@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\AreaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ShippingChargeController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\BasicInformationController;
+use App\Http\Controllers\Admin\ShipmentController;
 /*
 |--------------------------------------------------------------------------
 | Admin Route
@@ -16,10 +18,10 @@ Route::post('admin/logout', [App\Http\Controllers\Admin\AuthController::class,'l
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function () {
     Route::get('/', [AdminDashboardController::class,'index'])->name('admin-dashboard');
-    Route::get('/basic-information', 'BasicInformationController@index')->name('basic-information');
-    Route::post('/basic-information', 'BasicInformationController@update')->name('basic-information.update');
-    Route::post('/add-merchant-verify-message', 'BasicInformationController@addVerifyMsg')->name('addVerifyMsg');
-    Route::post('/update-verify-message/{id}', 'BasicInformationController@updateVerifyMsg')->name('updateVerifyMsg');
+    Route::get('/basic-information', [BasicInformationController::class,'index'])->name('basic-information');
+    Route::post('/basic-information', [BasicInformationController::class,'update'])->name('basic-information.update');
+    Route::post('/add-merchant-verify-message', [BasicInformationController::class,'addVerifyMsg'])->name('addVerifyMsg');
+    Route::post('/update-verify-message/{id}', [BasicInformationController::class,'updateVerifyMsg'])->name('updateVerifyMsg');
 
     Route::get('/admin-change-hub/{hub}', [AdminDashboardController::class,'admin_changes_hub'])->name('admin-change-hub');
     Route::get('/get-admin-hub-ids/{admin}', 'DashboardController@get_admin_hub_ids')->name('get-admin-hub-ids');
@@ -59,8 +61,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::resource('/driver-list', 'DriverController');
     Route::get('/driver-shipments/{id}', 'DriverController@assigned_shipments')->name('admin-driverShipments');
     //Shipping List
-    Route::get('/shipping-list', 'ShipmentController@index')->name('AdminShipment.index');
-    Route::get('/shipping-list/more/{id}/{status}/{shipping_status}', 'ShipmentController@show')->name('AdminShipmentMore');
+    Route::get('/shipping-list', [ShipmentController::class,'index'])->name('AdminShipment.index');
+    Route::get('/shipping-list/more/{id}/{status}/{shipping_status}', [ShipmentController::class,'show'])->name('AdminShipmentMore');
     Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', 'ShipmentController@save_driver_shipment')->name('saveDriverShipments');
     Route::get('/shipping-list/received', 'ShipmentController@shipment_received')->name('AdminShipmentReceived');
     Route::get('/shipping-list/cancelled', 'ShipmentController@shipment_cancelled')->name('AdminShipmentCancelled');

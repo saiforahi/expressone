@@ -33,6 +33,7 @@ class CreateShipmentsTable extends Migration
             
             $table->longText('note')->nullable();
             $table->integer('shipping_status')->default(0);
+            $table->unsignedBigInteger('logistic_status')->nullable();
             $table->string('status')->default(1);
             $table->timestamp('time_starts')->useCurrent();
             $table->timestamps();
@@ -42,6 +43,7 @@ class CreateShipmentsTable extends Migration
             $table->foreign('shipping_charge_id')->references('id')->on('shipping_charges')->onDelete('set null');
             $table->foreign('delivery_location_id')->references('id')->on('locations')->onDelete('set null');
             $table->foreign('pickup_location_id')->references('id')->on('locations')->onDelete('set null');
+            $table->foreign('logistic_status')->references('id')->on('logistic_steps')->onDelete('set null');
         });
     }
 
