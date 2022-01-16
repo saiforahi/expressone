@@ -22,7 +22,7 @@ class Courier extends Authenticatable
         'created_at' => 'datetime:Y-m-d h:i:s A',
         'updated_at' => 'datetime:Y-m-d h:i:s A',
     ];
-    public function guard_name(){
+    public function guard__name(){
         return $this->guard_name;
     }
     // public function user(){
