@@ -360,7 +360,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 
     Route::get('/profile', 'DashboardController@profile')->name('profile');
     Route::get('/profile-edit', 'DashboardController@ProfileEdit')->name('ProfileEdit');
-    Route::post('/profile-update', 'DashboardController@ProfileUpdate')->name('ProfileUpdate');
+    Route::post('/profile-update', 'DashboardController@profileUpdate')->name('profileUpdate');
 
 
     Route::get('/account', 'DashboardController@account')->name('account');

@@ -32,28 +32,34 @@
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <form id="upload_form" method="post" action="{{ route('merchant.addShipment', $shipment['id']) }}">
+                <input type="text" name="tracking_code" @if (isset($shipment->tracking_code))
+                value="{{ $shipment['tracking_code'] }}"
+            @else
+                value="{{ $tracking_code }}"
+                @endif>
                 @csrf
                 <div class="main-card mb-3 card card-body">
                     <h5 class="card-title">Customer Details:</h5>
-                        {{-- Add recipient --}}
-                        <div class="form-row">
-                            <div class="col text-left">
-                                <label class="" for="name">Customer Name</label> <span
-                                    class="text-danger">*</span>
-                                <input type="text" class="form-control" name="name" placeholder="Customer Name" required value="{{ @old('recipient', $shipment['recipient']['name']) }}">
-                            </div>
-                            <div class="col text-left">
-                                <label for="usr3">Phone Number</label> <span class="text-danger">*</span>
-                                <input type="text" class="form-control" name="phone" placeholder="Customer phone"
-                                    required value="{{ @old('recipient', $shipment['recipient']['phone']) }}">
-                            </div>
-                            <div class="col text-left">
-                                <label class="" for="address">Address</label> <span
-                                    class="text-danger">*</span>
-                                <input type="text" class="form-control" name="address"
-                                    placeholder="Customer Address" required value="{{ @old('recipient', $shipment['recipient']['address']) }}">
-                            </div>
+                    {{-- Add recipient --}}
+                    <div class="form-row">
+                        <div class="col text-left">
+                            <label class="" for="name">Customer Name</label> <span
+                                class="text-danger">*</span>
+                            <input type="text" class="form-control" name="name" placeholder="Customer Name" required
+                                value="{{ @old('recipient', $shipment['recipient']['name']) }}">
                         </div>
+                        <div class="col text-left">
+                            <label for="usr3">Phone Number</label> <span class="text-danger">*</span>
+                            <input type="text" class="form-control" name="phone" placeholder="Customer phone" required
+                                value="{{ @old('recipient', $shipment['recipient']['phone']) }}">
+                        </div>
+                        <div class="col text-left">
+                            <label class="" for="address">Address</label> <span
+                                class="text-danger">*</span>
+                            <input type="text" class="form-control" name="address" placeholder="Customer Address" required
+                                value="{{ @old('recipient', $shipment['recipient']['address']) }}">
+                        </div>
+                    </div>
                 </div>
                 {{-- Customer Details --}}
                 <div class="main-card mb-3 card card-body">
@@ -65,8 +71,8 @@
                                 <option>Select location</option>
                                 @foreach ($locations as $loc)
                                     <option @if ($shipment['pickup_location_id'] == $loc->id)
-                                        selected @else ' '
-                                            @endif value="{{ $loc->id }}">{{ $loc->name }}</option>
+                                    selected @else ' '
+                                        @endif value="{{ $loc->id }}">{{ $loc->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -119,6 +125,7 @@
         .activating2 {
             border: 1px solid red !important;
         }
+
     </style>
     <link href="{{ asset('vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/select2.min.css') }}">
@@ -157,6 +164,7 @@
                 calculate();
             });
         });
+
         function calculate() {
             let area = $("#area").val();
             let weight = $("#weight").val();

@@ -55,7 +55,7 @@
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                
+
                                 <div class="form-group col-md-4">
                                     <label class="title-2">Email:</label>
                                     <input type="text" value="{{ old('email') }}" class="form-control"
@@ -69,10 +69,9 @@
                                     <textarea class="form-control" name="address" id="" cols="30" rows="1"></textarea>
                                 </div>
                                 <div class="form-group col-md-12">
-                                    <label class="title-2">Identification Number:</label>
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            {{-- <label class="title-2">Type</label> --}}
+                                        {{-- <div class="col-md-4">
+                                            <label class="title-2">Identification Type</label>
                                             <select class="form-control" name="id_type">
                                                 <option>-- Select Type --</option>
                                                 <option value="NID">NID</option>
@@ -80,16 +79,32 @@
                                             </select>
                                         </div>
                                         <div class="col-md-8">
-                                            {{-- <label class="title-2">Identification Number:</label> --}}
+                                            <label class="title-2">Identification Number:</label>
                                             <input type="text" value="{{ old('id_no') }}" class="form-control"
                                                 placeholder="Enter valid identification number" name="id_no">
                                             @error('id_no')
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
+                                        </div> --}}
+                                        <div class="col-md-6">
+                                            <label class="title-2">NID:</label>
+                                            <input type="text" value="{{ old('nid_no') }}" class="form-control"
+                                                placeholder="Enter valid NID number" name="nid_no">
+                                            @error('nid_no')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="title-2">BIN:</label>
+                                            <input type="text" value="{{ old('bin_no') }}" class="form-control"
+                                                placeholder="Enter valid NID number" name="bin_no">
+                                            @error('bin_no')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group col-md-4">
                                     <label class="title-2">Password: </label>
                                     <input type="password" class="form-control" min="8" max="20"
@@ -110,8 +125,8 @@
                                     <label class="title-2">Website link: </label>
                                     <input class="form-control" name="website_link" placeholder="Web site link">
                                 </div> --}}
-                                
-                                
+
+
                                 {{-- <div class="form-group col-md-4">
                                     <label class="title-2">Bank Account Name: </label>
                                     <input type="text" class="form-control" placeholder="Account Name"
@@ -144,7 +159,7 @@
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
                                 </div> --}}
-                                
+
                             </form>
                             <div class="row mt-3">
                                 <div class="form-group col-md-3">

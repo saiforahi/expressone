@@ -24,13 +24,13 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function 
     Route::get('/shipment-cnote/{shipment}', 'ShipmentController@shipmentConsNote')->name('merchant.shipmentCn');
     Route::post('set-shipping-charge/{id}', [ShippingChargeController::class, 'setShippingCharge'])->name('setShippingCharge');
     //Profile
-    Route::get('/profile', [MerchantDashboardController::class,'profile'])->name('profile');
-    Route::get('/profile-edit', [MerchantDashboardController::class,'ProfileEdit'])->name('ProfileEdit');
-    Route::post('/profile-update', [MerchantDashboardController::class,'ProfileUpdate'])->name('ProfileUpdate');
+    Route::get('/profile', [DashboardController::class,'profile'])->name('profile');
+    Route::get('/profile-edit', [DashboardController::class,'ProfileEdit'])->name('ProfileEdit');
+    Route::post('/profile-update', [DashboardController::class,'profileUpdate'])->name('profileUpdate');
     //Account
-    Route::get('/account', [MerchantDashboardController::class,'account'])->name('account');
-    Route::post('/change-email', [MerchantDashboardController::class,'ChangeMail'])->name('ChangeMail');
-    Route::post('/change-password', [MerchantDashboardController::class,'ChangePassword'])->name('ChangePassword');
+    Route::get('/account', [DashboardController::class,'account'])->name('account');
+    Route::post('/change-email', [DashboardController::class,'ChangeMail'])->name('ChangeMail');
+    Route::post('/change-password', [DashboardController::class,'ChangePassword'])->name('ChangePassword');
     //Merchant Shipment
     Route::match(['get', 'post'], 'add-edit-shipment/{id?}', [ShipmentController::class, 'addEditShipment'])->name('merchant.addShipment');
     Route::get('/shipments', [ShipmentController::class,'index'])->name('merhcant_shipments');

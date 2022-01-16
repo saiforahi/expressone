@@ -40,7 +40,7 @@
     <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
         <div class="main-card mb-3 card">
             <div class="card-body">
-                <form method="post" action="{{ route('ProfileUpdate') }}">
+                <form method="post" action="{{ route('profileUpdate') }}">
                     @csrf
                     <input type="hidden" name="id" value="{{ Auth::guard('user')->user()->id }}">
                     <div class="form-row">
@@ -93,9 +93,16 @@
 
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label>{{ Auth::guard('user')->user()->id_type }}-Number</label>
-                                <input name="id_value" value="{{ Auth::guard('user')->user()->id_value }}" type="text"
-                                    class="form-control" placeholder="Enter Identity Value">
+                                <label>NID</label>
+                                <input name="nid_no" value="{{ Auth::guard('user')->user()->nid_no }}" type="text"
+                                    class="form-control" placeholder="Enter NID" value="{{ Auth::guard('user')->user()->nid_no }}">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label>BIN</label>
+                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="text"
+                                    class="form-control" placeholder="Enter BIN" value="{{ Auth::guard('user')->user()->bin_no }}">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -107,7 +114,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="bank_br_name" class="">Bank br. name</label>
+                                <label for="bank_br_name" class="">Bank br. name</label>++++
                                 <input name="bank_br_name" value="{{ Auth::guard('user')->user()->bank_br_name }}"
                                     type="text" class="form-control" required placeholder="Enter bank br name">
                             </div>

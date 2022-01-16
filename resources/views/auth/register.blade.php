@@ -87,7 +87,8 @@
                                 </div>
 
                                 <div class="form-group col-md-3">
-                                    <button type="submit" class="form-control" style="background-color: #e922c8;border-radius: 80px; color:#fff;">Register</button>
+                                    <button type="submit" class="form-control"
+                                        style="background-color: #e922c8;border-radius: 80px; color:#fff;">Register</button>
                                 </div>
                             </form>
                         </div>

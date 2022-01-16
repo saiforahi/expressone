@@ -22,12 +22,14 @@ class ShipmentController extends Controller
         $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
         $data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
+
         return view('dashboard.shipment-create', $data);
     }
     public function addEditShipment(Request $request, $id = null)
     {
         if ($id == "") {
             // Add Shipment
+
             $shipment = new Shipment();
             $title = "Add Shipment";
             $buttonText = "Save Shipment";
@@ -35,7 +37,6 @@ class ShipmentController extends Controller
         } else {
             // Update Shipment
             $shipment = Shipment::find($id);
-            //dd($shipment['recipient']['name']);
             $title = "Edit Shipment";
             $buttonText = "Update Shipment";
             $message = "Shipment has been updated successfully!";
@@ -59,8 +60,7 @@ class ShipmentController extends Controller
             ], $messages);
             $data = $request->only(['name', 'phone', 'address']);
             $shipment['recipient'] =  $data;
-            $shipment->tracking_code = uniqid();
-            $shipment->amount = $request->cod_amount;
+            $shipment->tracking_code = $request->tracking_code;
             $shipment->shipping_charge_id = $request->shipping_charge_id;
             $shipment->pickup_location_id = $request->pickup_location_id;
             $shipment->weight = $request->weight;
@@ -74,7 +74,9 @@ class ShipmentController extends Controller
         $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
         $data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
-        return view('dashboard.addEditShipment', $data, compact('title', 'buttonText','shipment'));
+        $tracking_code = uniqid();
+
+        return view('dashboard.addEditShipment', $data, compact('title', 'buttonText','shipment','tracking_code'));
     }
     public function rateCheck(Request $request)
     {
