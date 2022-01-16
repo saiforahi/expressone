@@ -29,7 +29,6 @@ class ShipmentController extends Controller
     {
         if ($id == "") {
             // Add Shipment
-
             $shipment = new Shipment();
             $title = "Add Shipment";
             $buttonText = "Save Shipment";
@@ -61,6 +60,7 @@ class ShipmentController extends Controller
             $data = $request->only(['name', 'phone', 'address']);
             $shipment['recipient'] =  $data;
             $shipment->tracking_code = $request->tracking_code;
+            $shipment->invoice_id = $request->invoice_id;
             $shipment->shipping_charge_id = $request->shipping_charge_id;
             $shipment->pickup_location_id = $request->pickup_location_id;
             $shipment->weight = $request->weight;
@@ -75,7 +75,16 @@ class ShipmentController extends Controller
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
         $data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
         $tracking_code = uniqid();
-
+        //Invoice ID
+        $invoice_data = Shipment::orderBy('id', 'desc')->first();
+        if ($invoice_data == null) {
+            $firstReg = '0';
+            $data['invoice_no'] = $firstReg + 1;
+            //dd($invoice_no);
+        } else {
+            $invoice_data = Shipment::orderBy('id', 'desc')->first()->invoice_id;
+            $data['invoice_no'] = $invoice_data + 1;
+        }
         return view('dashboard.addEditShipment', $data, compact('title', 'buttonText','shipment','tracking_code'));
     }
     public function rateCheck(Request $request)

@@ -32,9 +32,14 @@
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <form id="upload_form" method="post" action="{{ route('merchant.addShipment', $shipment['id']) }}">
+                <input type="text" name="invoice_id" @if (isset($shipment->invoice_id))
+                value="{{ $shipment['invoice_id'] }}"
+                @else
+                value="{{ $invoice_no }}"
+                @endif>
                 <input type="text" name="tracking_code" @if (isset($shipment->tracking_code))
                 value="{{ $shipment['tracking_code'] }}"
-            @else
+                @else
                 value="{{ $tracking_code }}"
                 @endif>
                 @csrf
