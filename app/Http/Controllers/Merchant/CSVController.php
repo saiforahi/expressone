@@ -67,17 +67,6 @@ class CSVController extends Controller
     public function store_new(Request $request)
     {
         foreach (Session::get('csv_data') as $key => $line) {
-            $insert = new Shipment();
-            $insert->recipient = $line['recipient'];
-            $insert->amount = $line['amount'];
-            $insert->weight = $line['weight'];
-            $insert->note = $line['note'];
-            //CSV Data
-            $insert->merchant_id = Auth::guard('user')->user()->id;
-            $insert->added_by()->associate(Auth::guard('user')->user());
-            $insert->invoice_id = rand(2222, 2000000);
-            $insert->tracking_code = uniqid();
-            $insert->save();
             //Invoice ID
             $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first();
             if ($invoice_data == null) {
@@ -88,6 +77,18 @@ class CSVController extends Controller
                 $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first()->invoice_no;
                 $invoice_no = $invoice_data + 1;
             }
+            $insert = new Shipment();
+            $insert->recipient = $line['recipient'];
+            $insert->amount = $line['amount'];
+            $insert->weight = $line['weight'];
+            $insert->note = $line['note'];
+            //CSV Data
+            $insert->merchant_id = Auth::guard('user')->user()->id;
+            $insert->added_by()->associate(Auth::guard('user')->user());
+            $insert->invoice_id = $invoice_no;
+            $insert->tracking_code = uniqid();
+            $insert->save();
+
             //Make shipment Payment
             if ($insert->save()) {
                 $shipmentPmnt =  new ShipmentPayment();

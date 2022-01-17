@@ -6,11 +6,6 @@ use App\Http\Controllers\Admin\ShippingChargeController;
 use App\Http\Controllers\Merchant\DashboardController;
 use App\Http\Controllers\Merchant\CSVController;
 
-
-Route::get('/login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
-Route::get('/verify', [App\Http\Controllers\AuthController::class, 'verify'])->name('verify-user');
-Route::post('/verify', [App\Http\Controllers\AuthController::class, 'verify_code'])->name('verify-user-code');
-Route::post('/verification.resend', [App\Http\Controllers\AuthController::class, 'send_verification_code'])->name('verification.resend');
 //Merchant
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login.store');
 Route::get('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register');

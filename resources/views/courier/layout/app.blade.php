@@ -46,10 +46,10 @@
 <body class="nav-md">
     <div class="container body">
         <div class="main_container">
-            @include('driver.layout.inc.sidebar')
-            @include('driver.layout.inc.header')
+            @include('courier.layout.inc.sidebar')
+            @include('courier.layout.inc.header')
             @yield('content')
-            @include('driver.layout.inc.footer')
+            @include('courier.layout.inc.footer')
         </div>
     </div>
 

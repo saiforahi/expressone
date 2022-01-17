@@ -1,19 +1,22 @@
 <?php
 
-
 use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\TestController;
-
 
 //To clear all cache
 Route::get('cc', function () {
     Artisan::call('optimize:clear');
     return "Cleared!";
 });
-Route::get('test',[TestController::class,'index']); //testing route
+
+Route::get('/login', [AuthController::class, 'index'])->name('login');
+Route::get('/verify', [AuthController::class, 'verify'])->name('verify-user');
+Route::post('/verify', [AuthController::class, 'verify_code'])->name('verify-user-code');
+Route::post('/verification.resend', [AuthController::class, 'send_verification_code'])->name('verification.resend');
+
 Route::get('/', [HomeController::class,'index'])->name('home');
 Route::get('/about', [HomeController::class,'about'])->name('about');
 Route::get('/team', [HomeController::class,'team'])->name('team');
