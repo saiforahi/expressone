@@ -38,12 +38,12 @@ class ShipmentController extends Controller
     {
         $merchants=array();
         if(!Auth::guard('admin')->user()->hasRole('super-admin')){
-            $shipments_belongs_to_my_units= DB::table('units')->where('admin_id',Auth::guard('admin')->user()->id)->join('points','points.unit_id','units.id')->join('locations','points.id','locations.point_id')->join('shipments','locations.id','shipments.pickup_location_id')->select('shipments.*', 'locations.name as location_name', 'units.name as unit_name')->get();
+            $shipments_belongs_to_my_units= DB::table('units')->where('admin_id',Auth::guard('admin')->user()->id)->join('points','points.unit_id','units.id')->join('locations','points.id','locations.point_id')->join('shipments','locations.id','shipments.pickup_location_id')->where('shipments.logistic_status','1')->select('shipments.*', 'locations.name as location_name', 'units.name as unit_name')->get();
             // dd($shipments_belongs_to_my_units);
             // return $shipments_belongs_to_my_units;
             $merchants = $shipments_belongs_to_my_units->pluck('merchant_id')->toArray();
         }
-        else $merchants = Shipment::where('status', 1)->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
+        else $merchants = Shipment::where('logistic_status', '1')->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
         
         $users = User::whereIn('id', array_unique($merchants))->get();
         return view('admin.shipment.shipment-list', compact('users'));
