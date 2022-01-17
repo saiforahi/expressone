@@ -6,7 +6,7 @@ use App\Models\Unit;
 use App\ShippingPrice;
 use App\Models\Location;
 use App\Models\Shipment;
-use App\ShipmentPayment;
+use App\Models\ShipmentPayment;
 use Illuminate\Http\Request;
 use App\Models\ShippingCharge;
 use Yajra\DataTables\DataTables;

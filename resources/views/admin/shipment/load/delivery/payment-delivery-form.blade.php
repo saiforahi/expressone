@@ -1,8 +1,8 @@
 <form class="form-horizontal" method="post" action="/admin/save-delivery-payment">@csrf
-    
+
     @foreach ($shipments as $shipment)
     @php
-        $check = \App\ShipmentPayment::where('shipment_id',$shipment->id);
+        $check = \App\Models\ShipmentPayment::where('shipment_id',$shipment->id);
     @endphp
     @if($check->count() <1)
         <div class="form-group">
@@ -12,7 +12,7 @@
             </div>
         </div>
         <input type="hidden" name="shipment_ids[]" value="{{$shipment->id}}">
-    @else 
+    @else
         <div class="form-group">
             <label class="control-label col-sm-5"><i class="fa fa-check text-success"></i> {{$shipment->user->first_name.' '.$shipment->user->last_name}} <br><small>{{$shipment->area->name}}</small></label>
             <div class="col-sm-7">
@@ -27,6 +27,6 @@
           <button type="submit" class="btn btn-success">Submit payments</button>
         </div>
     </div>
-    
+
 
 </form>

@@ -8,7 +8,7 @@ use DataTables;
 use Illuminate\Support\Facades\Auth;
 use App\Driver_shipment;
 use App\Driver_hub_shipment_box;
-use App\Shipment;
+use App\Models\Shipment;
 class DashboardController extends Controller
 {
     public function index(){

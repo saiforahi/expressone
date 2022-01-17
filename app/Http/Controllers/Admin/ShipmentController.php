@@ -40,7 +40,7 @@ class ShipmentController extends Controller
             $merchants = $shipments_belongs_to_my_units->select('shipments.merchant_id')->groupBy('shipments.merchant_id')->pluck('merchant_id')->toArray();
         }
         else $merchants = Shipment::where('status', 1)->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
-        
+
         $user = User::whereIn('id', $merchants)->get();
         return view('admin.shipment.shipment-list', compact('user'));
     }
@@ -902,13 +902,13 @@ class ShipmentController extends Controller
     function save_delivery_payment(Request $request)
     {
         foreach ($request->shipment_ids as $key => $shipment_id) {
-            $count = \App\ShipmentPayment::where('shipment_id', $shipment_id)->count();
+            $count = \App\Models\ShipmentPayment::where('shipment_id', $shipment_id)->count();
             $data = [
                 'shipment_id' => $shipment_id,
                 'admin_id' => Auth::guard('admin')->user()->id, 'amount' => $request->amount[$key],
             ];
             if ($count < 1) {
-                \App\ShipmentPayment::create($data);
+                \App\Models\ShipmentPayment::create($data);
             }
         }
         return back()->with('message', 'Shipment Payment for delivery is successfully saved!');
@@ -917,14 +917,14 @@ class ShipmentController extends Controller
 
     function shipment_audit(Shipment $shipment)
     {
-        // $driverAssign = \App\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'pickup','user_type'=>'driver'])->first();
-        // $driverReceive = \App\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'receive','user_type'=>'driver'])->first();
-        // $dispatch = \App\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'dispatch'])->first();
-        // $transit = \App\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'transit'])->first();
-        // $outForDelivery = \App\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'out-for-delivery'])->first();
-        // $assignDriver = \App\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'assign-driver-for-delivery'])->first();
-        // $deliverReport = \App\Shipment_movement::where(['shipment_id'=>$shipment->id,'user_type'=>'driver','report_type'=>'delivery-report'])->first();
-        $audit_logs = \App\Shipment_movement::where('shipment_id', $shipment->id)->get();
+        // $driverAssign = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'pickup','user_type'=>'driver'])->first();
+        // $driverReceive = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'receive','user_type'=>'driver'])->first();
+        // $dispatch = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'dispatch'])->first();
+        // $transit = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'transit'])->first();
+        // $outForDelivery = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'out-for-delivery'])->first();
+        // $assignDriver = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'assign-driver-for-delivery'])->first();
+        // $deliverReport = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'user_type'=>'driver','report_type'=>'delivery-report'])->first();
+        $audit_logs = \App\Models\Shipment_movement::where('shipment_id', $shipment->id)->get();
 
 
         return view('admin.shipment.load.delivery.audit', compact('shipment', 'audit_logs'));
@@ -991,17 +991,17 @@ class ShipmentController extends Controller
 
         if ($request->label == '0') {
             Driver_shipment::where('shipment_id', $request->id)->delete();
-            \App\Shipment_movement::where('shipment_id', $request->id)->delete();
+            \App\Models\Shipment_movement::where('shipment_id', $request->id)->delete();
         } elseif ($request->label == '1') {
             Driver_shipment::where('shipment_id', $request->id)
                 ->where('status', '!=', 'pending')
                 ->where('status', '!=', 'received')->delete();
-            \App\Shipment_movement::where('shipment_id', $request->id)
+            \App\Models\Shipment_movement::where('shipment_id', $request->id)
                 ->where('report_type', '!=', 'assing-driver-to-pickup')->delete();
         } else {
             Driver_shipment::where('shipment_id', $request->id)
                 ->where('status', '!=', 'received')->delete();
-            \App\Shipment_movement::where('shipment_id', $request->id)
+            \App\Models\Shipment_movement::where('shipment_id', $request->id)
                 ->where('report_type', '!=', 'receive-parcels')
                 ->where('report_type', '!=', 'assing-driver-to-pickup')->delete();
         }

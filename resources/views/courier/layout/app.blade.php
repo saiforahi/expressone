@@ -52,10 +52,8 @@
             @include('courier.layout.inc.footer')
         </div>
     </div>
-
-
     <!-- jQuery -->
-    <script src="{{ asset('ass_vendors/jquery/dist/jquery.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <!-- Bootstrap -->
     <script src="{{ asset('ass_vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <!-- FastClick -->

@@ -396,7 +396,7 @@ Route::group(['middleware' => 'auth:driver', 'namespace' => 'Courier', 'prefix' 
     Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-driver-shipments');
     Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-driver-shipments');
 
-    Route::get('/shipments', 'ShipmentController@index')->name('courierShipments.index');
+    Route::get('/shipments', 'ShipmentController@index')->name('courierShipments');
     Route::get('/my-shipments/{type}', 'ShipmentController@my_shipments')->name('my-shipments');
     Route::get('/shipping-details/{id}/{status}', 'ShipmentController@show')->name('shipping-details');
 

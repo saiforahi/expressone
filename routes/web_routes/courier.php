@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Courier\ShipmentController;
 use App\Http\Controllers\Courier\AuthController as CourierAuthController;
 use App\Http\Controllers\Courier\DashboardController as CourierDashboardController;
 
@@ -15,9 +16,9 @@ Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix'
     Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-courier-shipments');
     Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-courier-shipments');
 
-    Route::get('/shipments', 'ShipmentController@index')->name('courierShipments.index');
-    Route::get('/my-shipments/{type}', 'ShipmentController@my_shipments')->name('my-shipments');
-    Route::get('/shipping-details/{id}/{status}', 'ShipmentController@show')->name('shipping-details');
+    Route::get('shipments', [ShipmentController::class,'index'])->name('courierShipments');
+    Route::get('my-shipments/{type}', [ShipmentController::class,'my_shipments'])->name('my-shipments');
+    Route::get('shipping-details/{id}/{status}', [ShipmentController::class,'show'])->name('shipping-details');
 
     Route::get('/cencell-parcel/{id}', 'ShipmentController@cencel_parcel')->name('cancel-parcel');
     Route::get('/receive-shipment/{id}', 'ShipmentController@receive_parcel')->name('receive-parcel');

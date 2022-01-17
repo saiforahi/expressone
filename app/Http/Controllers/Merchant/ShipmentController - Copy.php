@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Merchant;
 use App\Area;
 use App\Http\Controllers\Controller;
-use App\Shipment;
+use App\Models\Shipment;
 use App\ShippingPrice;
-use App\ShipmentPayment;
+use App\Models\ShipmentPayment;
 use Illuminate\Http\Request;
 use Auth;
 use PDF;
