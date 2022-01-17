@@ -54,13 +54,13 @@ class AuthController extends Controller
             return response()->json(['success'=>false,'errors'=>$validator->errors()], 422);
         }
         $user = get_first_user_by_email($request->email);
-        if (! $user || ! Hash::check($request->password, $user->password ) || !Auth::guard($user->guard_name())->attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (! $user || ! Hash::check($request->password, $user->password ) || !Auth::guard($user->guard__name())->attempt(['email' => $request->email, 'password' => $request->password])) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect'],
             ]);
         }
         $token=$user->createToken('api_token')->plainTextToken;
-        $user['guard'] = $user->guard_name();
+        $user['guard'] = $user->guard__name();
         return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"data"=>$user],200);
         
     }

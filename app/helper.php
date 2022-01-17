@@ -126,12 +126,14 @@ if (!function_exists('get_first_user_by_email')) {
     function get_first_user_by_email($email)
     {
         $user = null;
-        if (Admin::where('email', $email)->exists()) {
-            $user = Admin::where('email', $email)->first();
-        } else if (User::where('email', $email)->exists()) {
-            $user = User::where('email', $email)->first();
-        } else if (Courier::where('email', $email)->exists()) {
-            $user = Courier::where('email', $email)->first();
+        if(Admin::where('email',$email)->exists()){
+            $user = Admin::with('roles')->where('email',$email)->first();
+        }
+        else if(User::where('email',$email)->exists()){
+            $user = User::where('email',$email)->first();
+        }
+        else if(Courier::where('email',$email)->exists()){
+            $user = Courier::where('email',$email)->first();
         }
         return  $user;
     }

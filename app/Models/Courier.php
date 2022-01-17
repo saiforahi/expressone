@@ -25,6 +25,13 @@ class Courier extends Authenticatable
     public function guard__name(){
         return $this->guard_name;
     }
+
+    public function pickup_shipments(){
+        return $this->hasMany(Shipment::class)->where('type','pickup');
+    }
+    public function delivery_shipments(){
+        return $this->hasMany(Shipment::class)->where('type','delivery');
+    }
     // public function user(){
     //     return $this->morphOne(User::class, 'inheritable');
     // }
