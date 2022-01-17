@@ -7,10 +7,9 @@ use App\Zone;
 use App\ShippingPrice;
 use App\Models\Location;
 use App\Models\Shipment;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ShipmentPayment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -77,9 +76,31 @@ class CSVController extends Controller
             //CSV Data
             $insert->merchant_id = Auth::guard('user')->user()->id;
             $insert->added_by()->associate(Auth::guard('user')->user());
-            $insert->invoice_id = rand(2222, 9999);
+            $insert->invoice_id = rand(2222, 2000000);
             $insert->tracking_code = uniqid();
             $insert->save();
+            //Invoice ID
+            $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first();
+            if ($invoice_data == null) {
+                $firstReg = 111;
+                $invoice_no = $firstReg + 1;
+                //dd($invoice_no);
+            } else {
+                $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first()->invoice_no;
+                $invoice_no = $invoice_data + 1;
+            }
+            //Make shipment Payment
+            if ($insert->save()) {
+                $shipmentPmnt =  new ShipmentPayment();
+                $shipmentPmnt->shipment_id = $insert->id;
+                $shipmentPmnt->sl_no  = $invoice_no;
+                $shipmentPmnt->tracking_code  = uniqid();
+                $shipmentPmnt->invoice_no  = $invoice_no;
+                $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
+                $shipmentPmnt->cod_amount  = $insert->amount;
+                $shipmentPmnt->delivery_charge  = $insert->shipping_charge_id;
+                $shipmentPmnt->save();
+            }
         }
         Session::forget('csv_data');
         return redirect()->route('merchant.dashboard')->with('message', 'CSV-file data has been saved successfully');

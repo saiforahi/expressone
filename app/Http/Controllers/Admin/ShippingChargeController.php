@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use App\Models\ShippingCharge;
+use App\Models\ShipmentPayment;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class ShippingChargeController extends Controller
@@ -76,7 +78,11 @@ class ShippingChargeController extends Controller
     {
         try {
             $parcel = Shipment::findOrFail($id);
-            $parcel->shipping_charge_id =$request->result[$id];
+            $parcel->shipping_charge_id = $request->result[$id];
+            //Update shipment_payments
+            if ($parcel) {
+                DB::table('shipment_payments')->where('shipment_id', $id)->update(['delivery_charge' => $parcel->shippingCharge->shipping_amount]);
+            }
             $parcel->save();
             return redirect()->back();
         } catch (\Throwable $th) {
