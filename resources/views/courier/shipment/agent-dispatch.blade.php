@@ -1,4 +1,4 @@
-@extends('driver.layout.app')
+@extends('courier.layout.app')
 @section('title','My shipment List')
 @section('content')
 <div class="right_col" role="main">

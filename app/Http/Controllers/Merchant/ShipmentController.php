@@ -6,7 +6,7 @@ use App\Models\Unit;
 use App\ShippingPrice;
 use App\Models\Location;
 use App\Models\Shipment;
-use App\ShipmentPayment;
+use App\Models\ShipmentPayment;
 use Illuminate\Http\Request;
 use App\Models\ShippingCharge;
 use Yajra\DataTables\DataTables;
@@ -21,8 +21,7 @@ class ShipmentController extends Controller
     {
         $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
-        $data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
-
+        //$data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
         return view('dashboard.shipment-create', $data);
     }
     public function addEditShipment(Request $request, $id = null)
@@ -43,22 +42,17 @@ class ShipmentController extends Controller
         if ($request->isMethod('POST')) {
             $data = $request->all();
             $messages = [
-                "name.required" => "Please enter customer name.",
-                "phone.required" => "Please enter customer phone number.",
-                "address.required" => "Please enter customer address.",
+                "recipient.required" => "Please enter corrent recipient informations",
                 "pickup_location_id.required" => "Please enter pickup_location_id.",
                 "shipping_charge_id.required" => "Please select shipping charge",
                 "amount.required" => "Please enter amount",
             ];
             $request->validate([
-                'name' => 'required|max:100',
-                'phone' => 'required|max:20',
-                'address' => 'required|max:255',
+                'recipient' => 'required|max:100',
                 "amount" => 'required',
                 "shipping_charge_id" => 'required'
             ], $messages);
-            $data = $request->only(['name', 'phone', 'address']);
-            $shipment['recipient'] =  $data;
+            $shipment->recipient = $request->recipient;
             $shipment->tracking_code = $request->tracking_code;
             $shipment->invoice_id = $request->invoice_id;
             $shipment->shipping_charge_id = $request->shipping_charge_id;
@@ -74,7 +68,7 @@ class ShipmentController extends Controller
         }
         $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
-        $data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
+        $data['locations'] = Location::select('id', 'name', 'point_id')->get();
         $tracking_code = uniqid();
         //Invoice ID
         $invoice_data = Shipment::orderBy('id', 'desc')->first();
@@ -104,16 +98,10 @@ class ShipmentController extends Controller
 
     function shipment_pdf(Shipment $shipment)
     {
-        $total_price = $price = $shipment->cod_amount;
-        $data = [
-            'shipment' => $shipment,
-            'price' => $price,
-            'total_price' => $total_price
-        ];
-        //$pdf = PDF::loadView('dashboard.shipment-pdf', compact('shipment', 'price', 'total_price', 'shipping', 'qrcode'));
-        $mpdf = PDF::loadView('dashboard.shipment-pdf', $data);
-        // $mpdf->Output('Invoice-' . $shipment->invoice_id . '.pdf', 'D');
+        $mpdf = PDF::loadView('dashboard.shipment_pdf_new', compact('shipment'));
         return $mpdf->download('Invoice-' . $shipment->invoice_id . '.pdf');
+        //return $mpdf->Output('Invoice-' . $shipment->invoice_id . '.pdf', 'D');
+        //return $mpdf->Output('MyPDF.pdf', 'D');
     }
 
     function shipmentInvoice($id)

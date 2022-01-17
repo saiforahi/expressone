@@ -1,7 +1,7 @@
 <?php $num = 0;  ?>
 @foreach($boxes as $key=>$box)
   @foreach(explode(',',$box->shipment_ids) as $shipment_id)
-  <?php $shipment = \App\Shipment::where('id',$shipment_id)->first();?>
+  <?php $shipment = \App\Models\Shipment::where('id',$shipment_id)->first();?>
   @if(is_return_avail_agentSide($box->id,$shipment->id) ==0)
     <!-- {{$box->id}},  {{$shipment->id}}  <br> -->
     <table class="table table-xs" id="{{$shipment->id}}">
@@ -25,7 +25,7 @@
             <td></td><td class="text-right hub0">Hub: {{hub_from_area($shipment->area_id)->name}}</td>
           </tr>
           <tr>
-            <td colspan="3">Address: {{$shipment->address}} </td>  
+            <td colspan="3">Address: {{$shipment->address}} </td>
           </tr>
           <tr class="text-right">
             <td class="text-left" style="width:50%">Date: <small>{{date('M d, Y',strtotime($shipment->created_at))}} (<b class="text-info">{{$shipment->created_at->diffForHumans()}}</b>)</small></td>

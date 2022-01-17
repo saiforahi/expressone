@@ -1,7 +1,7 @@
 <?php $num = 0;  ?>
 @foreach($boxes as $key=>$box)
   @foreach(explode(',',$box->shipment_ids) as $key=>$shipment_id)
-  <?php $shipment = \App\Shipment::where('id',$shipment_id)->first(); ?>
+  <?php $shipment = \App\Models\Shipment::where('id',$shipment_id)->first(); ?>
   @if(is_assigned2Driver($box->id,$shipment->id,'assigning') != 0)
     <table class="table table-xs" id="{{$shipment->id}}">
         <tbody>
@@ -24,7 +24,7 @@
             <td></td><td class="text-right hub0">Hub: {{hub_from_area($shipment->area_id)->name}}</td>
           </tr>
           <tr>
-            <td colspan="3">Address: {{$shipment->address}} </td>  
+            <td colspan="3">Address: {{$shipment->address}} </td>
           </tr>
           <tr class="text-right">
             <td class="text-left" style="width:50%">Date: <small>{{date('M d, Y',strtotime($shipment->created_at))}} (<b class="text-info">{{$shipment->created_at->diffForHumans()}}</b>)</small></td>
@@ -33,7 +33,7 @@
                 <button class="btn btn-success btn-xs rmBtn{{$shipment->id}}" onclick="moveToAgentDispatch(<?php echo $box->id.','.$shipment->id;?>);"><i class="fa fa-long-arrow-left"></i> Move</button>
               </td>
           </tr>
-          
+
         </tbody>
     </table> <?php $num++; ?>
   @endif
@@ -60,7 +60,7 @@
             <div class="row">
             <button type="submit" class="pull-right btn btn-info btn-sm submit"> <i class="fa fa-truck"></i> Assign for Delivery</button>
             </div>
-            
+
         </form>
          <div class="get row"></div>
       </div>

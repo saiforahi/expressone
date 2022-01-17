@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\User;
-use App\Shipment;
+use App\Models\User;
+use App\Models\Shipment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -47,7 +47,7 @@ class MerchantController extends Controller
 
     public function show(User $user)
     {
-        $shipments = Shipment::where('user_id', $user->id)->get();
+        $shipments = Shipment::where('merchant_id', $user->id)->get();
         return view('admin.merchant.merchant-details', compact('user', 'shipments'));
     }
 

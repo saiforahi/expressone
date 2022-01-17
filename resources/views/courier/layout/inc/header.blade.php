@@ -13,7 +13,7 @@
                 <ul class="dropdown-menu dropdown-usermenu pull-right">
                     <li><a href=""> Profile</a></li>
                     <li>
-                        <a class="dropdown-item" href="{{ route('driver.logout') }}"
+                        <a class="dropdown-item" href="{{ route('courier.logout') }}"
                            onclick="event.preventDefault(); document.getElementById('frm-logout').submit();"><i
                                 class="fa fa-sign-out pull-right"></i> Log Out</a>
                     </li>
@@ -35,6 +35,6 @@
 
     </div>
 </div>
-<form id="frm-logout" action="{{ route('driver.logout') }}" method="POST" style="display: none;">
+<form id="frm-logout" action="{{ route('courier.logout') }}" method="POST" style="display: none;">
     @csrf
 </form>

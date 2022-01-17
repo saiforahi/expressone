@@ -46,16 +46,14 @@
 <body class="nav-md">
     <div class="container body">
         <div class="main_container">
-            @include('driver.layout.inc.sidebar')
-            @include('driver.layout.inc.header')
+            @include('courier.layout.inc.sidebar')
+            @include('courier.layout.inc.header')
             @yield('content')
-            @include('driver.layout.inc.footer')
+            @include('courier.layout.inc.footer')
         </div>
     </div>
-
-
     <!-- jQuery -->
-    <script src="{{ asset('ass_vendors/jquery/dist/jquery.min.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
     <!-- Bootstrap -->
     <script src="{{ asset('ass_vendors/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <!-- FastClick -->

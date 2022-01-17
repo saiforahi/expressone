@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Shipment;
+use App\Models\Shipment;
 use App\User;
 use App\Courier;
 use App\Driver_shipment;

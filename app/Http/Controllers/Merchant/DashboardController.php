@@ -7,7 +7,6 @@ use App\Models\Unit;
 use App\Models\User;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
-use App\Models\ShippingCharge;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +21,9 @@ class DashboardController extends Controller
     {
         // dd(Auth::user()->morphClass);
         // dd(Auth::user()->inheritable->getMorphClass());
-        $shipment = Shipment::orderBy('created_at', 'DESC')->where('merchant_id', Auth::guard('user')->user()->id)->get()->toArray();
+        //$shipment = Shipment::orderBy('created_at', 'DESC')->where('merchant_id', Auth::guard('user')->user()->id)->get()->toArray();
+        $shipment = Shipment::orderBy('created_at', 'DESC')->where('merchant_id', Auth::guard('user')->user()->id)->get();
+        //dd(gettype($shipment));
         $shippingCharges =  DB::table('shipping_charges')->select('id', 'consignment_type', 'shipping_amount')->get();
         return view('dashboard.index', compact('shipment', 'shippingCharges'));
     }
@@ -93,7 +94,7 @@ class DashboardController extends Controller
 
     public function profileUpdate(Request $request)
     {
-        
+
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         $request->validate([
             'first_name' => 'required|min:3|max:50',

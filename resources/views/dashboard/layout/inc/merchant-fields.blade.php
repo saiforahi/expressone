@@ -114,7 +114,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="bank_br_name" class="">Bank br. name</label>++++
+                                <label for="bank_br_name" class="">Bank br. name</label>
                                 <input name="bank_br_name" value="{{ Auth::guard('user')->user()->bank_br_name }}"
                                     type="text" class="form-control" required placeholder="Enter bank br name">
                             </div>

@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Merchant;
 
 use App\Area;
 use App\Zone;
-use App\Shipment;
 use App\ShippingPrice;
-use Illuminate\Support\Str;
+use App\Models\Location;
+use App\Models\Shipment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\ShipmentPayment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -39,12 +40,10 @@ class CSVController extends Controller
         while (($line = fgetcsv($file)) !== FALSE) {
             if ($i != 1) {
                 $lines[] = array(
-                    'name' => $line[1],
-                    'phone' => $line[2],
-                    'address' => $line[3],
-                    'cod_amount' => $line[4],
-                    'weight_charge' => $line[5],
-                    'merchant_note' => $line[6]
+                    'recipient' => $line[1],
+                    'amount' => $line[2],
+                    'weight' => $line[3],
+                    'note' => $line[4]
                 );
             }
             $i++;
@@ -56,37 +55,55 @@ class CSVController extends Controller
         return redirect('/csv-temporary');
     }
 
-    function show()
+    function csvTemp()
     {
         if (!Session::has('csv_data')) {
             Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!');
             return redirect('/dashboard');
         }
-        $areas = Area::latest()->get();
+        $areas = Location::latest()->get();
         return view('dashboard.csv.show', compact('areas'));
     }
     public function store_new(Request $request)
     {
         foreach (Session::get('csv_data') as $key => $line) {
+            //Invoice ID
+            $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first();
+            if ($invoice_data == null) {
+                $firstReg = 111;
+                $invoice_no = $firstReg + 1;
+                //dd($invoice_no);
+            } else {
+                $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first()->invoice_no;
+                $invoice_no = $invoice_data + 1;
+            }
             $insert = new Shipment();
-            $insert->name =  $line['name'];
-            $insert->phone =  $line['phone'];
-            $insert->address = $line['address'];
-            $insert->cod_amount = $line['cod_amount'];
-            //$insert->delivery_charge = $line['delivery_charge'];
-            $insert->weight_charge = $line['weight_charge'];
-            $insert->merchant_note = $line['merchant_note'];
+            $insert->recipient = $line['recipient'];
+            $insert->amount = $line['amount'];
+            $insert->weight = $line['weight'];
+            $insert->note = $line['note'];
             //CSV Data
-            $insert->user_id = Auth::guard('user')->user()->id;
-            $insert->area_id = $request->area[$key];
-            $insert->invoice_id = rand(1111, 9999);
-            $insert->tracking_code = rand(1100, 9999);
+            $insert->merchant_id = Auth::guard('user')->user()->id;
+            $insert->added_by()->associate(Auth::guard('user')->user());
+            $insert->invoice_id = $invoice_no;
+            $insert->tracking_code = uniqid();
             $insert->save();
+
+            //Make shipment Payment
+            if ($insert->save()) {
+                $shipmentPmnt =  new ShipmentPayment();
+                $shipmentPmnt->shipment_id = $insert->id;
+                $shipmentPmnt->sl_no  = $invoice_no;
+                $shipmentPmnt->tracking_code  = uniqid();
+                $shipmentPmnt->invoice_no  = $invoice_no;
+                $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
+                $shipmentPmnt->cod_amount  = $insert->amount;
+                $shipmentPmnt->delivery_charge  = $insert->shipping_charge_id;
+                $shipmentPmnt->save();
+            }
         }
-        // exit;
-        Session::flash('message', 'CSV-file data has been uploaded to database successfully');
         Session::forget('csv_data');
-        return redirect()->route('merchant.dashboard');
+        return redirect()->route('merchant.dashboard')->with('message', 'CSV-file data has been saved successfully');
     }
     public function store(Request $request)
     {

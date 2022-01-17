@@ -1,4 +1,4 @@
-@extends('driver.layout.app')
+@extends('courier.layout.app')
 @section('title', ' shipments of ' . $user->first_name)
 @section('content')
 
