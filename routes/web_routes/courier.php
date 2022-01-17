@@ -25,7 +25,7 @@ Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix'
 
     Route::get('/my-parcels/{type}', 'ShipmentController@my_parcels')->name('my-parcel');
     Route::get('/agent-dispatch', 'ShipmentController@agent_dispatch')->name('box-for-delivery');
-    Route::get('/shipment-info/{shipment}', 'ShipmentController@shipment_info')->name('shipment-info');
+    Route::get('/shipment-details/{shipment}', 'ShipmentController@shipment_info')->name('shipment-details');
     Route::post('/shipment-delivery', 'ShipmentController@delivery_report')->name('shipment-delivery');
 
     Route::get('/return-agent-dispatch', 'ShipmentController@return_agent_dispatch')->name('return-box-for-delivery');

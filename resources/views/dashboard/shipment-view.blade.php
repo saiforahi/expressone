@@ -5,11 +5,11 @@
         <div class="page-title-wrapper">
             <div class="page-title-heading">
                 <div class="page-title-icon">
-                    <i class="fa fa-truck text-success">
-                    </i>
+                    <i class="fa fa-location-arrow text-success" aria-hidden="true"></i>
                 </div>
-                <div class="page-title-subheading">
-                    <p>The shipment current status</p>
+                <div>{{ $title }}
+                    <div class="page-title-subheading">Shipment Details
+                    </div>
                 </div>
             </div>
         </div>
@@ -26,12 +26,11 @@
                         <thead>
                             <tr>
                                 <th>Ref.</th>
-                                <th>Customer name</th>
-                                <th>Contact no</th>
-                                <th>Customer Address</th>
+                                <th>Tracking Code</th>
+                                <th>Customer Details</th>
                                 <th>COD Amount</th>
                                 <th>Delivery Charge</th>
-                                <th>Weight charge</th>
+                                <th>Weight</th>
                                 <th>Merchante note</th>
                                 <th>Created At</th>
                                 <th>QR</th>
@@ -40,34 +39,25 @@
                         <tbody>
                             <tr>
                                 <td>{{ $shipment->invoice_id }}</td>
-                                <td>{{ $shipment->name }}</td>
-                                <td>{{ $shipment->phone }}</td>
-                                <td>{{ $shipment->address }}</td>
-                                <td>{{ $shipment->cod_amount }}</td>
+                                <td>{{ $shipment->tracking_code }}</td>
                                 <td>
-                                    @if ($shipment->delivery_charge == null)
-                                        0
-                                    @else
-                                        {{ $shipment->delivery_charge }}
-                                    @endif
+                                    {{ $shipment['recipient']['name'] }} <br>
+                                    <button class="btn btn-primary btn-sm"><i class="fa fa-phone"></i>&nbsp; {{ $shipment['recipient']['phone'] }}</button> <br>
+                                    {{ $shipment['recipient']['address'] }}
+                                </td>
+                                <td>{{ $shipment->amount }}</td>
+                                <td>
+                                    {{ $shipment->shippingCharge->shipping_amount }} - {{ $shipment->shippingCharge->consignment_type }}
                                 </td>
                                 <td>
-                                    @if ($shipment->weight_charge == null)
-                                        0
-                                    @else
-                                        {{ $shipment->weight_charge }}
-                                    @endif
+                                    {{ $shipment->weight }}
                                 </td>
                                 <td>
-                                    @if ($shipment->merchant_note == null)
-                                        -
-                                    @else
-                                        {{ $shipment->merchant_note }}
-                                    @endif
+                                     {{  $shipment->note  }}
                                 </td>
                                 <td>{{ date('F m, Y', strtotime($shipment->created_at)) }}</td>
                                 <td>
-                                    {{QrCode::size(150)->generate($shipment->tracking_code)}}
+                                    {{ QrCode::size(150)->generate($shipment->tracking_code) }}
                                 </td>
                             </tr>
                         </tbody>

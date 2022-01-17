@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CmsPage;
+use Exception;
 use App\Models\User;
-use App\Models\User_verification;
-use App\Models\Mail_configuration;
+use App\Models\CmsPage;
 use Illuminate\Http\Request;
+use App\Models\User_verification;
 use App\Mail\UserRegistrationMail;
 use App\Mail\UserVerificationMail;
-use Exception;
+use App\Models\Mail_configuration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -35,37 +35,50 @@ class AuthController extends Controller
 
     public function registerStore(Request $request)
     {
+
         $request->validate([
             'first_name' => 'required|max:50',
             'last_name' => 'required|max:50',
             'email' => 'required|email|max:100|unique:users,email',
             'phone' => 'required|max:15',
+            'shop_name' => 'required|min:5',
             'password' => 'required|max:20|min:8|confirmed',
-            'id_type'=> 'required|string',
-            'id_no'=> 'required|string'
+            'nid_no' => 'numeric|min:10'
         ]);
-
-        try{
-            $user = User::create([
-                // 'user_id' => 'UR' . rand(100, 999) . time(),
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'shop_name' => $request->shop_name,
-                'address' => $request->address,
-                'password' => Hash::make($request->password),
-            ]);
-            if($request->id_type == 'NID'){
-                $user->nid_no = $request->id_no;
-            }
-            else{
-                $user->bin_no = $request->id_no;
-            }
-            $user->save();
+        // try {
+        //     User::create([
+        //         'first_name' => $request->first_name,
+        //         'last_name' => $request->last_name,
+        //         'ip' => $request->ip(),
+        //         'email' => $request->email,
+        //         'phone' => $request->phone,
+        //         'shop_name' => $request->shop_name,
+        //         'address' => $request->address,
+        //         'nid_no' => $request->nid_no,
+        //         'bin_no' => $request->bin_no,
+        //         'password' => Hash::make($request->password)
+        //     ]);
+        //     return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
+        // } catch (Exception $e) {
+        //     throw $e;
+        //     return redirect()->back()->with('error', 'Something went wrong, please try again later..');
+        // }
+        try {
+            $merchant = new User();
+            $merchant->first_name = $request->first_name;
+            $merchant->last_name = $request->last_name;
+            $merchant->ip = $request->ip;
+            $merchant->email = $request->email;
+            $merchant->phone = $request->phone;
+            $merchant->shop_name = $request->shop_name;
+            $merchant->address = $request->address;
+            $merchant->nid_no = $request->nid_no;
+            $merchant->bin_no = $request->bin_no;
+            $merchant->password = Hash::make($request->password);
+            $merchant->save();
             return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
-        }
-        catch(Exception $e){
+        } catch (\Throwable $th) {
+            throw $th;
             return redirect()->back()->with('error', 'Something went wrong, please try again later..');
         }
     }
@@ -86,7 +99,7 @@ class AuthController extends Controller
         $request->session()->flash('login_error', 'Wrong information or this account not login.');
         return back()->withInput($request->only('email', 'remember'));
     }
-    
+
 
 
     public function verify()

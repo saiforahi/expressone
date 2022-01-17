@@ -37,7 +37,15 @@ class Shipment extends Model
     {
         return $this->belongsToMany(Hub::class);
     }
-
+    /**
+     * Get the deliveryCharge that owns the Shipment
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shippingCharge()
+    {
+        return $this->belongsTo(ShippingCharge::class);
+    }
     // public function inheritable(){
     //     return $this->morphTo();
     // }

@@ -15,22 +15,22 @@ class CreateShipmentsTable extends Migration
     {
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
-            $table->string('invoice_id')->unique();
+            $table->string('invoice_id')->nullable()->unique()->comment('Will generate when download Invoice');
             $table->string('tracking_code')->unique();
             $table->unsignedBigInteger('merchant_id')->nullable();
             $table->unsignedBigInteger('shipping_charge_id')->nullable()->comment('PK of shipping_charges table');
             $table->unsignedBigInteger('delivery_location_id')->nullable();
             $table->unsignedBigInteger('pickup_location_id')->nullable();
-            
+
             $table->nullableMorphs('added_by');
             $table->json('recipient')->nullable();
             $table->integer('weight')->nullable();
             $table->string('parcel_type')->nullable();
             $table->integer('piece_qty')->nullable();
             $table->enum('service_type',['express','priority'])->nullable();
-            
+
             $table->string('amount')->nullable('Amount to be collected from customer');
-            
+
             $table->longText('note')->nullable();
             $table->integer('shipping_status')->default(0);
             $table->unsignedBigInteger('logistic_status')->nullable();

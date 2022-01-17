@@ -44,7 +44,7 @@
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <form method="post" action="{{ route('ProfileUpdate') }}">
+                    <form method="post" action="{{ route('profileUpdate') }}">
                         @csrf
                         <input type="hidden" name="id" value="{{ Auth::guard('user')->user()->id }}">
                         <div class="row justify-content-center mb-4">

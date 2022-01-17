@@ -91,16 +91,15 @@ class DashboardController extends Controller
         return view('dashboard.profile_edit', compact('areas'));
     }
 
-    public function ProfileUpdate(Request $request)
+    public function profileUpdate(Request $request)
     {
+        
         $regex = '/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/';
         $request->validate([
             'first_name' => 'required|min:3|max:50',
             'last_name' => 'required|min:3|max:50',
-            //'phone' => ['required', 'regex:/^(?:\+88|01)?(?:\d{11}|\d{13})$'],
             'phone' => ['required', 'regex:/(^(\+8801|8801|01|008801))[1|3-9]{1}(\d){8}$/'],
-            //'id_type' => 'required',
-            'id_value' => 'required',
+            'nid_no' => 'required',
             'shop_name' => 'required|min:3',
             'address' => 'required|max:255',
             'website_link' => 'required|regex:' . $regex,
@@ -114,8 +113,8 @@ class DashboardController extends Controller
         $register_user->first_name = $request->first_name;
         $register_user->last_name = $request->last_name;
         $register_user->phone = $request->phone;
-        //$register_user->id_type = $request->id_type;
-        $register_user->id_value = $request->id_value;
+        $register_user->nid_no = $request->nid_no;
+        $register_user->bin_no = $request->bin_no;
         $register_user->shop_name = $request->shop_name;
         $register_user->address = $request->address;
         $register_user->unit_id = $request->unit_id;
@@ -125,7 +124,6 @@ class DashboardController extends Controller
         $register_user->bank_acc_name = $request->bank_acc_name;
         $register_user->bank_acc_no = $request->bank_acc_no;
         $register_user->save();
-        //$request->session()->flash('message', 'Profile update successfully');
         return redirect('/profile')->with('success','Profile update successfully');
     }
 }

@@ -355,12 +355,12 @@ Route::post('/logout', 'AuthController@logout')->name('logout');
 Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 
     Route::get('/dashboard', 'DashboardController@index')->name('merchant.dashboard');
-    Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
+    Route::get('/shipment-details/{shipment}', 'ShipmentController@show')->name('shipmentDetails');
     Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
 
     Route::get('/profile', 'DashboardController@profile')->name('profile');
     Route::get('/profile-edit', 'DashboardController@ProfileEdit')->name('ProfileEdit');
-    Route::post('/profile-update', 'DashboardController@ProfileUpdate')->name('ProfileUpdate');
+    Route::post('/profile-update', 'DashboardController@profileUpdate')->name('profileUpdate');
 
 
     Route::get('/account', 'DashboardController@account')->name('account');
@@ -408,7 +408,7 @@ Route::group(['middleware' => 'auth:driver', 'namespace' => 'Courier', 'prefix' 
 
     Route::get('/my-parcels/{type}', 'ShipmentController@my_parcels')->name('my-parcel');
     Route::get('/agent-dispatch', 'ShipmentController@agent_dispatch')->name('box-for-delivery');
-    Route::get('/shipment-info/{shipment}', 'ShipmentController@shipment_info')->name('shipment-info');
+    Route::get('/shipment-details/{shipment}', 'ShipmentController@shipment_info')->name('shipment-details');
     Route::post('/shipment-delivery', 'ShipmentController@delivery_report')->name('shipment-delivery');
 
     Route::get('/return-agent-dispatch', 'ShipmentController@return_agent_dispatch')->name('return-box-for-delivery');

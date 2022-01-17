@@ -34,6 +34,7 @@
             <form id="upload_form" method="post" action="{{ route('merchant.addShipment') }}">
                 {{-- invoice no --}}
                 <input type="hidden" value="{{ $invoice_id }}" name="invoice_id">
+                <input type="text" value="{{ $trackingCode }}" name="invoice_id">
                 @csrf
                 <div class="main-card mb-3 card card-body">
                     <h5 class="card-title">Customer Details:</h5>
