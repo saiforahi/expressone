@@ -37,41 +37,21 @@
                             @endif
                         </ul>
                     </li> --}}
-                    <li><a><i class="fa mdi mdi-cube-send"></i> Logistics <span class="fa fa-chevron-down"></span></a>
+                    <li>
+                        <a><i class="fa mdi mdi-cube-send"></i>Logistics<span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (Auth::guard('admin')->user()->type == 'admin')
-                                <li><a href="{{ route('AdminShipment.index') }}">Pick-up</a></li>
-                            @endif
+                            <li><a href="{{ route('AdminShipment.index') }}">Pick-up</a></li>
 
-                            @if (Auth::guard('admin')->user()->type == 'admin')
-                                <li><a href="{{ route('AdminShipmentReceived') }}">Receive</a></li>
-                            @endif
+                            <li><a href="{{ route('AdminShipmentReceived') }}">Receive</a></li>
 
-                            @if (Auth::guard('admin')->user()->type == 'admin')
-                                <li><a href="{{ route('AdminShipmentDispatch') }}">Dispatch</a></li>
-                            @endif
+                            <li><a href="{{ route('AdminShipmentDispatch') }}">Dispatch</a></li>
+                            <li><a href="{{ route('AdminAgentDispatch') }}">Agent Dispatch</a></li>
+                            <li><a href="{{ route('AdminReconcile') }}">Reconcile</a></li>
+                            <li><a href="{{ route('AdminDelivery') }}">Delivery</a></li>
+                            <li><a href="{{ route('AdminDownload') }}">Download</a></li>
+                            <li><a href="{{ route('AdminUploadCSV') }}">Upload CSV-File</a></li>
 
-                            @if (Auth::guard('admin')->user()->type == 'admin')
-                                <li><a href="{{ route('AdminAgentDispatch') }}">Agent Dispatch</a></li>
-                            @endif
-
-                            @if (Auth::guard('admin')->user()->type == 'admin')
-                                <li><a href="{{ route('AdminReconcile') }}">Reconcile</a></li>
-                            @endif
-
-                            @if (Auth::guard('admin')->user()->type == 'admin')
-                                <li><a href="{{ route('AdminDelivery') }}">Delivery</a></li>
-                            @endif
-
-                            @if (Auth::guard('admin')->user()->type == 'admin')
-                                <li><a href="{{ route('AdminDownload') }}">Download</a></li>
-                            @endif
-
-                            @if (Auth::guard('admin')->user()->type == 'admin')
-                                <li><a href="{{ route('AdminUploadCSV') }}">Upload CSV-File</a></li>
-                            @endif
-
-                            <?php $units = \DB::table('units')
+                            {{-- <?php $units = \DB::table('units')
                                 ->where('status', '1')
                                 ->get(); ?>
                             @foreach ($units as $unit)
@@ -80,7 +60,7 @@
                                             href="{{ route('thirdparty-shipments', $unit->id) }}">{{ $unit->name }}</a>
                                     </li>
                                 @endif
-                            @endforeach
+                            @endforeach --}}
                         </ul>
                     </li>
 

@@ -66,7 +66,6 @@ class CSVController extends Controller
     }
     public function store_new(Request $request)
     {
-
         foreach (Session::get('csv_data') as $key => $line) {
             $insert = new Shipment();
             $insert->recipient = $line['recipient'];

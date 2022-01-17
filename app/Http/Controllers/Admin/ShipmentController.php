@@ -3,34 +3,45 @@
 namespace App\Http\Controllers\Admin;
 
 use PDF;
-use App\Hub;
-use App\Area;
-use App\User;
-use App\Courier;
-use App\Shipment;
-use App\Hub_shipment;
-use App\ShippingPrice;
-use App\Driver_shipment;
-use App\Hub_shipment_box;
-use App\Events\SendingSMS;
-use App\Reconcile_shipment;
-use App\Thirdparty_shipment;
+use App\Models\Hub;
+use App\Models\Area;
+use App\Models\User;
+use App\Models\Unit;
+use App\Models\Courier;
+use App\Models\Shipment;
+use App\Models\Hub_shipment;
+use App\Models\ShippingPrice;
+use App\Models\Driver_shipment;
+use App\Models\Hub_shipment_box;
+use App\Models\Events\SendingSMS;
+use App\Models\Reconcile_shipment;
+use App\Models\Thirdparty_shipment;
 use Illuminate\Http\Request;
-use App\Driver_hub_shipment_box;
+use App\Models\Driver_hub_shipment_box;
 use App\Events\ShipmentMovement;
-use App\Driver_shipment_delivery;
-use App\ShipmentPayment;
-use App\Driver_return_shipment_box;
+use App\Models\Driver_shipment_delivery;
+use App\Models\ShipmentPayment;
+use App\Models\Driver_return_shipment_box;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class ShipmentController extends Controller
 {
+    public function __construct(){
+        $this->middleware(['auth:admin','role:super-admin|unit-admin'])->except([]);
+        // $this->middleware('role:super-admin|unit-admin')->except([]);
+    }
     public function index()
     {
-        $shipment = Shipment::where('status', 1)->select('user_id')->groupBy('user_id')->pluck('user_id')->toArray();
-        $user = User::whereIn('id', $shipment)->get();
+        $merchants=array();
+        if(!Auth::guard('admin')->user()->hasRole('super-admin')){
+            $shipments_belongs_to_my_units= Unit::where('admin_id',Auth::guard('admin')->user()->id)->join('points','points.unit_id','units.id')->join('locations','locations.point_id','points.id')->join('shipments','shipments.pickup_location_id','locations.id')->get();
+            $merchants = $shipments_belongs_to_my_units->select('shipments.merchant_id')->groupBy('shipments.merchant_id')->pluck('merchant_id')->toArray();
+        }
+        else $merchants = Shipment::where('status', 1)->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
+        
+        $user = User::whereIn('id', $merchants)->get();
         return view('admin.shipment.shipment-list', compact('user'));
     }
 

@@ -27,7 +27,7 @@ class User extends Authenticatable
     public function shipments(){
         return $this->morphMany(Shipment::class, 'added_by');
     }
-    public function guard_name(){
+    public function guard__name(){
         return $this->guard_name;
     }
     // public function inheritable(){
