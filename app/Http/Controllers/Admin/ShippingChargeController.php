@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Shipment;
-use App\ShippingCharge;
+use App\Models\Shipment;
 use Illuminate\Http\Request;
+use App\Models\ShippingCharge;
+use App\Http\Controllers\Controller;
 
 class ShippingChargeController extends Controller
 {

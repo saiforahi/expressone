@@ -58,7 +58,7 @@
         <div class="col-md-12">
             <div class="main-card mb-3 card">
                 <div class="card-header"> Your Shipment &nbsp; <a href="{{ route('merchant.addShipment') }}"
-                        class="btn btn-success"><i class="fa fa-plus-circle"></i> Add New Shipment</a> </div> <br>
+                        class="btn btn-success"><i class="fa fa-plus-circle"></i>Add New Shipment</a> </div> <br>
                 <div class="container-fluid table-responsive">
                     <table id="dashboardDatatable"
                         class="align-middle mb-0 table table-borderless table-striped table-hover text-center">
@@ -108,9 +108,8 @@
 
                                     </td>
                                     <td style="font-size: 13px">
-                                        @foreach ($shipments['recipient'] as $customer)
-                                            {{ $customer }} <br>
-                                        @endforeach
+                                        {{-- @foreach ($shipments['recipient'] as $item) --}}
+                                        {{ $shipments['recipient'] }}
                                     </td>
 
                                     <td>

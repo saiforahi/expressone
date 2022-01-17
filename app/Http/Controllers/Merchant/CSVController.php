@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Merchant;
 
 use App\Area;
 use App\Zone;
-use App\Shipment;
 use App\ShippingPrice;
+use App\Models\Location;
+use App\Models\Shipment;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -39,12 +41,10 @@ class CSVController extends Controller
         while (($line = fgetcsv($file)) !== FALSE) {
             if ($i != 1) {
                 $lines[] = array(
-                    'name' => $line[1],
-                    'phone' => $line[2],
-                    'address' => $line[3],
-                    'cod_amount' => $line[4],
-                    'weight_charge' => $line[5],
-                    'merchant_note' => $line[6]
+                    'recipient' => $line[1],
+                    'amount' => $line[2],
+                    'weight' => $line[3],
+                    'note' => $line[4]
                 );
             }
             $i++;
@@ -56,37 +56,33 @@ class CSVController extends Controller
         return redirect('/csv-temporary');
     }
 
-    function show()
+    function csvTemp()
     {
         if (!Session::has('csv_data')) {
             Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!');
             return redirect('/dashboard');
         }
-        $areas = Area::latest()->get();
+        $areas = Location::latest()->get();
         return view('dashboard.csv.show', compact('areas'));
     }
     public function store_new(Request $request)
     {
+
         foreach (Session::get('csv_data') as $key => $line) {
             $insert = new Shipment();
-            $insert->name =  $line['name'];
-            $insert->phone =  $line['phone'];
-            $insert->address = $line['address'];
-            $insert->cod_amount = $line['cod_amount'];
-            //$insert->delivery_charge = $line['delivery_charge'];
-            $insert->weight_charge = $line['weight_charge'];
-            $insert->merchant_note = $line['merchant_note'];
+            $insert->recipient = $line['recipient'];
+            $insert->amount = $line['amount'];
+            $insert->weight = $line['weight'];
+            $insert->note = $line['note'];
             //CSV Data
-            $insert->user_id = Auth::guard('user')->user()->id;
-            $insert->area_id = $request->area[$key];
-            $insert->invoice_id = rand(1111, 9999);
-            $insert->tracking_code = rand(1100, 9999);
+            $insert->merchant_id = Auth::guard('user')->user()->id;
+            $insert->added_by()->associate(Auth::guard('user')->user());
+            $insert->invoice_id = rand(2222, 9999);
+            $insert->tracking_code = uniqid();
             $insert->save();
         }
-        // exit;
-        Session::flash('message', 'CSV-file data has been uploaded to database successfully');
         Session::forget('csv_data');
-        return redirect()->route('merchant.dashboard');
+        return redirect()->route('merchant.dashboard')->with('message', 'CSV-file data has been saved successfully');
     }
     public function store(Request $request)
     {

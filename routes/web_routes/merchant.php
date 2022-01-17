@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Merchant\ShipmentController;
-use App\Http\Controllers\Merchant\ShippingChargeController;
+use App\Http\Controllers\Admin\ShippingChargeController;
 use App\Http\Controllers\Merchant\DashboardController;
+use App\Http\Controllers\Merchant\CSVController;
 
 
 Route::get('/login', [App\Http\Controllers\AuthController::class, 'index'])->name('login');
@@ -37,13 +38,13 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function 
     Route::delete('/shipment-delete/{id}', [ShipmentController::class, 'shipmentDelete'])->name('shipment.delete');
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
     //Merchant Payment routes
-    Route::get('payments', 'ShipmentController@payments')->name('payments');
-    Route::get('payments-load', 'ShipmentController@payments_loading')->name('payments-load');
-    Route::get('/show-payment/{shipment}', 'ShipmentController@show_payment')->name('payments-show');
+    Route::get('payments', [ShipmentController::class, 'payments'])->name('payments');
+    Route::get('payments-load', [ShipmentController::class, 'payments_loading'])->name('payments-load');
+    Route::get('show-payment/{shipment}', [ShipmentController::class, 'show_payment'])->name('show_payment');
     //Merchant CSV
-    Route::get('/csv-upload', 'CSVController@create')->name('csv-upload');
-    Route::post('/csv-upload', 'CSVController@get_csv_data')->name('get-csv');
-    Route::get('/csv-temporary', 'CSVController@show')->name('csv-temporary');
-    Route::post('/csv-temporary', 'CSVController@store_new')->name('csv-save');
+    Route::get('csv-upload', [CSVController::class, 'create'])->name('csv-upload');
+    Route::post('csv-upload', [CSVController::class, 'get_csv_data'])->name('get-csv');
+    Route::get('csv-temporary', [CSVController::class, 'csvTemp'])->name('csv-temporary');
+    Route::post('csv-temporary', [CSVController::class, 'store_new'])->name('csv-save');
     Route::get('prepare-shipment-details/{id}', 'ShipmentController@PrepareShipmentEdit')->name('PrepareShipmentEdit');
 });

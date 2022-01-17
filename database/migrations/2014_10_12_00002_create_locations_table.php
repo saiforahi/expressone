@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Location;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,16 +20,10 @@ class CreateLocationsTable extends Migration
             $table->unsignedBigInteger('point_id');
             $table->boolean('status')->default(1);
             $table->timestamps();
-
             $table->foreign('point_id')->references('id')->on('points');
         });
-
-        // \App\Area::create([ 'name' =>'Mirpur','zone_id'=>1,'hub_id'=>'1']);
-        // \App\Area::create([ 'name' =>'Uttara','zone_id'=>2,'hub_id'=>'2']);
-        // \App\Area::create([ 'name' =>'Kaliayour','zone_id'=>3,'hub_id'=>'3']);
-
+        Location::create([ 'name' =>'Mirpur','point_id'=>1, 'status'=> 1]);
     }
-
     /**
      * Reverse the migrations.
      *
