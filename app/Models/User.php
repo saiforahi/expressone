@@ -30,6 +30,9 @@ class User extends Authenticatable
     public function guard__name(){
         return $this->guard_name;
     }
+    public function unit(){
+        return $this->belongsTo(Unit::class);
+    }
     // public function inheritable(){
     //     return $this->morphTo();
     // }

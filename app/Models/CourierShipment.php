@@ -3,7 +3,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 class CourierShipment extends Model
 {
-    protected $fillable = ['driver_id', 'shipment_id', 'admin_id', 'note', 'status'];
+    protected $fillable = ['courier_id', 'shipment_id', 'admin_id', 'note', 'status'];
     protected $table = 'courier_shipment';
     public function driver()
     {

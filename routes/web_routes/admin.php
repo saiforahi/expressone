@@ -23,7 +23,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/add-merchant-verify-message', [BasicInformationController::class,'addVerifyMsg'])->name('addVerifyMsg');
     Route::post('/update-verify-message/{id}', [BasicInformationController::class,'updateVerifyMsg'])->name('updateVerifyMsg');
 
-    Route::get('/admin-change-hub/{hub}', [AdminDashboardController::class,'admin_changes_hub'])->name('admin-change-hub');
+    Route::get('/admin-change-unit/{unit}', [AdminDashboardController::class,'admin_changes_unit'])->name('admin-change-unit');
     Route::get('/get-admin-hub-ids/{admin}', 'DashboardController@get_admin_hub_ids')->name('get-admin-hub-ids');
     Route::get('/unit', [App\Http\Controllers\Admin\AreaController::class,'unit'])->name('unit');
     Route::post('/unit', [App\Http\Controllers\Admin\AreaController::class,'unit_store'])->name('unit.store');
@@ -62,8 +62,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/driver-shipments/{id}', 'DriverController@assigned_shipments')->name('admin-driverShipments');
     //Shipping List
     Route::get('/shipping-list', [ShipmentController::class,'index'])->name('AdminShipment.index');
-    Route::get('/shipping-list/more/{id}/{status}/{shipping_status}', [ShipmentController::class,'show'])->name('AdminShipmentMore');
-    Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', 'ShipmentController@save_driver_shipment')->name('saveDriverShipments');
+    Route::get('/shipping-list/more/{id}/{status}/{logistic_status}', [ShipmentController::class,'show'])->name('AdminShipmentMore');
+    Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', [ShipmentController::class,'save_courier_shipment'])->name('saveDriverShipments');
     Route::get('/shipping-list/received', 'ShipmentController@shipment_received')->name('AdminShipmentReceived');
     Route::get('/shipping-list/cancelled', 'ShipmentController@shipment_cancelled')->name('AdminShipmentCancelled');
 
@@ -106,8 +106,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/driver-assign2agent-dispatch/{hub_shipment_box}/{shipment}', 'ShipmentController@driverAssign2Agent_dispatch')->name('driver-assign2agent-dispatch');
 
     Route::post('/agent-dispatch-assing-to-driver', 'ShipmentController@agent_dispatchAssigning')->name('agent-dispatch-assing2Driver');
-    Route::get('/all-shipments', 'ShipmentController@all_shipments')->name('all-shipments');
-    Route::get('/shipment-details/{shipment}', 'ShipmentController@new_shipment_detail')->name('shipment-details');
+    Route::get('/all-shipments', [ShipmentController::class,'all_shipments'])->name('all-shipments');
+    Route::get('/shipment-details/{shipment}', [ShipmentController::class,'new_shipment_detail'])->name('shipment-details');
     Route::get('/shipment-print/{shipment}', 'ShipmentController@shipment_print')->name('shipment-print');
     Route::post('/reset-shipment', 'ShipmentController@reset_shipment')->name('reset-shipment');
     // ajax call, get zone wize area
