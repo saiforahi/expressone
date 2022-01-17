@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Location;
 
 class CreateLocationsTable extends Migration
 {
@@ -17,16 +18,14 @@ class CreateLocationsTable extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('point_id');
+            $table->unsignedBigInteger('unit_id');
             $table->boolean('status')->default(1);
             $table->timestamps();
 
             $table->foreign('point_id')->references('id')->on('points');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
-
-        // \App\Area::create([ 'name' =>'Mirpur','zone_id'=>1,'hub_id'=>'1']);
-        // \App\Area::create([ 'name' =>'Uttara','zone_id'=>2,'hub_id'=>'2']);
-        // \App\Area::create([ 'name' =>'Kaliayour','zone_id'=>3,'hub_id'=>'3']);
-
+        Location::create([ 'name' =>'Mirpur','point_id'=>1,'unit_id'=>1, 'status'=> 1]);
     }
 
     /**
