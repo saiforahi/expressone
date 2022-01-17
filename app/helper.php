@@ -73,7 +73,7 @@ function pick_shipments($driver_id, $user_id)
 
 function is_belongsTo_hub($userHub, $authHub)
 {
-    if (auth()->guard('admin')->user()->role_id == 1) {
+    if (auth()->guard('admin')->user()->hasRole('super-admin')) {
         return true;
     } else {
         if ($userHub == $authHub) return true;

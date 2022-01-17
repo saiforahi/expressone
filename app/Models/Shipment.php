@@ -22,20 +22,17 @@ class Shipment extends Model
     {
         return $this->belongsTo(Area::class);
     }
-    // function owner()
-    // {
-    //     return $this->belongsTo(User::class,'');
-    // }
-    public function added_by(){
+    public function added_by()
+    {
         return $this->morphTo();
     }
-    public function zone()
+    public function pickup_location()
     {
-        return $this->belongsTo(Zone::class);
+        return $this->belongsTo(Location::class, 'pickup_location_id', 'id');
     }
-    public function hubs()
+    public function delivery_location()
     {
-        return $this->belongsToMany(Hub::class);
+        return $this->belongsTo(Location::class, 'delivery_location_id', 'id');
     }
     /**
      * Get the deliveryCharge that owns the Shipment

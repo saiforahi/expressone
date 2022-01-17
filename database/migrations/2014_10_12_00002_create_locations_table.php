@@ -18,11 +18,13 @@ class CreateLocationsTable extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('point_id');
+            $table->unsignedBigInteger('unit_id');
             $table->boolean('status')->default(1);
             $table->timestamps();
             $table->foreign('point_id')->references('id')->on('points');
+            $table->foreign('unit_id')->references('id')->on('units');
         });
-        Location::create([ 'name' =>'Mirpur','point_id'=>1, 'status'=> 1]);
+        Location::create([ 'name' =>'Mirpur','point_id'=>1,'unit_id'=>1, 'status'=> 1]);
     }
     /**
      * Reverse the migrations.

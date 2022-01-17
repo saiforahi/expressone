@@ -26,7 +26,7 @@
                 <div class="page-title">
                     <h3>
                         Merchant Shipment List
-                        @if ($shipments->count() > 0 && Request::segment(6) == '0')
+                        @if ($shipments->count() > 0 && $shipments->where('logistic_status','!=','1')->count()==0)
                             <a data-target="#assignShipment" data-toggle="modal" data-id="all" href="#"
                                 class="btn btn-primary assign pull-right">Assign all parcels to a Rider</a>
                         @endif
@@ -59,21 +59,21 @@
                                 @foreach ($shipments as $key => $shipment)
                                     <tr shipment_id={{ $shipment->id }}>
                                         <th scope="row">
-                                            {{-- <input style="display:none" type="checkbox" id="ids" name="ids[]"
-                                                value="{{ $shipment->id }}"> --}}
+                                            <input style="display:none" type="checkbox" id="ids" name="ids[]"
+                                                value="{{ $shipment->id }}">
                                             {{ $key + 1 }}
                                         </th>
-                                        <th scope="row">Name: {{ $shipment->name }} <br>Price:
+                                        <th scope="row">Name: {{ $shipment->recipient['name'] }} <br>Price:
                                             {{ $shipment->cod_amount }}
                                         </th>
 
-                                        <th scope="row"><i class="fa fa-phone"></i> {{ $shipment->phone }}<br>
-                                            <i class="fa fa-map-marker"></i> {{ $shipment->address }}<br>
+                                        <th scope="row"><i class="fa fa-phone"></i> {{ $shipment->recipient['phone'] }}<br>
+                                            <i class="fa fa-map-marker"></i> {{ $shipment->recipient['address'] }}<br>
                                         </th>
                                         <th scope="row">
 
-                                            @if ($shipment->shipping_charge_id == 1)
-                                                Regular
+                                            @if ($shipment->service_type == 1)
+                                                Priority
                                             @else
                                                 Express
                                             @endif
@@ -84,7 +84,7 @@
                                                     class="fa fa-truck"></i></button>
                                         </th>
                                         <th scope="row">
-                                            @if ($shipment->status == '1' && $shipment->shipping_status < 2)
+                                            {{-- @if ($shipment->status == '1' && $shipment->shipping_status < 2)
                                                 <a onClick="return confirm('Are you sure to Delete the shipment');"
                                                     href="/admin/delete-shipment/{{ $shipment->id }}"
                                                     class="btn-xs btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
@@ -94,7 +94,7 @@
                                                     Cancel</a>
                                             @elseif($shipment->status=='2')
                                                 cancelled
-                                            @endif
+                                            @endif --}}
                                         </th>
                                     </tr>
                                     {{-- Assign to driver modal --}}
@@ -110,7 +110,7 @@
                                                 <div class="modal-body">
                                                     <form method="post">
                                                         @csrf
-                                                        @include('admin.shipment.includes.shipment-assign-driver-form')
+                                                        @include('admin.shipment.includes.shipment-assign-courier-form')
                                                         <input type="hidden" name="shipment_id"
                                                             value="{{ $shipment->id }}" id="shipment_id"><br>
                                                         <button type="submit" class="pull-right btn btn-info btn-sm"> <i

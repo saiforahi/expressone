@@ -12,6 +12,7 @@ use App\Models\ShippingCharge;
 use Yajra\DataTables\DataTables;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Controllers\Controller;
+use App\Models\LogisticStep;
 use Illuminate\Support\Facades\Auth;
 
 class ShipmentController extends Controller
@@ -60,6 +61,7 @@ class ShipmentController extends Controller
             $shipment->amount = $request->amount;
             $shipment->note = $request->note;
             $shipment->merchant_id = Auth::guard('user')->user()->id;
+            $shipment->logistic_status= LogisticStep::first()->id; //setting logistic status to approval from unit/super admin
             $shipment->added_by()->associate(Auth::guard('user')->user());
             $shipment->save();
             return redirect()->route('merchant.dashboard')->with('success', $message);

@@ -11,7 +11,7 @@ class LogisticStep extends Model
     // protected $fillable=[];
     protected $guarded=[];
 
-    protected function next(){
-        return $this->hasOne(LogisticStep::class);
+    public function next(){
+        return $this->hasOne(LogisticStep::class,'id','next');
     }
 }

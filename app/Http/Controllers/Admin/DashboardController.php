@@ -26,9 +26,9 @@ class DashboardController extends Controller
         return view('admin.dashboard')->with('salesToday','');
     }
 
-    public function admin_changes_hub(Hub $hub)
+    public function admin_changes_unit(Unit $unit)
     {
-        Session::put('admin_hub',$hub);
+        Session::put('admin_unit',$unit);
         return back();
     }
 

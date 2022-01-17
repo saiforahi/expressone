@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Unit;
+use App\Models\Shipment;
 
 class Admin extends Authenticatable
 {
@@ -28,5 +30,14 @@ class Admin extends Authenticatable
 
     public function units(){
         return $this->hasMany(Unit::class);
+    }
+
+    public function my_shipments(){
+        if($this->hasRole('super-admin')){
+            return Shipment::all();
+        }
+        else{
+            return Unit::where('admin_id',$this->id)->join('points','points.unit_id','units.id')->join('locations','locations.point_id','points.id')->join('shipments','shipments.pickup_location_id','locations.id')->get();
+        }
     }
 }
