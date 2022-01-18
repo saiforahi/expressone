@@ -66,17 +66,17 @@
                                             </td>
                                             <td>
                                                 @if($shipment->shipping_status>5)
-                                                    <?php $driver_id = \DB::table('driver_hub_shipment_box')->where('shipment_id', $shipment->id)->pluck('driver_id')->first();
-                                                    $dName = \DB::table('drivers')->where('id', $driver_id)->select('first_name', 'last_name')->first(); ?>
+                                                    <?php $courier_id = \DB::table('driver_hub_shipment_box')->where('shipment_id', $shipment->id)->pluck('courier_id')->first();
+                                                    $dName = \DB::table('drivers')->where('id', $courier_id)->select('first_name', 'last_name')->first(); ?>
 
                                                     @if($dName !=null) Delivery by <b
                                                         class="label label-info">{{$dName->first_name.' '.$dName->last_name}}</b>
                                                     <br> @endif
                                                 @endif
 
-                                                <?php $driver_id = \DB::table('driver_shipment')->where('shipment_id', $shipment->id)->pluck('driver_id')->first();?>
-                                                @if($driver_id !=null)
-                                                    <?php $dName = \DB::table('drivers')->where('id', $driver_id)->select('first_name', 'last_name')->first(); echo $driver_id;?>
+                                                <?php $courier_id = \DB::table('driver_shipment')->where('shipment_id', $shipment->id)->pluck('courier_id')->first();?>
+                                                @if($courier_id !=null)
+                                                    <?php $dName = \DB::table('drivers')->where('id', $courier_id)->select('first_name', 'last_name')->first(); echo $courier_id;?>
                                                     Picked up by: <b
                                                         class="label label-info">{{$dName->first_name.' '.$dName->last_name}}</b>
                                                 @else
@@ -266,10 +266,10 @@
             });
         }
 
-        function get_driver_shipment(driver_id) {
+        function get_driver_shipment(courier_id) {
             $('.delivery-result').html('<p class="text-center text-warning">Loading...</p>');
             $.ajax({
-                type: "get", url: '<?php echo '/admin/get-driver-shipment/';?>' + driver_id,
+                type: "get", url: '<?php echo '/admin/get-driver-shipment/';?>' + courier_id,
                 success: function (data) {
                     $('.delivery-result').html(data);
                 }
@@ -319,13 +319,13 @@
 
         function get_driver() {
             let url = window.location.href;
-            let driver_id = $('[name=driver_id]').val();
+            let courier_id = $('[name=courier_id]').val();
             url = new URL(url);
-            if (window.location.href.indexOf("driver_id") > -1) {
-                url.searchParams.set('driver_id', driver_id);
+            if (window.location.href.indexOf("courier_id") > -1) {
+                url.searchParams.set('courier_id', courier_id);
                 window.location.replace(url.href);
             } else {
-                url.searchParams.append('driver_id', driver_id);
+                url.searchParams.append('courier_id', courier_id);
                 window.location.replace(url.href);
             }
         }

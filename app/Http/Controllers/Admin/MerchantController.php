@@ -30,7 +30,7 @@ class MerchantController extends Controller
             'website_link' => 'max:255',
         ]);
         $register_user = new User();
-        $register_user->user_id = 'UR' . rand(100, 999) . time();
+        $register_user->merchant_id = 'UR' . rand(100, 999) . time();
         $register_user->first_name = $request->first_name;
         $register_user->last_name = $request->last_name;
         $register_user->email = $request->email;

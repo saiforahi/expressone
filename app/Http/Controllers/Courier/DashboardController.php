@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Courier;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use DataTables;
-use Illuminate\Support\Facades\Auth;
-use App\Driver_shipment;
-use App\Driver_hub_shipment_box;
 use App\Models\Shipment;
+use Illuminate\Http\Request;
+use App\Models\CourierShipment;
+use App\Driver_hub_shipment_box;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
+
 class DashboardController extends Controller
 {
     public function index(){
@@ -32,21 +34,22 @@ class DashboardController extends Controller
         $dateFrom = date('Y-m-d',strtotime(str_replace('~','/',explode('-',$dates)[0])));
         $dateTo = date('Y-m-d',strtotime(str_replace('~','/',explode('-',$dates)[1])));
         if($type=='delivery'){
-            $shipments = Driver_hub_shipment_box::where(['driver_id'=>Auth::guard('driver')->user()->id])
+            $shipments = Driver_hub_shipment_box::where(['courier_id'=>Auth::guard('courier')->user()->id])
             ->whereBetween('created_at', [$dateFrom." 00:00:00", $dateTo." 23:59:59"])
             ->orderBy('id', 'DESC')->get();
         }else{
-            $shipments = Driver_shipment::where(['driver_id'=>Auth::guard('driver')->user()->id])
+            $shipments = CourierShipment::with('shipment')->with('admin')->where(['courier_id'=>Auth::guard('courier')->user()->id])
             ->whereBetween('created_at', [$dateFrom." 00:00:00", $dateTo." 23:59:59"])
             ->orderBy('id', 'DESC')->get();
+            //dd($shipments);
         }
 
-        return view('driver.includes.date-wize-shipments',compact('shipments'));
+        return view('courier.includes.date-wize-shipments',compact('shipments'));
     }
 
     public function delivery_shipments()
     {
-        return DataTables::of(Driver_hub_shipment_box::where('driver_id',Auth::guard('driver')->user()->id)
+        return DataTables::of(Driver_hub_shipment_box::where('courier_id',Auth::guard('courier')->user()->id)
         ->where('status','!=','assigned')
         ->orderBy('id', 'DESC'))
                 ->addColumn('date', function ($driverShipment) {
@@ -82,7 +85,7 @@ class DashboardController extends Controller
 
 
     function pickup_shipments(){
-        return DataTables::of(Driver_hub_shipment_box::where(['driver_id'=>Auth::guard('driver')->user()->id,'status'=>'assigned'])->orderBy('id', 'DESC'))
+        return DataTables::of(Driver_hub_shipment_box::where(['courier_id'=>Auth::guard('courier')->user()->id,'status'=>'assigned'])->orderBy('id', 'DESC'))
         ->addColumn('date', function ($driverShipment) {
             $data = 'Date: '.date('M d, Y H:i',strtotime($driverShipment->created_at)).'<br/>';
             $data.= 'TrackingCode: '.$driverShipment->shipment->tracking_code; return $data;
@@ -113,7 +116,7 @@ class DashboardController extends Controller
             return view('dashboard.include.shipping-status',compact('status','shipping_status'));
         })->rawColumns(['date','customer_info','merchant','amount','area','status'])->make(true);
 
-        // return DataTables::of(Driver_shipment::where(['driver_id'=>Auth::guard('driver')->user()->id])->orderBy('id', 'DESC'))
+        // return DataTables::of(Driver_shipment::where(['courier_id'=>Auth::guard('courier')->user()->id])->orderBy('id', 'DESC'))
         // ->addColumn('date', function ($driverShipment) {
         //     $data = 'Date: '.date('M d, Y H:i',strtotime($driverShipment->created_at)).'<br/>';
         //     $data.= 'TracingCode: '.$driverShipment->shipment->tracking_code; return $data;

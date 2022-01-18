@@ -5,7 +5,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Merchant Shipment List
+                    <h3>Courier Shipment List
                     </h3>
                 </div>
             </div>
@@ -15,23 +15,56 @@
                 <div class="col-12">
                     <div class="x_panel">
                         <div class="x_content table-responsive">
-
                             <table id="datatable-buttons"
                                 class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>
                                     <tr class="bg-dark">
-                                        <th>Merchant Id</th>
                                         <th>Image</th>
-                                        <th>Info</th>
+                                        <th>Merchant Info</th>
                                         <th>Contact</th>
                                         <th>Shipment</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($merchant as $user)
+                                    @foreach ($user as $users)
+                                        {{-- courier_shipments is a helper --}}
+                                        @if (courier_shipments(Auth::guard('courier')->user()->id, $users->id) > 0)
+                                            <tr>
+                                                <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid"
+                                                        src="{{ $users->image == null ? asset('images/user.png') : asset('storage/user/' . $users->image) }}">
+                                                </th>
+                                                <th scope="row">Name: {{ $users['first_name'] }}
+                                                    {{ $users['last_name'] }}<br>
+                                                    Shop Name: {{ $users->shop_name }}
+                                                </th>
+                                                <th scope="row"><i class="fa fa-phone"></i> {{ $users['phone'] }}<br>
+                                                    <i class="fa fa-envelope-o"></i> {{ $users['email'] }}<br>
+                                                    <i class="fa fa-map-marker"></i> {{ $users['address'] }}<br>
+                                                </th>
+                                                <th scope="row">
+                                                    <button class="btn btn-info">
+                                                        {{-- {{ courier_shipments(Auth::guard('courier')->user()->id, $users->id) }} --}}
+                                                        parcel
+                                                    </button>
 
-                                        Okay
+                                                </th>
+                                                <th class="text-right">
+                                                    <?php
+                                                    if (courier_shipments(Auth::guard('courier')->user()->id, $users->id) > 0) {
+                                                        $ability = '';
+                                                        $action = ' /courier/shipping-details/' . $users->id . '/pending';
+                                                    } else {
+                                                        $ability = 'disabled';
+                                                        $action = 'javaScript:void(0)';
+                                                    }
+                                                    ?>
+
+                                                    <a href="{{ $action }}" class="btn btn-primary"
+                                                        {{ $ability }}>View</a>
+                                                </th>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>
@@ -50,8 +83,10 @@
     <!-- Datatables -->
     <link href="{{ asset('ass_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('ass_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}"
+        rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}"
+        rel="stylesheet">
     <link href="{{ asset('ass_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 @endpush
 

@@ -85,9 +85,9 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::post('/add-parcelBy-admin', 'ShipmentController@add_parcel')->name('add-parcelBy-admin');
 
 
-    Route::get('/assign-to-hub/{user_id}/{status}/{shipping_status}', 'ShipmentController@assignToHub')->name('AdminShipmentReceive');
-    Route::get('/receiving-parcels/{user_id}/{status?}/{shipping_status?}', 'ShipmentController@receving_parcels')->name('receiving-parcels');
-    Route::get('/get-hub-csv-files/{user_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
+    Route::get('/assign-to-hub/{merchant_id}/{status}/{shipping_status}', 'ShipmentController@assignToHub')->name('AdminShipmentReceive');
+    Route::get('/receiving-parcels/{merchant_id}/{status?}/{shipping_status?}', 'ShipmentController@receving_parcels')->name('receiving-parcels');
+    Route::get('/get-hub-csv-files/{merchant_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
 
     Route::get('/move-to-hub', 'ShipmentController@MoveToHub')->name('ShipmentToHub');
     Route::get('/move2hub-withPhone', 'ShipmentController@MoveToHubWithPhone')->name('move2hub-withPhone');

@@ -57,7 +57,7 @@
                                     <tr>
                                         <th scope="row">{{$no}}</th>
                                         <th scope="row">{{$drivers->first_name}} {{$drivers->last_name}}</th>
-                                        <th scope="row">{{$drivers->driver_id}}</th>
+                                        <th scope="row">{{$drivers->courier_id}}</th>
                                         <th scope="row">{{$drivers->phone}}</th>
                                         <th scope="row">{{$drivers->email}}</th>
                                         <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid"

@@ -43,6 +43,16 @@ class Shipment extends Model
     {
         return $this->belongsTo(ShippingCharge::class);
     }
+    /**
+     * Get the merchant t
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function merchant()
+    {
+        return $this->belongsTo(User::class);
+        //return $this->belongsTo(User::class, 'foreign_key', 'other_key');
+    }
     // public function inheritable(){
     //     return $this->morphTo();
     // }

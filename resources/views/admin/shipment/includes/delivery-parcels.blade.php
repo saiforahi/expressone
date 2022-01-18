@@ -30,14 +30,14 @@
       </td>
       <td>
         @if($shipment->shipping_status>5)
-          <?php $driver_id = \DB::table('driver_hub_shipment_box')->where('shipment_id',$shipment->id)->pluck('driver_id')->first();
-          $dName = \DB::table('drivers')->where('id',$driver_id)->select('first_name','last_name')->first(); ?>
+          <?php $courier_id = \DB::table('driver_hub_shipment_box')->where('shipment_id',$shipment->id)->pluck('courier_id')->first();
+          $dName = \DB::table('drivers')->where('id',$courier_id)->select('first_name','last_name')->first(); ?>
           @if($dName !=null) Delivery by <b class="label label-info">{{$dName->first_name.' '.$dName->last_name}}</b> <br> @endif
         @endif
 
-        <?php $driver_id = \DB::table('driver_shipment')->where('shipment_id',$shipment->id)->pluck('driver_id')->first();?> 
-        @if($driver_id !=null)
-          <?php $dName = \DB::table('drivers')->where('id',$driver_id)->select('first_name','last_name')->first();?>
+        <?php $courier_id = \DB::table('driver_shipment')->where('shipment_id',$shipment->id)->pluck('courier_id')->first();?>
+        @if($courier_id !=null)
+          <?php $dName = \DB::table('drivers')->where('id',$courier_id)->select('first_name','last_name')->first();?>
           Picked up by<br><b class="label label-info">{{$dName->first_name.' '.$dName->last_name}}</b>
         @else
           <?php $dName = \DB::table('admins')->where('id',Auth::guard('admin')->user()->id)->select('first_name','last_name')->first();?>
@@ -45,7 +45,7 @@
         @endif
       </td>
       <td class="">Created at: {{date('M d, y H:i:s',strtotime($shipment->created_at))}}<br>
-      Delivery at: 
+      Delivery at:
       @if($shipment->shipping_status>5)
         <?php $created_at = \DB::table('driver_hub_shipment_box')->where('shipment_id',$shipment->id)->pluck('created_at')->first(); ?>
         {{date('M d, y H:i:s',strtotime($created_at))}}
@@ -54,13 +54,12 @@
       <td class="">
         Status:
         @include('admin.shipment.status',['status'=>$shipment->status,'shipping_status'=>$shipment->shipping_status]) <br><br>
-        
+
         <b data-toggle="modal" data-target="#DriverNote" class="btn btn-xs btn-info pull-right" onclick="get_driver_note(<?php echo $shipment->id;?>)"> <i class="fa fa-info"></i> <i class="fa fa-plus-circle"></i></b>
-        
+
         <button onclick="audit_log(<?php echo $shipment->id;?>)" class="btn btn-xs pull-left btn-warning" data-toggle="modal" data-target="#logModal">Audit log</button>
         <button onclick="print_page(<?php echo $shipment->id;?>)" class="btn btn-xs pull-left btn-primary" data-id="{{$shipment->id}}"><i class="fa fa-print"></i> Print</button>
-      
+
       </td>
     </tr>
     @endforeach
-      

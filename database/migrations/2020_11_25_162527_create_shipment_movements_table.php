@@ -17,11 +17,11 @@ class CreateShipmentMovementsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('shipment_id');
             $table->string('user_type');
-            $table->integer('user_id')->comment('the one who make action');
+            $table->integer('merchant_id')->comment('the one who make action');
             $table->string('report_type');
             $table->text('note')->nullable();
             $table->string('status')->nullable();
-            
+
             $table->foreign('shipment_id')->references('id')->on('shipments');
             $table->timestamps();
         });

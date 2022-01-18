@@ -34,7 +34,7 @@
                                         <?php
                                         $checkShipment = \DB::table('shipments')
                                             ->select('id')
-                                            ->where(['user_id' => $users->id, 'status' => '1', 'shipping_status' => '2'])
+                                            ->where(['merchant_id' => $users->id, 'status' => '1', 'shipping_status' => '2'])
                                             ->get();
                                         $status = '1';
                                         $shipping_status = '2';

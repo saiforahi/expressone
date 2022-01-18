@@ -7,6 +7,13 @@
                 <div class="title_left">
                     <h3>{{ $title }}</h3>
                 </div>
+                <div class="title_right">
+                    <div class="form-group pull-right top_search">
+                        <a href="{{ url('admin/add-edit-shipping-charge') }}" class="btn btn-info btn-sm add-hub">
+                            <i class="fa fa-plus fs-13 m-r-3"></i> Add Shipping Charge
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="clearfix"></div>
             <div class="row">

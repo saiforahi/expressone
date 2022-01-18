@@ -74,7 +74,7 @@
                 </div>
                 <div class="modal-body">
                     @include('admin.shipment.includes.parcel-entry-form')
-                    <input type="hidden" name="user_id" value="{{ $id }}">
+                    <input type="hidden" name="merchant_id" value="{{ $id }}">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -180,7 +180,7 @@
                 });
             });
 
-            // with Customer phone no 
+            // with Customer phone no
             $('[name=phoneNo]').on('keypress', function(e) {
                 if (e.which == 13) {
                     $.ajax({
@@ -188,7 +188,7 @@
                         url: '/admin/move2hub-withPhone/',
                         data: {
                             phone: $(this).val(),
-                            user_id: '<?php echo $id; ?>'
+                            merchant_id: '<?php echo $id; ?>'
                         },
                         success: function(data) {
                             $('.result').html(data);
@@ -208,7 +208,7 @@
                         url: '/admin/move2hub-withInvoice/',
                         data: {
                             invoice_id: $(this).val(),
-                            user_id: '<?php echo $id; ?>'
+                            merchant_id: '<?php echo $id; ?>'
                         },
                         success: function(data) {
                             $('.result').html(data);

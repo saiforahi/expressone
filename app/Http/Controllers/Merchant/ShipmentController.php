@@ -199,7 +199,7 @@ class ShipmentController extends Controller
 
     public function payments()
     {
-        // $shipment = Shipment::orderBy('id','DESC')->where('user_id', Auth::guard('user')->user()->id)->get();
+        // $shipment = Shipment::orderBy('id','DESC')->where('merchant_id', Auth::guard('user')->user()->id)->get();
         return view('dashboard.shipment-payment');
     }
 

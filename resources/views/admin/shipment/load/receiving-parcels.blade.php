@@ -41,7 +41,7 @@
                     <a href="{{route('shipment-print',$shipment->id)}}" class="btnPrint" target="_blank"><i
                             class="fa fa-print"></i> Print</a> &nbsp;
                     <button class="btn btn-xs btn-default"><i class="fa fa-undo"></i> Return</button>
-                    <input type="hidden" id="user_id{{$key}}" value="{{$shipment->user_id}}">
+                    <input type="hidden" id="merchant_id{{$key}}" value="{{$shipment->merchant_id}}">
                     <input type="hidden" id="hub_id{{$key}}" value="{{$shipment->area->hub_id}}">
                     <input type="hidden" id="shipment_id{{$key}}" value="{{$shipment->id}}">
                     <button class="btn btn-success btn-xs r{{$key}}" onclick="receive(<?php echo $key;?>);">Receive <i
@@ -68,7 +68,7 @@
     function receive(key) {
         $('.r' + key).prop('disabled', true);
         $('.r' + key).html('Moving...');
-        let user_id = $('#user_id' + key).val();
+        let merchant_id = $('#merchant_id' + key).val();
         let hub_id = $('#hub_id' + key).val();
         // alert(hub_id);
         let shipment_id = $('#shipment_id' + key).val();
@@ -76,7 +76,7 @@
         let area = $('#area' + key).val();
         $.ajax({
             type: "get", url: '/admin/move-to-hub',
-            data: {shipment_id: shipment_id, hub_id: hub_id, user_id: user_id, weight: weight, area_id: area},
+            data: {shipment_id: shipment_id, hub_id: hub_id, merchant_id: merchant_id, weight: weight, area_id: area},
             success: function (data) {
                 $('.result').html(data);
                 $('.r' + key).prop('disabled', false);

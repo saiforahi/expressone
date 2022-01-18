@@ -37,7 +37,7 @@ class DriverController extends Controller
         ]);
 
         $register_user = new Courier();
-        $register_user->driver_id = 'DR' . rand(100, 999) . time();
+        $register_user->courier_id = 'DR' . rand(100, 999) . time();
         $register_user->first_name = $request->first_name;
         $register_user->last_name = $request->last_name;
         $register_user->email = $request->email;
@@ -74,7 +74,7 @@ class DriverController extends Controller
 
     public function assigned_shipments($id){
         Session::flash('message', 'Courier assigned shipments');
-        $shipments = Driver_shipment::where('driver_id',$id)->get();
+        $shipments = Driver_shipment::where('courier_id',$id)->get();
         //dd($shipments);
         return view('admin.driver.shipments', compact('shipments'));
     }

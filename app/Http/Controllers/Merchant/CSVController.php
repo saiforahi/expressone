@@ -68,15 +68,15 @@ class CSVController extends Controller
     {
         foreach (Session::get('csv_data') as $key => $line) {
             //Invoice ID
-            $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first();
-            if ($invoice_data == null) {
-                $firstReg = 111;
-                $invoice_no = $firstReg + 1;
-                //dd($invoice_no);
-            } else {
-                $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first()->invoice_no;
-                $invoice_no = $invoice_data + 1;
-            }
+            // $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first();
+            // if ($invoice_data == null) {
+            //     $firstReg = 111;
+            //     $invoice_no = $firstReg + 1;
+            //     //dd($invoice_no);
+            // } else {
+            //     $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first()->invoice_no;
+            //     $invoice_no = $invoice_data + 1;
+            // }
             $insert = new Shipment();
             $insert->recipient = $line['recipient'];
             $insert->amount = $line['amount'];
@@ -85,18 +85,17 @@ class CSVController extends Controller
             //CSV Data
             $insert->merchant_id = Auth::guard('user')->user()->id;
             $insert->added_by()->associate(Auth::guard('user')->user());
-            $insert->invoice_id = $invoice_no;
+            $insert->invoice_id =  rand(1111,9999);
             $insert->tracking_code = uniqid();
             $insert->save();
-
             //Make shipment Payment
             if ($insert->save()) {
                 $shipmentPmnt =  new ShipmentPayment();
                 $shipmentPmnt->shipment_id = $insert->id;
-                $shipmentPmnt->sl_no  = $invoice_no;
+                $shipmentPmnt->sl_no  = rand(1,100000);
                 $shipmentPmnt->tracking_code  = uniqid();
-                $shipmentPmnt->invoice_no  = $invoice_no;
-                $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
+                $shipmentPmnt->invoice_no  = rand(2000,90000);
+                $shipmentPmnt->admin_id  = 1; //Please check this which data will save here
                 $shipmentPmnt->cod_amount  = $insert->amount;
                 $shipmentPmnt->delivery_charge  = $insert->shipping_charge_id;
                 $shipmentPmnt->save();
@@ -157,7 +156,7 @@ class CSVController extends Controller
             } else $invoice_id = $request->invoice_id[$key];
 
             $insert = new Shipment();
-            $insert->user_id = Auth::guard('user')->user()->id;
+            $insert->merchant_id = Auth::guard('user')->user()->id;
             $insert->zone_id = $zone->zone_id;
             $insert->area_id = $request->area[$key];
             $insert->name = $request->name[$key];

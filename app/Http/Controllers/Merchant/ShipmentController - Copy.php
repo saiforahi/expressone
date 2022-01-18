@@ -120,7 +120,7 @@ class ShipmentController extends Controller
         // $total_price = $price + $cod_amount + (int)$request->parcel_value;
 
         $insert = new Shipment();
-        $insert->user_id = Auth::guard('user')->user()->id;
+        $insert->merchant_id = Auth::guard('user')->user()->id;
         $insert->zone_id = $zone->zone_id;
         $insert->area_id = $request->area;
         $insert->name = $request->name;
@@ -153,7 +153,7 @@ class ShipmentController extends Controller
         $earth = new Earth();
         $earth = $earth->getCountries()->toArray();
         $address = address::all();
-        $shipment = shipment::where('user_id', session('user-id'))->where('id', $id)->first();
+        $shipment = shipment::where('merchant_id', session('user-id'))->where('id', $id)->first();
         if ($shipment->status == 1) {
             return redirect('dashboard');
         }
@@ -226,7 +226,7 @@ class ShipmentController extends Controller
 
     function payments()
     {
-        // $shipment = Shipment::orderBy('id','DESC')->where('user_id', Auth::guard('user')->user()->id)->get();
+        // $shipment = Shipment::orderBy('id','DESC')->where('merchant_id', Auth::guard('user')->user()->id)->get();
         return view('dashboard.shipment-payment');
     }
 

@@ -47,14 +47,14 @@
                                                 </th>
                                                 <th scope="row">
                                                     <button class="btn btn-info">
-                                                        {{ driver_shipments(Auth::guard('driver')->user()->id, $user->id) }}
+                                                        {{ courier_shipments(Auth::guard('courier')->user()->id, $user->id) }}
                                                         parcel
                                                     </button>
 
                                                 </th>
                                                 <th class="text-right">
                                                     <?php
-                                                    if (driver_shipments(Auth::guard('driver')->user()->id, $user->id) > 0) {
+                                                    if (courier_shipments(Auth::guard('courier')->user()->id, $user->id) > 0) {
                                                         $ability = '';
                                                         $action = ' /driver/shipping-details/' . $user->id . '/pending';
                                                     } else {

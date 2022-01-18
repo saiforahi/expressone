@@ -48,7 +48,7 @@ class AuthController extends Controller
         ]);
 
         $driver = Courier::create([
-            'driver_id' => rand(),
+            'courier_id' => rand(),
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'phone' => $request->phone,

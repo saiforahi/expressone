@@ -32,7 +32,6 @@ class UserSeeder extends Seeder
             'password' => Hash::make('12345678'),
         ]);
         $admin->assignRole($role1);
-
         //unit admin
         $unitadmin = \App\Models\Admin::create([
             'first_name' => 'Unit',
@@ -48,13 +47,19 @@ class UserSeeder extends Seeder
             'first_name' => 'Demo',
             'last_name' => 'Merchant',
             'email' => 'merchant@email.com',
+            'shop_name' => 'ABC Enterprise',
             'phone' => '01XXXXXXXXX',
             'password' => Hash::make('12345678'),
+            'bank_name' => 'DBBl',
+            'bank_br_name' => 'Pallabi',
+            'bank_acc_name' => 'John Doe',
+            'bank_acc_no' => 108103121415,
+            'unit_id' => 1,
             'is_verified' => 1,
+            'address' => 'Mirpur',
             'nid_no' => '1234567898',
             'bin_no' => '1234564534563'
         ]);
-
         //merchant
         $courier = \App\Models\Courier::create([
             'first_name' => 'Demo',

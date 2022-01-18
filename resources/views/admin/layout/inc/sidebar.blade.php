@@ -52,8 +52,8 @@
                             <li><a href="{{ route('AdminUploadCSV') }}">Upload CSV-File</a></li>
 
                             {{-- <?php $units = \DB::table('units')
-                                ->where('status', '1')
-                                ->get(); ?>
+    ->where('status', '1')
+    ->get(); ?>
                             @foreach ($units as $unit)
                                 @if (Auth::guard('admin')->user()->type == 'admin')
                                     <li><a
@@ -97,11 +97,8 @@
                     <li><a href="{{ route('driver-list.index') }} "><i class="fa mdi mdi-truck-fast"></i> Riders</a>
                     </li>
 
-                    @if (checkAdminAccess('merchant-list') != 0)
-                        <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
-                                Merchant List</a></li>
-                    @endif
-
+                    <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
+                            Merchant List</a></li>
                     <li>
                         <a><i class="fa mdi mdi-account"></i> Employee Manage<span
                                 class="fa fa-chevron-down"></span></a>

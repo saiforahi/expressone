@@ -41,25 +41,28 @@
                                 class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>
                                     <tr class="bg-dark">
-                                        <th>Merchant Id</th>
                                         <th>Image</th>
                                         <th>Name</th>
                                         <th>Phone</th>
-                                        <th>Email</th>
+                                        <th>NID</th>
+                                        <th>BIN</th>
                                         <th>Status</th>
                                         <th>Is verified?</th>
                                         <th>Action</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($user as $users)
                                         <tr>
-                                            <th scope="row">{{ $users['user_id'] }}</th>
+
                                             <th scope="row"><img style="max-height:25px" class="img-thumbnail img-fluid"
                                                     src="{{ $users->image == null ? asset('images/user.png') : asset('storage/user/' . $users->image) }}">
                                             </th>
                                             <th scope="row">{{ $users['first_name'] }} {{ $users['last_name'] }}</th>
                                             <th scope="row">{{ $users['phone'] }}</th>
+                                            <th scope="row">{{ $users['nid_no'] }}</th>
+                                            <th scope="row">{{ $users['bin_no'] }}</th>
                                             <th scope="row">{{ $users['email'] }}</th>
                                             <th scope="row">
                                                 @if ($users->status == 1)
@@ -81,9 +84,6 @@
                                                         Not Verified
                                                     </a>
                                                 @endif
-                                            </th>
-
-                                            <th scope="row">
                                                 <a href="/admin/merchant-details/{{ $users->id }}"
                                                     class="btn btn-primary btn-xs pull-right">View</a>
                                             </th>
@@ -195,8 +195,8 @@
                                     <div class="col-md-12 text-left">
                                         <label for="Merchant">Merchant selection</label>
                                         <?php $users = \DB::table('users')->get(); ?>
-                                        <select class="form-control select2" style="width:100%;height:35px" name="user_id"
-                                            required>
+                                        <select class="form-control select2" style="width:100%;height:35px"
+                                            name="merchant_id" required>
                                             <option value="" selected disabled>Select Merchant</option>
                                             @foreach ($users as $user)
                                                 <option value="{{ $user->id }}">{{ $user->first_name }}
@@ -223,9 +223,9 @@
                                 <div class="row my-4">
                                     <div class="col-md-12 text-left driverArea" style="display: none">
                                         <label for="area">Rider selection</label>
-                                        <?php $drivers = \DB::table('drivers')->get(); ?>
-                                        <select class="form-control select2" style="width:100%;height:35px" name="driver_id"
-                                            required>
+                                        <?php $drivers = \DB::table('couriers')->get(); ?>
+                                        <select class="form-control select2" style="width:100%;height:35px"
+                                            name="courier_id" required>
                                             <option value="" selected disabled>Select Rider</option>
                                             @foreach ($drivers as $driver)
                                                 <option value="{{ $driver->id }}">{{ $driver->first_name }}
@@ -293,10 +293,10 @@
                 let status = $(this).val();
                 if (status != '0') {
                     $('.driverArea').slideDown();
-                    $('[name=driver_id]').prop('required', true)
+                    $('[name=courier_id]').prop('required', true)
                 } else {
                     $('.driverArea').slideUp();
-                    $('[name=driver_id]').prop('required', false)
+                    $('[name=courier_id]').prop('required', false)
                 }
             })
             //Update merchant verify status

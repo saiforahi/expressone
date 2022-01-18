@@ -26,7 +26,7 @@
                 <div class="page-title">
                     <h3>
                         Merchant Shipment List
-                        @if ($shipments->count() > 0 && $shipments->where('logistic_status','!=','1')->count()==0)
+                        @if ($shipments->count() > 0 && $shipments->where('logistic_status', '!=', '1')->count() == 0)
                             <a data-target="#assignShipment" data-toggle="modal" data-id="all" href="#"
                                 class="btn btn-primary assign pull-right">Assign all parcels to a Rider</a>
                         @endif
@@ -49,7 +49,6 @@
                                         <!-- <input id="checkAll" type="checkbox" name="checkAll"> -->
                                     </th>
                                     <th>Customer Info</th>
-                                    <th>Area</th>
                                     <th>Delivery Type</th>
                                     <th>Assign</th>
                                     <th>Action</th>
@@ -57,18 +56,15 @@
                             </thead>
                             <tbody>
                                 @foreach ($shipments as $key => $shipment)
+
                                     <tr shipment_id={{ $shipment->id }}>
                                         <th scope="row">
                                             <input style="display:none" type="checkbox" id="ids" name="ids[]"
                                                 value="{{ $shipment->id }}">
                                             {{ $key + 1 }}
                                         </th>
-                                        <th scope="row">Name: {{ $shipment->recipient['name'] }} <br>Price:
-                                            {{ $shipment->cod_amount }}
-                                        </th>
-
-                                        <th scope="row"><i class="fa fa-phone"></i> {{ $shipment->recipient['phone'] }}<br>
-                                            <i class="fa fa-map-marker"></i> {{ $shipment->recipient['address'] }}<br>
+                                        <th scope="row">Name: {{ $shipment['recipient'] }} <br>Price:
+                                            {{ $shipment->amount }}
                                         </th>
                                         <th scope="row">
 
@@ -84,21 +80,20 @@
                                                     class="fa fa-truck"></i></button>
                                         </th>
                                         <th scope="row">
-                                            {{-- @if ($shipment->status == '1' && $shipment->shipping_status < 2)
-                                                <a onClick="return confirm('Are you sure to Delete the shipment');"
-                                                    href="/admin/delete-shipment/{{ $shipment->id }}"
-                                                    class="btn-xs btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
-                                                <a data-id="{{ $shipment->id }}" data-toggle="modal"
-                                                    data-target="#cancelNote" href="#"
-                                                    class="btn-xs btn btn-warning cancel"><i class="fa fa-times"></i>
-                                                    Cancel</a>
-                                            @elseif($shipment->status=='2')
+                                            {{-- @if ($shipment->status == '1' && $shipment->shipping_status < 2) --}}
+                                            <a onClick="return confirm('Are you sure to Delete the shipment');"
+                                                href="/admin/delete-shipment/{{ $shipment->id }}"
+                                                class="btn-xs btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                            <a data-id="{{ $shipment->id }}" data-toggle="modal"
+                                                data-target="#cancelNote" href="#" class="btn-xs btn btn-warning cancel"><i
+                                                    class="fa fa-times"></i>
+                                                Cancel</a>
+                                            {{-- @elseif($shipment->status == '2')
                                                 cancelled
                                             @endif --}}
                                         </th>
                                     </tr>
-                                    {{-- Assign to driver modal --}}
-                                    <!-- Modal to assign to driver -->
+                                    <!-- Modal to assign to courier -->
                                     <div id="assignShipment" class="modal fade" role="dialog">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -122,8 +117,7 @@
 
                                         </div>
                                     </div>
-                                    {{-- Assign to driver modal --}}
-
+                                    <!-- Modal to assign to courier -->
                                 @endforeach
                             </tbody>
                         </table>

@@ -76,8 +76,8 @@
                             <div class="position-relative form-group">
                                 <label for="shop_name" class="">Shop Name</label>
                                 <input name="shop_name"
-                                    value="{{ Auth::guard('user')->user()->shop_name }}" type="text"
-                                    class="form-control" required max="255">
+                                    value="{{ Auth::guard('user')->user()->shop_name }}"
+                                    type="text" class="form-control" required max="255">
                             </div>
                         </div>
                         <div class="col-md-4">
@@ -95,41 +95,47 @@
                             <div class="position-relative form-group">
                                 <label>NID</label>
                                 <input name="nid_no" value="{{ Auth::guard('user')->user()->nid_no }}" type="text"
-                                    class="form-control" placeholder="Enter NID" value="{{ Auth::guard('user')->user()->nid_no }}">
+                                    class="form-control" placeholder="Enter NID"
+                                    value="{{ Auth::guard('user')->user()->nid_no }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label>BIN</label>
                                 <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="text"
-                                    class="form-control" placeholder="Enter BIN" value="{{ Auth::guard('user')->user()->bin_no }}">
+                                    class="form-control" placeholder="Enter BIN"
+                                    value="{{ Auth::guard('user')->user()->bin_no }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="bank_name" class="">Bank name</label>
-                                <input name="bank_name" value="{{ Auth::guard('user')->user()->bank_name }}"
+                                <input name="bank_name"
+                                    value="{{ Auth::guard('user')->user()->bank_name }}"
                                     type="text" class="form-control" required placeholder="Enter bank name">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="bank_br_name" class="">Bank br. name</label>
-                                <input name="bank_br_name" value="{{ Auth::guard('user')->user()->bank_br_name }}"
+                                <input name="bank_br_name"
+                                    value="{{ Auth::guard('user')->user()->bank_br_name }}"
                                     type="text" class="form-control" required placeholder="Enter bank br name">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="bank_acc_name" class="">Bank A/C name</label>
-                                <input name="bank_acc_name" value="{{ Auth::guard('user')->user()->bank_acc_name }}"
+                                <input name="bank_acc_name"
+                                    value="{{ Auth::guard('user')->user()->bank_acc_name }}"
                                     type="text" class="form-control" required placeholder="Enter bank account name">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="bank_acc_no" class="">Bank A/C no</label>
-                                <input name="bank_acc_no" value="{{ Auth::guard('user')->user()->bank_acc_no }}"
+                                <input name="bank_acc_no"
+                                    value="{{ Auth::guard('user')->user()->bank_acc_no }}"
                                     type="text" class="form-control" required placeholder="Enter bank A/c no">
                             </div>
                         </div>
@@ -144,8 +150,8 @@
                             <div class="position-relative form-group">
                                 <label for="website_link" class="">Website (optional)
                                     Link</label><input name="website_link" id="website_link"
-                                    value="{{ Auth::guard('user')->user()->website_link }}" type="url"
-                                    class="form-control" placeholder="https://findbankswiftcode.com/">
+                                    value="{{ Auth::guard('user')->user()->website_link }}"
+                                    type="url" class="form-control" placeholder="https://findbankswiftcode.com/">
                             </div>
                         </div>
                     </div>

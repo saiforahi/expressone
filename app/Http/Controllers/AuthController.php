@@ -35,7 +35,6 @@ class AuthController extends Controller
 
     public function registerStore(Request $request)
     {
-
         $request->validate([
             'first_name' => 'required|max:50',
             'last_name' => 'required|max:50',
@@ -45,24 +44,6 @@ class AuthController extends Controller
             'password' => 'required|max:20|min:8|confirmed',
             'nid_no' => 'numeric|min:10'
         ]);
-        // try {
-        //     User::create([
-        //         'first_name' => $request->first_name,
-        //         'last_name' => $request->last_name,
-        //         'ip' => $request->ip(),
-        //         'email' => $request->email,
-        //         'phone' => $request->phone,
-        //         'shop_name' => $request->shop_name,
-        //         'address' => $request->address,
-        //         'nid_no' => $request->nid_no,
-        //         'bin_no' => $request->bin_no,
-        //         'password' => Hash::make($request->password)
-        //     ]);
-        //     return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
-        // } catch (Exception $e) {
-        //     throw $e;
-        //     return redirect()->back()->with('error', 'Something went wrong, please try again later..');
-        // }
         try {
             $merchant = new User();
             $merchant->first_name = $request->first_name;
@@ -78,7 +59,7 @@ class AuthController extends Controller
             $merchant->save();
             return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
         } catch (\Throwable $th) {
-            throw $th;
+            dd($th);
             return redirect()->back()->with('error', 'Something went wrong, please try again later..');
         }
     }
@@ -124,7 +105,7 @@ class AuthController extends Controller
         if ($check == null) {
             return back()->with('message', 'Verification code does not match!');
         } else {
-            $userinfo = User::where('id', $check->user_id)->update(['is_verified' => '1']);
+            $userinfo = User::where('id', $check->merchant_id)->update(['is_verified' => '1']);
             $userinfo = User_verification::where('id', $check->id)
                 ->update(['status' => 'verified']);
         }
@@ -142,7 +123,7 @@ class AuthController extends Controller
         $code = rand();
         $user = User::where('email', Session::get('verification_email'))->first();
         $add = User_verification::create([
-            'user_id' => $user->id, 'verification_code' => $code,
+            'merchant_id' => $user->id, 'verification_code' => $code,
         ]);
 
         $this->get_config($subject);

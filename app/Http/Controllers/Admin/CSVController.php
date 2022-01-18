@@ -161,7 +161,7 @@ class CSVController extends Controller
             // }else $invoice_id = $request->invoice_id[$key];
 
             // $insert = new Shipment();
-            // $insert->user_id = $request->user_id;
+            // $insert->merchant_id = $request->merchant_id;
             // $insert->zone_id = $zone->zone_id;
             // $insert->area_id = $request->area[$key];
             // $insert->name = $request->name[$key];
@@ -233,7 +233,7 @@ class CSVController extends Controller
     //         }else $invoice_id = $request->invoice_id[$key];
 
     //         $insert = new Shipment();
-    //         $insert->user_id = $request->user_id;
+    //         $insert->merchant_id = $request->merchant_id;
     //         $insert->zone_id = $zone->zone_id;
     //         $insert->area_id = $request->area[$key];
     //         $insert->name = $request->name[$key];

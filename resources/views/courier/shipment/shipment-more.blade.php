@@ -1,7 +1,6 @@
 @extends('courier.layout.app')
-@section('title', ' shipments of ' . $user->first_name)
+@section('title', ' Shipments of ' . $user->first_name)
 @section('content')
-
     <div class="right_col" role="main">
         <div style="margin-top:1em">
             <div class="row">
@@ -26,7 +25,7 @@
                 <div class="page-title">
                     <h3>Merchant Shipment List
                         @if ($shipments->count() > 0)
-                            <a href="/driver/receive-all-shipment/{{ $user->id }}"
+                            <a href="/courier/receive-all-shipment/{{ $user->id }}"
                                 class="btn btn-primary pull-right">Receive All Parcels</a>
                         @endif
                     </h3>
@@ -87,11 +86,11 @@
                                         </th>
                                         <th class="text-right">
                                             <a onClick="return confirm('Are you sure to receive the shipment');"
-                                                href="/driver/receive-shipment/{{ $row->shipment->id }}"
+                                                href="/courier/receive-shipment/{{ $row->shipment->id }}"
                                                 class="btn-xs btn btn-success"><i class="fa fa-check"></i> Receive</a>
                                             <a data-toggle="modal" data-target="#cancelParcel"
                                                 data-id="{{ $row->shipment->id }}" class="btn-xs btn btn-warning cencel"><i
-                                                    class="fa fa-times"></i> Cancell</a>
+                                                    class="fa fa-times"></i> Cancel</a>
                                         </th>
                                     </tr>
                                 @endforeach

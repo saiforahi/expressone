@@ -1,6 +1,6 @@
 <select class="form-control" name="courier_id" required="">
     <option value="">Choose Courier</option>
-    @foreach ($couriers as $courier)
+    @foreach ($drivers as $courier)
         <option value="{{ $courier->id }}">{{ $courier->first_name . ' ' . $courier->last_name }} ({{ $courier->phone }})
         </option>
     @endforeach
