@@ -9,6 +9,7 @@ use App\Models\Location;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\LogisticStep;
 use App\Models\ShipmentPayment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -38,17 +39,21 @@ class CSVController extends Controller
         $file = fopen('./csv-file/' . $filename, "r");
         $i = 1;
         while (($line = fgetcsv($file)) !== FALSE) {
+            // dd($line);
             if ($i != 1) {
                 $lines[] = array(
-                    'recipient' => $line[1],
-                    'amount' => $line[2],
-                    'weight' => $line[3],
-                    'note' => $line[4]
+                    'recipient_name' => $line[1],
+                    'recipient_phone' => $line[2],
+                    'recipient_address' => $line[3],
+                    'amount' => $line[4],
+                    'delivery_charge' => $line[5],
+                    'note' => $line[6]
                 );
             }
             $i++;
         }
         Session::put('csv_data', $lines);
+        // dd($lines);
         fclose($file);
         //--- Redirect Section
         // exit;
@@ -61,32 +66,37 @@ class CSVController extends Controller
             Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!');
             return redirect('/dashboard');
         }
-        $areas = Location::latest()->get();
-        return view('dashboard.csv.show', compact('areas'));
+        $locations = Location::latest()->get();
+        return view('dashboard.csv.show', compact('locations'));
     }
     public function store_new(Request $request)
     {
+        // dd($request->all());
+        // dd(Session::get('csv_data'));
         foreach (Session::get('csv_data') as $key => $line) {
             //Invoice ID
             $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first();
             if ($invoice_data == null) {
                 $firstReg = 111;
                 $invoice_no = $firstReg + 1;
-                //dd($invoice_no);
+                
             } else {
                 $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first()->invoice_no;
                 $invoice_no = $invoice_data + 1;
             }
             $insert = new Shipment();
-            $insert->recipient = $line['recipient'];
+            $recipient_data['name']=$line['recipient_name'];
+            // dd(json_encode(array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address'])));
+            $insert->recipient = json_encode(array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address']));
             $insert->amount = $line['amount'];
-            $insert->weight = $line['weight'];
+            $insert->weight = $request->weight[$key];
             $insert->note = $line['note'];
             //CSV Data
             $insert->merchant_id = Auth::guard('user')->user()->id;
             $insert->added_by()->associate(Auth::guard('user')->user());
             $insert->invoice_id = $invoice_no;
             $insert->tracking_code = uniqid();
+            $insert->logistic_status = LogisticStep::first()->id;
             $insert->save();
 
             //Make shipment Payment
@@ -96,7 +106,7 @@ class CSVController extends Controller
                 $shipmentPmnt->sl_no  = $invoice_no;
                 $shipmentPmnt->tracking_code  = uniqid();
                 $shipmentPmnt->invoice_no  = $invoice_no;
-                $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
+                // $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
                 $shipmentPmnt->cod_amount  = $insert->amount;
                 $shipmentPmnt->delivery_charge  = $insert->shipping_charge_id;
                 $shipmentPmnt->save();

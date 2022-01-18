@@ -36,28 +36,20 @@
                                         //     echo '<script>alert("Merchant area deos not updated")</script>';
                                         //     continue;
                                         // }
-
+                                        
                                         if (Request::segment(3) == 'received') {
-                                            $checkShipment = \DB::table('shipments')
-                                                ->select('id')
-                                                ->where(['merchant_id' => $user->id])
-                                                ->get();
+                                            $checkShipment = \App\Models\Shipment::cousins()->where('admins.id',Auth::guard('admin')->user()->id)->get();
                                             $status = '1';
-                                            $shipping_status = '2';
+                                            $logistic_status = '2';
                                         } elseif (Request::segment(3) == 'cancelled') {
-                                            $checkShipment = \DB::table('shipments')
-                                                ->select('id')
-                                                ->where(['merchant_id' => $user->id])
-                                                ->get();
+                                            $checkShipment = \App\Models\Shipment::cousins()->where('admins.id',Auth::guard('admin')->user()->id)->get();
                                             $status = '2';
-                                            $shipping_status = '6';
+                                            $logistic_status = '6';
                                         } else {
-                                            $checkShipment = \DB::table('shipments')
-                                                ->select('id')
-                                                ->where(['merchant_id' => $user->id])
-                                                ->get();
+                                            $checkShipment = get_shipments_for_logged_in_admin('approval');
+                                            // dd($checkShipment);
                                             $status = '1';
-                                            $shipping_status = '0';
+                                            $logistic_status = '0';
                                         } ?>
 
                                         <?php if (Session::has('admin_unit')) {
@@ -92,7 +84,7 @@
                                                     Location/Area: {{ $user->unit->name }} --}}
                                                 </th>
                                                 <th class="text-right">
-                                                    <a href="/admin/shipping-list/more/{{ $user->id . '/' . $status . '/' . $shipping_status }}"
+                                                    <a href="/admin/shipping-list/more/{{ $user->id . '/' . $status . '/' . $logistic_status }}"
                                                         class="btn btn-primary">View</a>
 
                                                     <?php $is_cencell = \DB::table('shipments')

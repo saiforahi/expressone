@@ -97,7 +97,7 @@
                     <li><a href="{{ route('driver-list.index') }} "><i class="fa mdi mdi-truck-fast"></i> Riders</a>
                     </li>
 
-                    @if (checkAdminAccess('merchant-list') != 0)
+                    @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                         <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
                                 Merchant List</a></li>
                     @endif

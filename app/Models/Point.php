@@ -12,4 +12,8 @@ class Point extends Model
     function shippingPrice(){
     	return $this->hasMany(ShippingPrice::class);
     }
+
+    public function unit(){
+        return $this->belongsTo(Unit::class);
+    }
 }

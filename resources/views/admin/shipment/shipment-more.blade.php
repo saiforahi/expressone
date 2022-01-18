@@ -63,12 +63,12 @@
                                                 value="{{ $shipment->id }}">
                                             {{ $key + 1 }}
                                         </th>
-                                        <th scope="row">Name: {{ $shipment->recipient['name'] }} <br>Price:
+                                        <th scope="row">Name: {{ json_decode($shipment->recipient,true)['name'] }} <br>Price:
                                             {{ $shipment->cod_amount }}
                                         </th>
 
-                                        <th scope="row"><i class="fa fa-phone"></i> {{ $shipment->recipient['phone'] }}<br>
-                                            <i class="fa fa-map-marker"></i> {{ $shipment->recipient['address'] }}<br>
+                                        <th scope="row"><i class="fa fa-phone"></i> {{ json_decode($shipment->recipient,true)['phone'] }}<br>
+                                            <i class="fa fa-map-marker"></i> {{ json_decode($shipment->recipient,true)['address'] }}<br>
                                         </th>
                                         <th scope="row">
 
