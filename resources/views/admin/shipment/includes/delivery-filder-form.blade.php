@@ -25,20 +25,20 @@
             <option @if(request()->merchant_id==$user->id)selected @endif value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
             @endforeach
         </select>
-    </div> 
+    </div>
     <div class="col-md-2">
         @php $drivers = \App\Courier::where('status','1')->get(); @endphp
 
-        <select class="form-control select2" name="driver_id" onchange="get_driver()">
+        <select class="form-control select2" name="courier_id" onchange="get_driver()">
             <option value="">Search By Rider</option>
             @foreach($drivers as $driver)
-            <option @if(request()->driver_id==$driver->id)selected @endif  value="{{$driver->id}}">{{$driver->first_name}} {{$driver->last_name}}</option>
+            <option @if(request()->courier_id==$driver->id)selected @endif  value="{{$driver->id}}">{{$driver->first_name}} {{$driver->last_name}}</option>
             @endforeach
         </select>
     </div>
 </div>
 <br/>
-<div class="row"> 
+<div class="row">
     <div class="col-md-6">
         <input style="padding:18px;" type="text" class="form-control" id="invoice_id" name="invoice_id" placeholder="Type Invoice ID/s" value="{{request()->invoice_id}}" >
     </div>

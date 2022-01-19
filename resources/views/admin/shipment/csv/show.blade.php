@@ -76,7 +76,7 @@
                     <div class="form-row">
                         <div class="col-md-4">
                             <?php $merchants = \DB::table('users')->get(); ?>
-                            <select name="user_id" class=" select2 form-control" required="">
+                            <select name="merchant_id" class=" select2 form-control" required="">
                                @foreach($merchants as $merchant)
                                 <option value="">Select Merchant</option>
                                 <option value="{{$merchant->id}}">{{$merchant->first_name.' '.$merchant->last_name}}</option> @endforeach

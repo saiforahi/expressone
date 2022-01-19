@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class User_verification extends Model
 {
-    
-    protected $fillable = [ 'user_id', 'verification_code', 'status'];
+
+    protected $fillable = [ 'merchant_id', 'verification_code', 'status'];
 
 
     function user(){

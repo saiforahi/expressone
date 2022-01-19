@@ -40,7 +40,7 @@
                             class="text-info">{{ $item->shipment->created_at->diffForHumans() }}</b>)</small> </td>
                 <td></td>
                 <td>
-                    <button class="btn btn-xs btn-default" onclick="move_item(<?php echo $item->id . ',' . $item->user_id; ?>)"><i
+                    <button class="btn btn-xs btn-default" onclick="move_item(<?php echo $item->id . ',' . $item->merchant_id; ?>)"><i
                             class="fa fa-arrow-left"></i> Move </button>
                 </td>
             </tr>
@@ -50,15 +50,15 @@
 @endforeach
 
 <script type="text/javascript">
-    function move_item(id, user_id) {
-        // alert(id +' '+ user_id);return false;
+    function move_item(id, merchant_id) {
+        // alert(id +' '+ merchant_id);return false;
         $.ajax({
             type: "get",
             url: '/admin/remove-hub-parcel/' + id,
             success: function(data) {
                 $('.row' + id).remove();
 
-                $(".receiving-parcels").load('/admin/receiving-parcels/' + user_id + '/1');
+                $(".receiving-parcels").load('/admin/receiving-parcels/' + merchant_id + '/1');
 
                 let num = parseInt($('.num<?php echo $id; ?>').text());
                 $('.num<?php echo $id; ?>').text(num - 1);

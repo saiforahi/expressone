@@ -19,6 +19,11 @@ class MerchantController extends Controller
 
     public function store(Request $request)
     {
+        echo '<pre>';
+        echo '======================<br>';
+        print_r($request->all());
+        echo '<br>======================<br>';
+        exit();
         $request->validate([
             'first_name' => 'required|max:50',
             'last_name' => 'required|max:50',
@@ -30,7 +35,7 @@ class MerchantController extends Controller
             'website_link' => 'max:255',
         ]);
         $register_user = new User();
-        $register_user->user_id = 'UR' . rand(100, 999) . time();
+        $register_user->merchant_id = 'UR' . rand(100, 999) . time();
         $register_user->first_name = $request->first_name;
         $register_user->last_name = $request->last_name;
         $register_user->email = $request->email;
@@ -41,7 +46,6 @@ class MerchantController extends Controller
         $register_user->password = Hash::make($request->password);
         $register_user->is_verified = '1';
         $register_user->save();
-
         return redirect('/admin/merchant-list');
     }
 

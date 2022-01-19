@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Validator;
 use App\Models\Area;
 use App\Models\Blog;
@@ -18,7 +16,6 @@ use App\Models\Promise;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use App\Models\Blog_category;
-use App\Models\ShippingPrice;
 
 class HomeController extends Controller
 {

@@ -2,36 +2,29 @@
 
 namespace App\Http\Controllers\Courier;
 
-use Auth;
-use Session;
 use App\Models\User;
 use App\Models\Shipment;
 use App\Events\SendingSMS;
 use Illuminate\Http\Request;
-use App\Events\ShipmentMovement;
-use App\Driver_shipment_delivery;
-use App\Http\Controllers\Controller;
 use App\Models\CourierShipment;
+use App\Events\ShipmentMovement;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class ShipmentController extends Controller
 {
     public function index()
     {
-        //$shipment = CourierShipment::where('status', 1)->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
-        $courierShipment = CourierShipment::with('admin')->with('shipment')->where('status','received')->get()->groupBy('admin_id');
-        $merchant = User::whereIn('id', $courierShipment)->get();
-        echo '<pre>';
-        echo '======================<br>';
-        print_r($merchant);
-        echo '<br>======================<br>';
-        exit();
-        return view('courier.shipment.index', compact('merchant'));
+        $shipment = Shipment::where('status',1)->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
+        $user = User::whereIn('id',$shipment)->get();
+        return view('courier.shipment.index',compact('user'));
     }
 
 
     public function cencel_parcel($id, Request $request)
     {
-        Driver_shipment::where('shipment_id', $id)->update(['note' => $request->note, 'status' => 'cancelled']);
+        CourierShipment::where('shipment_id', $id)->update(['note' => $request->note, 'status' => 'cancelled']);
         Shipment::where('id', $id)->update(['shipping_status' => 6]);
         // dd($id);
         return back();
@@ -39,22 +32,22 @@ class ShipmentController extends Controller
     // accept a paracel assigned from admin
     public function receive_parcel($id, Request $request)
     {
-        $shipment = Shipment::find($id);
-        // dd($shipment);
-        Driver_shipment::where(['driver_id' => Auth::guard('driver')->user()->id, 'shipment_id' => $id])->update(['status' => 'received']);
-        // $shipments_id = Driver_shipment::where('id',$id)->pluck('shipment_id')->first();
-        Shipment::where('id', $id)->update(['shipping_status' => 2]);
+        // $shipment = Shipment::find($id);
+        // CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id,'shipment_id' => $id])->update(['status' => 'received']);
+        // Shipment::where('id', $id)->update(['logistic_status' => 3]);
+        // $message = 'Dear ' . $shipment->name . ', We ' . basic_information()->company_name . ' has received your parcel & we at your hand soon. Price of parcel delivery is: ' . $shipment->amount;
+        // event(new SendingSMS('customer', $shipment->phone, $message));
+        // return back();
 
-        $message = 'Dear ' . $shipment->name . ', We ' . basic_information()->company_name . ' has received your parcel & we at your hand soon. Price of parcel delivery is: ' . $shipment->total_price;
-        event(new SendingSMS('customer', $shipment->phone, $message));
-
-        return back();
+        CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id,'shipment_id' => $id])->update(['status' => 'received']);
+        Shipment::where('id', $id)->update(['logistic_status' => 3]);
+        return back()->with('success','This parcel submittd to unit');
     }
 
     public function my_shipments($type)
     {
         if ($type = 'return') {
-            $shipments = Driver_hub_shipment_box::latest()->where(['driver_id' => Auth::guard('driver')->user()->id, 'status' => $type])->get();
+            $shipments = Driver_hub_shipment_box::latest()->where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $type])->get();
         }
 
         return view('driver.shipment.my-shipments', compact('shipments', 'type'));
@@ -62,29 +55,32 @@ class ShipmentController extends Controller
 
     function my_parcels($type)
     {
-        $shipments = Driver_shipment::latest()->where(['driver_id' => Auth::guard('driver')->user()->id, 'status' => $type])->get();
+        $shipments = CourierShipment::latest()->where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $type])->get();
         return view('driver.shipment.my-parcels', compact('shipments', 'type'));
     }
 
-    public function show($id, $status)
+    public function show($id)
     {
-        // $shipments = Shipment::where('user_id',$id)->where(['status'=>1,'shipping_status'=>1])->get();
-        $shipments = Driver_shipment::where(['driver_id' => Auth::guard('driver')->user()->id, 'status' => $status])->get();
-        // dd($status);
+        //dd($id);
+        $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id])->get();
         $user = User::find($id);
-        return view('driver.shipment.shipment-more', compact('shipments', 'user'));
+        return view('courier.shipment.shipment-more', compact('shipments', 'user'));
+
+        // $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $status])->get();
+        // $user = User::find($id);
+        // return view('courier.shipment.shipment-more', compact('shipments', 'user'));
     }
 
     function receive_all_parcel(User $user)
     {
         // dd($user);
-        $shipments = Shipment::where('user_id', $user->id)->get();
+        $shipments = Shipment::where('merchant_id', $user->id)->get();
         foreach ($shipments as $key => $shipment) {
-            $check = Driver_shipment::where(['shipment_id' => $shipment->id, 'status' => 'received'])->get();
+            $check = CourierShipment::where(['shipment_id' => $shipment->id, 'status' => 'received'])->get();
             if ($check->count() == 0) {
-                Driver_shipment::where(['driver_id' => Auth::guard('driver')->user()->id, 'shipment_id' => $shipment->id])->update(['status' => 'received']);
+                CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'shipment_id' => $shipment->id])->update(['status' => 'received']);
                 Shipment::where('id', $shipment->id)->update(['shipping_status' => 2]);
-                event(new ShipmentMovement($shipment->id, 'driver', Auth::guard('driver')->user()->id, 'receive-parcels', 'Receive parcels for pickup', 'receive'));
+                event(new ShipmentMovement($shipment->id, 'driver', Auth::guard('courier')->user()->id, 'receive-parcels', 'Receive parcels for pickup', 'receive'));
 
                 $message = 'Dear ' . $shipment->name . ', We ' . basic_information()->company_name . ' has received your parcel & we at your hand soon. Price of parcel delivery is: ' . $shipment->total_price;
                 event(new SendingSMS('customer', $shipment->phone, $message));
@@ -98,21 +94,21 @@ class ShipmentController extends Controller
     public function agent_dispatch()
     {
         // show paracels date-wize
-        // $boxes = Driver_hub_shipment_box::where('driver_id',Auth::guard('driver')->user()->id)
+        // $boxes = Driver_hub_shipment_box::where('courier_id',Auth::guard('courier')->user()->id)
         // ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as date_count'))
         // ->groupBy('date')->get();
-
-        $paracels = Driver_hub_shipment_box::where([
-            'driver_id' => Auth::guard('driver')->user()->id,
-            'status' => 'assigned'
+        $parcels = CourierShipment::where([
+            'courier_id' => Auth::guard('courier')->user()->id,
+            'status' => 'delivered'
         ])->get();
-        return view('driver.shipment.agent-dispatch', compact('paracels'));
+        //dd($parcels);
+        return view('courier.shipment.agent-dispatch', compact('parcels'));
     }
-
-    //get more
+    //Courier shipment details form shipments table
     function shipment_info(Shipment $shipment)
     {
-        return view('driver.shipment.includes.shipment-details', compact('shipment'));
+        $crShipment = $shipment;
+        return view('courier.shipment.includes.shipment-details', compact('crShipment'));
     }
 
     function delivery_report(Request $request)
@@ -136,12 +132,12 @@ class ShipmentController extends Controller
             Shipment::where('id', Session::get('shipment_id'))->update(['price' => $request->price]);
         }
 
-        Driver_shipment_delivery::create([
-            'driver_id' => Auth::guard('driver')->user()->id, 'shipment_id' => Session::get('shipment_id'),
+        CourierShipment::create([
+            'courier_id' => Auth::guard('courier')->user()->id, 'shipment_id' => Session::get('shipment_id'),
             'type' => $request->status
         ]);
 
-        event(new ShipmentMovement(Session::get('shipment_id'), 'driver', Auth::guard('driver')->user()->id, 'delivery-report', 'Delivery Report for the shipment', $request->status));
+        event(new ShipmentMovement(Session::get('shipment_id'), 'driver', Auth::guard('courier')->user()->id, 'delivery-report', 'Delivery Report for the shipment', $request->status));
         echo '<p class="alert alert-success">Your report has been successfully submited</p>';
 
 
@@ -192,13 +188,10 @@ class ShipmentController extends Controller
             }
         }
     }
-
-
-
     public function return_agent_dispatch()
     {
         $paracels = Driver_return_shipment_box::where([
-            'driver_id' => Auth::guard('driver')->user()->id,
+            'courier_id' => Auth::guard('courier')->user()->id,
             'status_in' => 'assigned'
         ])->get();
         // dd($paracels);
@@ -219,7 +212,7 @@ class ShipmentController extends Controller
             'otp' => $request->otp,
             'collect_by' => $request->collect_by,
             'shipment_id' => $shipment->first()->id,
-            'driver_id' => Auth::guard('driver')->user()->id,
+            'courier_id' => Auth::guard('courier')->user()->id,
         ]);
         $shipment->update(['shipping_status' => $status]);
         return back()->with('message', 'The Shipment OTP has been confirmed successfully!');

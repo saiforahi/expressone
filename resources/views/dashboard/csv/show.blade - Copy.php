@@ -35,7 +35,7 @@
             <div class="main-card mb-3 card card-body">
                 <form id="upload_form" method="post" action="">
                     {{ csrf_field() }}
-                    {{-- <input type="hidden" name="user_id" value="{{Auth::user()->id}}"/> --}}
+                    {{-- <input type="hidden" name="merchant_id" value="{{Auth::user()->id}}"/> --}}
                     @foreach (\Session::get('csv_data') as $key => $line)
                         <div class="page">Parcel: {{ $key + 1 }}</div>
                         <div class="form_each">

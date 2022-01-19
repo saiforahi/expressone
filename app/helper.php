@@ -48,26 +48,26 @@ function is_user_filled($id)
 
 function user_shipment($id, $status = 1, $shipping_status = 0)
 {
-    return Shipment::where('user_id', $id)->where(['status' => $status, 'shipping_status' => $shipping_status])->get();
+    return Shipment::where('merchant_id', $id)->where(['status' => $status, 'shipping_status' => $shipping_status])->get();
 }
 
-function driver_shipments($driver_id, $user_id)
+function courier_shipments($courier_id, $merchant_id)
 {
-    $shipments = Shipment::where('user_id', $user_id)->where(['status' => 1, 'shipping_status' => 1])->get();
+    $shipments = Shipment::where('merchant_id', $merchant_id)->where(['status' => 1, 'shipping_status' => 1])->get();
     $num = array();
     foreach ($shipments as $key => $shipment) {
-        $num[] = CourierShipment::where(['driver_id' => auth()->guard('driver')->user()->id, 'shipment_id' => $shipment->id])->count();
+        $num[] = CourierShipment::where(['courier_id' => auth()->guard('courier')->user()->id, 'shipment_id' => $shipment->id])->count();
     }
     return COUNT($num);
 }
 
 // driver received shipments
-function pick_shipments($driver_id, $user_id)
+function pick_shipments($courier_id, $merchant_id)
 {
-    $shipments = Shipment::where('user_id', $user_id)->where(['status' => 1, 'shipping_status' => 2])->get();
+    $shipments = Shipment::where('merchant_id', $merchant_id)->where(['status' => 1, 'shipping_status' => 2])->get();
     $num = array();
     foreach ($shipments as $key => $shipment) {
-        $num[] = CourierShipment::where(['driver_id' => auth()->guard('driver')->user()->id, 'shipment_id' => $shipment->id])->count();
+        $num[] = CourierShipment::where(['courier_id' => auth()->guard('courier')->user()->id, 'shipment_id' => $shipment->id])->count();
     }
     return COUNT($num);
 }

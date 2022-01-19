@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Merchant;
-
-use App\Models\Area;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\Shipment;
@@ -103,7 +101,7 @@ class DashboardController extends Controller
             'nid_no' => 'required',
             'shop_name' => 'required|min:3',
             'address' => 'required|max:255',
-            'website_link' => 'required|regex:' . $regex,
+            //'website_link' => 'required|regex:' . $regex,
             'bank_name' => 'required|min:3',
             'bank_br_name' => 'required|max:100',
             'bank_acc_name' => 'required|max:255',

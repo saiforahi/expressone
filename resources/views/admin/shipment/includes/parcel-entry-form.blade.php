@@ -22,13 +22,15 @@
         </div>
         <div class="col-md-6 text-left">
             <label for="area">Area</label>
-            <?php $locations = \DB::table('locations')->get();?>
-            <select  class="form-control select2" style="width:100%;height:35px" name="area" id="area" required>
+            <?php
+            //$area = \DB::table('areas')->get();
+            ?>
+            {{-- <select  class="form-control select2" style="width:100%;height:35px" name="area" id="area" required>
                 <option value="" selected disabled>Select area</option>
-                @foreach($locations as $location)
-                        <option value="{{$location->id}}">{{$location->name}}</option>
+                @foreach($area as $areas)
+                        <option value="{{$areas->id}}">{{$areas->name}}</option>
                 @endforeach
-            </select>
+            </select> --}}
         </div>
     </div>
 
@@ -37,7 +39,7 @@
         <div class="col-md-4 text-left">
             <label class="" for="weight">Weight</label>
             <input type="text" id="weight" class="form-control" name="weight" value="1">
-  
+
         </div>
         <div class="col-md-4 cod_target text-left">
             <label for="parcel_value">Declared Parcel Value</label>
@@ -60,6 +62,6 @@
         <label class="col-md-3">Delivery Type:</label>
         <div class="col-md-4">
             <label class="radio-inline"><input type="radio" value="1" name="delivery_type" checked>Regular</label>
-			<label class="radio-inline"><input type="radio" value="2" name="delivery_type">Express</label> 
+			<label class="radio-inline"><input type="radio" value="2" name="delivery_type">Express</label>
         </div>
     </div>

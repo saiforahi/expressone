@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Parcel assign to Unit')
+@section('title', 'Parcel assign to hub')
 @section('content')
     <div class="right_col" role="main">
         <div class="row">
@@ -17,7 +17,7 @@
             <div class="col-md-6 ">
                 <div class="x_panel row">
                     <p>Parcel Receiving panel
-                        <a href="#" class="pull-right">my-unit parcels</a>
+                        <a href="#" class="pull-right">my-hub parcels</a>
                     </p>
                     <hr>
                     <!-- <button class="btn-success btn-xs btn pull-right">Move all <i class="fa fa-arrow-right"></i> </button></p><hr> -->
@@ -27,29 +27,28 @@
 
             <div class="col-md-6 ">
                 <div class="x_panel row">
-                    <p>Unit existing panel
+                    <p>Hub existing panel
                         <input type="text" name="phoneNo" placeholder="Customer phone No.">
                         <input type="text" name="invoice_id" placeholder="Invoice number">
                     </p>
                     <hr>
                     <div class="x_content result">
-                        @foreach ($points as $point)
-                        
-                            <div class="row hub{{ $point->id }}" style="background:#f7f7f7;margin-bottom:1em">
+                        @foreach ($hubs as $key => $hub)
+                            <div class="row hub{{ $hub->id }}" style="background:#f7f7f7;margin-bottom:1em">
                                 <div class="col-md-6">
-                                    <p class="alert">Delivery Point:
-                                        @if ($point->status == 1 && $point->unit->status == '1') {{ $point->unit->name }} ({{ $point->name }}) @else {{ $hub->name }} @endif
-                                        {{-- <br>Number of parcels: <b
-                                            class="num{{ $point->id }}">{{ user_hub_count($point->id, $id, 'on-dispatch') }}</b> --}}
+                                    <p class="alert"> Hub:
+                                        @if ($hub->status == '1' && $hub->zone->status == '1') {{ $hub->zone->name }} ({{ $hub->name }}) @else {{ $hub->name }} @endif
+                                        <br>Number of parcels: <b
+                                            class="num{{ $hub->id }}">{{ user_hub_count($hub->id, $id, 'on-dispatch') }}</b>
                                     </p>
                                 </div>
                                 <div class="col-md-6 m-b-0 m-t-5">
-                                    <button class="btn btn-xs btn-info form-control s{{ $point->id }}"
-                                        onclick="sorting(<?php echo $point->id; ?>)">Send to sorting</button>
+                                    <button class="btn btn-xs btn-info form-control s{{ $hub->id }}"
+                                        onclick="sorting(<?php echo $hub->id; ?>)">Send to sorting</button>
                                     <button class="btn btn-xs btn-default form-control viewParcel" data-toggle="modal"
-                                        data-target="#viewParcel" data-hub_id="{{ $point->id }}">View Parcels</button>
+                                        data-target="#viewParcel" data-hub_id="{{ $hub->id }}">View Parcels</button>
                                     <a class="btn btn-xs btn-success form-control"
-                                        href="/admin/user-hub-parcels-csv/<?php echo $point->id . '/' . $id; ?>"> <i
+                                        href="/admin/user-hub-parcels-csv/<?php echo $hub->id . '/' . $id; ?>"> <i
                                             class="fa fa-file-excel-o"></i> Get CSV</a>
                                     <div class="result2"></div>
                                 </div>
@@ -167,7 +166,7 @@
 
         $(function() {
 
-            $(".receiving-parcels").load('/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $logistic_status; ?>');
+            $(".receiving-parcels").load('/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $shipping_status; ?>');
 
             $('.viewParcel').on('click', function() {
                 let id = $(this).data('hub_id');
@@ -195,7 +194,7 @@
                             $('.result').html(data);
                             $('[name=phoneNo]').val('');
                             $(".receiving-parcels").load(
-                                '/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $logistic_status; ?>');
+                                '/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $shipping_status; ?>');
                         }
                     });
                 }
@@ -215,7 +214,7 @@
                             $('.result').html(data);
                             $('[name=invoice_id]').val('');
                             $(".receiving-parcels").load(
-                                '/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $logistic_status; ?>');
+                                '/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $shipping_status; ?>');
                         }
                     });
                 }

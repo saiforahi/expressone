@@ -84,7 +84,7 @@ class HoldShipmentController extends Controller
     }
     public function move_to_hold_shipmentRider(Courier $driver)
     {
-        $dds = Driver_shipment_delivery::where(['driver_id'=>$driver->id,'type'=>'hold'])->get();
+        $dds = Driver_shipment_delivery::where(['courier_id'=>$driver->id,'type'=>'hold'])->get();
         foreach($dds as $dd){
             $shipment = Shipment::where('id',$dd->shipment_id)->first();
             $check = Hold_shipment::where(['shipment_id'=>$shipment->id,'status'=>'pending']);
@@ -177,7 +177,7 @@ class HoldShipmentController extends Controller
     }
     // save shipment info at return_shipments (left to right) with driver id
     function move_to_return_shipment_withRider(Courier $driver){
-        $dds = Driver_shipment_delivery::where(['driver_id'=>$driver->id,'type'=>'return'])->get();
+        $dds = Driver_shipment_delivery::where(['courier_id'=>$driver->id,'type'=>'return'])->get();
         foreach($dds as $dd){
             $shipment = Shipment::where('id',$dd->shipment_id)->first();
             $check = Return_shipment::where(['shipment_id'=>$shipment->id,'status'=>'pending']);
@@ -417,7 +417,7 @@ class HoldShipmentController extends Controller
         Driver_return_shipment_box::where([
             'admin_id'=>Auth::guard('admin')->user()->id,'status_in'=>'assigning'
         ])->update( [
-            'driver_id'=>$request->driver_id,'status_in'=>'assigned'
+            'courier_id'=>$request->courier_id,'status_in'=>'assigned'
         ]);
 
         // dd(Session::get('box_ids'));
@@ -465,8 +465,8 @@ class HoldShipmentController extends Controller
             ->pluck('shipment_ids')->toArray();
         }
 
-        $shipment = Shipment::whereIn('id',explode(',',implode(',',$ids)))->select('user_id')
-        ->groupBy('user_id')->pluck('user_id')->toArray();
+        $shipment = Shipment::whereIn('id',explode(',',implode(',',$ids)))->select('merchant_id')
+        ->groupBy('merchant_id')->pluck('merchant_id')->toArray();
         $user = User::whereIn('id',$shipment)->get();
         // dd($user);
         return view('admin.shipment.hold.merchant-handover',compact('user'));
@@ -477,7 +477,7 @@ class HoldShipmentController extends Controller
     }
 
     function handover2merchant(User $user){
-        $shipments = Shipment::where(['user_id'=>$user->id,'shipping_status'=>'on-8'])->get();
+        $shipments = Shipment::where(['merchant_id'=>$user->id,'shipping_status'=>'on-8'])->get();
 
         $count = 0;
         foreach ($shipments as $key => $shipment) {

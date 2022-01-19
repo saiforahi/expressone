@@ -115,7 +115,7 @@ INSERT INTO `basic_information` (`id`, `website_title`, `company_name`, `meet_ti
 
 CREATE TABLE `drivers` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `driver_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `courier_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -190,7 +190,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `shipments` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `merchant_id` int(11) NOT NULL,
   `zone_id` int(11) NOT NULL,
   `area_id` int(11) DEFAULT NULL,
   `added_by` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'merchant',
@@ -218,7 +218,7 @@ CREATE TABLE `shipments` (
 -- Dumping data for table `shipments`
 --
 
-INSERT INTO `shipments` (`id`, `user_id`, `zone_id`, `area_id`, `added_by`, `name`, `phone`, `address`, `zip_code`, `parcel_value`, `invoice_id`, `merchant_note`, `weight`, `delivery_type`, `cod`, `cod_amount`, `price`, `tracking_code`, `total_price`, `shipping_status`, `status`, `created_at`, `updated_at`) VALUES
+INSERT INTO `shipments` (`id`, `merchant_id`, `zone_id`, `area_id`, `added_by`, `name`, `phone`, `address`, `zip_code`, `parcel_value`, `invoice_id`, `merchant_note`, `weight`, `delivery_type`, `cod`, `cod_amount`, `price`, `tracking_code`, `total_price`, `shipping_status`, `status`, `created_at`, `updated_at`) VALUES
 (4, 1, 2, 2, 'merchant', 'Orpon', '01946547568', '9/1 Kolalampur', NULL, '1000', '5475685678', NULL, '6', '1', '0', '0', '75', '18773404001', '1075', '0', '1', '2020-11-15 14:50:04', '2020-11-15 14:50:04');
 
 -- --------------------------------------------------------
@@ -259,7 +259,7 @@ INSERT INTO `shipping_prices` (`id`, `zone_id`, `cod`, `cod_value`, `delivery_ty
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `user_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `merchant_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `shop_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -278,7 +278,7 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `user_id`, `first_name`, `last_name`, `shop_name`, `email`, `phone`, `password`, `address`, `website_link`, `image`, `remember_token`, `created_at`, `updated_at`) VALUES
+INSERT INTO `users` (`id`, `merchant_id`, `first_name`, `last_name`, `shop_name`, `email`, `phone`, `password`, `address`, `website_link`, `image`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'UR9341605119421', 'Nayem', 'Islam', 'Nayem Ltd', 'nayem@gmail.com', '01966634890', '$2y$10$wX0Z5mrYxBLaWiH8MCSJUuG0PONq1jS9zhuwtVGXPPxCYcYHtr/EK', 'Narayanganj', NULL, '641605164031.jpg', 'wOIbK9BdMI4cvdwihsJw9f8XQwkA3HGmIU1i8yCNZ8sHOnFHdND3qJ4zExNp', '2020-11-11 12:30:21', '2020-11-12 00:53:51'),
 (2, 'UR6451605188156', 'Md.', 'Ali', 'Ali express', 'ali@gmail.com', '01923456789', '$2y$10$LQIqtJMJqdXXN5P1qAl64uJ5EGo91Cncz0Vn153e9gkZjNo7aETlu', 'Chaina', 'www.aliexpress.com', NULL, NULL, '2020-11-12 07:35:56', '2020-11-12 07:35:56');
 

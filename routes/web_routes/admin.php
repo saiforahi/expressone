@@ -1,11 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\AreaController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ShippingChargeController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\BasicInformationController;
+use App\Http\Controllers\Admin\AreaController;
+use App\Http\Controllers\Admin\DriverController;
+use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\Admin\ShipmentController;
+use App\Http\Controllers\Admin\ShippingChargeController;
+use App\Http\Controllers\Admin\BasicInformationController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 /*
 |--------------------------------------------------------------------------
 | Admin Route
@@ -47,19 +49,21 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/location-delete/{location}', [AreaController::class,'location_delete'])->name('location.delete');
     Route::get('/get-location-single', [AreaController::class,'location_detail'])->name('location.single');
 
-    Route::get('/merchant-list', 'MerchantController@index')->name('merchant.list');
-    Route::get('/merchant-details/{user}', 'MerchantController@show')->name('merchant.details');
-    Route::post('/merchant-list', 'MerchantController@store')->name('merchant.store');
-    Route::post('/update-merchant-verify', 'MerchantController@updateMerchantStatus')->name('admin.merchant.status');
-
+    Route::get('merchant-list', [MerchantController::class,'index'])->name('merchant.list');
+    Route::get('merchant-details/{user}', [MerchantController::class,'show'])->name('merchant.details');
+    Route::post('merchant-store', [MerchantController::class,'store'])->name('merchant.store');
+    Route::post('update-merchant-verify', [MerchantController::class,'updateMerchantStatus'])->name('admin.merchant.status');
+    //Shipping routes
     Route::get('/shipping-price-set', 'ShippingPriceController@shippingPrice')->name('shippingPrice.set');
     Route::post('/shipping-price-set', 'ShippingPriceController@shippingPriceAdd')->name('shippingPrice.add');
     Route::post('/shipping-price-set-edit', 'ShippingPriceController@shippingPriceEdit')->name('shippingPrice.edit');
     Route::get('/delete-shipping-price/{shipping_price}', 'ShippingPriceController@destroy')->name('delete-shipping-price');
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
-    //Admin Courier  list
-    Route::resource('/driver-list', 'DriverController');
-    Route::get('/driver-shipments/{id}', 'DriverController@assigned_shipments')->name('admin-driverShipments');
+    //Admin Courier route
+    Route::get('courier', [DriverController::class,'index'])->name('allCourier');
+    Route::post('courier-delete/{id}', [DriverController::class,'courierDelete'])->name('courierDelete');
+    Route::match(['get', 'post'], 'add-edit-courier/{id?}', [DriverController::class, 'addEditCourier'])->name('addEditCourier');
+    Route::get('courier-shipments/{id}', [DriverController::class,'assigned_shipments'])->name('admin-driverShipments');
     //Shipping List
     Route::get('/shipping-list', [ShipmentController::class,'index'])->name('AdminShipment.index');
     Route::get('/shipping-list/more/{id}/{status}/{logistic_status}', [ShipmentController::class,'show'])->name('AdminShipmentMore');
@@ -67,7 +71,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/shipping-list/received', [ShipmentController::class,'shipment_received'])->name('AdminShipmentReceived');
     Route::get('/shipping-list/cancelled', 'ShipmentController@shipment_cancelled')->name('AdminShipmentCancelled');
 
-    Route::post('/add-parcelBy-admin', 'ShipmentController@add_parcel')->name('add-parcelBy-admin');
+    Route::get('/add-parcelBy-admin', [ShipmentController::class,'add_parcel'])->name('add-parcelBy-admin');
     Route::get('/assign-to-unit/{merchant_id}/{status}/{logistic_status}', [ShipmentController::class,'unit_received'])->name('AdminShipmentReceive');
     Route::get('/receiving-parcels/{user_id}/{status?}/{logistic_status?}', [ShipmentController::class,'receiving_parcels'])->name('receiving-parcels');
     Route::get('/get-hub-csv-files/{user_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
@@ -151,8 +155,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/shipping-list/cencelled-items/{id}', 'ShipmentController@cencelled_shippings')->name('CencelledShipping');
     Route::get('/back-to-shipment/{id}', 'ShipmentController@back2shipment')->name('back2shipment');
 
-    Route::get('/delete-shipment/{id}', 'ShipmentController@destroy')->name('destroy-shipment');
-    Route::get('/cencell-shipment/{id}', 'ShipmentController@cencell')->name('cencell-shipment');
+    Route::get('delete-shipment/{id}', [ShipmentController::class,'destroy'])->name('destroy-shipment');
+    Route::get('cencell-shipment/{id}', [ShipmentController::class,'cencel'])->name('cencel-shipment');
 
     // third party shipments
     Route::get('/thirdparty-shipments/{hub}', 'ThirdpartyShipmentController@index')->name('thirdparty-shipments');

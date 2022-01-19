@@ -4,7 +4,7 @@ use UniSharp\LaravelFilemanager\Lfm;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HomeController;
+
 
 //To clear all cache
 Route::get('clear', function () {
@@ -17,11 +17,11 @@ Route::get('/verify', [AuthController::class, 'verify'])->name('verify-user');
 Route::post('/verify', [AuthController::class, 'verify_code'])->name('verify-user-code');
 Route::post('/verification.resend', [AuthController::class, 'send_verification_code'])->name('verification.resend');
 
-Route::get('/', [HomeController::class,'index'])->name('home');
-Route::get('/about', [HomeController::class,'about'])->name('about');
-Route::get('/team', [HomeController::class,'team'])->name('team');
-Route::get('/mission', [HomeController::class,'mission'])->name('mission');
-Route::get('/vision', [HomeController::class,'vision'])->name('vision');
+Route::get('/', [\App\Http\Controllers\HomeController::class,'index'])->name('home');
+Route::get('/about', [\App\Http\Controllers\HomeController::class,'about'])->name('about');
+Route::get('/team', [\App\Http\Controllers\HomeController::class,'team'])->name('team');
+Route::get('/mission', [\App\Http\Controllers\HomeController::class,'mission'])->name('mission');
+Route::get('/vision', [\App\Http\Controllers\HomeController::class,'vision'])->name('vision');
 Route::get('/promise', 'HomeController@promise')->name('promise');
 Route::get('/history', 'HomeController@history')->name('history');
 Route::get('/tracking', 'HomeController@tracking')->name('tracking');

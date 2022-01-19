@@ -77,6 +77,7 @@
                         </thead>
                         <tbody>
                             @foreach ($shipment as $key => $shipments)
+
                                 <tr>
                                     <td> {{ ++$key }}</td>
                                     <td>
@@ -108,8 +109,9 @@
 
                                     </td>
                                     <td style="font-size: 13px">
-                                        {{-- @foreach ($shipments['recipient'] as $item) --}}
-                                        {{ json_decode($shipments['recipient'],true)['name'] }}
+
+                                        {{ $shipments['recipient']['name'] }}
+
                                     </td>
 
                                     <td>

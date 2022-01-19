@@ -41,11 +41,11 @@
                                 class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>
                                     <tr class="bg-dark">
-                                        <th>Merchant Id</th>
                                         <th>Image</th>
                                         <th>Name</th>
                                         <th>Phone</th>
-                                        <th>Email</th>
+                                        <th>NID</th>
+                                        <th>BIN</th>
                                         <th>Status</th>
                                         <th>Is verified?</th>
                                         <th>Action</th>
@@ -54,12 +54,13 @@
                                 <tbody>
                                     @foreach ($user as $users)
                                         <tr>
-                                            <th scope="row">{{ $users['user_id'] }}</th>
                                             <th scope="row"><img style="max-height:25px" class="img-thumbnail img-fluid"
                                                     src="{{ $users->image == null ? asset('images/user.png') : asset('storage/user/' . $users->image) }}">
                                             </th>
                                             <th scope="row">{{ $users['first_name'] }} {{ $users['last_name'] }}</th>
                                             <th scope="row">{{ $users['phone'] }}</th>
+                                            <th scope="row">{{ $users['nid_no'] }}</th>
+                                            <th scope="row">{{ $users['bin_no'] }}</th>
                                             <th scope="row">{{ $users['email'] }}</th>
                                             <th scope="row">
                                                 @if ($users->status == 1)
@@ -81,9 +82,6 @@
                                                         Not Verified
                                                     </a>
                                                 @endif
-                                            </th>
-
-                                            <th scope="row">
                                                 <a href="/admin/merchant-details/{{ $users->id }}"
                                                     class="btn btn-primary btn-xs pull-right">View</a>
                                             </th>
@@ -91,7 +89,6 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
@@ -171,12 +168,9 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
-
     <!-- Modal for add merchant-->
     <div id="addParcel" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
@@ -190,13 +184,13 @@
                         <div class="x_content">
                             <br>
                             <form id="demo-form2" method="post" class="form-horizontal form-label-left input_mask"
-                                action="/admin/add-parcelBy-admin"> {{ csrf_field() }}
+                                action="{{ route('add-parcelBy-admin') }}" method="post"> @csrf
                                 <div class="row my-4">
                                     <div class="col-md-12 text-left">
                                         <label for="Merchant">Merchant selection</label>
                                         <?php $users = \DB::table('users')->get(); ?>
-                                        <select class="form-control select2" style="width:100%;height:35px" name="user_id"
-                                            required>
+                                        <select class="form-control select2" style="width:100%;height:35px"
+                                            name="merchant_id" required>
                                             <option value="" selected disabled>Select Merchant</option>
                                             @foreach ($users as $user)
                                                 <option value="{{ $user->id }}">{{ $user->first_name }}
@@ -208,7 +202,6 @@
                                 <div class="my-4" style="margin-top:1em ">
                                     @include('admin.shipment.includes.parcel-entry-form')
                                 </div>
-
                                 <div class="row"> <br>
                                     <label class="col-md-2">Status:</label>
                                     <div class="col-md-10">
@@ -223,9 +216,9 @@
                                 <div class="row my-4">
                                     <div class="col-md-12 text-left driverArea" style="display: none">
                                         <label for="area">Rider selection</label>
-                                        <?php $drivers = \DB::table('drivers')->get(); ?>
-                                        <select class="form-control select2" style="width:100%;height:35px" name="driver_id"
-                                            required>
+                                        <?php $drivers = \DB::table('couriers')->get(); ?>
+                                        <select class="form-control select2" style="width:100%;height:35px"
+                                            name="courier_id" required>
                                             <option value="" selected disabled>Select Rider</option>
                                             @foreach ($drivers as $driver)
                                                 <option value="{{ $driver->id }}">{{ $driver->first_name }}
@@ -234,7 +227,6 @@
                                         </select>
                                     </div>
                                 </div>
-
                                 <div class="row my-4" style="margin-top:1em">
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-success pull-right"><i
@@ -249,43 +241,38 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
-
 @endsection
 @push('style')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" />
     <!-- Datatables -->
-    <link href="{{ asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 @endpush
-
 @push('scripts')
     <!-- Datatables -->
-    <script src="{{ asset('vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
-    <script src="{{ asset('vendors/jszip/dist/jszip.min.js') }}"></script>
-    <script src="{{ asset('vendors/pdfmake/build/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/jszip/dist/jszip.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/pdfmake/build/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/pdfmake/build/vfs_fonts.js') }}"></script>
     <script>
         $(function() {
-
             $('.adNewParcel').on('click', function() {
                 $('#addParcel').modal('show');
             });
@@ -293,10 +280,10 @@
                 let status = $(this).val();
                 if (status != '0') {
                     $('.driverArea').slideDown();
-                    $('[name=driver_id]').prop('required', true)
+                    $('[name=courier_id]').prop('required', true)
                 } else {
                     $('.driverArea').slideUp();
-                    $('[name=driver_id]').prop('required', false)
+                    $('[name=courier_id]').prop('required', false)
                 }
             })
             //Update merchant verify status

@@ -34,7 +34,6 @@ return [
     | Supported: "session", "token"
     |
     */
-
     'guards' => [
         'user' => [
             'driver' => 'session',
@@ -66,7 +65,6 @@ return [
             'hash' => false,
         ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | User Providers
