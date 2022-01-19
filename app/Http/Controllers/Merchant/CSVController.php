@@ -13,6 +13,7 @@ use App\Models\LogisticStep;
 use App\Models\ShipmentPayment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 
 class CSVController extends Controller
 {
@@ -25,36 +26,45 @@ class CSVController extends Controller
     public function get_csv_data(Request $request)
     {
         Session::forget('csv_data');
+        $filename = '';
+        //upload file
         if (empty($request->file)) {
             return back();
         }
-
-        $filename = '';
-        //upload file
-        if ($file = request()->file('file')) {
-            $filename  = date('Ymd-his') . '.' . $file->getClientOriginalExtension();
-            $file->move('./csv-file/', $filename);
-        }
-
-        $file = fopen('./csv-file/' . $filename, "r");
-        $i = 1;
-        while (($line = fgetcsv($file)) !== FALSE) {
-            // dd($line);
-            if ($i != 1) {
-                $lines[] = array(
-                    'recipient_name' => $line[1],
-                    'recipient_phone' => $line[2],
-                    'recipient_address' => $line[3],
-                    'amount' => $line[4],
-                    'delivery_charge' => $line[5],
-                    'note' => $line[6]
-                );
+        // $filename = '';
+        // //upload file
+        // if ($file = request()->file('file')) {
+        //     $filename  = date('Ymd-his') . '.' . $file->getClientOriginalExtension();
+        //     $file->move('./csv-file/', $filename);
+        // }
+        $reader = ReaderEntityFactory::createXLSXReader();
+        $reader->open($request->file);
+        $lines=[];
+        foreach ($reader->getSheetIterator() as $sheet) {
+            if ($sheet->getIndex() === 0) { // index is 0-based
+                foreach ($sheet->getRowIterator() as $rowNumber => $row) {
+                    if($rowNumber > 1){
+                        $cells = $row->getCells();
+                        $lines[] = array(
+                            'recipient_name' => $cells[2]->getValue(),
+                            'recipient_phone' => $cells[3]->getValue(),
+                            'recipient_address' => $cells[4]->getValue(),
+                            'upazilla_district'=> $cells[5]->getValue(),
+                            'delivery_type'=> $cells[6]->getValue(),
+                            'amount' => $cells[7]->getValue(),
+                            'delivery_charge' => $cells[8]->getValue(),
+                            'weight_charge'=> $cells[9]->getValue(),
+                            'note'=> $cells[10]->getValue()??null
+                        );
+                    }
+                }
+                break; // no need to read more sheets
             }
-            $i++;
         }
+        
         Session::put('csv_data', $lines);
         // dd($lines);
-        fclose($file);
+        $reader->close();
         //--- Redirect Section
         // exit;
         return redirect('/csv-temporary');
@@ -96,6 +106,7 @@ class CSVController extends Controller
             $insert->added_by()->associate(Auth::guard('user')->user());
             $insert->invoice_id = $invoice_no;
             $insert->tracking_code = uniqid();
+            // $insert->service_type = $request->
             $insert->logistic_status = LogisticStep::first()->id;
             $insert->save();
 
