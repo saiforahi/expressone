@@ -61,9 +61,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
     //Admin Courier route
     Route::get('courier', [DriverController::class,'index'])->name('allCourier');
-    Route::get('courier-delete/{id}', [DriverController::class,'courierDelete'])->name('courierDelete');
+    Route::post('courier-delete/{id}', [DriverController::class,'courierDelete'])->name('courierDelete');
     Route::match(['get', 'post'], 'add-edit-courier/{id?}', [DriverController::class, 'addEditCourier'])->name('addEditCourier');
-    Route::get('driver-shipments/{id}', [DriverController::class,'assigned_shipments'])->name('admin-driverShipments');
+    Route::get('courier-shipments/{id}', [DriverController::class,'assigned_shipments'])->name('admin-driverShipments');
     //Shipping List
     Route::get('/shipping-list', [ShipmentController::class,'index'])->name('AdminShipment.index');
     Route::get('/shipping-list/more/{id}/{status}/{logistic_status}', [ShipmentController::class,'show'])->name('AdminShipmentMore');

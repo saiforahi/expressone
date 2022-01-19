@@ -1,8 +1,6 @@
 @extends('admin.layout.app')
 @section('title', 'Rider List')
 @section('content')
-
-
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
@@ -11,27 +9,15 @@
                 </div>
                 <div class="title_right">
                     <div class="form-group pull-right top_search">
-                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">
+                        <a  type="button" class="btn btn-info btn-sm" href="{{ url('admin/add-edit-courier') }}">
                             <i class="fa fa-user-plus fs-13 m-r-3"></i> Add Rider
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="clearfix"></div>
             <hr>
-            @if ($errors->any())
-                <ul class="alert alert-danger alert-dismissible">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            @endif
-            @if (session()->has('message'))
-                <div class="alert alert-success alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    {{ session()->get('message') }}
-                </div>
-            @endif
+            @include('flash.message')
             <div class="row">
                 <div class="col-12">
                     <div class="x_panel">
@@ -64,10 +50,8 @@
                                                     alt=""></th>
                                             <th scope="row" class="text-right">
                                                 <div class="btn-group  btn-group-sm">
-                                                    <form action="{{ route('courierDelete', $courier->id) }}"
-                                                        method="post">
+                                                    <form method="POST" action="{{ route('courierDelete', $courier->id) }}">
                                                         @csrf
-                                                        @method('DELETE')
                                                         <button class="btn btn-success delete" type="submit"><i
                                                                 class="mdi mdi-delete m-r-3"></i>Delete
                                                         </button>
@@ -103,7 +87,7 @@
                         </div>
                         <div class="x_content">
                             <br>
-                            <form id="demo-form2" method="post" action="{{ route('addEditCourier') }}" autocomplete="off"
+                            <form id="demo-form2" method="post" action="{{ route('addEditCourier',$courier->id) }}" autocomplete="off"
                                 class="form-horizontal form-label-left input_mask">
                                 @csrf
 

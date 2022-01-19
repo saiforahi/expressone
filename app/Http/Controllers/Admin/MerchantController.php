@@ -41,7 +41,6 @@ class MerchantController extends Controller
         $register_user->password = Hash::make($request->password);
         $register_user->is_verified = '1';
         $register_user->save();
-
         return redirect('/admin/merchant-list');
     }
 
