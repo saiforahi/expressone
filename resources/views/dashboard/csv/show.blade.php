@@ -40,9 +40,21 @@
                         <div class="form_each">
                             <div class="form-row">
                                 <div class="col text-left">
-                                    <label class="" for="name">Customer Name</label>
-                                    <input type="text" id="name" class="form-control" name="recipient[]"
-                                        value="{{ $line['recipient'] }}" required>
+                                    <label class="" for="name">Recipient Name</label>
+                                    <input type="text" id="name" class="form-control" name="recipient_name[]"
+                                        value="{{ $line['recipient_name'] }}" required>
+                                </div>
+                                <div class="col text-left">
+                                    <label class="" for="name">Recipient Phone</label>
+                                    <input type="text" id="name" class="form-control" name="recipient_phone[]"
+                                        value="{{ $line['recipient_phone'] }}" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col text-left">
+                                    <label class="" for="name">Recipient Address</label>
+                                    <input type="text" id="name" class="form-control" name="recipient_address[]"
+                                        value="{{ $line['recipient_address'] }}" required>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -54,20 +66,24 @@
                                 </div>
 
                                 <div class="col cod_target text-left">
+<<<<<<< HEAD
                                     <label for="weight_charge">Weight</label>
+=======
+                                    <label for="weight_charge">Weight (kg)</label>
+>>>>>>> origin/v8
                                     <input type="number" class="form-control" data-key="{{ $key }}"
-                                        name="weight[]" id="weight{{ $key }}"
-                                        value="{{ $line['weight'] }}">
+                                        name="weight[]" id="weight{{ $key }}" value="0"
+                                        >
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="col-md-3 text-left">
-                                    <label for="area">Area</label>
+                                    <label for="area">Pickup Location</label>
                                     <select class="form-control select2 area" data-key="{{ $key }}" name="area[]"
                                         id="area{{ $key }}" style="padding:1px;">
                                         <option value="" selected disabled>Select area</option>
-                                        @foreach ($areas as $area)
-                                            <option value="{{ $area->id }}">{{ $area->name }}</option>
+                                        @foreach ($locations as $location)
+                                            <option value="{{ $location->id }}">{{ $location->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

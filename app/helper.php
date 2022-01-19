@@ -9,6 +9,7 @@ use App\Models\Unit;
 
 use App\Models\User;
 use App\Models\Location;
+use App\Models\LogisticStep;
 use App\Models\UnitShipment;
 // use Illuminate\Support\Facades\Auth;
 
@@ -157,5 +158,19 @@ if (!function_exists('active_guard')) {
             if (auth()->guard($guard)->check()) return $guard;
         }
         return null;
+    }
+}
+
+if (!function_exists('get_shipments_for_logged_in_admin')) {
+    function get_shipments_for_logged_in_admin($logistic_step_slug)
+    {
+        $shipments=array();
+        if(auth()->guard('admin')->user()->hasRole('super-admin')){
+            $shipments=Shipment::cousins()->where('shipments.logistic_status',LogisticStep::where('slug',$logistic_step_slug)->first()->id)->get();
+        }
+        else{
+            $shipments = Shipment::cousins()->where('admins.id',auth()->guard('admin')->user()->id)->where('shipments.logistic_status',LogisticStep::where('slug','picked-up')->first()->id)->get();
+        }
+        return $shipments;
     }
 }

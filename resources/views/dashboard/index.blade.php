@@ -109,7 +109,7 @@
                                     </td>
                                     <td style="font-size: 13px">
                                         {{-- @foreach ($shipments['recipient'] as $item) --}}
-                                        {{ $shipments['recipient'] }}
+                                        {{ json_decode($shipments['recipient'],true)['name'] }}
                                     </td>
 
                                     <td>

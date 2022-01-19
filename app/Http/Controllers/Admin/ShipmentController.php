@@ -22,7 +22,10 @@ use App\Models\ShipmentPayment;
 use App\Models\Driver_return_shipment_box;
 use App\Http\Controllers\Controller;
 use App\Models\CourierShipment;
+use App\Models\Location;
 use App\Models\LogisticStep;
+use App\Models\Point;
+use App\Models\Unit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -36,6 +39,7 @@ class ShipmentController extends Controller
     }
     public function index()
     {
+<<<<<<< HEAD
         $merchants = array();
         if (!Auth::guard('admin')->user()->hasRole('super-admin')) {
             $shipments_belongs_to_my_units = DB::table('units')->where('admin_id', Auth::guard('admin')->user()->id)->join('points', 'points.unit_id', 'units.id')->join('locations', 'points.id', 'locations.point_id')->join('shipments', 'locations.id', 'shipments.pickup_location_id')->where('shipments.logistic_status', '1')->select('shipments.*', 'locations.name as location_name', 'units.name as unit_name')->get();
@@ -44,14 +48,36 @@ class ShipmentController extends Controller
             $merchants = $shipments_belongs_to_my_units->pluck('merchant_id')->toArray();
         } else $merchants = Shipment::where('logistic_status', '1')->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
 
+=======
+        $merchants=array();
+        if(!Auth::guard('admin')->user()->hasRole('super-admin')){
+            
+            $shipments_belongs_to_my_units= DB::table('units')->where('admin_id',Auth::guard('admin')->user()->id)->join('points','points.unit_id','units.id')->join('locations','points.id','locations.point_id')->join('shipments','locations.id','shipments.pickup_location_id')->where('shipments.logistic_status',1)->select('shipments.*', 'locations.name as location_name', 'units.name as unit_name')->get();
+            // return $shipments_belongs_to_my_units;
+            $merchants = $shipments_belongs_to_my_units->pluck('merchant_id')->toArray();
+        }
+        else $merchants = Shipment::where('logistic_status', 1)->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
+>>>>>>> origin/v8
         $users = User::whereIn('id', array_unique($merchants))->get();
         return view('admin.shipment.shipment-list', compact('users'));
     }
 
     public function all_shipments(Request $request)
     {
+<<<<<<< HEAD
         $shipments = Auth::guard('admin')->user()->my_shipments();
         //dd($shipments);
+=======
+        $shipments='';
+        if(Auth::guard('admin')->user()->hasRole('super-admin')){
+            $shipments = Shipment::with('pickup_location')->with('delivery_location')->get();
+        }
+        else{
+            $shipments = Auth::guard('admin')->user()->_shipments();
+        }
+        
+        // dd($shipments);
+>>>>>>> origin/v8
         return view('admin.shipment.all-shipments', compact('shipments'));
     }
     function new_shipment_detail(Shipment $shipment)
@@ -108,6 +134,7 @@ class ShipmentController extends Controller
 
     public function shipment_received()
     {
+<<<<<<< HEAD
         $date = \Carbon\Carbon::today()->subDays(7);
         $shipment = Shipment::where(['status' => 1, 'shipping_status' => 2])->select('merchant_id')
             ->where('time_starts', '>=', $date)
@@ -116,8 +143,20 @@ class ShipmentController extends Controller
         $user = User::where('area_id', '!=', null)->whereIn('id', $shipment)->get();
         if ($user->count() == 0) {
             echo '<script>alert("Merchant informatin may missing!!")</script>';
+=======
+        // dd(get_shipments_for_logged_in_admin());
+        if(Auth::guard('admin')->user()->hasRole('super-admin')){
+            $shipments = Shipment::cousins()->where('shipments.logistic_status',LogisticStep::where('slug','picked-up')->first()->id)->pluck('shipments.merchant_id')->toArray();
+>>>>>>> origin/v8
         }
-        return view('admin.shipment.shipment-receive', compact('user'));
+        else{
+            $shipments = Shipment::cousins()->where('admins.id',(Auth::guard('admin')->user()->id))->where('shipments.logistic_status',LogisticStep::where('slug','picked-up')->first()->id)->pluck('shipments.merchant_id')->toArray();
+        }
+        $users = User::where('unit_id', '!=', null)->whereIn('id', array_unique($shipments))->get();
+        // if ($user->count() == 0) {
+        //     echo '<script>alert("Merchant informatin may missing!!")</script>';
+        // }
+        return view('admin.shipment.shipment-receive', compact('users'));
     }
 
     function shipment_cancelled()
@@ -129,8 +168,14 @@ class ShipmentController extends Controller
 
     public function show($id, $status, $shipping_status)
     {
+<<<<<<< HEAD
         $shipments = Shipment::where('merchant_id', $id)->where(['status' => $status, 'shipping_status' => $shipping_status])->get();
         //dd($shipments);
+=======
+        // dd($logistic_status);
+        $shipments = Shipment::where(['merchant_id'=>$id,'logistic_status'=>1])->get();
+        // dd($shipments);
+>>>>>>> origin/v8
         $user = User::find($id);
         $drivers = Courier::orderBy('id', 'desc')->get();
         return view('admin.shipment.shipment-more', compact('shipments', 'drivers', 'user'));
@@ -249,23 +294,38 @@ class ShipmentController extends Controller
         return back();
     }
 
-    function assignToHub($id, $status, $shipping_status)
+    function unit_received($id, $status, $logistic_status)
     {
         $user = User::find($id);
+<<<<<<< HEAD
         $hub = Hub_shipment::where(['merchant_id' => $user->id, 'status' => 'on-dispatch'])->select('hub_id')->groupBy('hub_id')->pluck('hub_id')->toArray();
         $hubs = Hub::whereIn('id', $hub)->get();
         return view('admin.shipment.assign-to-hub', compact('hubs', 'user', 'id', 'status', 'shipping_status'));
+=======
+
+        $points = DB::table('unit_shipment')->join('points','points.unit_id','unit_shipment.unit_id')->select('points.id as point_id')->groupBy('point_id')->pluck('point_id')->toArray();
+        $points = Point::whereIn('id', $points)->get();
+
+        return view('admin.shipment.assign-to-unit', compact('points', 'user', 'id', 'status', 'logistic_status'));
+>>>>>>> origin/v8
     }
 
-    function receving_parcels($id, $status = 1, $shipping_status = 2)
+    function receiving_parcels($id, $status = 1, $logistic_status = 2)
     {
         $date = \Carbon\Carbon::today()->subDays(7);
+<<<<<<< HEAD
         $shipments = Shipment::where('merchant_id', $id)
             ->where(['status' => $status, 'shipping_status' => $shipping_status])
             ->where('time_starts', '>=', $date)->get();
 
         $areas = Area::orderBy('name')->get();
         return view('admin.shipment.load.receiving-parcels', compact('shipments', 'areas', 'id', 'status', 'shipping_status'));
+=======
+        $shipments = Auth::guard('admin')->user()->my_shipments()->join('shipment_payments','shipment_payments.shipment_id','shipments.id')->where('logistic_status', $logistic_status)->select('shipments.*')->get();
+        
+        $locations = Location::orderBy('name')->get();
+        return view('admin.shipment.load.receiving-parcels', compact('shipments', 'locations', 'id', 'status', 'logistic_status'));
+>>>>>>> origin/v8
     }
 
     //ajax call form assign-to-hub route

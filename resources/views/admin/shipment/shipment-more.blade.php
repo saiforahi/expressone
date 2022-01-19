@@ -63,8 +63,17 @@
                                                 value="{{ $shipment->id }}">
                                             {{ $key + 1 }}
                                         </th>
+<<<<<<< HEAD
                                         <th scope="row">Name: {{ $shipment['recipient'] }} <br>Price:
                                             {{ $shipment->amount }}
+=======
+                                        <th scope="row">Name: {{ json_decode($shipment->recipient,true)['name'] }} <br>Price:
+                                            {{ $shipment->cod_amount }}
+                                        </th>
+
+                                        <th scope="row"><i class="fa fa-phone"></i> {{ json_decode($shipment->recipient,true)['phone'] }}<br>
+                                            <i class="fa fa-map-marker"></i> {{ json_decode($shipment->recipient,true)['address'] }}<br>
+>>>>>>> origin/v8
                                         </th>
                                         <th scope="row">
 

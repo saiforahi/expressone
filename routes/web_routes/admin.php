@@ -52,7 +52,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('merchant-details/{user}', [MerchantController::class,'show'])->name('merchant.details');
     Route::post('merchant-store', [MerchantController::class,'store'])->name('merchant.store');
     Route::post('update-merchant-verify', [MerchantController::class,'updateMerchantStatus'])->name('admin.merchant.status');
-    
+
 
     Route::get('/shipping-price-set', 'ShippingPriceController@shippingPrice')->name('shippingPrice.set');
     Route::post('/shipping-price-set', 'ShippingPriceController@shippingPriceAdd')->name('shippingPrice.add');
@@ -65,14 +65,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     //Shipping List
     Route::get('/shipping-list', [ShipmentController::class,'index'])->name('AdminShipment.index');
     Route::get('/shipping-list/more/{id}/{status}/{logistic_status}', [ShipmentController::class,'show'])->name('AdminShipmentMore');
-    Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', [ShipmentController::class,'saveCourierShipment'])->name('saveCourierShipment');
-    Route::get('/shipping-list/received', 'ShipmentController@shipment_received')->name('AdminShipmentReceived');
+    Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', [ShipmentController::class,'save_courier_shipment'])->name('saveDriverShipments');
+    Route::get('/shipping-list/received', [ShipmentController::class,'shipment_received'])->name('AdminShipmentReceived');
     Route::get('/shipping-list/cancelled', 'ShipmentController@shipment_cancelled')->name('AdminShipmentCancelled');
 
     Route::post('/add-parcelBy-admin', 'ShipmentController@add_parcel')->name('add-parcelBy-admin');
-    Route::get('/assign-to-hub/{merchant_id}/{status}/{shipping_status}', 'ShipmentController@assignToHub')->name('AdminShipmentReceive');
-    Route::get('/receiving-parcels/{merchant_id}/{status?}/{shipping_status?}', 'ShipmentController@receving_parcels')->name('receiving-parcels');
-    Route::get('/get-hub-csv-files/{merchant_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
+    Route::get('/assign-to-unit/{merchant_id}/{status}/{logistic_status}', [ShipmentController::class,'unit_received'])->name('AdminShipmentReceive');
+    Route::get('/receiving-parcels/{user_id}/{status?}/{logistic_status?}', [ShipmentController::class,'receiving_parcels'])->name('receiving-parcels');
+    Route::get('/get-hub-csv-files/{user_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
 
     Route::get('/move-to-hub', 'ShipmentController@MoveToHub')->name('ShipmentToHub');
     Route::get('/move2hub-withPhone', 'ShipmentController@MoveToHubWithPhone')->name('move2hub-withPhone');

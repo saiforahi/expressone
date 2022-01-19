@@ -7,8 +7,8 @@
                 <td></td>
                 <td class="text-right">
                     <select class="select2 select2_single areaOp" data-key="{{$key}}" id="area{{$key}}">
-                        @foreach($areas as $area)
-                            <option value="{{$area->id}}" @if($shipment->area_id==$area->id)selected @endif>{{$area->name}}</option>
+                        @foreach($locations as $location)
+                            <option value="{{$location->id}}" @if($shipment->pickup_location_id==$location->id)selected @endif>{{$location->name}}</option>
                         @endforeach
                     </select>
                 </td>
@@ -19,16 +19,16 @@
                 <td></td>
             </tr>
             <tr>
-                <td>Price: {{$shipment->cod_amount}}</td>
+                <td>Price: {{\App\Models\ShipmentPayment::where('shipment_id',$shipment->id)->first()->cod_amount}}</td>
                 <td></td>
                 <td class="text-right">
                     Weight: <input style="width:100px" type="number" id="weight{{$key}}" value="{{$shipment->weight}}">
                 </td>
             </tr>
             <tr>
-                <td>Phone: {{$shipment->phone}} </td>
+                <td>Phone: {{$shipment->recepient['phone']}} </td>
                 <td></td>
-                <td class="text-right hub{{$key}}">Hub: {{hub_from_area($shipment->area_id)->name}}</td>
+                <td class="text-right hub{{$key}}">Point: {{$shipment->pickup_location->point->name}}</td>
             </tr>
             <tr>
                 <td colspan="3">Address: {{$shipment->address}} </td>
@@ -41,7 +41,11 @@
                     <a href="{{route('shipment-print',$shipment->id)}}" class="btnPrint" target="_blank"><i
                             class="fa fa-print"></i> Print</a> &nbsp;
                     <button class="btn btn-xs btn-default"><i class="fa fa-undo"></i> Return</button>
+<<<<<<< HEAD
                     <input type="hidden" id="merchant_id{{$key}}" value="{{$shipment->merchant_id}}">
+=======
+                    <input type="hidden" id="user_id{{$key}}" value="{{$shipment->merchant_id}}">
+>>>>>>> origin/v8
                     <input type="hidden" id="hub_id{{$key}}" value="{{$shipment->area->hub_id}}">
                     <input type="hidden" id="shipment_id{{$key}}" value="{{$shipment->id}}">
                     <button class="btn btn-success btn-xs r{{$key}}" onclick="receive(<?php echo $key;?>);">Receive <i

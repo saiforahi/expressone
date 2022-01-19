@@ -7,7 +7,7 @@ use App\Http\Controllers\AuthController;
 
 
 //To clear all cache
-Route::get('cc', function () {
+Route::get('clear', function () {
     Artisan::call('optimize:clear');
     return "Cleared!";
 });
