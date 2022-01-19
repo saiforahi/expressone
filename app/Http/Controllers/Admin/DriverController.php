@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Shipment;
-use App\User;
-use App\Courier;
-use App\Driver_shipment;
-use App\Driver_hub_shipment_box;
-
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Session;
+use App\Models\Courier;
+use App\Models\Shipment;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
 class DriverController extends Controller

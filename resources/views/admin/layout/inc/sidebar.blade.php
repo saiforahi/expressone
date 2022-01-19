@@ -51,9 +51,9 @@
                             <li><a href="{{ route('AdminDownload') }}">Download</a></li>
                             <li><a href="{{ route('AdminUploadCSV') }}">Upload CSV-File</a></li>
 
-                            {{-- <?php $units = \DB::table('units')
-    ->where('status', '1')
-    ->get(); ?>
+                            <?php $units = \DB::table('units')
+                                ->where('status', '1')
+                                ->get(); ?>
                             @foreach ($units as $unit)
                                 @if (Auth::guard('admin')->user()->type == 'admin')
                                     <li><a
@@ -94,7 +94,7 @@
                         </ul>
                     </li>
 
-                    <li><a href="{{ route('driver-list.index') }} "><i class="fa mdi mdi-truck-fast"></i>Couriers</a>
+                    <li><a href="{{ url('admin/courier') }} "><i class="fa mdi mdi-truck-fast"></i>Couriers</a>
                     </li>
 
                     @if (Auth::guard('admin')->user()->hasRole('super-admin'))

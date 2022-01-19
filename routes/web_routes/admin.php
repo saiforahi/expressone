@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AreaController;
-use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\Admin\ShipmentController;
 use App\Http\Controllers\Admin\ShippingChargeController;
@@ -61,8 +60,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/delete-shipping-price/{shipping_price}', 'ShippingPriceController@destroy')->name('delete-shipping-price');
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
     //Admin Courier  list
-    Route::resource('couriers', DriverController::class);
-    Route::get('driver-shipments/{id}', DriverController::class,'assigned_shipments')->name('admin-driverShipments');
+    Route::resource('courier', \App\Http\Controllers\Admin\DriverController::class);
+    Route::get('/driver-shipments/{id}', 'DriverController@assigned_shipments')->name('admin-driverShipments');
     //Shipping List
     Route::get('/shipping-list', [ShipmentController::class,'index'])->name('AdminShipment.index');
     Route::get('/shipping-list/more/{id}/{status}/{logistic_status}', [ShipmentController::class,'show'])->name('AdminShipmentMore');
