@@ -39,15 +39,15 @@ class CSVController extends Controller
         $file = fopen('./csv-file/' . $filename, "r");
         $i = 1;
         while (($line = fgetcsv($file)) !== FALSE) {
-            // dd($line);
+            //dd($line);
             if ($i != 1) {
                 $lines[] = array(
                     'recipient_name' => $line[1],
                     'recipient_phone' => $line[2],
                     'recipient_address' => $line[3],
                     'amount' => $line[4],
-                    'delivery_charge' => $line[5],
-                    'note' => $line[6]
+                    //'delivery_charge' => $line[5],
+                    'note' => $line[5]
                 );
             }
             $i++;
@@ -75,38 +75,25 @@ class CSVController extends Controller
         // dd(Session::get('csv_data'));
         foreach (Session::get('csv_data') as $key => $line) {
             //Invoice ID
-<<<<<<< HEAD
-            // $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first();
-            // if ($invoice_data == null) {
-            //     $firstReg = 111;
-            //     $invoice_no = $firstReg + 1;
-            //     //dd($invoice_no);
-            // } else {
-            //     $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first()->invoice_no;
-            //     $invoice_no = $invoice_data + 1;
-            // }
-=======
             $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first();
             if ($invoice_data == null) {
                 $firstReg = 111;
                 $invoice_no = $firstReg + 1;
-                
             } else {
                 $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first()->invoice_no;
                 $invoice_no = $invoice_data + 1;
             }
->>>>>>> origin/v8
             $insert = new Shipment();
-            $recipient_data['name']=$line['recipient_name'];
+            $recipient_data['name'] = $line['recipient_name'];
             // dd(json_encode(array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address'])));
-            $insert->recipient = json_encode(array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address']));
+            $insert->recipient = json_encode(array('name' => $line['recipient_name'], 'phone' => $line['recipient_phone'], 'address' => $line['recipient_address']));
             $insert->amount = $line['amount'];
             $insert->weight = $request->weight[$key];
             $insert->note = $line['note'];
             //CSV Data
             $insert->merchant_id = Auth::guard('user')->user()->id;
             $insert->added_by()->associate(Auth::guard('user')->user());
-            $insert->invoice_id =  rand(1111,9999);
+            $insert->invoice_id =  rand(1111, 9999);
             $insert->tracking_code = uniqid();
             $insert->logistic_status = LogisticStep::first()->id;
             $insert->save();
@@ -114,15 +101,10 @@ class CSVController extends Controller
             if ($insert->save()) {
                 $shipmentPmnt =  new ShipmentPayment();
                 $shipmentPmnt->shipment_id = $insert->id;
-                $shipmentPmnt->sl_no  = rand(1,100000);
+                $shipmentPmnt->sl_no  = rand(1, 100000);
                 $shipmentPmnt->tracking_code  = uniqid();
-<<<<<<< HEAD
-                $shipmentPmnt->invoice_no  = rand(2000,90000);
-                $shipmentPmnt->admin_id  = 1; //Please check this which data will save here
-=======
                 $shipmentPmnt->invoice_no  = $invoice_no;
                 // $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
->>>>>>> origin/v8
                 $shipmentPmnt->cod_amount  = $insert->amount;
                 $shipmentPmnt->delivery_charge  = $insert->shipping_charge_id;
                 $shipmentPmnt->save();

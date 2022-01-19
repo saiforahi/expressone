@@ -22,18 +22,13 @@
         </div>
         <div class="col-md-6 text-left">
             <label for="area">Area</label>
-<<<<<<< HEAD
             <?php
             //$area = \DB::table('areas')->get();
             ?>
             {{-- <select  class="form-control select2" style="width:100%;height:35px" name="area" id="area" required>
-=======
-            <?php $locations = \DB::table('locations')->get();?>
-            <select  class="form-control select2" style="width:100%;height:35px" name="area" id="area" required>
->>>>>>> origin/v8
                 <option value="" selected disabled>Select area</option>
-                @foreach($locations as $location)
-                        <option value="{{$location->id}}">{{$location->name}}</option>
+                @foreach($area as $areas)
+                        <option value="{{$areas->id}}">{{$areas->name}}</option>
                 @endforeach
             </select> --}}
         </div>

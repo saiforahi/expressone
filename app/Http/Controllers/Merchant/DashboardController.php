@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers\Merchant;
-
-use App\Models\Area;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\Shipment;

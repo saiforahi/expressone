@@ -18,7 +18,8 @@ Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix'
 
     Route::get('shipments', [ShipmentController::class,'index'])->name('courierShipments');
     Route::get('my-shipments/{type}', [ShipmentController::class,'my_shipments'])->name('my-shipments');
-    Route::get('shipping-details/{id}/{status}', [ShipmentController::class,'show'])->name('shipping-details');
+    //Route::get('shipping-details/{id}/{status}', [ShipmentController::class,'show'])->name('shipping-details');
+    Route::get('shipping-details/{id}/', [ShipmentController::class,'show'])->name('shipping-details');
 
     Route::get('cencell-parcel/{id}', [ShipmentController::class,'cencel_parcel'])->name('cancel-parcel');
     Route::get('receive-shipment/{id}', [ShipmentController::class,'receive_parcel'])->name('receive-parcel');

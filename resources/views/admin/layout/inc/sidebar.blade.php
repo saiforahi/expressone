@@ -94,19 +94,14 @@
                         </ul>
                     </li>
 
-                    <li><a href="{{ route('driver-list.index') }} "><i class="fa mdi mdi-truck-fast"></i> Riders</a>
+                    <li><a href="{{ route('driver-list.index') }} "><i class="fa mdi mdi-truck-fast"></i>Couriers</a>
                     </li>
 
-<<<<<<< HEAD
-                    <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
-                            Merchant List</a></li>
-=======
                     @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                         <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
                                 Merchant List</a></li>
                     @endif
 
->>>>>>> origin/v8
                     <li>
                         <a><i class="fa mdi mdi-account"></i> Employee Manage<span
                                 class="fa fa-chevron-down"></span></a>

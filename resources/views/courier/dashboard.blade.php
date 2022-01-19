@@ -16,7 +16,7 @@
                         </div>
                     @endif
                     <div class="x_title">
-                        <h2><i class="fa fa-truck"></i> <small>My Shipments tab</small></h2>
+                        <h2><i class="fa fa-truck"></i> <small></small>My Shipment Tab</h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
@@ -211,6 +211,7 @@
                     },
                 });
             });
+
             function replaceAll(str, find, replace) {
                 var escapedFind = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
                 return str.replace(new RegExp(escapedFind, 'g'), replace);

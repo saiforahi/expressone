@@ -66,11 +66,7 @@
                                 </div>
 
                                 <div class="col cod_target text-left">
-<<<<<<< HEAD
-                                    <label for="weight_charge">Weight</label>
-=======
                                     <label for="weight_charge">Weight (kg)</label>
->>>>>>> origin/v8
                                     <input type="number" class="form-control" data-key="{{ $key }}"
                                         name="weight[]" id="weight{{ $key }}" value="0"
                                         >

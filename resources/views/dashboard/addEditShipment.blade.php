@@ -32,6 +32,7 @@
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <form id="upload_form" method="post" action="{{ route('merchant.addShipment', $shipment['id']) }}">
+                <input type="hidden" name="shipmentId" value="{{ $shipment['id'] }}">
                 <input type="hidden" name="invoice_id" @if (isset($shipment->invoice_id))
                 value="{{ $shipment['invoice_id'] }}"
                 @else
@@ -50,8 +51,13 @@
                         <div class="col text-left">
                             <label class="" for="name">Customer Informations</label> <span
                                 class="text-danger">*</span>
-                            <input type="text" class="form-control" name="recipient" placeholder="Name, 01744 XXXXXX, Address" required
-                                value="{{ @old('recipient', $shipment['recipient']) }}">
+                            <input type="text" class="form-control" name="name" placeholder="Name" required
+                                value="{{ @old('recipient', $shipment['recipient']['name']) }}">
+
+                            <input type="text" class="form-control" name="phone" placeholder="01744 XXXXXX" required
+                                value="{{ @old('recipient', $shipment['recipient']['phone']) }}">
+                            <input type="text" class="form-control" name="address" placeholder="Address" required
+                                value="{{ @old('recipient', $shipment['recipient']['address']) }}">
                         </div>
                     </div>
                 </div>
