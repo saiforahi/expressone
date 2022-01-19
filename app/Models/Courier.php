@@ -25,7 +25,15 @@ class Courier extends Authenticatable
     public function guard__name(){
         return $this->guard_name;
     }
-
+    /**
+     * Get all of the shipments f
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function courierShipments()
+    {
+        return $this->hasMany(CourierShipment::class,);
+    }
     public function pickup_shipments(){
         return $this->hasMany(Shipment::class)->where('type','pickup');
     }

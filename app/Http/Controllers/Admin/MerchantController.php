@@ -19,6 +19,11 @@ class MerchantController extends Controller
 
     public function store(Request $request)
     {
+        echo '<pre>';
+        echo '======================<br>';
+        print_r($request->all());
+        echo '<br>======================<br>';
+        exit();
         $request->validate([
             'first_name' => 'required|max:50',
             'last_name' => 'required|max:50',

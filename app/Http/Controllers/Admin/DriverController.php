@@ -15,7 +15,8 @@ class DriverController extends Controller
 {
     public function index()
     {
-        $couriers = Courier::orderBy('id', 'DESC')->get();
+        $couriers = Courier::with('courierShipments')->orderBy('id', 'DESC')->get();
+        //$couriers = Courier::with(['courierShipments' => function ($query) {$query->select('shipment_id', 'courier_id');}])->orderBy('id', 'DESC')->get();
         return view('admin.courier.driver', compact('couriers'));
     }
 
