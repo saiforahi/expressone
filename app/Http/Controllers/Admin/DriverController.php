@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Session;
 use App\Models\Courier;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\CourierShipment;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class DriverController extends Controller
 {
     public function index()
     {
-        $driver = Courier::orderBy('id', 'DESC')->get();
-        return view('admin.driver.driver', compact('driver'));
+        $couriers = Courier::orderBy('id', 'DESC')->get();
+        return view('admin.driver.driver', compact('couriers'));
     }
 
     public function delivery_note(Shipment $shipment)
@@ -22,7 +23,7 @@ class DriverController extends Controller
         return Driver_hub_shipment_box::where('shipment_id',$shipment->id)->pluck('driver_note')->first();
     }
 
-    public function store(Request $request)
+    public function addEditCourier(Request $request)
     {
         $request->validate([
             'first_name' => 'required|max:191',
@@ -60,18 +61,25 @@ class DriverController extends Controller
         //
     }
 
-    public function destroy($id)
+    public function courierDelete($id)
     {
-        Courier::find($id)->delete();
-        Session::flash('message', 'Courier Delete successfully');
-        return redirect('/admin/driver-list');
+        dd($id);
+        try {
+            Courier::find($id)->delete();
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with('success','Courier not delete');
+        }
+        return redirect('/admin/driver-list')->with('success','Courier Delete successfully');
     }
 
-
     public function assigned_shipments($id){
-        Session::flash('message', 'Courier assigned shipments');
-        $shipments = Driver_shipment::where('courier_id',$id)->get();
-        //dd($shipments);
-        return view('admin.driver.shipments', compact('shipments'));
+        //$shipments = CourierShipment::with('shipment')->where('courier_id',$id)->get();
+        $shipments = CourierShipment::with([
+			'shipment' => function ($query) {
+				$query->select('id', 'recipient','amount','weight');
+			}
+		])->where('courier_id',$id)->orderBy('id', 'DESC')->get();
+        return view('admin.driver.shipments', compact('shipments'))->with('success','Courier assigned shipments');
     }
 }

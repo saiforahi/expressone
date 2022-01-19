@@ -93,8 +93,7 @@
                             @endif
                         </ul>
                     </li>
-
-                    <li><a href="{{ url('admin/courier') }} "><i class="fa mdi mdi-truck-fast"></i>Couriers</a>
+                    <li><a href="{{ route('allCourier') }}"><i class="fa mdi mdi-truck-fast"></i>Couriers</a>
                     </li>
 
                     @if (Auth::guard('admin')->user()->hasRole('super-admin'))
