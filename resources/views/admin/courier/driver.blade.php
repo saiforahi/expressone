@@ -39,6 +39,9 @@
                                 <tbody>
                                     @php $no = 1 @endphp
                                     @foreach ($couriers as $courier)
+                                        @php
+                                            $countShipment = \App\Models\CourierShipment::where('courier_id', $courier->id)->count();
+                                        @endphp
                                         <tr>
                                             <th scope="row">{{ $no }}</th>
                                             <th scope="row">{{ $courier->first_name }} {{ $courier->last_name }}</th>
@@ -50,12 +53,6 @@
                                                     alt=""></th>
                                             <th scope="row" class="text-right">
                                                 <div class="btn-group  btn-group-sm">
-                                                    @php
-                                                        $countShipment = \App\Models\CourierShipment::where('courier_id', $courier->id)
-                                                            ->orderBy('id', 'DESC')
-                                                            ->count();
-                                                        //dd($c_shipments)
-                                                    @endphp
                                                     @if ($countShipment == 0)
                                                         <form method="POST"
                                                             action="{{ route('courierDelete', $courier->id) }}">
