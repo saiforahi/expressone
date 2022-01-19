@@ -9,7 +9,7 @@
                 </div>
                 <div class="title_right">
                     <div class="form-group pull-right top_search">
-                        <a  type="button" class="btn btn-info btn-sm" href="{{ url('admin/add-edit-courier') }}">
+                        <a type="button" class="btn btn-info btn-sm" href="{{ url('admin/add-edit-courier') }}">
                             <i class="fa fa-user-plus fs-13 m-r-3"></i> Add Rider
                         </a>
                     </div>
@@ -50,14 +50,25 @@
                                                     alt=""></th>
                                             <th scope="row" class="text-right">
                                                 <div class="btn-group  btn-group-sm">
-                                                    <form method="POST" action="{{ route('courierDelete', $courier->id) }}">
-                                                        @csrf
-                                                        <button class="btn btn-success delete" type="submit"><i
-                                                                class="mdi mdi-delete m-r-3"></i>Delete
-                                                        </button>
+                                                    @php
+                                                        $countShipment = \App\Models\CourierShipment::where('courier_id', $courier->id)
+                                                            ->orderBy('id', 'DESC')
+                                                            ->count();
+                                                        //dd($c_shipments)
+                                                    @endphp
+                                                    @if ($countShipment == 0)
+                                                        <form method="POST"
+                                                            action="{{ route('courierDelete', $courier->id) }}">
+                                                            @csrf
+                                                            <button class="btn btn-success delete" type="submit"><i
+                                                                    class="mdi mdi-delete m-r-3"></i>Delete
+                                                            </button>
+                                                        </form>
+                                                    @else
                                                         <a class="btn btn-info"
-                                                            href="/admin/courier-shipments/{{ $courier->id }}">All Shipments</a>
-                                                    </form>
+                                                            href="/admin/courier-shipments/{{ $courier->id }}">All
+                                                            Shipments</a>
+                                                    @endif
                                                 </div>
                                             </th>
                                         </tr>
@@ -87,8 +98,8 @@
                         </div>
                         <div class="x_content">
                             <br>
-                            <form id="demo-form2" method="post" action="{{ route('addEditCourier',$courier->id) }}" autocomplete="off"
-                                class="form-horizontal form-label-left input_mask">
+                            <form id="demo-form2" method="post" action="{{ route('addEditCourier', $courier->id) }}"
+                                autocomplete="off" class="form-horizontal form-label-left input_mask">
                                 @csrf
 
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
@@ -145,8 +156,10 @@
     <!-- Datatables -->
     <link href="{{ asset('ass_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('ass_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}"
+        rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}"
+        rel="stylesheet">
     <link href="{{ asset('ass_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 @endpush
 
