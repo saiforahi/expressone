@@ -30,7 +30,7 @@
                     <td>
                       {{$shipment->cod_amount}}
                     </td>
-                    <td> {{$shipment->pickup_location->name}} </td>
+                    <td> {{$shipment->pickup_location->name??null}} </td>
                     <td> {{$shipment->delivery_location->name??null}} </td>
                     <td> <a target="_blank" href="/tracking?code={{$shipment->tracking_code}}">{{$shipment->tracking_code}} </a></td>
                     <td>@include('admin.shipment.status',['status'=>$shipment->status,'shipping_status'=>$shipment->shipping_status])</td>
