@@ -26,6 +26,7 @@ use App\Models\Driver_hub_shipment_box;
 use Illuminate\Support\Facades\Session;
 use App\Models\CourierShipment_delivery;
 use App\Models\Driver_return_shipment_box;
+use PhpParser\Node\Stmt\TryCatch;
 
 class ShipmentController extends Controller
 {
@@ -135,52 +136,105 @@ class ShipmentController extends Controller
         $drivers = Courier::orderBy('id', 'desc')->get();
         return view('admin.shipment.shipment-more', compact('shipments', 'drivers', 'user'));
     }
-
-    // add a parcel under a merchant
-    function add_parcel(Request $request)
+    public function addParcelForm()
     {
-        $total_price = 0;
-        $cod_type = 0;
-        $cod_amount = 0;
+        $data['title'] = "Add Parcel";
+        return view('admin.shipment.addParcel', $data);
+    }
+    public function adminSaveParcel(Request $request)
+    {
+        try {
+            $shipment = new Shipment();
+            $data = $request->only('name', 'phone', 'address');
+            $shipment->recipient = $data;
+            $shipment->tracking_code = uniqid();
+            $shipment->invoice_id = rand(1000, 100000);
+            $shipment->shipping_charge_id = $request->shipping_charge_id;
+            $shipment->pickup_location_id = $request->pickup_location_id;
+            $shipment->weight = $request->weight;
+            $shipment->amount = $request->amount;
+            $shipment->note = $request->note;
+            //$shipment->merchant_id = Auth::guard('admin')->user()->id;
+            $shipment->added_by()->associate(Auth::guard('admin')->user());
+            $shipment->logistic_status = LogisticStep::first()->id;
+            $shipment->save();
+            //Make shipment Payment
+            if ($shipment->save()) {
+                $shipmentPmnt =  new ShipmentPayment();
+                //dd($shipmentPmnt);
+                $shipmentPmnt->shipment_id = $shipment->id;
+                $shipmentPmnt->sl_no  = rand(1, 100000);
+                $shipmentPmnt->tracking_code  = uniqid();
+                $shipmentPmnt->invoice_no  = rand(2222, 222222);
+                // $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
+                $shipmentPmnt->cod_amount  = $shipment->amount;
+                $shipmentPmnt->delivery_charge  = $shipment->shipping_charge_id;
+                $shipmentPmnt->save();
+            }
+            return redirect()->route('merchant.list')->with('message', 'New parcel has been saved successfully!!');
+        } catch (\Throwable $th) {
+            throw $th;
+            return back()->with('error', 'Parcel not saved!!'.$th);
+        }
 
+    }
+    // add a parcel under a merchant
+    public function add_parcel(Request $request)
+    {
+
+        // $total_price = 0;
+        // $cod_type = 0;
+        // $cod_amount = 0;
         $checkInvoice = Shipment::where('invoice_id', $request->invoice_id)->count();
         if ($checkInvoice > 0 && $checkInvoice != null) {
-            $invoice_id = $request->invoice_id . rand(222, 22);
+            $invoice_id = $request->invoice_id . rand(1000, 100000);
         } else $invoice_id = $request->invoice_id;
+        // $data = [
+        //     'merchant_id' => $request->merchant_id,
+        //     'unit_id' => $request->unit_id,
+        //     'name' => $request->name,
+        //     'phone' => $request->phone,
+        //     'address' => $request->address,
+        //     'zip_code' => $request->zip_code,
+        //     'parcel_value' => $request->parcel_value,
+        //     'invoice_id' => $invoice_id,
+        //     'merchant_note' => $request->merchant_note,
+        //     'weight' => $request->weight,
+        //     'delivery_type' => $request->delivery_type,
+        //     'tracking_code' => rand(),
+        //     'cod' => $cod_type,
+        //     'cod_amount' => $cod_amount,
+        //     'price' => 0,
+        //     'total_price' => $total_price,
+        //     'shipping_status' => 2
+        // ];
+        // $shipment = Shipment::create($data);
+        $shipment = new Shipment();
+        $data = $request->only('name', 'phone', 'address');
+        $shipment->recipient = $data;
+        $shipment->tracking_code = $request->tracking_code;
+        $shipment->invoice_id = $invoice_id;
+        $shipment->shipping_charge_id = $request->shipping_charge_id;
+        $shipment->pickup_location_id = $request->pickup_location_id;
+        $shipment->weight = $request->weight;
+        $shipment->amount = $request->amount;
+        $shipment->note = $request->note;
+        $shipment->merchant_id = Auth::guard('admin')->user()->id;
+        $shipment->added_by()->associate(Auth::guard('admin')->user());
+        $shipment->logistic_status = LogisticStep::first()->id;
+        $shipment->save();
 
-        $data = [
-            'merchant_id' => $request->merchant_id,
-            'zone_id' => Area::where('id', $request->area)->first()->zone_id,
-            'area_id' => $request->area,
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'zip_code' => $request->zip_code,
-            'parcel_value' => $request->parcel_value,
-            'invoice_id' => $invoice_id,
-            'merchant_note' => $request->merchant_note,
-            'weight' => $request->weight,
-            'delivery_type' => $request->delivery_type,
-            'tracking_code' => rand(),
-            'cod' => $cod_type,
-            'cod_amount' => $cod_amount,
-            'price' => 0,
-            'total_price' => $total_price,
-            'shipping_status' => 2
-        ];
-        $shipment = Shipment::create($data);
+        // if ($request->status != '0') {
+        //     if ($request->status == '1') $status = 'pending';
 
-        if ($request->status != '0') {
-            if ($request->status == '1') $status = 'pending';
-
-            if ($request->status == '2') $status = 'received';
-            CourierShipment::create([
-                'courier_id' => $request->courier_id,
-                'shipment_id' => $shipment->id,
-                'admin_id' => Auth::guard('admin')->user()->id,
-                'status' => $status
-            ]);
-        }
+        //     if ($request->status == '2') $status = 'received';
+        //     CourierShipment::create([
+        //         'courier_id' => $request->courier_id,
+        //         'shipment_id' => $shipment->id,
+        //         'admin_id' => Auth::guard('admin')->user()->id,
+        //         'status' => $status
+        //     ]);
+        // }
         return back()->with('message', 'New parcel has been created successfully!!');
     }
 
@@ -219,7 +273,7 @@ class ShipmentController extends Controller
         return back();
     }
 
-    function cencelled_shippings($merchant_id)
+    public function cencelled_shippings($merchant_id)
     {
         $shipments = Shipment::where('merchant_id', $merchant_id)->where(['status' => 2])->get();
         $user = User::find($merchant_id);

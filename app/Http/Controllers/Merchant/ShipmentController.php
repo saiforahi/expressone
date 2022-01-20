@@ -70,8 +70,7 @@ class ShipmentController extends Controller
             $shipment->merchant_id = Auth::guard('user')->user()->id;
             $shipment->logistic_status= LogisticStep::first()->id; //Setting logistic status to approval from unit/super admin
             $shipment->added_by()->associate(Auth::guard('user')->user());
-            $shipment->logistic_status = LogisticStep::first()->id;
-            $saveShipment =$shipment->save();
+            $shipment->save();
             //Make shipment Payment
             // if ($saveShipment) {
             //     $shipmentPmnt =  new ShipmentPayment();

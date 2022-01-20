@@ -7,7 +7,6 @@
                 <div class="title_left">
                     <h3>{{ $title }}</h3>
                 </div>
-               
             </div>
             <div class="clearfix"></div>
             <hr>
@@ -29,7 +28,7 @@
                     <div class="x_panel">
                         <div class="x_content">
                             <form id="demo-form2" method="post" action="{{ route('addEditCourier', $courier->id) }}"
-                                autocomplete="off" class="form-horizontal form-label-left input_mask">
+                                autocomplete="on" class="form-horizontal form-label-left input_mask">
                                 @csrf
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="first_name">First Name:</label>
