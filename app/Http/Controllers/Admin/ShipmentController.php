@@ -26,6 +26,7 @@ use App\Models\Driver_hub_shipment_box;
 use Illuminate\Support\Facades\Session;
 use App\Models\CourierShipment_delivery;
 use App\Models\Driver_return_shipment_box;
+use App\Models\Unit;
 use PhpParser\Node\Stmt\TryCatch;
 
 class ShipmentController extends Controller
@@ -113,7 +114,7 @@ class ShipmentController extends Controller
         $shipment = Shipment::where(['status' => 1, 'shipping_status' => 2])->select('merchant_id')
             ->where('time_starts', '>=', $date)
             ->groupBy('merchant_id')->pluck('merchant_id')->toArray();
-        dd($shipment);
+        //dd($shipment);
         $user = User::where('unit_id', '!=', null)->whereIn('id', $shipment)->get();
         if ($user->count() == 0) {
             echo '<script>alert("Merchant informatin may missing!!")</script>';
@@ -570,7 +571,7 @@ class ShipmentController extends Controller
     function hub_receivable()
     {
         if (Session::has('admin_sub')) {
-            $hub = Hub::where('id', Session::get('admin_hub')->hub_id)->first();
+            $hub = Unit::where('id', Session::get('admin_hub')->unit_id)->first();
         } else $hub = null;
 
         if ($hub == null) {

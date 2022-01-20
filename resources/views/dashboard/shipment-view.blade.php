@@ -42,6 +42,8 @@
                                 <td>{{ $shipment->tracking_code }}</td>
                                 <td>
                                     {{ $shipment['recipient']['name']}} <br>
+                                    {{ $shipment['recipient']['phone']}} <br>
+                                    {{ $shipment['recipient']['address']}}
                                 </td>
                                 <td>{{ $shipment->amount }}</td>
                                 <td>

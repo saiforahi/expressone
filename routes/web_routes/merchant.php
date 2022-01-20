@@ -20,7 +20,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function 
     Route::get('add-shipment', [ShipmentController::class, 'addShipment'])->name('merchant.addShipment');
     Route::post('save-shipment', [ShipmentController::class, 'saveShipment'])->name('merchant.saveShipment');
     Route::get('edit-shipment/{shipment}', [ShipmentController::class, 'editShipment'])->name('merchant.editShipment');
-    Route::post('update-shipment/{shipment}', [ShipmentController::class, 'updateShipment'])->name('merchant.updateShipment');
+    Route::put('update-shipment/{shipment}', [ShipmentController::class, 'updateShipment'])->name('merchant.updateShipment');
 
 
     Route::get('/shipments', [ShipmentController::class, 'index'])->name('merhcant_shipments');

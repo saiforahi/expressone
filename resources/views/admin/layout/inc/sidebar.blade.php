@@ -103,10 +103,10 @@
                         <a><i class="fa mdi mdi-account"></i> Employee Manage<span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (checkAdminAccess('admin-list') != 0)
+                            @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                                 <li><a href="{{ route('admin-list') }}">Employee List</a></li>
                             @endif
-                            @if (checkAdminAccess('role-assign') != 0)
+                            @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                                 <li><a href="{{ route('role-assign') }}">Role Assign</a></li>
                             @endif
                         </ul>
