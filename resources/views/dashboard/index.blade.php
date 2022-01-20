@@ -114,7 +114,7 @@
                                     </td>
                                     <td style="font-size: 13px">
 
-                                        $shipments['recipient']['name'] }}
+                                        {{$shipments['recipient']['name'] }}
 
                                     </td>
 

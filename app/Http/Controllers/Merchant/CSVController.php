@@ -97,7 +97,7 @@ class CSVController extends Controller
             $insert = new Shipment();
             $recipient_data['name']=$line['recipient_name'];
             // dd(json_encode(array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address'])));
-            $insert->recipient = json_encode(array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address']));
+            $insert->recipient = array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address']);
             $insert->amount = $line['amount'];
             $insert->weight = $request->weight[$key];
             $insert->note = $line['note'];
