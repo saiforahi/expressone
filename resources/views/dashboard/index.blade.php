@@ -132,7 +132,7 @@
                                                     <i class="fa fa-trash text-white"></i>
                                                 </button>
                                             </form>
-                                            <a href="{{ route('merchant.addShipment', $shipments['id']) }}"
+                                            <a href="{{ route('merchant.editShipment', $shipments['id']) }}"
                                                 class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i></a>
                                         @endif
                                         <a href="/shipment-details/{{ $shipments['id'] }}"

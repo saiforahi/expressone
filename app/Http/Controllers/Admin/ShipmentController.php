@@ -113,8 +113,8 @@ class ShipmentController extends Controller
         $shipment = Shipment::where(['status' => 1, 'shipping_status' => 2])->select('merchant_id')
             ->where('time_starts', '>=', $date)
             ->groupBy('merchant_id')->pluck('merchant_id')->toArray();
-
-        $user = User::where('area_id', '!=', null)->whereIn('id', $shipment)->get();
+        dd($shipment);
+        $user = User::where('unit_id', '!=', null)->whereIn('id', $shipment)->get();
         if ($user->count() == 0) {
             echo '<script>alert("Merchant informatin may missing!!")</script>';
         }

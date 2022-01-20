@@ -41,7 +41,7 @@
                                 <td>{{ $shipment->invoice_id }}</td>
                                 <td>{{ $shipment->tracking_code }}</td>
                                 <td>
-                                    {{ $shipment['recipient']}} <br>
+                                    {{ $shipment['recipient']['name']}} <br>
                                 </td>
                                 <td>{{ $shipment->amount }}</td>
                                 <td>
