@@ -369,7 +369,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 
     Route::get('/prepare-shipment', 'ShipmentController@index')->name('PrepareShipment');
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
-    Route::post('prepare-shipment-submit', 'ShipmentController@merchant.addShipment')->name('merchant.addShipment');
+    Route::post('prepare-shipment-submit', 'ShipmentController@merchant.saveShipment')->name('merchant.saveShipment');
     Route::get('/edit-shipment/{shipment}', 'ShipmentController@edit')->name('editShipment');
     Route::post('/edit-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
 

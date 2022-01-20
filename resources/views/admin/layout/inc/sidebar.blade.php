@@ -41,9 +41,7 @@
                         <a><i class="fa mdi mdi-cube-send"></i>Logistics<span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="{{ route('AdminShipment.index') }}">Pick-up</a></li>
-
                             <li><a href="{{ route('AdminShipmentReceived') }}">Receive</a></li>
-
                             <li><a href="{{ route('AdminShipmentDispatch') }}">Dispatch</a></li>
                             <li><a href="{{ route('AdminAgentDispatch') }}">Agent Dispatch</a></li>
                             <li><a href="{{ route('AdminReconcile') }}">Reconcile</a></li>
@@ -105,10 +103,10 @@
                         <a><i class="fa mdi mdi-account"></i> Employee Manage<span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (checkAdminAccess('admin-list') != 0)
+                            @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                                 <li><a href="{{ route('admin-list') }}">Employee List</a></li>
                             @endif
-                            @if (checkAdminAccess('role-assign') != 0)
+                            @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                                 <li><a href="{{ route('role-assign') }}">Role Assign</a></li>
                             @endif
                         </ul>
@@ -169,16 +167,10 @@
                             </li>
                         </ul>
                     </li>
-
                     @if (checkAdminAccess('set-mail-info') != 0)
                         <li><a href="{{ route('mail-setup') }}"><i class="fa mdi mdi-email-open"></i> Mail SetUp</a>
                         </li>
                     @endif
-                    {{-- <li class="text-danger">
-                        <a href="javascript:;"><i class="fa mdi mdi-power"></i> Logout</a>
-
-                    </li> --}}
-
                 </ul>
             </div>
 

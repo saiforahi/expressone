@@ -6,12 +6,6 @@ use App\Http\Controllers\Admin\ShippingChargeController;
 use App\Http\Controllers\Merchant\DashboardController;
 use App\Http\Controllers\Merchant\CSVController;
 
-//Merchant
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login.store');
-Route::get('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register');
-Route::post('/register', [App\Http\Controllers\AuthController::class, 'registerStore'])->name('register.store');
-Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
-
 Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('merchant.dashboard');
     //Profile
@@ -23,7 +17,12 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function 
     Route::post('/change-email', [DashboardController::class, 'ChangeMail'])->name('ChangeMail');
     Route::post('/change-password', [DashboardController::class, 'ChangePassword'])->name('ChangePassword');
     //Merchant Shipment
-    Route::match(['get', 'post'], 'add-edit-shipment/{id?}', [ShipmentController::class, 'addEditShipment'])->name('merchant.addShipment');
+    Route::get('add-shipment', [ShipmentController::class, 'addShipment'])->name('merchant.addShipment');
+    Route::post('save-shipment', [ShipmentController::class, 'saveShipment'])->name('merchant.saveShipment');
+    Route::get('edit-shipment/{shipment}', [ShipmentController::class, 'editShipment'])->name('merchant.editShipment');
+    Route::put('update-shipment/{shipment}', [ShipmentController::class, 'updateShipment'])->name('merchant.updateShipment');
+
+
     Route::get('/shipments', [ShipmentController::class, 'index'])->name('merhcant_shipments');
     Route::get('/shipment-details/{shipment}', [ShipmentController::class, 'show'])->name('shipmentDetails');
     Route::get('/shipment-pdf/{shipment}', [ShipmentController::class, 'shipment_pdf'])->name('pdf.shipment');

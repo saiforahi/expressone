@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Merchant;
+
 use App\Model\Area;
 use App\Models\Unit;
 use App\ShippingPrice;
@@ -24,90 +25,89 @@ class ShipmentController extends Controller
         //$data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
         return view('dashboard.shipment-create', $data);
     }
-    public function addEditShipment(Request $request, $id = null)
+    public function addShipment(Shipment $shipment)
     {
-        // echo '<pre>';
-        // echo '======================<br>';
-        // print_r($request->all());
-        // echo '<br>======================<br>';
-        // exit();
-        if ($id == "") {
-            // Add Shipment
-            $shipment = new Shipment();
-            $title = "Add Shipment";
-            $buttonText = "Save Shipment";
-            $message = "Shipment has been saved successfully!";
-        } else {
-            // Update Shipment
-            $shipment = Shipment::find($id);
-            $title = "Edit Shipment";
-            $buttonText = "Update Shipment";
-            $message = "Shipment has been updated successfully!";
-        }
-        if ($request->isMethod('POST')) {
-            $data = $request->all();
-            $messages = [
-                //"recipient.required" => "Please enter corrent recipient informations",
-                "pickup_location_id.required" => "Please enter pickup_location_id.",
-                "shipping_charge_id.required" => "Please select shipping charge",
-                "amount.required" => "Please enter amount",
-            ];
-            $request->validate([
-                //'recipient' => 'required|max:100',
-                "amount" => 'required',
-                "shipping_charge_id" => 'required'
-            ], $messages);
-            //$shipment->recipient = $request->recipient;
-            $data = $request->only('name','phone','address');
-            $shipment->recipient = $data;
-            $shipment->tracking_code = $request->tracking_code;
-            $shipment->invoice_id = rand(1000,100000);
+        $data['title'] = "Add Shipment";
+        $data['area'] = Unit::where('status', 1)->get();
+        $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
+        $data['locations'] = Location::select('id', 'name', 'point_id')->get();
+        return view('dashboard.addShipment', $data,compact('shipment'));
+    }
+
+    public function saveShipment(Request $request, Shipment $shipment)
+    {
+        try {
+            $jsonData = $request->only('name', 'phone', 'address');
+            $shipment->recipient = $jsonData;
+            $shipment->tracking_code = uniqid();
+            $shipment->invoice_id = rand(1000, 100000);
             $shipment->shipping_charge_id = $request->shipping_charge_id;
             $shipment->pickup_location_id = $request->pickup_location_id;
             $shipment->weight = $request->weight;
             $shipment->amount = $request->amount;
             $shipment->note = $request->note;
             $shipment->merchant_id = Auth::guard('user')->user()->id;
-            $shipment->logistic_status= LogisticStep::first()->id; //Setting logistic status to approval from unit/super admin
+            $shipment->logistic_status = LogisticStep::first()->id; //Setting logistic status to approval from unit/super admin
             $shipment->added_by()->associate(Auth::guard('user')->user());
-            $shipment->logistic_status = LogisticStep::first()->id;
-            $saveShipment =$shipment->save();
+            $shipment->save();
             //Make shipment Payment
-            // if ($saveShipment) {
-            //     $shipmentPmnt =  new ShipmentPayment();
-            //     //dd($shipmentPmnt);
-            //     $shipmentPmnt->shipment_id = $shipment->id;
-            //     $shipmentPmnt->sl_no  = rand(1, 100000);
-            //     $shipmentPmnt->tracking_code  = uniqid();
-            //     $shipmentPmnt->invoice_no  = rand(2222, 222222);
-            //     // $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
-            //     $shipmentPmnt->cod_amount  = $shipment->amount;
-            //     $shipmentPmnt->delivery_charge  = $shipment->shipping_charge_id;
-            //     $shipmentPmnt->save();
-            // }
-            return redirect()->route('merchant.dashboard')->with('success', $message);
+            if ($shipment->save()) {
+                $shipmentPmnt = new ShipmentPayment();
+                $shipmentPmnt->shipment_id = $shipment->id;
+                $shipmentPmnt->sl_no  = rand(1, 100000);
+                $shipmentPmnt->tracking_code  = uniqid();
+                $shipmentPmnt->invoice_no  = rand(2222, 222222);
+                $shipmentPmnt->cod_amount  = $shipment->amount;
+                $shipmentPmnt->delivery_charge  = $shipment->shipping_charge_id;
+                $shipmentPmnt->save();
+            }
+            return redirect()->back()->with('success', 'Shipment has been saved successfully');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with('error', 'Shipment not saved');
         }
+    }
+
+    public function editShipment(Shipment $shipment)
+    {
+
+        $data['title'] = "Update Shipment";
         $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
         $data['locations'] = Location::select('id', 'name', 'point_id')->get();
-        $tracking_code = uniqid();
-        //Invoice ID
-        $invoice_data = Shipment::orderBy('id', 'desc')->first();
-        if ($invoice_data == null) {
-            $firstReg = '0';
-            $data['invoice_no'] = $firstReg + 1;
-            //dd($invoice_no);
-        } else {
-            $invoice_data = Shipment::orderBy('id', 'desc')->first()->invoice_id;
-            $data['invoice_no'] = $invoice_data + 1;
-        }
-        return view('dashboard.addEditShipment', $data, compact('title', 'buttonText', 'shipment', 'tracking_code'));
+        return view('dashboard.editShipment', $data,compact('shipment'));
     }
+
+
+    public function updateShipment(Request $request, Shipment $shipment)
+    {
+        try {
+            $jsonData = $request->only('name', 'phone', 'address');
+            $shipment->recipient = $jsonData;
+            $shipment->tracking_code = uniqid();
+            $shipment->invoice_id = rand(1000, 100000);
+            $shipment->shipping_charge_id = $request->shipping_charge_id;
+            $shipment->pickup_location_id = $request->pickup_location_id;
+            $shipment->weight = $request->weight;
+            $shipment->amount = $request->amount;
+            $shipment->note = $request->note;
+            $shipment->merchant_id = Auth::guard('user')->user()->id;
+            $shipment->logistic_status = LogisticStep::first()->id; //Setting logistic status to approval from unit/super admin
+            $shipment->added_by()->associate(Auth::guard('user')->user());
+            $shipment->update();
+            return redirect()->back()->with('success', 'Shipment has been saved successfully');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->with('error', 'Shipment not saved');
+        }
+    }
+
+
 
     function show(Shipment $shipment)
     {
         $title = "Shipment Details";
-        return view('dashboard.shipment-view', compact('shipment','title'));
+        return view('dashboard.shipment-view', compact('shipment', 'title'));
     }
     function shipmentConsNote(Shipment $shipment)
     {

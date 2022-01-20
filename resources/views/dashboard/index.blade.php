@@ -10,9 +10,13 @@
                         <div class="widget-subheading">All shipment request</div>
                     </div>
                     <div class="widget-content-right">
-                        <?php $shipments = \DB::table('shipments')
+                        <?php
+                        $shipments = \DB::table('shipments')
                             ->where('merchant_id', Auth::guard('user')->user()->id)
-                            ->count(); ?>
+                            ->count();
+                        //dd($shipments);
+                        ?>
+
                         <div class="widget-numbers text-white"><span> {{ $shipments }}</span></div>
                     </div>
                 </div>
@@ -110,7 +114,7 @@
                                     </td>
                                     <td style="font-size: 13px">
 
-                                        {{ $shipments['recipient']['name'] }}
+                                        $shipments['recipient']['name'] }}
 
                                     </td>
 
@@ -132,7 +136,7 @@
                                                     <i class="fa fa-trash text-white"></i>
                                                 </button>
                                             </form>
-                                            <a href="{{ route('merchant.addShipment', $shipments['id']) }}"
+                                            <a href="{{ route('merchant.editShipment', $shipments['id']) }}"
                                                 class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i></a>
                                         @endif
                                         <a href="/shipment-details/{{ $shipments['id'] }}"
