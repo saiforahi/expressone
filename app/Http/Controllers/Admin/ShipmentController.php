@@ -27,6 +27,7 @@ use Illuminate\Support\Facades\Session;
 use App\Models\CourierShipment_delivery;
 use App\Models\Driver_return_shipment_box;
 use App\Models\Unit;
+use App\Models\UnitShipment;
 use PhpParser\Node\Stmt\TryCatch;
 
 class ShipmentController extends Controller
@@ -111,15 +112,14 @@ class ShipmentController extends Controller
     public function shipment_received()
     {
         $date = \Carbon\Carbon::today()->subDays(7);
-        $shipment = Shipment::where(['status' => 1, 'shipping_status' => 2])->select('merchant_id')
-            ->where('time_starts', '>=', $date)
+        $shipment = Shipment::whereBetween('logistic_status',['3','4'])->select('merchant_id')
             ->groupBy('merchant_id')->pluck('merchant_id')->toArray();
         //dd($shipment);
-        $user = User::where('unit_id', '!=', null)->whereIn('id', $shipment)->get();
-        if ($user->count() == 0) {
-            echo '<script>alert("Merchant informatin may missing!!")</script>';
-        }
-        return view('admin.shipment.shipment-receive', compact('user'));
+        $users = User::where('unit_id', '!=', null)->whereIn('id', $shipment)->get();
+        // if ($users->count() == 0) {
+        //     echo '<script>alert("Merchant informatin may missing!!")</script>';
+        // }
+        return view('admin.shipment.shipment-receive', compact('users'));
     }
 
     function shipment_cancelled()
@@ -304,12 +304,13 @@ class ShipmentController extends Controller
         return back();
     }
 
-    function assignToHub($id, $status, $shipping_status)
+    function unit_received($id, $status, $logistic_status)
     {
         $user = User::find($id);
-        $hub = Hub_shipment::where(['merchant_id' => $user->id, 'status' => 'on-dispatch'])->select('hub_id')->groupBy('hub_id')->pluck('hub_id')->toArray();
-        $hubs = Hub::whereIn('id', $hub)->get();
-        return view('admin.shipment.assign-to-hub', compact('hubs', 'user', 'id', 'status', 'shipping_status'));
+        $hub = UnitShipment::join('shipments','shipments.id','unit_shipments.shipment_id')->where(['shipments.merchant_id' => $user->id, 'unit_shipments.status' => 'on-dispatch'])->select('unit_shipments.unit_id')->groupBy('unit_shipments.unit_id')->pluck('unit_shipments.unit_id')->toArray();
+        
+        $units = Unit::whereIn('id', $hub)->get();
+        return view('admin.shipment.assign-to-hub', compact('units', 'user', 'id', 'status', 'logistic_status'));
     }
 
     function receving_parcels($id, $status = 1, $shipping_status = 2)

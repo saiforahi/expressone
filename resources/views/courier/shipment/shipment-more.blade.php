@@ -90,7 +90,8 @@
                                         </th>
                                         <th class="text-right">
                                             @if ($courierShipment->status == 'received')
-                                                <button class="btn-xs btn btn-success">Submittd at Unit</button>
+                                                {{-- <form action="{{route('')}}"></form> --}}
+                                                <button class="btn-xs btn btn-success">Submitted at Unit</button>
                                             @else
                                             <a  onClick="return confirm('Are you sure to receive the shipment');"
                                                 href="/courier/receive-shipment/{{ $courierShipment->shipment->id }}"
