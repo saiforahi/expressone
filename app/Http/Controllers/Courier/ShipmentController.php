@@ -217,4 +217,8 @@ class ShipmentController extends Controller
         $shipment->update(['shipping_status' => $status]);
         return back()->with('message', 'The Shipment OTP has been confirmed successfully!');
     }
+
+    public function drop_in_unit_shipment(){
+
+    }
 }

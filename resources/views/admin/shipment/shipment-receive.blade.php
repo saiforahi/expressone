@@ -25,7 +25,7 @@
                                         <th>Info</th>
                                         <th>Contact</th>
                                         <th>Parcel/s</th>
-                                        <th>Area</th>
+                                        <th>Unit</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>

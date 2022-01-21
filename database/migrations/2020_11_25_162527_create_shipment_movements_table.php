@@ -14,16 +14,17 @@ class CreateShipmentMovementsTable extends Migration
     public function up()
     {
         Schema::create('shipment_movements', function (Blueprint $table) {
-            $table->id();
+            // $table->id();
             $table->unsignedBigInteger('shipment_id');
-            $table->string('user_type');
-            $table->nullableMorphs('last_action_made_by');
-            $table->integer('merchant_id')->comment('the one who make action');
+            $table->unsignedBigInteger('logistic_step_id');
+            $table->nullableMorphs('action_made_by');
             $table->string('report_type');
             $table->text('note')->nullable();
             $table->string('status')->nullable();
 
             $table->foreign('shipment_id')->references('id')->on('shipments');
+            $table->foreign('logistic_step_id')->references('id')->on('logistic_steps');
+            $table->primary(['shipment_id','logistic_step_id']);
             $table->timestamps();
         });
     }
