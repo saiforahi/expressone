@@ -51,10 +51,17 @@
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="col text-left">
+                                <div class="col-md-8 text-left">
                                     <label class="" for="name">Recipient Address</label>
                                     <input type="text" id="name" class="form-control" name="recipient_address[]"
                                         value="{{ $line['recipient_address'] }}" required>
+                                </div>
+                                <div class="col-md-4 text-left">
+                                    <label for="area">Delivery Area (Upazila, District)</label>
+                                    {{-- <?php dd($line['upazila_district']); ?> --}}
+                                    <input type="text" class="form-control" readonly
+                                        name="upazila_district[]" id="upazila_district{{ $key }}"
+                                        value="{{ $line['upazila_district'] }}">
                                 </div>
                             </div>
                             <div class="form-row">
@@ -79,11 +86,22 @@
                                 </div>
                             </div>
                             <div class="form-row">
+                                
                                 <div class="col-md-3 text-left">
                                     <label for="area">Pickup Location</label>
                                     <select class="form-control select2 area" data-key="{{ $key }}" name="area[]"
                                         id="area{{ $key }}" style="padding:1px;">
                                         <option value="" selected disabled>Select area</option>
+                                        @foreach ($locations as $location)
+                                            <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3 text-left">
+                                    <label for="area">Delivery Location</label>
+                                    <select class="form-control select2 area" data-key="{{ $key }}" name="delivery_location[]"
+                                        id="area{{ $key }}" style="padding:1px;">
+                                        <option value="" selected disabled>Select Delivery Location</option>
                                         @foreach ($locations as $location)
                                             <option value="{{ $location->id }}">{{ $location->name }}</option>
                                         @endforeach

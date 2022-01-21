@@ -58,7 +58,7 @@
                                             href="{{ route('thirdparty-shipments', $unit->id) }}">{{ $unit->name }}</a>
                                     </li>
                                 @endif
-                            @endforeach --}}
+                            @endforeach
                         </ul>
                     </li>
 
@@ -98,19 +98,17 @@
                         <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
                                 Merchant List</a></li>
                     @endif
-
+                    
+                    @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                     <li>
                         <a><i class="fa mdi mdi-account"></i> Employee Manage<span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (Auth::guard('admin')->user()->hasRole('super-admin'))
-                                <li><a href="{{ route('admin-list') }}">Employee List</a></li>
-                            @endif
-                            @if (Auth::guard('admin')->user()->hasRole('super-admin'))
-                                <li><a href="{{ route('role-assign') }}">Role Assign</a></li>
-                            @endif
+                            <li><a href="{{ route('admin-list') }}">Employee List</a></li>
+                            <li><a href="{{ route('role-assign') }}">Role Assign</a></li>
                         </ul>
                     </li>
+                    @endif
                     <li><a><i class="fa fa-home"></i> Website Management <span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">

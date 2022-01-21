@@ -50,6 +50,7 @@
                                     </th>
                                     <th>Customer Info</th>
                                     <th>Delivery Type</th>
+                                    <th>Delivery Location</th>
                                     <th>Assign</th>
                                     <th>Action</th>
                                 </tr>
@@ -63,8 +64,8 @@
                                                 value="{{ $shipment->id }}">
                                             {{ $key + 1 }}
                                         </th>
-                                        <th scope="row">Name: {{ $shipment['recipient']['name'] }} <br>Price:
-                                            {{ $shipment->amount }}
+                                        <th scope="row">Name: {{ $shipment['recipient']['name'] }}<br>Phone:
+                                            {{ $shipment->recipient['phone'] }}<br>Address: {{ $shipment['recipient']['address'] }}<br>
                                         </th>
                                         <th scope="row">
 
@@ -74,13 +75,25 @@
                                                 Express
                                             @endif
                                         </th>
+                                        <th>
+                                            @if($shipment->delivery_location != null)
+                                            {{$shipment->delivery_location->name}}
+                                            @else
+                                            <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
+                                                data-target="#shipping_price_modal"
+                                                class="btn-xs btn btn-warning"><i class="fas fa-dollar-sign"></i>Set Delivery Location</a>
+                                            @endif
+                                        </th>
                                         <th class="text-right">
                                             <button type="button" class="btn btn-primary btn-xs assign" data-toggle="modal"
                                                 data-target="#assignShipment" data-id="{{ $shipment->id }}">to Courier <i
                                                     class="fa fa-truck"></i></button>
                                         </th>
-                                        <th scope="row">
+                                        <th scope="row text-align-right">
                                             {{-- @if ($shipment->status == '1' && $shipment->shipping_status < 2) --}}
+                                            <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
+                                                data-target="#shipping_price_modal"
+                                                class="btn-xs btn btn-danger"><i class="fas fa-dollar-sign"></i>Set Shipping Price</a>
                                             <a onClick="return confirm('Are you sure to Delete the shipment');"
                                                 href="/admin/delete-shipment/{{ $shipment->id }}"
                                                 class="btn-xs btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
@@ -147,6 +160,30 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Cancel the Shipment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Modal cancelling note-->
+    <div class="modal fade" id="shipping_price_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form id="cancelForm" class="modal-content">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Set Shipping Price
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <label>Price</label>
+                    <textarea required class="form-control" rows="3" name="note"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>

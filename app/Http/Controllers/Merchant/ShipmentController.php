@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Merchant;
 
+use App\Events\ShipmentMovementEvent;
 use App\Model\Area;
 use App\Models\Unit;
 use App\ShippingPrice;
@@ -60,6 +61,7 @@ class ShipmentController extends Controller
                 $shipmentPmnt->cod_amount  = $shipment->amount;
                 $shipmentPmnt->delivery_charge  = $shipment->shipping_charge_id;
                 $shipmentPmnt->save();
+                event(new ShipmentMovementEvent($shipment,LogisticStep::first(),Auth::guard('user')->user()));
             }
             return redirect()->back()->with('success', 'Shipment has been saved successfully');
         } catch (\Throwable $th) {

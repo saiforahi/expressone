@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Merchant;
 
 use App\Area;
+use App\Events\ShipmentMovementEvent;
 use App\Zone;
 use App\ShippingPrice;
 use App\Models\Location;
@@ -49,7 +50,7 @@ class CSVController extends Controller
                             'recipient_name' => $cells[2]->getValue(),
                             'recipient_phone' => $cells[3]->getValue(),
                             'recipient_address' => $cells[4]->getValue(),
-                            'upazilla_district'=> $cells[5]->getValue(),
+                            'upazila_district'=> $cells[5]->getValue(),
                             'delivery_type'=> $cells[6]->getValue(),
                             'amount' => $cells[7]->getValue(),
                             'delivery_charge' => $cells[8]->getValue(),
@@ -121,6 +122,7 @@ class CSVController extends Controller
                 $shipmentPmnt->cod_amount  = $insert->amount;
                 $shipmentPmnt->delivery_charge  = $insert->shipping_charge_id;
                 $shipmentPmnt->save();
+                event(new ShipmentMovementEvent($insert,LogisticStep::first(),Auth::guard('user')->user()));
             }
         }
         Session::forget('csv_data');
