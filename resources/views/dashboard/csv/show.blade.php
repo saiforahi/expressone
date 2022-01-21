@@ -88,8 +88,8 @@
                             <div class="form-row">
                                 
                                 <div class="col-md-3 text-left">
-                                    <label for="area">Pickup Location</label>
-                                    <select class="form-control select2 area" data-key="{{ $key }}" name="area[]"
+                                    <label for="area">Pickup Location *</label>
+                                    <select required class="form-control select2 area" data-key="{{ $key }}" name="pickup_location[]"
                                         id="area{{ $key }}" style="padding:1px;">
                                         <option value="" selected disabled>Select area</option>
                                         @foreach ($locations as $location)
