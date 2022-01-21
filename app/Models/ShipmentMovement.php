@@ -9,6 +9,7 @@ class ShipmentMovement extends Model
 {
     use HasFactory;
     protected $table = "shipment_movements";
+    protected $guarded=[];
     public function action_made_by()
     {
         return $this->morphTo();

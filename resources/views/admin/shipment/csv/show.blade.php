@@ -40,7 +40,7 @@
                             <input type="number" class="form-control parcel_value" data-key="{{$key}}" name="parcel_value[]" id="parcel_value{{$key}}" value="{{$line['price']}}">
                         </div>
                         <div class="col-md-3 text-left">
-                            <label for="invoice_id">Invoice Id</label>
+                            <label for="invoice_id">Invoice ID</label>
                             <input type="text" id="invoice_id" class="form-control" name="invoice_id[]" value="{{$line['invoice']}}">
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                             <label for="invoice_id">Shipping method</label>
                             <select class="form-control" name="delivery_type[]" required style="padding:1px;">
                                 <option value=""  disabled>Select Delivery type</option>
-                                <option value="1" selected>Regualr</option>
+                                <option value="1" selected>Priority</option>
                                 <option value="2">Express</option>
                             </select>
                         </div>

@@ -307,7 +307,9 @@ class ShipmentController extends Controller
     function unit_received($id, $status, $logistic_status)
     {
         $user = User::find($id);
-        $hub = UnitShipment::join('shipments','shipments.id','unit_shipments.shipment_id')->where(['shipments.merchant_id' => $user->id, 'unit_shipments.status' => 'on-dispatch'])->select('unit_shipments.unit_id')->groupBy('unit_shipments.unit_id')->pluck('unit_shipments.unit_id')->toArray();
+        //->select('unit_shipments.unit_id')->groupBy('unit_shipments.unit_id')->pluck('unit_shipments.unit_id')->toArray()
+        $hub = DB::table('unit_shipment')->join('shipments','shipments.id','unit_shipments.shipment_id')->get();
+        dd($hub);
         
         $units = Unit::whereIn('id', $hub)->get();
         return view('admin.shipment.assign-to-hub', compact('units', 'user', 'id', 'status', 'logistic_status'));
