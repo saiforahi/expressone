@@ -67,19 +67,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('courier-shipments/{id}', [DriverController::class,'assigned_shipments'])->name('admin-driverShipments');
     //Shipping List
     Route::get('/shipping-list', [ShipmentController::class,'index'])->name('AdminShipment.index');
-    Route::get('/shipping-list/more/{id}/{status}/{logistic_status}', [ShipmentController::class,'show'])->name('AdminShipmentMore');
-    Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', [ShipmentController::class,'save_courier_shipment'])->name('saveDriverShipments');
+    Route::get('/shipping-list/more/{id}/{status}/{logistic_statuses}', [ShipmentController::class,'show'])->name('AdminShipmentMore');
+    Route::post('/shipping-list/more/{id}/{status}/{logistic_statuses}', [ShipmentController::class,'save_courier_shipment'])->name('saveDriverShipments');
     Route::get('/shipping-list/received', [ShipmentController::class,'shipment_received'])->name('AdminShipmentReceived');
     Route::get('/shipping-list/cancelled', 'ShipmentController@shipment_cancelled')->name('AdminShipmentCancelled');
 
     Route::post('/add-parcelBy-admin', [ShipmentController::class,'add_parcel'])->name('add-parcelBy-admin');
     Route::get('/add-paracel', [ShipmentController::class,'addParcelForm'])->name('add-paracel');
     Route::post('/save-paracel', [ShipmentController::class,'adminSaveParcel'])->name('adminSaveParcel');
-    Route::get('/assign-to-unit/{merchant_id}/{status}/{logistic_status}', [ShipmentController::class,'unit_received'])->name('AdminShipmentReceive');
+    Route::get('/assign-to-unit/{merchant_id}/{status}/{logistic_status}', [ShipmentController::class,'unit_received_and_receivable'])->name('AdminShipmentReceive');
     Route::get('/receiving-parcels/{user_id}/{status?}/{logistic_status?}', [ShipmentController::class,'receiving_parcels'])->name('receiving-parcels');
     Route::get('/get-hub-csv-files/{user_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
 
-    Route::get('/move-to-hub', 'ShipmentController@MoveToHub')->name('ShipmentToHub');
+    Route::get('/move-to-hub', [ShipmentController::class,'MoveToHubNew'])->name('ShipmentToHub');
     Route::get('/move2hub-withPhone', 'ShipmentController@MoveToHubWithPhone')->name('move2hub-withPhone');
     Route::get('/move2hub-withInvoice', 'ShipmentController@MoveToHubWithInvoice')->name('move2hub-withInvoice');
 
@@ -87,9 +87,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/user-hub-parcels-csv/{hub}/{user}', 'ShipmentController@hub_parcels_csv')->name('hub-parcels-csv');
     Route::get('/remove-hub-parcel/{hub_shipment}', 'ShipmentController@remove_hub_parcel')->name('remove-hub-parcel');
     Route::get('/change-hub-with-area/{id}', 'ShipmentController@change_bub')->name('change-hub-with-area');
-    Route::get('/hub-sorting/{hub}', 'ShipmentController@hub_sorting')->name('hub-sorting');
+    Route::get('/hub-sorting/{hub}', [ShipmentController::class,'unit_sorting'])->name('hub-sorting');
 
-    Route::get('/shipping-list/dispatch', 'ShipmentController@shipment_dispatch')->name('AdminShipmentDispatch');
+    Route::get('/send-to-dispatch', [ShipmentController::class,'shipment_dispatch'])->name('send-to-dispatch');
+    Route::get('/shipping-list/dispatch', [ShipmentController::class,'shipment_dispatch'])->name('AdminShipmentDispatch');
     Route::get('/dispatch/view/{hub}', 'ShipmentController@dispatch_view')->name('dispatchView');
     Route::get('/status-dispatch/{hub}', 'ShipmentController@status_dispatch')->name('status-dispatch');
     Route::get('/status-on-transit/{hub}', 'ShipmentController@status_on_transit')->name('status-on-transit');

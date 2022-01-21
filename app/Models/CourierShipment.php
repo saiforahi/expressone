@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CourierShipment extends Model
 {
-    protected $fillable = ['courier_id', 'shipment_id', 'admin_id', 'note', 'status'];
+    protected $fillable = ['courier_id', 'shipment_id', 'admin_id', 'note', 'status','type'];
     protected $table = 'courier_shipment';
     //CourierShipment Blongs to
     public function courier()

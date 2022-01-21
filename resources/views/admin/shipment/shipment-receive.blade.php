@@ -33,9 +33,9 @@
                                     @foreach ($users as $user)
                                         <?php
                                         // dd();
-                                        $checkShipment = \App\Models\Shipment::cousins()->where(['units.admin_id'=>Auth::guard('admin')->user()->id,'shipments.merchant_id'=>$user->id])->whereBetween('logistic_status',[3,4])->count();
+                                        $checkShipment = \App\Models\Shipment::cousins()->where(['units.admin_id'=>Auth::guard('admin')->user()->id,'shipments.merchant_id'=>$user->id])->whereBetween('logistic_status',[4,6])->count();
                                         $status=1;
-                                        $logistic_status=1;
+                                        $logistic_status=[4,5];
                                         if (Session::has('admin_unit')) {
                                             $hubID = Session::get('admin_unit')->id;
                                         } else {
@@ -71,10 +71,10 @@
                                             </th>
                                             <th class="text-right">
                                                 <a target="_blank"
-                                                    href="/admin/get-hub-csv-files/{{ $user->id . '/' . $status . '/' . $logistic_status }}"
+                                                    href="/admin/get-hub-csv-files/{{ $user->id . '/' . $status . '/' . implode(",",$logistic_status) }}"
                                                     class="btn btn-info btn-sm"> <i class="fa fa-file-excel-o"></i>
                                                     CSV</a>
-                                                <a href="/admin/assign-to-unit/{{ $user->id . '/' . $status . '/' . $logistic_status }}"
+                                                <a href="/admin/assign-to-unit/{{ $user->id . '/' . $status . '/' . implode(",",$logistic_status) }}"
                                                     class="btn btn-success btn-sm"> <i class="fa fa-search"></i>
                                                     View</a>
                                             </th>

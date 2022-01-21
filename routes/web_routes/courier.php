@@ -24,6 +24,7 @@ Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix'
     Route::get('cencell-parcel/{id}', [ShipmentController::class,'cencel_parcel'])->name('cancel-parcel');
     Route::get('receive-shipment/{id}', [ShipmentController::class,'receive_parcel'])->name('receive-parcel');
     Route::get('receive-all-shipment/{user}', [ShipmentController::class,'receive_all_parcel'])->name('receive-all-parcel');
+    Route::get('submit-all-shipments/{shipments}', [ShipmentController::class,'submit_at_unit'])->name('submit-all-shipments');
 
     Route::get('my-parcels/{type}', [ShipmentController::class,'my_parcels'])->name('my-parcel');
 

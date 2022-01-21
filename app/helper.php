@@ -11,6 +11,9 @@ use App\Models\User;
 use App\Models\Location;
 use App\Models\LogisticStep;
 use App\Models\UnitShipment;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 // use Illuminate\Support\Facades\Auth;
 
 function basic_information()
@@ -53,11 +56,7 @@ function user_shipment($id, $status = 1, $shipping_status = 0)
 
 function courier_shipments($courier_id, $merchant_id)
 {
-    $shipments = Shipment::where('merchant_id', $merchant_id)->where(['status' => 1, 'shipping_status' => 1])->get();
-    $num = array();
-    foreach ($shipments as $key => $shipment) {
-        $num[] = CourierShipment::where(['courier_id' => auth()->guard('courier')->user()->id, 'shipment_id' => $shipment->id])->count();
-    }
+    $num=DB::table('courier_shipment')->where(['type'=>'pickup','courier_id'=>$courier_id])->join('shipments','courier_shipment.shipment_id','shipments.id')->where('shipments.merchant_id',$merchant_id)->select('shipments.merchant_id')->groupBy('shipments.merchant_id')->pluck('shipments.merchant_id')->toArray();
     return COUNT($num);
 }
 
@@ -162,14 +161,28 @@ if (!function_exists('active_guard')) {
 }
 
 if (!function_exists('get_shipments_for_logged_in_admin')) {
-    function get_shipments_for_logged_in_admin($logistic_step_slug)
+    function get_shipments_for_logged_in_admin($logistic_step_slug_array)
     {
         $shipments=array();
         if(auth()->guard('admin')->user()->hasRole('super-admin')){
-            $shipments=Shipment::cousins()->where('shipments.logistic_status',LogisticStep::where('slug',$logistic_step_slug)->first()->id)->get();
+            $shipments=Shipment::cousins()->whereIn('shipments.logistic_status',$logistic_step_slug_array)->get();
         }
         else{
-            $shipments = Shipment::cousins()->where('admins.id',auth()->guard('admin')->user()->id)->where('shipments.logistic_status',LogisticStep::where('slug','picked-up')->first()->id)->get();
+            $shipments = Shipment::cousins()->where('admins.id',auth()->guard('admin')->user()->id)->whereIn('logistic_steps.slug',$logistic_step_slug_array)->get();
+        }
+        return $shipments;
+    }
+}
+
+if (!function_exists('user_hub_count')) {
+    function user_hub_count($logistic_step_slug_array)
+    {
+        $shipments=array();
+        if(auth()->guard('admin')->user()->hasRole('super-admin')){
+            $shipments=Shipment::cousins()->whereIn('shipments.logistic_status',$logistic_step_slug_array)->get();
+        }
+        else{
+            $shipments = Shipment::cousins()->where('admins.id',auth()->guard('admin')->user()->id)->whereIn('logistic_steps.slug',$logistic_step_slug_array)->get();
         }
         return $shipments;
     }
