@@ -33,23 +33,23 @@
                     </p>
                     <hr>
                     <div class="x_content result">
-                        @foreach ($points as $point)
+                        @foreach ($units as $unit)
                         
-                            <div class="row hub{{ $point->id }}" style="background:#f7f7f7;margin-bottom:1em">
+                            <div class="row hub{{ $unit->id }}" style="background:#f7f7f7;margin-bottom:1em">
                                 <div class="col-md-6">
                                     <p class="alert">Delivery Point:
-                                        @if ($point->status == 1 && $point->unit->status == '1') {{ $point->unit->name }} ({{ $point->name }}) @else {{ $hub->name }} @endif
+                                        {{ $unit->name }}
                                         {{-- <br>Number of parcels: <b
-                                            class="num{{ $point->id }}">{{ user_hub_count($point->id, $id, 'on-dispatch') }}</b> --}}
+                                            class="num{{ $unit->id }}">{{ user_hub_count($unit->id, $id, 'on-dispatch') }}</b> --}}
                                     </p>
                                 </div>
                                 <div class="col-md-6 m-b-0 m-t-5">
-                                    <button class="btn btn-xs btn-info form-control s{{ $point->id }}"
-                                        onclick="sorting(<?php echo $point->id; ?>)">Send to sorting</button>
+                                    <button class="btn btn-xs btn-info form-control s{{ $unit->id }}"
+                                        onclick="sorting(<?php echo $unit->id; ?>)">Send to In-Transit</button>
                                     <button class="btn btn-xs btn-default form-control viewParcel" data-toggle="modal"
-                                        data-target="#viewParcel" data-hub_id="{{ $point->id }}">View Parcels</button>
+                                        data-target="#viewParcel" data-hub_id="{{ $unit->id }}">View Parcels</button>
                                     <a class="btn btn-xs btn-success form-control"
-                                        href="/admin/user-hub-parcels-csv/<?php echo $point->id . '/' . $id; ?>"> <i
+                                        href="/admin/user-hub-parcels-csv/<?php echo $unit->id . '/' . $id; ?>"> <i
                                             class="fa fa-file-excel-o"></i> Get CSV</a>
                                     <div class="result2"></div>
                                 </div>
@@ -153,11 +153,12 @@
                 success: function(data) {
                     $('.hub' + hub_id).remove();
                     $('.result2').html(data);
-                    $('.s' + hub_id).text('Send to Sorting');
+                    $('.s' + hub_id).text('Sent to in-transit');
                     $('.s' + hub_id).prop('disabled', false);
                 },
                 error: function(request, error) {
                     alert(" Can't do because: " + error);
+                    console.log(error.response.data)
                     $('.hub' + hub_id).html(
                         '<p class="alert text-danger"><i class="fa fa-times-circle"></i> Execution failed! Please try again!!</p>'
                     );
@@ -166,7 +167,6 @@
         }
 
         $(function() {
-
             $(".receiving-parcels").load('/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $logistic_status; ?>');
 
             $('.viewParcel').on('click', function() {

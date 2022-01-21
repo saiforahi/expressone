@@ -25,9 +25,12 @@
                 </div>
                 <div class="page-title">
                     <h3>Merchant Shipment List
-                        @if ($shipments->count() > 0)
+                        @if ($shipments->count() > 0 && $shipments->where('status','pending')->count()>0)
                             <a href="/courier/receive-all-shipment/{{ $user->id }}"
                                 class="btn btn-primary pull-right">Receive All Parcels</a>
+                        @elseif ($shipments->count() > 0 && $shipments->where('status','received')->count()>0)
+                        <a href="/courier/submit-all-shipments/{{implode(',',$shipments->pluck('id')->toArray())}}"
+                            class="btn btn-primary pull-right">Submit All Parcels</a>
                         @endif
                     </h3>
                 </div>
@@ -68,7 +71,7 @@
                                             {{ $courierShipment->shipment->amount }}
                                         </th>
                                         <th scope="row">
-                                            Zone: {{ $courierShipment->shipment->pickup_location->name }} <br>
+                                            Location: {{ $courierShipment->shipment->pickup_location->name }} <br>
 
                                         </th>
                                         <th scope="row"><i class="fa fa-phone"></i> {{ $courierShipment->shipment->recipient['phone'] }}<br>
@@ -76,8 +79,8 @@
                                             <i class="fa fa-map-marker"></i> {{ $courierShipment->shipment->recipient['address'] }}<br>
                                         </th>
                                         <th scope="row">
-                                            @if ($courierShipment->shipping_charge_id == 1)
-                                                Regular
+                                            @if ($courierShipment->shipment->service_type == 'priority')
+                                                Priority
                                             @else
                                                 Express
                                             @endif
@@ -92,7 +95,7 @@
                                             @if ($courierShipment->status == 'received')
                                                 {{-- <form action="{{route('')}}"></form> --}}
                                                 <button class="btn-xs btn btn-success">Submitted at Unit</button>
-                                            @else
+                                            @elseif($courierShipment->status == 'pending')
                                             <a  onClick="return confirm('Are you sure to receive the shipment');"
                                                 href="/courier/receive-shipment/{{ $courierShipment->shipment->id }}"
                                                 class="btn-xs btn btn-success"><i class="fa fa-check"></i> Receive</a>

@@ -42,9 +42,9 @@
                         <ul class="nav child_menu">
                             <li><a href="{{ route('AdminShipment.index') }}">Pick-up</a></li>
                             <li><a href="{{ route('AdminShipmentReceived') }}">Receive</a></li>
-                            <li><a href="{{ route('AdminShipmentDispatch') }}">Dispatch</a></li>
-                            <li><a href="{{ route('AdminAgentDispatch') }}">Agent Dispatch</a></li>
-                            <li><a href="{{ route('AdminReconcile') }}">Reconcile</a></li>
+                            <li><a href="{{ route('AdminShipmentDispatch') }}">In-Transit</a></li>
+                            {{-- <li><a href="{{ route('AdminAgentDispatch') }}">Agent Dispatch</a></li> --}}
+                            {{-- <li><a href="{{ route('AdminReconcile') }}">Reconcile</a></li> --}}
                             <li><a href="{{ route('AdminDelivery') }}">Delivery</a></li>
                             <li><a href="{{ route('AdminDownload') }}">Download</a></li>
                             <li><a href="{{ route('AdminUploadCSV') }}">Upload CSV-File</a></li>

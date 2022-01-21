@@ -52,12 +52,9 @@
                                             $status = '2';
                                             $shipping_status = '6';
                                         } else {
-                                            $checkShipment = \DB::table('shipments')
-                                                ->select('id')
-                                                ->where(['merchant_id' => $user->id])
-                                                ->get();
-                                            $status = '1';
-                                            $shipping_status = '0';
+                                            $checkShipment = get_shipments_for_logged_in_admin(['label-create','approval','to-pick-up']);
+                                            $status = 0;
+                                            $shipping_status = ['label-create','approval','to-pick-up'];
                                         } ?>
 
                                         <?php if (Session::has('admin_unit')) {
@@ -92,12 +89,12 @@
                                                     Location/Area: {{ $user->unit->name }} --}}
                                                 </th>
                                                 <th class="text-right">
-                                                    <a href="/admin/shipping-list/more/{{ $user->id . '/' . $status . '/' . $shipping_status }}"
+                                                    <a href="/admin/shipping-list/more/{{ $user->id . '/' . $status . '/' . implode(",",$shipping_status) }}"
                                                         class="btn btn-primary">View</a>
 
                                                     <?php $is_cencell = \DB::table('shipments')
                                                         ->select('id')
-                                                        ->where(['merchant_id' => $user->id, 'status' => '2']); ?>
+                                                        ->where(['merchant_id' => $user->id, 'status' => 'cancelled']); ?>
                                                     @if ($is_cencell->count() > 0)
                                                         <!-- <a href="/admin/shipping-list/cencelled-items/{{ $user->id }}" class="btn btn-warning">Cencelled items</a> -->
                                                     @endif

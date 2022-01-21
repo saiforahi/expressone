@@ -57,15 +57,15 @@
                             </thead>
                             <tbody>
                                 @foreach ($shipments as $key => $shipment)
-
-                                    <tr shipment_id={{ $shipment->id }}>
+                                    <tr id={{ $shipment->id }}>
                                         <th scope="row">
-                                            <input style="display:none" type="checkbox" id="ids" name="ids[]"
-                                                value="{{ $shipment->id }}">
+                                            <input style="display:none" class="hidden-checkbox" type="checkbox" id="ids"
+                                                name="ids[]" value="{{ $shipment->id }}">
                                             {{ $key + 1 }}
                                         </th>
                                         <th scope="row">Name: {{ $shipment['recipient']['name'] }}<br>Phone:
-                                            {{ $shipment->recipient['phone'] }}<br>Address: {{ $shipment['recipient']['address'] }}<br>
+                                            {{ $shipment->recipient['phone'] }}<br>Address:
+                                            {{ $shipment['recipient']['address'] }}<br>
                                         </th>
                                         <th scope="row">
 
@@ -76,24 +76,30 @@
                                             @endif
                                         </th>
                                         <th>
-                                            @if($shipment->delivery_location != null)
-                                            {{$shipment->delivery_location->name}}
+                                            @if ($shipment->delivery_location != null)
+                                                {{ $shipment->delivery_location->name }}
                                             @else
-                                            <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
-                                                data-target="#delivery_location_modal"
-                                                class="btn-xs btn btn-warning"><i class="fas fa-dollar-sign"></i>Set Delivery Location</a>
+                                                <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
+                                                    data-target="#delivery_location_modal" class="btn-xs btn btn-warning"><i
+                                                        class="fas fa-dollar-sign"></i>Set Delivery Location</a>
                                             @endif
                                         </th>
                                         <th class="text-right">
-                                            <button type="button" class="btn btn-primary btn-xs assign" data-toggle="modal"
-                                                data-target="#assignShipment" data-id="{{ $shipment->id }}">to Courier <i
-                                                    class="fa fa-truck"></i></button>
+                                            @if (\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->exists())
+                                                Courier :
+                                            @else
+                                                <button type="button" class="btn btn-primary btn-xs assign"
+                                                    data-toggle="modal" data-target="#assignShipment"
+                                                    data-id="{{ $shipment->id }}">to Courier <i
+                                                        class="fa fa-truck"></i></button>
+                                            @endif
+
                                         </th>
                                         <th scope="row text-align-right">
                                             {{-- @if ($shipment->status == '1' && $shipment->shipping_status < 2) --}}
                                             <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
-                                                data-target="#shipping_price_modal"
-                                                class="btn-xs btn btn-danger"><i class="fas fa-dollar-sign"></i>Set Shipping Price</a>
+                                                data-target="#shipping_price_modal" class="btn-xs btn btn-danger"><i
+                                                    class="fas fa-dollar-sign"></i>Set Shipping Price</a>
                                             <a onClick="return confirm('Are you sure to Delete the shipment');"
                                                 href="/admin/delete-shipment/{{ $shipment->id }}"
                                                 class="btn-xs btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
@@ -140,6 +146,7 @@
         </div>
     </div>
 
+
     <!-- Modal cancelling note-->
     <div class="modal fade" id="cancelNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
@@ -165,8 +172,8 @@
         </div>
     </div>
     <!-- shipping price set modal-->
-    <div class="modal fade" id="shipping_price_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
+    <div class="modal fade" id="shipping_price_modal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <form id="cancelForm" class="modal-content">
                 @csrf
@@ -189,8 +196,8 @@
         </div>
     </div>
     <!-- Delivery location select modal-->
-    <div class="modal fade" id="delivery_location_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
+    <div class="modal fade" id="delivery_location_modal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <form id="cancelForm" class="modal-content">
                 @csrf
@@ -203,12 +210,12 @@
                 </div>
                 <div class="modal-body">
                     <label>Delivery Location</label>
-                    <?php $locations = \App\Models\Location::all();?>
+                    <?php $locations = \App\Models\Location::all(); ?>
                     <select class="form-control">
                         @foreach ($locations as $location)
-                            <option value="{{$location->id}}">{{$location->name}}</option>
+                            <option value="{{ $location->id }}">{{ $location->name }}</option>
                         @endforeach
-                        
+
                     </select>
                 </div>
                 <div class="modal-footer">
@@ -254,7 +261,7 @@
                 let id = $(this).data('id');
                 $('#shipment_id').val(id);
                 if (id == 'all') {
-                    var searchIDs = $("#datatable-buttons input:checkbox").map(function() {
+                    var searchIDs = $("input.hidden-checkbox:checkbox").map(function() {
                         return $(this).val();
                     }).toArray();
                     $('#shipment_id').val(searchIDs);

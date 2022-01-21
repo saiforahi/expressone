@@ -16,8 +16,8 @@
 
             <div class="col-md-6 ">
                 <div class="x_panel row">
-                    <p>Parcel Receiving panel
-                        <a href="#" class="pull-right">my-hub parcels</a>
+                    <p>Shipment Receiving panel
+                        <a href="#" class="pull-right">my-unit shipments</a>
                     </p>
                     <hr>
                     <!-- <button class="btn-success btn-xs btn pull-right">Move all <i class="fa fa-arrow-right"></i> </button></p><hr> -->
@@ -33,22 +33,22 @@
                     </p>
                     <hr>
                     <div class="x_content result">
-                        @foreach ($hubs as $key => $hub)
-                            <div class="row hub{{ $hub->id }}" style="background:#f7f7f7;margin-bottom:1em">
+                        @foreach ($units as $key => $unit)
+                            <div class="row hub{{ $unit->id }}" style="background:#f7f7f7;margin-bottom:1em">
                                 <div class="col-md-6">
-                                    <p class="alert"> Hub:
-                                        @if ($hub->status == '1' && $hub->zone->status == '1') {{ $hub->zone->name }} ({{ $hub->name }}) @else {{ $hub->name }} @endif
-                                        <br>Number of parcels: <b
-                                            class="num{{ $hub->id }}">{{ user_hub_count($hub->id, $id, 'on-dispatch') }}</b>
+                                    <p class="alert"> Unit:
+                                        {{ $unit->name }}
+                                        {{-- <br>Number of parcels: <b
+                                            class="num{{ $hub->id }}">{{ user_hub_count($hub->id, $id, 'on-dispatch') }}</b> --}}
                                     </p>
                                 </div>
                                 <div class="col-md-6 m-b-0 m-t-5">
-                                    <button class="btn btn-xs btn-info form-control s{{ $hub->id }}"
-                                        onclick="sorting(<?php echo $hub->id; ?>)">Send to sorting</button>
+                                    <button class="btn btn-xs btn-info form-control s{{ $unit->id }}"
+                                        onclick="sorting(<?php echo $unit->id; ?>)">Send to sorting</button>
                                     <button class="btn btn-xs btn-default form-control viewParcel" data-toggle="modal"
-                                        data-target="#viewParcel" data-hub_id="{{ $hub->id }}">View Parcels</button>
+                                        data-target="#viewParcel" data-hub_id="{{ $unit->id }}">View Parcels</button>
                                     <a class="btn btn-xs btn-success form-control"
-                                        href="/admin/user-hub-parcels-csv/<?php echo $hub->id . '/' . $id; ?>"> <i
+                                        href="/admin/user-hub-parcels-csv/<?php echo $unit->id . '/' . $id; ?>"> <i
                                             class="fa fa-file-excel-o"></i> Get CSV</a>
                                     <div class="result2"></div>
                                 </div>
@@ -166,7 +166,7 @@
 
         $(function() {
 
-            $(".receiving-parcels").load('/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $shipping_status; ?>');
+            $(".receiving-parcels").load('/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $logistic_status; ?>');
 
             $('.viewParcel').on('click', function() {
                 let id = $(this).data('hub_id');
@@ -194,7 +194,7 @@
                             $('.result').html(data);
                             $('[name=phoneNo]').val('');
                             $(".receiving-parcels").load(
-                                '/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $shipping_status; ?>');
+                                '/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $logistic_status; ?>');
                         }
                     });
                 }
@@ -213,8 +213,7 @@
                         success: function(data) {
                             $('.result').html(data);
                             $('[name=invoice_id]').val('');
-                            $(".receiving-parcels").load(
-                                '/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $shipping_status; ?>');
+                            $(".receiving-parcels").load('/admin/receiving-parcels/<?php echo $id . '/' . $status . '/' . $logistic_status; ?>');
                         }
                     });
                 }
