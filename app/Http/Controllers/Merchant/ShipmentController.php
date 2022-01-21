@@ -144,7 +144,7 @@ class ShipmentController extends Controller
             return back()->with('message', 'Shipment has been deleted successfully!');
         } catch (\Throwable $th) {
             throw $th;
-            return back()->with('message', 'Shipment has been deleted successfully!' . $th);
+            return back()->with('message', 'Something went wrong' . $th);
         }
     }
 

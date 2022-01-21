@@ -102,7 +102,7 @@
                                     </td>
                                     <td class="text-center">
                                         @include('dashboard.include.shipping-status',
-                                        ['status'=>$shipments['status'],'shipping_status'=>$shipments['shipping_status']])
+                                        ['status'=>$shipments['status'],'logistic_status'=>$shipments['logistic_status']])
                                     </td>
                                     <td><a href="/tracking?code={{ $shipments['tracking_code'] }}"
                                             target="_blank">{{ $shipments['tracking_code'] }}
@@ -126,7 +126,7 @@
                                         {{ $shipments['weight'] }}
                                     </td>
                                     <td>
-                                        @if ($shipments['status'] == 1 && $shipments['shipping_status'] == 0)
+                                        @if ($shipments['status'] == null && $shipments['logistic_status'] == 1)
                                             <form style="display: inline-block" class="form-delete" method="post"
                                                 action="{{ url('shipment-delete', $shipments['id']) }}">
                                                 @method('DELETE')

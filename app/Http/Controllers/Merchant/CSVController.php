@@ -101,6 +101,8 @@ class CSVController extends Controller
             $insert->recipient = array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address']);
             $insert->amount = $line['amount'];
             $insert->weight = $request->weight[$key];
+            $insert->pickup_location_id=$request->pickup_location[$key];
+            $insert->delivery_location_id=$request->delivery_location[$key]??null;
             $insert->note = $line['note'];
             //CSV Data
             $insert->merchant_id = Auth::guard('user')->user()->id;

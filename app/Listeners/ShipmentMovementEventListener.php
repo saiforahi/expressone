@@ -32,9 +32,7 @@ class ShipmentMovementEventListener
             ['shipment_id'=>$event->shipment->id, 'logistic_step_id'=> $event->logistic_step->id],
             // ['price' => 99, 'discounted' => 1]
         );
-        // $move=ShipmentMovement::where(['shipment_id'=>$event->shipment->id,'logistic_step_id'=>$event->logistic_step->id])->first();
         $move->action_made_by()->associate($event->user);
         $move->save();
-        // $new_move->save();
     }
 }

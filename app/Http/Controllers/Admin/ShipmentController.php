@@ -26,8 +26,10 @@ use App\Models\Driver_hub_shipment_box;
 use Illuminate\Support\Facades\Session;
 use App\Models\CourierShipment_delivery;
 use App\Models\Driver_return_shipment_box;
+use App\Models\Location;
 use App\Models\Unit;
 use App\Models\UnitShipment;
+use Exception;
 use PhpParser\Node\Stmt\TryCatch;
 
 class ShipmentController extends Controller
@@ -41,7 +43,7 @@ class ShipmentController extends Controller
     {
         $merchants = array();
         if (!Auth::guard('admin')->user()->hasRole('super-admin')) {
-            $shipments_belongs_to_my_units = DB::table('units')->where('admin_id', Auth::guard('admin')->user()->id)->join('points', 'points.unit_id', 'units.id')->join('locations', 'points.id', 'locations.point_id')->join('shipments', 'locations.id', 'shipments.pickup_location_id')->where('shipments.logistic_status', '1')->select('shipments.*', 'locations.name as location_name', 'units.name as unit_name')->get();
+            $shipments_belongs_to_my_units = DB::table('units')->where('admin_id', Auth::guard('admin')->user()->id)->join('points', 'points.unit_id', 'units.id')->join('locations', 'points.id', 'locations.point_id')->join('shipments', 'locations.id', 'shipments.pickup_location_id')->whereBetween('shipments.logistic_status', [1,2])->select('shipments.*', 'locations.name as location_name', 'units.name as unit_name')->get();
             // dd($shipments_belongs_to_my_units);
             // return $shipments_belongs_to_my_units;
             $merchants = $shipments_belongs_to_my_units->pluck('merchant_id')->toArray();
@@ -50,7 +52,16 @@ class ShipmentController extends Controller
         $users = User::whereIn('id', array_unique($merchants))->get();
         return view('admin.shipment.shipment-list', compact('users'));
     }
+    public function set_delivery_location(Shipment $shipment, Location $location){
+        try{
+            $shipment->delivery_location_id = $location->id;
+            $shipment->save();
+            
+        }
+        catch(Exception $e){
 
+        }
+    }
     public function all_shipments(Request $request)
     {
         $shipments = Auth::guard('admin')->user()->my_shipments();
@@ -298,7 +309,7 @@ class ShipmentController extends Controller
 
     public function cencel($id, Request $request)
     {
-        Shipment::where('id', $id)->update(['status' => '2', 'shipping_status' => '6']);
+        Shipment::where('id', $id)->update(['status' => 'cancelled']);
         CourierShipment::where('shipment_id', $id)->update(['note' => $request->note, 'status' => 'cancelled']);
         Session::flash('message', 'Shipment has been Cencelled successfully!');
         return back();

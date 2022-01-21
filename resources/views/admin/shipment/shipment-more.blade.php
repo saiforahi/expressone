@@ -80,7 +80,7 @@
                                             {{$shipment->delivery_location->name}}
                                             @else
                                             <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
-                                                data-target="#shipping_price_modal"
+                                                data-target="#delivery_location_modal"
                                                 class="btn-xs btn btn-warning"><i class="fas fa-dollar-sign"></i>Set Delivery Location</a>
                                             @endif
                                         </th>
@@ -164,7 +164,7 @@
             </form>
         </div>
     </div>
-    <!-- Modal cancelling note-->
+    <!-- shipping price set modal-->
     <div class="modal fade" id="shipping_price_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -180,6 +180,36 @@
                 <div class="modal-body">
                     <label>Price</label>
                     <textarea required class="form-control" rows="3" name="note"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Delivery location select modal-->
+    <div class="modal fade" id="delivery_location_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form id="cancelForm" class="modal-content">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Set Delivery Location
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <label>Delivery Location</label>
+                    <?php $locations = \App\Models\Location::all();?>
+                    <select class="form-control">
+                        @foreach ($locations as $location)
+                            <option value="{{$location->id}}">{{$location->name}}</option>
+                        @endforeach
+                        
+                    </select>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
