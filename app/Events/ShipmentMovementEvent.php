@@ -4,7 +4,7 @@ namespace App\Events;
 
 use App\Models\LogisticStep;
 use App\Models\Shipment;
-use Illuminate\Broadcasting\Channel;
+// use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
