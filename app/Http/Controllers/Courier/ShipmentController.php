@@ -36,9 +36,8 @@ class ShipmentController extends Controller
     // accept a paracel assigned from admin
     public function receive_parcel($id, Request $request)
     {
-        UnitShipment::create(['shipment_id'=>$id]);
         CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id,'shipment_id' => $id])->update(['status' => 'received']);
-        Shipment::where('id', $id)->update(['logistic_status' => 4]);
+        Shipment::where('id', $id)->where('logistic_status', '<=',4)->update(['logistic_status' => 4]);
         return back()->with('success','This parcel submittd to unit');
     }
 
@@ -81,7 +80,7 @@ class ShipmentController extends Controller
             // dd($shipment);
             // dd(Shipment::find($shipment->shipment_id)->logistic_status);
             CourierShipment::find($shipment->courier_shipment_id)->update(['status'=>'received']);
-            Shipment::where('id',$shipment->shipment_id)->update(['logistic_status'=>4]);
+            Shipment::where('id',$shipment->shipment_id)->where('logistic_status','<=',4)->update(['logistic_status'=>4]);
             event(new ShipmentMovementEvent(Shipment::find($shipment->shipment_id),LogisticStep::find(4),Auth::guard('courier')->user()));
         }
         return back();
@@ -90,11 +89,9 @@ class ShipmentController extends Controller
     {
         foreach(explode(",",$shipments) as $key=>$value){
             CourierShipment::where('shipment_id',$value)->update(['status'=>'submitted_to_unit']);
-            $shipment=Shipment::find($value);
-            $shipment->logistic_status = 5; //updating status to unit-received
-            $shipment->save();
+            $shipment=Shipment::where(['id'=>$value,'logistic_status'=>4])->update(['logistic_status'=>5]);//updating status to unit-received
             
-            event(new ShipmentMovementEvent($shipment,LogisticStep::find(5),Auth::guard('courier')->user()));
+            event(new ShipmentMovementEvent(Shipment::find($shipment),LogisticStep::find(5),Auth::guard('courier')->user()));
         }
         return back();
     }

@@ -4,12 +4,12 @@
             <p class="alert">Unit:
                 {{ $unit->name }}
                 <br>Parcel Records: <b
-                    class="num{{ $unit->id }}">0</b>
+                    class="num{{ $unit->id }}">{{count_shipment_for_delivery_unit($unit->id,$merchant_id)}}</b>
             </p>
         </div>
         <div class="col-md-6 m-b-0 m-t-5">
             <button class="btn btn-xs btn-info form-control s<?php echo $unit->id; ?>"
-                onclick="sorting(<?php echo $unit->id; ?>)">Send to Dispatch</button>
+                onclick="sorting(<?php echo $unit->id; ?>)">Send to In-Transit</button>
             <button class="btn btn-xs btn-default form-control v" onclick="viewParcel(<?php echo $unit->id . ',' . $merchant_id; ?>)"
                 data-toggle="modal" data-target="#viewParcel">View Parcels</button>
             <a class="btn btn-xs btn-success form-control" href="/admin/user-hub-parcels-csv/<?php echo $unit->id . '/' . $merchant_id; ?>"> <i
@@ -49,7 +49,8 @@
         $('.hub-parcels').html('Loading...');
         $.ajax({
             type: "get",
-            url: '/admin/user-hub-parcels/' + hub_id + '/' + merchant_id,
+            // url: '/admin/user-hub-parcels/' + hub_id + '/' + merchant_id,
+            url : '/admin/hub-sorting/'+unit_id
             success: function(data) {
                 $('.hub-parcels').html(data);
             }

@@ -72,7 +72,7 @@ class AuthController extends Controller
         ]);
         if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
             if (Auth::guard('user')->user()->is_verified == 1) {
-                return redirect()->intended('/dashboard');
+                return redirect()->route('merchant.dashboard');
             } else {
                 return redirect()->route('verify-user');
             }

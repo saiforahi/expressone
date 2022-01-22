@@ -4,8 +4,8 @@
     <div class="right_col" role="main">
         <div class="row">
             <div class="col-md-12">
-                <button data-toggle="modal" data-target="#extraParcel" class="pull-right btn btn-info btn-xs"><i
-                        class="fa fa-plus"></i> Add extra parcel</button>
+                {{-- <button data-toggle="modal" data-target="#extraParcel" class="pull-right btn btn-info btn-xs"><i
+                        class="fa fa-plus"></i> Add extra parcel</button> --}}
                 @if (session()->has('message'))
                     <div class="alert alert-success alert-dismissible">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -27,9 +27,9 @@
 
             <div class="col-md-6 ">
                 <div class="x_panel row">
-                    <p>Unit existing panel
-                        <input type="text" name="phoneNo" placeholder="Customer phone No.">
-                        <input type="text" name="invoice_id" placeholder="Invoice number">
+                    <p>Sorted Shipments
+                        {{-- <input type="text" name="phoneNo" placeholder="Customer phone No.">
+                        <input type="text" name="invoice_id" placeholder="Invoice number"> --}}
                     </p>
                     <hr>
                     <div class="x_content result">

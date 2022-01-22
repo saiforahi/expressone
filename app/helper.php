@@ -187,3 +187,18 @@ if (!function_exists('user_hub_count')) {
         return $shipments;
     }
 }
+
+if (!function_exists('count_shipment_for_delivery_unit')) {
+    function count_shipment_for_delivery_unit($unit_id,$merchant_id)
+    {
+        $shipments = Shipment::where(['merchant_id'=>$merchant_id,'logistic_status'=>6])->deliverycousins()->join('unit_shipment','unit_shipment.shipment_id','shipments.id')->where('units.id',$unit_id)->get(['shipments.*'])->count();
+        return $shipments;
+    }
+}
+
+if (!function_exists('is_courier_assign_available')) {
+    function is_courier_assign_available_for_pickup($shipments)
+    {
+        dd($shipments->select('id')->toArray());
+    }
+}
