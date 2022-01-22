@@ -62,4 +62,19 @@ class Shipment extends Model
     // public function morphClass(){
     //     return $this->hasOne(get_class($this->inheritable),'id','inheritable_id');
     // }
+    public function scopeCousins($query)
+    {
+        $query->join('locations','shipments.pickup_location_id','locations.id')
+        ->join('points','locations.point_id','points.id')
+        ->join('units','points.unit_id','units.id')
+        ->join('admins','units.admin_id','admins.id')->join('logistic_steps','logistic_steps.id','shipments.logistic_status');
+    }
+    public function scopeDeliverycousins($query)
+    {
+        $query->join('locations','shipments.delivery_location_id','locations.id')
+        ->join('points','locations.point_id','points.id')
+        ->join('units','points.unit_id','units.id')
+        ->join('admins','units.admin_id','admins.id')
+        ->join('logistic_steps','logistic_steps.id','shipments.logistic_status');
+    }
 }

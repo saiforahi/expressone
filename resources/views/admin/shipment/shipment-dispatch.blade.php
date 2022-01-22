@@ -24,9 +24,9 @@
                                 @foreach($hubs as $key=>$hub)
                                 <tr>
                                 	<td>{{$key+1}}</td>
-                                	<td>{{$hub->name}}</td>
-                                	<td>{{hubAt_hub_shipment_box($hub->id)}}  hubs</td>
-                                	<td class="text-right"><a class="btn btn-sm btn-primary" href="/admin/dispatch/view/{{$hub->id}}"><i class="fa fa-search"></i> More Details</a></td>
+                                	<td>{{$unit->name}}</td>
+                                	<td> </td>
+                                	<td class="text-right"><a class="btn btn-sm btn-primary" href="/admin/dispatch/view/{{$unit->id}}"><i class="fa fa-search"></i>More Details</a></td>
                                 </tr>
                                 @endforeach
                                 </tbody>

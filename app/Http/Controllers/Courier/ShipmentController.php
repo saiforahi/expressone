@@ -34,14 +34,9 @@ class ShipmentController extends Controller
     // accept a paracel assigned from admin
     public function receive_parcel($id, Request $request)
     {
-        $shipment = Shipment::find($id);
-        CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'shipment_id' => $id])->update(['status' => 'received']);
-        dd($shipment);
-        // $shipments_id = CourierShipment::where('id',$id)->pluck('shipment_id')->first();
-        Shipment::where('id', $id)->update(['shipping_status' => 2]);
-        $message = 'Dear ' . $shipment->name . ', We ' . basic_information()->company_name . ' has received your parcel & we at your hand soon. Price of parcel delivery is: ' . $shipment->amount;
-        event(new SendingSMS('customer', $shipment->phone, $message));
-        return back();
+        CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id,'shipment_id' => $id])->update(['status' => 'received']);
+        Shipment::where('id', $id)->where('logistic_status', '<=',4)->update(['logistic_status' => 4]);
+        return back()->with('success','This parcel submittd to unit');
     }
 
     public function my_shipments($type)
@@ -74,16 +69,21 @@ class ShipmentController extends Controller
         // dd($user);
         $shipments = Shipment::where('merchant_id', $user->id)->get();
         foreach ($shipments as $key => $shipment) {
-            $check = CourierShipment::where(['shipment_id' => $shipment->id, 'status' => 'received'])->get();
-            if ($check->count() == 0) {
-                CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'shipment_id' => $shipment->id])->update(['status' => 'received']);
-                Shipment::where('id', $shipment->id)->update(['shipping_status' => 2]);
-                event(new ShipmentMovement($shipment->id, 'driver', Auth::guard('courier')->user()->id, 'receive-parcels', 'Receive parcels for pickup', 'receive'));
-
-                $message = 'Dear ' . $shipment->name . ', We ' . basic_information()->company_name . ' has received your parcel & we at your hand soon. Price of parcel delivery is: ' . $shipment->total_price;
-                event(new SendingSMS('customer', $shipment->phone, $message));
-            }
-            // echo $shipment->id.' = '.$check->count().'<br/>';
+            // dd($shipment);
+            // dd(Shipment::find($shipment->shipment_id)->logistic_status);
+            CourierShipment::find($shipment->courier_shipment_id)->update(['status'=>'received']);
+            Shipment::where('id',$shipment->shipment_id)->where('logistic_status','<=',4)->update(['logistic_status'=>4]);
+            event(new ShipmentMovementEvent(Shipment::find($shipment->shipment_id),LogisticStep::find(4),Auth::guard('courier')->user()));
+        }
+        return back();
+    }
+    function submit_at_unit($shipments)
+    {
+        foreach(explode(",",$shipments) as $key=>$value){
+            CourierShipment::where('shipment_id',$value)->update(['status'=>'submitted_to_unit']);
+            $shipment=Shipment::where(['id'=>$value,'logistic_status'=>4])->update(['logistic_status'=>5]);//updating status to unit-received
+            
+            event(new ShipmentMovementEvent(Shipment::find($shipment),LogisticStep::find(5),Auth::guard('courier')->user()));
         }
         // dd($user);
         return back();

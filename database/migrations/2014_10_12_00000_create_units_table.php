@@ -4,6 +4,7 @@ use App\Models\Unit;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
 
 class CreateUnitsTable extends Migration
 {
@@ -21,6 +22,7 @@ class CreateUnitsTable extends Migration
             $table->timestamps();
         });
         Unit::create(['name' =>'Unit One']);
+        Unit::create(['name' =>'Unit Two']);
     }
 
     /**
