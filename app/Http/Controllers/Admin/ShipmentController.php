@@ -365,17 +365,14 @@ class ShipmentController extends Controller
     {
         // dd($request->all());
         $merchant_id=$request->merchant_id;
-        Shipment::where('id',$request->shipment_id)->update(['logistic_status'=>6,'delivery_location_id'=>$request->delivery_location_id]);
         UnitShipment::create([
             'shipment_id'=>$request->shipment_id,
             'unit_id'=>Shipment::find($request->shipment_id)->pickup_location->point->unit->id,
-            'admin_id'=>Shipment::find($request->shipment_id)->pickup_location->point->unit->admin_id,
         ]);
+        Shipment::where('id',$request->shipment_id)->update(['logistic_status'=>6,'delivery_location_id'=>$request->delivery_location_id]);
         event(new ShipmentMovementEvent(Shipment::find($request->shipment_id),LogisticStep::find(6),Auth::guard('admin')->user()->id),);
-        $units = UnitShipment::where('admin_id',Auth::guard('admin')->user()->id)->join('shipments','shipments.id','unit_shipment.shipment_id')->where('shipments.logistic_status',6)->select('unit_shipment.*')->groupBy('unit_id')->pluck('unit_id')->toArray();
-        // ->join('unit_shipment','unit_shipment.unit_id','units.id')->select('units.id')->groupBy('units.id')->pluck('units.id')->toArray()
-        // dd($units);
-        $units = Unit::whereIn('id', $units)->get();
+        $units = Shipment::deliverycousins()->join('unit_shipment','unit_shipment.shipment_id','shipments.id')->pluck('units.id')->toArray();
+        $units = Unit::whereIn('id', array_unique($units))->get();
         return view('admin.shipment.load.unit-shipments', compact('units', 'merchant_id'));
     }
 
@@ -530,11 +527,11 @@ class ShipmentController extends Controller
     {
         $units=[];
         if (Auth::guard('admin')->user()->hasRole('super-admin')) {
-            $units = Shipment::deliverycousins()->where('shipments.logistic_status',7)->select('units.*')->get();
+            $units = Shipment::where('shipments.logistic_status',7)->join('locations','shipments.delivery_location_id','locations.id')->join('points','locations.point_id','points.id')->join('units','points.unit_id','units.id')->get(['units.*']);
         } else {
-            $units = Shipment::deliverycousins()->where('shipments.logistic_status',7)->where('units.admin_id',Auth::guard('admin')->user()->id)->select('units.*')->get();
+            $units = Shipment::where('shipments.logistic_status',7)->join('locations','shipments.delivery_location_id','locations.id')->join('points','locations.point_id','points.id')->join('units','points.unit_id','units.id')->get(['units.*']);
         }
-        // $units = Unit::whereIn('id', $shipment)->get();
+        // $units = Unit::whereIn('id', $units)->get();
 
         return view('admin.shipment.shipment-dispatch', compact('units'));
     }

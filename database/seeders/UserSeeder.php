@@ -42,6 +42,16 @@ class UserSeeder extends Seeder
         ]);
         $unitadmin->assignRole($role2);
         Unit::find(1)->update(['admin_id' => $unitadmin->id]);
+        //unit admin 2
+        $unitadmin = \App\Models\Admin::create([
+            'first_name' => 'Unit',
+            'last_name' => 'Admin (2)',
+            'email' => 'unit-admin2@email.com',
+            'phone' => '01XXXXXXXXU',
+            'password' => Hash::make('12345678'),
+        ]);
+        $unitadmin->assignRole($role2);
+        Unit::find(2)->update(['admin_id' => $unitadmin->id]);
         //merchant
         $merchant = \App\Models\User::create([
             'first_name' => 'Demo',

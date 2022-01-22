@@ -23,6 +23,7 @@ class CreatePointsTable extends Migration
             $table->timestamps();
         });
         Point::create(['name' => 'Dhaka','unit_id'=> 1,'status'=> 1]);
+        Point::create(['name' => 'CTG','unit_id'=> 2,'status'=> 1]);
     }
 
     /**

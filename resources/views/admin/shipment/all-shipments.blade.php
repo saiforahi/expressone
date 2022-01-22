@@ -25,8 +25,8 @@
                 @foreach($shipments as $shipment)
                   <tr>
                     <td>{{date('M d, y',strtotime($shipment->created_at))}}</td>
-                    <td>{{json_decode($shipment->recipient,true)['name']}} - {{json_decode($shipment->recipient,true)['phone']}}</td>
-                    <td>{{json_decode($shipment->recipient,true)['name']}}</td>
+                    <td>{{$shipment->recipient['name']}} - {{$shipment->recipient['phone']}}</td>
+                    <td>{{$shipment->recipient['name']}}</td>
                     <td>
                       {{$shipment->cod_amount}}
                     </td>

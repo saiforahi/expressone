@@ -25,6 +25,7 @@ class CreateLocationsTable extends Migration
             $table->foreign('unit_id')->references('id')->on('units');
         });
         Location::create([ 'name' =>'Mirpur','point_id'=>1,'unit_id'=>1, 'status'=> 1]);
+        Location::create([ 'name' =>'Khulshi','point_id'=>2,'unit_id'=>2, 'status'=> 1]);
     }
     /**
      * Reverse the migrations.
