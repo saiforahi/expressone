@@ -50,22 +50,25 @@
                                     </th>
                                     <th>Customer Info</th>
                                     <th>Delivery Type</th>
-                                    <th>Delivery Location</th>
                                     <th>Assign</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($shipments as $key => $shipment)
-                                    <tr id={{ $shipment->id }}>
+
+                                    <tr shipment_id={{ $shipment->id }}>
                                         <th scope="row">
-                                            <input style="display:none" class="hidden-checkbox" type="checkbox" id="ids"
-                                                name="ids[]" value="{{ $shipment->id }}">
+                                            <input style="display:none" type="checkbox" id="ids" name="ids[]"
+                                                value="{{ $shipment->id }}">
                                             {{ $key + 1 }}
                                         </th>
-                                        <th scope="row">Name: {{ $shipment['recipient']['name'] }}<br>Phone:
-                                            {{ $shipment->recipient['phone'] }}<br>Address:
-                                            {{ $shipment['recipient']['address'] }}<br>
+                                        <th scope="row">
+                                            Name: {{ $shipment['recipient']['name'] }} <br>
+                                            Phone: {{ $shipment['recipient']['phone'] }} <br>
+                                            Phone: {{ $shipment['recipient']['address'] }}
+                                            Price:
+                                            {{ $shipment->amount }}
                                         </th>
                                         <th scope="row">
 
@@ -75,31 +78,13 @@
                                                 Express
                                             @endif
                                         </th>
-                                        <th>
-                                            @if ($shipment->delivery_location != null)
-                                                {{ $shipment->delivery_location->name }}
-                                            @else
-                                                <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
-                                                    data-target="#delivery_location_modal" class="btn-xs btn btn-warning"><i
-                                                        class="fas fa-dollar-sign"></i>Set Delivery Location</a>
-                                            @endif
-                                        </th>
                                         <th class="text-right">
-                                            @if (\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->exists())
-                                                Courier :
-                                            @else
-                                                <button type="button" class="btn btn-primary btn-xs assign"
-                                                    data-toggle="modal" data-target="#assignShipment"
-                                                    data-id="{{ $shipment->id }}">to Courier <i
-                                                        class="fa fa-truck"></i></button>
-                                            @endif
-
+                                            <button type="button" class="btn btn-primary btn-xs assign" data-toggle="modal"
+                                                data-target="#assignShipment" data-id="{{ $shipment->id }}">to Courier <i
+                                                    class="fa fa-truck"></i></button>
                                         </th>
-                                        <th scope="row text-align-right">
+                                        <th scope="row">
                                             {{-- @if ($shipment->status == '1' && $shipment->shipping_status < 2) --}}
-                                            <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
-                                                data-target="#shipping_price_modal" class="btn-xs btn btn-danger"><i
-                                                    class="fas fa-dollar-sign"></i>Set Shipping Price</a>
                                             <a onClick="return confirm('Are you sure to Delete the shipment');"
                                                 href="/admin/delete-shipment/{{ $shipment->id }}"
                                                 class="btn-xs btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
@@ -146,7 +131,6 @@
         </div>
     </div>
 
-
     <!-- Modal cancelling note-->
     <div class="modal fade" id="cancelNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
@@ -171,87 +155,33 @@
             </form>
         </div>
     </div>
-    <!-- shipping price set modal-->
-    <div class="modal fade" id="shipping_price_modal" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <form id="cancelForm" class="modal-content">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Set Shipping Price
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <label>Price</label>
-                    <textarea required class="form-control" rows="3" name="note"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    <!-- Delivery location select modal-->
-    <div class="modal fade" id="delivery_location_modal" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <form id="cancelForm" class="modal-content">
-                @csrf
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Set Delivery Location
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <label>Delivery Location</label>
-                    <?php $locations = \App\Models\Location::all(); ?>
-                    <select class="form-control">
-                        @foreach ($locations as $location)
-                            <option value="{{ $location->id }}">{{ $location->name }}</option>
-                        @endforeach
-
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
 @endsection
 @push('style')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" />
     <!-- Datatables -->
-    <link href="{{ asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 @endpush
 @push('scripts')
     <!-- Datatables -->
-    <script src="{{ asset('vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
-    <script src="{{ asset('vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
-    <script src="{{ asset('vendors/jszip/dist/jszip.min.js') }}"></script>
-    <script src="{{ asset('vendors/pdfmake/build/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+    <script src="{{ asset('ass_vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/jszip/dist/jszip.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/pdfmake/build/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/pdfmake/build/vfs_fonts.js') }}"></script>
     <script type="text/javascript">
         $(function() {
             $('#checkAll').click(function() {
@@ -261,7 +191,7 @@
                 let id = $(this).data('id');
                 $('#shipment_id').val(id);
                 if (id == 'all') {
-                    var searchIDs = $("input.hidden-checkbox:checkbox").map(function() {
+                    var searchIDs = $("#datatable-buttons input:checkbox").map(function() {
                         return $(this).val();
                     }).toArray();
                     $('#shipment_id').val(searchIDs);

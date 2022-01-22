@@ -1,6 +1,5 @@
 <?php
 namespace App\Http\Controllers;
-use Validator;
 use App\Models\Area;
 use App\Models\Blog;
 use App\Models\Team;

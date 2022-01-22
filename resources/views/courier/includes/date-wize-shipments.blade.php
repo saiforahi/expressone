@@ -11,18 +11,17 @@
     </thead>
     <tbody>
         @foreach ($shipments as $courierShipment)
+
             <tr>
                 <td>
                     Date: {{ date('M d, Y H:i', strtotime($courierShipment->created_at)) }} <br>
-                    Tracking Code: {{ $courierShipment->shipment->tracking_code }}
+                    TracingCode: {{ $courierShipment->shipment->tracking_code }}
                 </td>
                 <td>
-                    {{ $courierShipment->shipment->recipient['name'] }}<br />
-                    {{ $courierShipment->shipment->recipient['phone'] }}<br />
-                    {{ $courierShipment->shipment->recipient['address'] }}
+                    {{ $courierShipment->shipment->recipient }}<br />
                 </td>
                 <td>
-                    {{ $courierShipment->admin->first_name }} -
+                    {{  $courierShipment->admin->first_name }} -
                     {{ $courierShipment->admin->last_name }}
                 </td>
                 <td>
@@ -31,7 +30,6 @@
                     @else
                     Pay by customer ({{ $courierShipment->shipment->amount  }})
                     @endif
-
                 </td>
                 <td> {{ $courierShipment->shipment->pickup_location->name }} </td>
                 <td>

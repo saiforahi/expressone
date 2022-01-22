@@ -31,7 +31,7 @@
             </div>
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
-            <form id="upload_form" method="post" action="{{ route('merchant.saveShipment') }}">
+            <form id="upload_form" method="post" action="{{ route('merchant.addShipment') }}">
                 {{-- invoice no --}}
                 <input type="hidden" value="{{ $invoice_id }}" name="invoice_id">
                 <input type="text" value="{{ $trackingCode }}" name="invoice_id">
@@ -206,7 +206,7 @@
         //             showCancelButton: true
         //         }, function () {
         //             $.ajax({
-        //                 url: "{{ route('merchant.saveShipment') }}",
+        //                 url: "{{ route('merchant.addShipment') }}",
         //                 type: 'post',
         //                 processData: false,
         //                 contentType: false,

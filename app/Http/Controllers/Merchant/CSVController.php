@@ -3,18 +3,15 @@
 namespace App\Http\Controllers\Merchant;
 
 use App\Area;
-use App\Events\ShipmentMovementEvent;
 use App\Zone;
 use App\ShippingPrice;
 use App\Models\Location;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\LogisticStep;
 use App\Models\ShipmentPayment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
-use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 
 class CSVController extends Controller
 {
@@ -27,45 +24,32 @@ class CSVController extends Controller
     public function get_csv_data(Request $request)
     {
         Session::forget('csv_data');
-        $filename = '';
-        //upload file
         if (empty($request->file)) {
             return back();
         }
-        // $filename = '';
-        // //upload file
-        // if ($file = request()->file('file')) {
-        //     $filename  = date('Ymd-his') . '.' . $file->getClientOriginalExtension();
-        //     $file->move('./csv-file/', $filename);
-        // }
-        $reader = ReaderEntityFactory::createXLSXReader();
-        $reader->open($request->file);
-        $lines=[];
-        foreach ($reader->getSheetIterator() as $sheet) {
-            if ($sheet->getIndex() === 0) { // index is 0-based
-                foreach ($sheet->getRowIterator() as $rowNumber => $row) {
-                    if($rowNumber > 1){
-                        $cells = $row->getCells();
-                        $lines[] = array(
-                            'recipient_name' => $cells[2]->getValue(),
-                            'recipient_phone' => $cells[3]->getValue(),
-                            'recipient_address' => $cells[4]->getValue(),
-                            'upazila_district'=> $cells[5]->getValue(),
-                            'delivery_type'=> $cells[6]->getValue(),
-                            'amount' => $cells[7]->getValue(),
-                            'delivery_charge' => $cells[8]->getValue(),
-                            'weight_charge'=> $cells[9]->getValue(),
-                            'note'=> $cells[10]->getValue()??null
-                        );
-                    }
-                }
-                break; // no need to read more sheets
-            }
+
+        $filename = '';
+        //upload file
+        if ($file = request()->file('file')) {
+            $filename  = date('Ymd-his') . '.' . $file->getClientOriginalExtension();
+            $file->move('./csv-file/', $filename);
         }
-        
+
+        $file = fopen('./csv-file/' . $filename, "r");
+        $i = 1;
+        while (($line = fgetcsv($file)) !== FALSE) {
+            if ($i != 1) {
+                $lines[] = array(
+                    'recipient' => $line[1],
+                    'amount' => $line[2],
+                    'weight' => $line[3],
+                    'note' => $line[4]
+                );
+            }
+            $i++;
+        }
         Session::put('csv_data', $lines);
-        // dd($lines);
-        $reader->close();
+        fclose($file);
         //--- Redirect Section
         // exit;
         return redirect('/csv-temporary');
@@ -77,54 +61,44 @@ class CSVController extends Controller
             Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!');
             return redirect('/dashboard');
         }
-        $locations = Location::latest()->get();
-        return view('dashboard.csv.show', compact('locations'));
+        $areas = Location::latest()->get();
+        return view('dashboard.csv.show', compact('areas'));
     }
     public function store_new(Request $request)
     {
-        // dd($request->all());
-        // dd(Session::get('csv_data'));
         foreach (Session::get('csv_data') as $key => $line) {
             //Invoice ID
-            $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first();
-            if ($invoice_data == null) {
-                $firstReg = 111;
-                $invoice_no = $firstReg + 1;
-                
-            } else {
-                $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first()->invoice_no;
-                $invoice_no = $invoice_data + 1;
-            }
+            // $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first();
+            // if ($invoice_data == null) {
+            //     $firstReg = 111;
+            //     $invoice_no = $firstReg + 1;
+            //     //dd($invoice_no);
+            // } else {
+            //     $invoice_data = ShipmentPayment::orderBy('id', 'desc')->first()->invoice_no;
+            //     $invoice_no = $invoice_data + 1;
+            // }
             $insert = new Shipment();
-            $recipient_data['name']=$line['recipient_name'];
-            // dd(json_encode(array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address'])));
-            $insert->recipient = array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address']);
+            $insert->recipient = $line['recipient'];
             $insert->amount = $line['amount'];
-            $insert->weight = $request->weight[$key];
-            $insert->pickup_location_id=$request->pickup_location[$key];
-            $insert->delivery_location_id=$request->delivery_location[$key]??null;
+            $insert->weight = $line['weight'];
             $insert->note = $line['note'];
             //CSV Data
             $insert->merchant_id = Auth::guard('user')->user()->id;
             $insert->added_by()->associate(Auth::guard('user')->user());
-            $insert->invoice_id = $invoice_no;
+            $insert->invoice_id =  rand(1111,9999);
             $insert->tracking_code = uniqid();
-            // $insert->service_type = $request->
-            $insert->logistic_status = LogisticStep::first()->id;
             $insert->save();
-
             //Make shipment Payment
             if ($insert->save()) {
                 $shipmentPmnt =  new ShipmentPayment();
                 $shipmentPmnt->shipment_id = $insert->id;
-                $shipmentPmnt->sl_no  = $invoice_no;
+                $shipmentPmnt->sl_no  = rand(1,100000);
                 $shipmentPmnt->tracking_code  = uniqid();
-                $shipmentPmnt->invoice_no  = $invoice_no;
-                // $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
+                $shipmentPmnt->invoice_no  = rand(2000,90000);
+                $shipmentPmnt->admin_id  = 1; //Please check this which data will save here
                 $shipmentPmnt->cod_amount  = $insert->amount;
                 $shipmentPmnt->delivery_charge  = $insert->shipping_charge_id;
                 $shipmentPmnt->save();
-                event(new ShipmentMovementEvent($insert,LogisticStep::first(),Auth::guard('user')->user()));
             }
         }
         Session::forget('csv_data');
@@ -182,7 +156,7 @@ class CSVController extends Controller
             } else $invoice_id = $request->invoice_id[$key];
 
             $insert = new Shipment();
-            $insert->user_id = Auth::guard('user')->user()->id;
+            $insert->merchant_id = Auth::guard('user')->user()->id;
             $insert->zone_id = $zone->zone_id;
             $insert->area_id = $request->area[$key];
             $insert->name = $request->name[$key];

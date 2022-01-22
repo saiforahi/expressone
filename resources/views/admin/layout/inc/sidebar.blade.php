@@ -41,24 +41,26 @@
                         <a><i class="fa mdi mdi-cube-send"></i>Logistics<span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             <li><a href="{{ route('AdminShipment.index') }}">Pick-up</a></li>
+
                             <li><a href="{{ route('AdminShipmentReceived') }}">Receive</a></li>
-                            <li><a href="{{ route('AdminShipmentDispatch') }}">In-Transit</a></li>
-                            {{-- <li><a href="{{ route('AdminAgentDispatch') }}">Agent Dispatch</a></li> --}}
-                            {{-- <li><a href="{{ route('AdminReconcile') }}">Reconcile</a></li> --}}
+
+                            <li><a href="{{ route('AdminShipmentDispatch') }}">Dispatch</a></li>
+                            <li><a href="{{ route('AdminAgentDispatch') }}">Agent Dispatch</a></li>
+                            <li><a href="{{ route('AdminReconcile') }}">Reconcile</a></li>
                             <li><a href="{{ route('AdminDelivery') }}">Delivery</a></li>
                             <li><a href="{{ route('AdminDownload') }}">Download</a></li>
                             <li><a href="{{ route('AdminUploadCSV') }}">Upload CSV-File</a></li>
 
-                            <?php $units = \DB::table('units')
-                                ->where('status', '1')
-                                ->get(); ?>
+                            {{-- <?php $units = \DB::table('units')
+    ->where('status', '1')
+    ->get(); ?>
                             @foreach ($units as $unit)
                                 @if (Auth::guard('admin')->user()->type == 'admin')
                                     <li><a
                                             href="{{ route('thirdparty-shipments', $unit->id) }}">{{ $unit->name }}</a>
                                     </li>
                                 @endif
-                            @endforeach
+                            @endforeach --}}
                         </ul>
                     </li>
 
@@ -91,24 +93,24 @@
                             @endif
                         </ul>
                     </li>
-                    <li><a href="{{ route('allCourier') }}"><i class="fa mdi mdi-truck-fast"></i>Couriers</a>
+
+                    <li><a href="{{ route('driver-list.index') }} "><i class="fa mdi mdi-truck-fast"></i> Riders</a>
                     </li>
 
-                    @if (Auth::guard('admin')->user()->hasRole('super-admin'))
-                        <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
-                                Merchant List</a></li>
-                    @endif
-                    
-                    @if (Auth::guard('admin')->user()->hasRole('super-admin'))
+                    <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
+                            Merchant List</a></li>
                     <li>
                         <a><i class="fa mdi mdi-account"></i> Employee Manage<span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="{{ route('admin-list') }}">Employee List</a></li>
-                            <li><a href="{{ route('role-assign') }}">Role Assign</a></li>
+                            @if (checkAdminAccess('admin-list') != 0)
+                                <li><a href="{{ route('admin-list') }}">Employee List</a></li>
+                            @endif
+                            @if (checkAdminAccess('role-assign') != 0)
+                                <li><a href="{{ route('role-assign') }}">Role Assign</a></li>
+                            @endif
                         </ul>
                     </li>
-                    @endif
                     <li><a><i class="fa fa-home"></i> Website Management <span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
@@ -165,10 +167,16 @@
                             </li>
                         </ul>
                     </li>
+
                     @if (checkAdminAccess('set-mail-info') != 0)
                         <li><a href="{{ route('mail-setup') }}"><i class="fa mdi mdi-email-open"></i> Mail SetUp</a>
                         </li>
                     @endif
+                    {{-- <li class="text-danger">
+                        <a href="javascript:;"><i class="fa mdi mdi-power"></i> Logout</a>
+
+                    </li> --}}
+
                 </ul>
             </div>
 

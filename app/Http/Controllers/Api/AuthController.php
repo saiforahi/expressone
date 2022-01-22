@@ -59,10 +59,11 @@ class AuthController extends Controller
                 'email' => ['The provided credentials are incorrect'],
             ]);
         }
+        
         $token=$user->createToken('api_token')->plainTextToken;
         $user['guard'] = $user->guard__name();
         return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"data"=>$user],200);
-        
+
     }
 
     public function register(Request $request) {

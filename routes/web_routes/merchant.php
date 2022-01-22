@@ -5,6 +5,11 @@ use App\Http\Controllers\Merchant\ShipmentController;
 use App\Http\Controllers\Admin\ShippingChargeController;
 use App\Http\Controllers\Merchant\DashboardController;
 use App\Http\Controllers\Merchant\CSVController;
+//Merchant
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login.store');
+Route::get('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register');
+Route::post('/register', [App\Http\Controllers\AuthController::class, 'registerStore'])->name('register.store');
+Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('merchant.dashboard');

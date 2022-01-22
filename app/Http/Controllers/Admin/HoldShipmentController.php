@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Shipment;
 use App\Hub;
-use App\Driver_return_shipment_box;
-use App\Hub_shipment_box;
-use App\Driver_hub_shipment_box;
-use App\Courier;
-use App\Driver_shipment_delivery;
-use App\Return_shipment_box;
-use App\Hold_shipment;
-use App\Return_shipment;
 use App\User;
+use App\Courier;
+use App\Hold_shipment;
 use Session; use Auth;
+use App\Models\Shipment;
+use App\Return_shipment;
+use App\Hub_shipment_box;
+use App\Return_shipment_box;
+use Illuminate\Http\Request;
+use App\Driver_hub_shipment_box;
 use App\Events\ShipmentMovement;
+use App\Driver_shipment_delivery;
+use App\Driver_return_shipment_box;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class HoldShipmentController extends Controller
 {

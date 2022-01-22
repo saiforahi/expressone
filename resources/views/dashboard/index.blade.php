@@ -10,13 +10,9 @@
                         <div class="widget-subheading">All shipment request</div>
                     </div>
                     <div class="widget-content-right">
-                        <?php
-                        $shipments = \DB::table('shipments')
+                        <?php $shipments = \DB::table('shipments')
                             ->where('merchant_id', Auth::guard('user')->user()->id)
-                            ->count();
-                        //dd($shipments);
-                        ?>
-
+                            ->count(); ?>
                         <div class="widget-numbers text-white"><span> {{ $shipments }}</span></div>
                     </div>
                 </div>
@@ -81,7 +77,6 @@
                         </thead>
                         <tbody>
                             @foreach ($shipment as $key => $shipments)
-
                                 <tr>
                                     <td> {{ ++$key }}</td>
                                     <td>
@@ -102,7 +97,7 @@
                                     </td>
                                     <td class="text-center">
                                         @include('dashboard.include.shipping-status',
-                                        ['status'=>$shipments['status'],'logistic_status'=>$shipments['logistic_status']])
+                                        ['status'=>$shipments['status'],'shipping_status'=>$shipments['shipping_status']])
                                     </td>
                                     <td><a href="/tracking?code={{ $shipments['tracking_code'] }}"
                                             target="_blank">{{ $shipments['tracking_code'] }}
@@ -113,9 +108,9 @@
 
                                     </td>
                                     <td style="font-size: 13px">
-
-                                        {{$shipments['recipient']['name'] }}
-
+                                           {{ $shipments->recipient['name'] }} <br>
+                                           {{ $shipments->recipient['phone'] }} <br>
+                                           {{ $shipments->recipient['address'] }}
                                     </td>
 
                                     <td>
@@ -126,7 +121,7 @@
                                         {{ $shipments['weight'] }}
                                     </td>
                                     <td>
-                                        @if ($shipments['status'] == null && $shipments['logistic_status'] == 1)
+                                        @if ($shipments['status'] == 1 && $shipments['shipping_status'] == 0)
                                             <form style="display: inline-block" class="form-delete" method="post"
                                                 action="{{ url('shipment-delete', $shipments['id']) }}">
                                                 @method('DELETE')

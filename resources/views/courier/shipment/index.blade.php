@@ -51,21 +51,15 @@
                                                 </th>
                                                 <th class="text-right">
                                                     <?php
-                                                    // if (courier_shipments(Auth::guard('courier')->user()->id, $users->id) > 0) {
-                                                    //     $ability = '';
-                                                    //     $action = ' /courier/shipping-details/' . $users->id . '/pending';
-                                                    // } else {
-                                                    //     $ability = 'disabled';
-                                                    //     $action = 'javaScript:void(0)';
-                                                    // }
                                                     if (courier_shipments(Auth::guard('courier')->user()->id, $users->id) > 0) {
                                                         $ability = '';
-                                                        $action = ' /courier/shipping-details/' . $users->id;
+                                                        $action = ' /courier/shipping-details/' . $users->id . '/pending';
                                                     } else {
                                                         $ability = 'disabled';
                                                         $action = 'javaScript:void(0)';
                                                     }
                                                     ?>
+
                                                     <a href="{{ $action }}" class="btn btn-primary"
                                                         {{ $ability }}>View</a>
                                                 </th>
@@ -74,6 +68,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
+
                         </div>
                     </div>
                 </div>

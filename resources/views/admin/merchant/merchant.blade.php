@@ -9,15 +9,9 @@
                 </div>
                 <div class="title_right">
                     <div class="pull-right top_search">
-                        {{-- <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addParcel"> <i
-                                class="fa mdi mdi-cube-send"></i>
+                        <button type="button" class="btn btn-info btn-sm adNewParcel"> <i class="fa mdi mdi-cube-send"></i>
                             Add new parcel
-                        </button> --}}
-                        <a href="{{ route('add-paracel') }}" type="button" class="btn btn-info btn-sm"> <i
-                            class="fa mdi mdi-cube-send"></i>
-                        Add new parcel
-                    </a>
-
+                        </button>
                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">
                             <i class="fa fa-user-plus fs-13 m-r-3"></i> Create new Merchant
                         </button>
@@ -52,14 +46,16 @@
                                         <th>Phone</th>
                                         <th>NID</th>
                                         <th>BIN</th>
-                                        <th>Email</th>
                                         <th>Status</th>
+                                        <th>Is verified?</th>
                                         <th>Action</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($user as $users)
                                         <tr>
+
                                             <th scope="row"><img style="max-height:25px" class="img-thumbnail img-fluid"
                                                     src="{{ $users->image == null ? asset('images/user.png') : asset('storage/user/' . $users->image) }}">
                                             </th>
@@ -95,79 +91,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Modal for add merchant-->
-    <div id="addParcel" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2> <small>Add new parcel</small> </h2>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <br>
-                            <form id="demo-form2" method="post" class="form-horizontal form-label-left input_mask"
-                                action="{{ route('add-parcelBy-admin') }}" method="post"> @csrf
-                                <div class="row my-4">
-                                    <div class="col-md-12 text-left">
-                                        <label for="Merchant">Merchant selection</label>
-                                        <?php $users = \DB::table('users')->get(); ?>
-                                        <select class="form-control select2" style="width:100%;height:35px"
-                                            name="merchant_id" required>
-                                            <option value="" selected disabled>Select Merchant</option>
-                                            @foreach ($users as $user)
-                                                <option value="{{ $user->id }}">{{ $user->first_name }}
-                                                    {{ $user->last_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="my-4" style="margin-top:1em ">
-                                    @include('admin.shipment.includes.parcel-entry-form')
-                                </div>
-                                <div class="row"> <br>
-                                    <label class="col-md-2">Status:</label>
-                                    <div class="col-md-10">
-                                        <label class="radio-inline"><input type="radio" value="0" name="status"
-                                                checked>Label create (pickup)</label>
-                                        <label class="radio-inline"><input type="radio" value="1" name="status">Assigned
-                                            to Rider</label>
-                                        <label class="radio-inline"><input type="radio" value="2" name="status">Receipt by
-                                            Rider</label>
-                                    </div>
-                                </div>
-                                <div class="row my-4">
-                                    <div class="col-md-12 text-left driverArea" style="display: none">
-                                        <label for="area">Rider selection</label>
-                                        <?php $drivers = \DB::table('couriers')->get(); ?>
-                                        <select class="form-control select2" style="width:100%;height:35px"
-                                            name="courier_id" required>
-                                            <option value="" selected disabled>Select Rider</option>
-                                            @foreach ($drivers as $driver)
-                                                <option value="{{ $driver->id }}">{{ $driver->first_name }}
-                                                    {{ $driver->last_name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row my-4" style="margin-top:1em">
-                                    <div class="col-md-12">
-                                        <button type="submit" class="btn btn-success pull-right"><i
-                                                class="mdi mdi-content-check m-r-3"></i>Create Parcels
-                                        </button>
-                                        <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">
-                                            <i class="mdi mdi-cancel m-r-3"></i>Cancel
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+
                         </div>
                     </div>
                 </div>
@@ -186,7 +110,7 @@
                         </div>
                         <div class="x_content">
                             <br>
-                            <form id="demo-form2" method="post" action="{{ route('merchant.store') }}" autocomplete="on"
+                            <form id="demo-form2" method="post" action="{{ route('merchant.store') }}" autocomplete="off"
                                 class="form-horizontal form-label-left input_mask"> {{ csrf_field() }}
 
                                 <div class="col-xs-12 form-group has-feedback">
@@ -235,16 +159,6 @@
                                     <input type="text" class="form-control" placeholder="http://www.xyz.com"
                                         name="website_link" id="website_link" value="{{ old('website_link') }}">
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label for="address">NID:</label>
-                                    <input type="text" class="form-control" placeholder="NID" name="nid_no"
-                                        value="{{ old('nid_no') }}">
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label>BIN NO:</label>
-                                    <input type="text" class="form-control" placeholder="http://www.xyz.com" name="bin_no"
-                                        value="{{ old('bin_no') }}">
-                                </div>
                                 <div class="col-md-12 form-group has-feedback ">
                                     <button type="submit" class="btn btn-success pull-right"><i
                                             class="mdi mdi-content-save m-r-3"></i>Save
@@ -257,7 +171,87 @@
                         </div>
                     </div>
                 </div>
+
             </div>
+
+        </div>
+    </div>
+
+    <!-- Modal for add merchant-->
+    <div id="addParcel" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2> <small>Add new parcel</small> </h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br>
+                            <form id="demo-form2" method="post" class="form-horizontal form-label-left input_mask"
+                                action="/admin/add-parcelBy-admin"> {{ csrf_field() }}
+                                <div class="row my-4">
+                                    <div class="col-md-12 text-left">
+                                        <label for="Merchant">Merchant selection</label>
+                                        <?php $users = \DB::table('users')->get(); ?>
+                                        <select class="form-control select2" style="width:100%;height:35px"
+                                            name="merchant_id" required>
+                                            <option value="" selected disabled>Select Merchant</option>
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}">{{ $user->first_name }}
+                                                    {{ $user->last_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="my-4" style="margin-top:1em ">
+                                    @include('admin.shipment.includes.parcel-entry-form')
+                                </div>
+
+                                <div class="row"> <br>
+                                    <label class="col-md-2">Status:</label>
+                                    <div class="col-md-10">
+                                        <label class="radio-inline"><input type="radio" value="0" name="status"
+                                                checked>Label create (pickup)</label>
+                                        <label class="radio-inline"><input type="radio" value="1" name="status">Assigned
+                                            to Rider</label>
+                                        <label class="radio-inline"><input type="radio" value="2" name="status">Receipt by
+                                            Rider</label>
+                                    </div>
+                                </div>
+                                <div class="row my-4">
+                                    <div class="col-md-12 text-left driverArea" style="display: none">
+                                        <label for="area">Rider selection</label>
+                                        <?php $drivers = \DB::table('couriers')->get(); ?>
+                                        <select class="form-control select2" style="width:100%;height:35px"
+                                            name="courier_id" required>
+                                            <option value="" selected disabled>Select Rider</option>
+                                            @foreach ($drivers as $driver)
+                                                <option value="{{ $driver->id }}">{{ $driver->first_name }}
+                                                    {{ $driver->last_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row my-4" style="margin-top:1em">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-success pull-right"><i
+                                                class="mdi mdi-content-check m-r-3"></i>Create Parcels
+                                        </button>
+                                        <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">
+                                            <i class="mdi mdi-cancel m-r-3"></i>Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
     </div>
 
@@ -265,33 +259,33 @@
 @push('style')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet" />
     <!-- Datatables -->
-    <link href="{{ asset('ass_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('ass_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}"
-        rel="stylesheet">
-    <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}"
-        rel="stylesheet">
-    <link href="{{ asset('ass_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 @endpush
+
 @push('scripts')
     <!-- Datatables -->
-    <script src="{{ asset('ass_vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
-    <script src="{{ asset('ass_vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/jszip/dist/jszip.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/pdfmake/build/pdfmake.min.js') }}"></script>
-    <script src="{{ asset('ass_vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js') }}"></script>
+    <script src="{{ asset('vendors/datatables.net-scroller/js/dataTables.scroller.min.js') }}"></script>
+    <script src="{{ asset('vendors/jszip/dist/jszip.min.js') }}"></script>
+    <script src="{{ asset('vendors/pdfmake/build/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('vendors/pdfmake/build/vfs_fonts.js') }}"></script>
     <script>
         $(function() {
+
             $('.adNewParcel').on('click', function() {
                 $('#addParcel').modal('show');
             });
@@ -312,9 +306,6 @@
                 $.ajax({
                     type: 'post',
                     url: '/admin/update-merchant-verify',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
                     data: {
                         is_verified: is_verified,
                         merchant_id: merchant_id

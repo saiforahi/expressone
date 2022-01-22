@@ -2,80 +2,80 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Courier;
 use App\Models\Shipment;
-use Illuminate\Http\Request;
+use App\User;
+use App\Courier;
+use App\Driver_shipment;
+use App\Driver_hub_shipment_box;
+
 use App\Http\Controllers\Controller;
-use App\Models\CourierShipment;
+use Illuminate\Http\Request;
+use Session;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use SebastianBergmann\LinesOfCode\Counter;
 
 class DriverController extends Controller
 {
     public function index()
     {
-        $couriers = Courier::with('courierShipments')->orderBy('id', 'DESC')->get();
-        //$couriers = Courier::with(['courierShipments' => function ($query) {$query->select('shipment_id', 'courier_id');}])->orderBy('id', 'DESC')->get();
-        return view('admin.courier.driver', compact('couriers'));
+        $driver = Courier::orderBy('id', 'DESC')->get();
+        return view('admin.driver.driver', compact('driver'));
     }
 
     public function delivery_note(Shipment $shipment)
     {
-        return Driver_hub_shipment_box::where('shipment_id', $shipment->id)->pluck('driver_note')->first();
+        return Driver_hub_shipment_box::where('shipment_id',$shipment->id)->pluck('driver_note')->first();
     }
 
-    public function addEditCourier(Request $request, $id = null)
+    public function store(Request $request)
     {
-        //dd('okay');
-        if ($id == "") {
-            $courier = new Courier();
-            $title = "Add Courier";
-            $buttonText = "Save";
-            $message = "Courier has been created successfully!";
-        } else {
-            $courier =  Courier::find($id);
-            $title = "Update Courier";
-            $buttonText = "Save";
-            $message = "Courier information has been updated successfully!";
-        }
-        if ($request->isMethod('post')) {
-            $data = $request->all();
-            $request->validate([
-                'first_name' => 'required|max:191',
-                'last_name' => 'required|max:191',
-                'email' => 'email|max:191',
-                'phone' => 'required|max:191',
-                'password' => 'required|max:20|min:6|confirmed',
-            ]);
-            $courier->first_name = $request->first_name;
-            $courier->last_name = $request->last_name;
-            $courier->email = $request->email;
-            $courier->phone = $request->phone;
-            $courier->password = Hash::make($request->password);
-            $courier->save();
-            return redirect()->route('allCourier')->with('success', $message);
-        }
-        return view('admin.courier.addEditCourier', compact('title', 'buttonText', 'message','courier'));
+        $request->validate([
+            'first_name' => 'required|max:191',
+            'last_name' => 'required|max:191',
+            'email' => 'email|max:191',
+            'phone' => 'required|max:191',
+            'password' => 'required|max:20|min:6|confirmed',
+        ]);
+
+        $register_user = new Courier();
+        $register_user->courier_id = 'DR' . rand(100, 999) . time();
+        $register_user->first_name = $request->first_name;
+        $register_user->last_name = $request->last_name;
+        $register_user->email = $request->email;
+        $register_user->phone = $request->phone;
+        $register_user->password = Hash::make($request->password);
+        $register_user->save();
+
+        Session::flash('message', 'Courier add successfully');
+        return redirect('/admin/driver-list');
     }
-    public function assigned_shipments($id)
+
+    public function show($id)
     {
-        //$shipments = CourierShipment::with('shipment')->where('courier_id',$id)->get();
-        $shipments = CourierShipment::with([
-            'shipment' => function ($query) {$query->select('id', 'recipient', 'amount', 'weight');}])->where('courier_id', $id)->orderBy('id', 'DESC')->get();
-        return view('admin.courier.shipments', compact('shipments'))->with('success', 'Courier assigned shipments');
+        //
     }
 
-    public function courierDelete($id)
+    public function edit($id)
     {
-        try {
-            Courier::find($id)->delete();
-        } catch (\Throwable $th) {
-            //throw $th;
-            return redirect()->back()->with('success', 'Courier not delete');
-        }
-        return redirect('admin/courier')->with('success', 'Courier Delete successfully');
+        //
+    }
+
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    public function destroy($id)
+    {
+        Courier::find($id)->delete();
+        Session::flash('message', 'Courier Delete successfully');
+        return redirect('/admin/driver-list');
     }
 
 
+    public function assigned_shipments($id){
+        Session::flash('message', 'Courier assigned shipments');
+        $shipments = Driver_shipment::where('courier_id',$id)->get();
+        //dd($shipments);
+        return view('admin.driver.shipments', compact('shipments'));
+    }
 }

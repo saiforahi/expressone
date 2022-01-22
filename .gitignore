@@ -6,5 +6,3 @@ public/csv-file
 demo/vendor
 *.zip
 .lock
-bootstrap/cache/
-storage/debugbar

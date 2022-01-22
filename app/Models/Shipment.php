@@ -18,6 +18,10 @@ class Shipment extends Model
     ];
 
     // relationships
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
+    }
     public function added_by()
     {
         return $this->morphTo();
@@ -29,9 +33,6 @@ class Shipment extends Model
     public function delivery_location()
     {
         return $this->belongsTo(Location::class, 'delivery_location_id', 'id');
-    }
-    public function payment_detail(){
-        return $this->hasOne(ShipmentPayment::class,'id','shipment_id');
     }
     /**
      * Get the deliveryCharge that owns the Shipment
@@ -61,18 +62,4 @@ class Shipment extends Model
     // public function morphClass(){
     //     return $this->hasOne(get_class($this->inheritable),'id','inheritable_id');
     // }
-    public function scopeCousins($query)
-    {
-        $query->join('locations','shipments.pickup_location_id','locations.id')
-        ->join('points','locations.point_id','points.id')
-        ->join('units','points.unit_id','units.id')
-        ->join('admins','units.admin_id','admins.id')->join('logistic_steps','logistic_steps.id','shipments.logistic_status');
-    }
-    public function scopeDeliverycousins($query)
-    {
-        $query->join('locations','shipments.delivery_location_id','locations.id')
-        ->join('points','locations.point_id','points.id')
-        ->join('units','points.unit_id','units.id')
-        ->join('admins','units.admin_id','admins.id')->join('logistic_steps','logistic_steps.id','shipments.logistic_status');
-    }
 }

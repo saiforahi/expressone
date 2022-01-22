@@ -16,3 +16,10 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+/*
+|--------------------------------------------------------------------------
+| courier Route
+|--------------------------------------------------------------------------
+*/
+require_once __DIR__.'/api_routes/courier.php';

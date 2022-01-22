@@ -34,7 +34,7 @@ class CreateShipmentsTable extends Migration
             $table->longText('note')->nullable();
             $table->integer('shipping_status')->default(0);
             $table->unsignedBigInteger('logistic_status')->nullable();
-            $table->enum('status',['cancelled','delivered','returned'])->nullable();
+            $table->string('status')->default(1);
             $table->timestamp('time_starts')->useCurrent();
             $table->timestamps();
             $table->softDeletes();

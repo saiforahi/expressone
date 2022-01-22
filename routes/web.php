@@ -7,16 +7,10 @@ use App\Http\Controllers\AuthController;
 
 
 //To clear all cache
-Route::get('clear', function () {
+Route::get('cc', function () {
     Artisan::call('optimize:clear');
     return "Cleared!";
 });
-
-//Home page route do not move to other file sometime does not work when clear route
-Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login.store');
-Route::get('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register');
-Route::post('/register', [App\Http\Controllers\AuthController::class, 'registerStore'])->name('register.store');
-Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
 Route::get('/login', [AuthController::class, 'index'])->name('login');
 Route::get('/verify', [AuthController::class, 'verify'])->name('verify-user');

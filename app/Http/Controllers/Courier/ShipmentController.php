@@ -7,21 +7,19 @@ use App\Models\Shipment;
 use App\Events\SendingSMS;
 use Illuminate\Http\Request;
 use App\Models\CourierShipment;
+use App\Models\ShipmentPayment;
 use App\Events\ShipmentMovement;
-use App\Events\ShipmentMovementEvent;
+use App\CourierShipment_delivery;
 use App\Http\Controllers\Controller;
-use App\Models\LogisticStep;
-use App\Models\UnitShipment;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class ShipmentController extends Controller
 {
     public function index()
     {
-        $merchants = DB::table('courier_shipment')->where('courier_id',Auth::guard('courier')->user()->id)->join('shipments','courier_shipment.shipment_id','shipments.id')->select('shipments.merchant_id')->groupBy('shipments.merchant_id')->pluck('shipments.merchant_id')->toArray();
-        $user = User::whereIn('id',$merchants)->get();
+        $shipment = Shipment::where('status',1)->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
+        $user = User::whereIn('id',$shipment)->get();
         return view('courier.shipment.index',compact('user'));
     }
 
@@ -36,10 +34,14 @@ class ShipmentController extends Controller
     // accept a paracel assigned from admin
     public function receive_parcel($id, Request $request)
     {
-        UnitShipment::create(['shipment_id'=>$id]);
-        CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id,'shipment_id' => $id])->update(['status' => 'received']);
-        Shipment::where('id', $id)->update(['logistic_status' => 4]);
-        return back()->with('success','This parcel submittd to unit');
+        $shipment = Shipment::find($id);
+        CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'shipment_id' => $id])->update(['status' => 'received']);
+        dd($shipment);
+        // $shipments_id = CourierShipment::where('id',$id)->pluck('shipment_id')->first();
+        Shipment::where('id', $id)->update(['shipping_status' => 2]);
+        $message = 'Dear ' . $shipment->name . ', We ' . basic_information()->company_name . ' has received your parcel & we at your hand soon. Price of parcel delivery is: ' . $shipment->amount;
+        event(new SendingSMS('customer', $shipment->phone, $message));
+        return back();
     }
 
     public function my_shipments($type)
@@ -57,47 +59,36 @@ class ShipmentController extends Controller
         return view('driver.shipment.my-parcels', compact('shipments', 'type'));
     }
 
-    public function show($id)
+    public function show($id, $status)
     {
-        //dd($id);
-        $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id])->get();
-        $user = User::find($id);
-        return view('courier.shipment.shipment-more', compact('shipments', 'user'));
-
         // $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $status])->get();
         // $user = User::find($id);
         // return view('courier.shipment.shipment-more', compact('shipments', 'user'));
+        $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $status])->get();
+        $user = User::find($id);
+        return view('courier.shipment.shipment-more', compact('shipments', 'user'));
     }
 
     function receive_all_parcel(User $user)
     {
-        $shipments = DB::table('courier_shipment')
-                    ->where(['type'=>'pickup','courier_id'=>Auth::guard('courier')->user()->id])
-                    ->join('shipments','courier_shipment.shipment_id','shipments.id')
-                    ->where('shipments.merchant_id',$user->id)
-                    ->get(['courier_shipment.*','shipments.*','courier_shipment.id as courier_shipment_id']);
-        // $shipments = CourierShipment::with('shipment')->where(['type'=>'pickup','courier_id'=>Auth::guard('courier')->user()->id])->where('shipments.merchant_id',$user->id)->get();
+        // dd($user);
+        $shipments = Shipment::where('merchant_id', $user->id)->get();
         foreach ($shipments as $key => $shipment) {
-            // dd($shipment);
-            // dd(Shipment::find($shipment->shipment_id)->logistic_status);
-            CourierShipment::find($shipment->courier_shipment_id)->update(['status'=>'received']);
-            Shipment::where('id',$shipment->shipment_id)->update(['logistic_status'=>4]);
-            event(new ShipmentMovementEvent(Shipment::find($shipment->shipment_id),LogisticStep::find(4),Auth::guard('courier')->user()));
+            $check = CourierShipment::where(['shipment_id' => $shipment->id, 'status' => 'received'])->get();
+            if ($check->count() == 0) {
+                CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'shipment_id' => $shipment->id])->update(['status' => 'received']);
+                Shipment::where('id', $shipment->id)->update(['shipping_status' => 2]);
+                event(new ShipmentMovement($shipment->id, 'driver', Auth::guard('courier')->user()->id, 'receive-parcels', 'Receive parcels for pickup', 'receive'));
+
+                $message = 'Dear ' . $shipment->name . ', We ' . basic_information()->company_name . ' has received your parcel & we at your hand soon. Price of parcel delivery is: ' . $shipment->total_price;
+                event(new SendingSMS('customer', $shipment->phone, $message));
+            }
+            // echo $shipment->id.' = '.$check->count().'<br/>';
         }
+        // dd($user);
         return back();
     }
-    function submit_at_unit($shipments)
-    {
-        foreach(explode(",",$shipments) as $key=>$value){
-            CourierShipment::where('shipment_id',$value)->update(['status'=>'submitted_to_unit']);
-            $shipment=Shipment::find($value);
-            $shipment->logistic_status = 5; //updating status to unit-received
-            $shipment->save();
-            
-            event(new ShipmentMovementEvent($shipment,LogisticStep::find(5),Auth::guard('courier')->user()));
-        }
-        return back();
-    }
+
     public function agent_dispatch()
     {
         // show paracels date-wize
@@ -195,6 +186,9 @@ class ShipmentController extends Controller
             }
         }
     }
+
+
+
     public function return_agent_dispatch()
     {
         $paracels = Driver_return_shipment_box::where([
@@ -223,9 +217,5 @@ class ShipmentController extends Controller
         ]);
         $shipment->update(['shipping_status' => $status]);
         return back()->with('message', 'The Shipment OTP has been confirmed successfully!');
-    }
-
-    public function drop_in_unit_shipment(){
-
     }
 }
