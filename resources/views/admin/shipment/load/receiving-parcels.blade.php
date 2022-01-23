@@ -73,15 +73,19 @@
         // alert(hub_id);
         let shipment_id = $('#shipment_id' + key).val();
         let weight = $('#weight' + key).val();
-        let area = $('#area' + key).val();
+        
+        // let area = $('#area' + key).val();
         $.ajax({
             type: "get", url: '/admin/move-to-hub',
             data: {shipment_id: shipment_id, hub_id: hub_id, merchant_id: merchant_id, weight: weight, area_id: area},
             success: function (data) {
-                $('.result').html(data);
-                $('.r' + key).prop('disabled', false);
-                $('.r' + key).html('Receive <i class="fa fa-arrow-right"></i>');
+                console.log(data);
+                // alert('blah')
                 $('#' + shipment_id).remove();
+                $('.result').html(data);
+                // $('.r' + key).prop('disabled', false);
+                // $('.r' + key).html('Receive <i class="fa fa-arrow-right"></i>');
+                
             }
         });
     }

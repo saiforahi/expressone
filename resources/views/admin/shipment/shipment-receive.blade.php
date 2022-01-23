@@ -6,7 +6,7 @@
             <div class="page-title">
                 <div>
                     <h3>Merchant Shipment List <small class="text-info">(Receive Point)</small>
-                        <a href="/admin/hub-receivable" class="btn btn-info pull-right">Hub received</a>
+                        <a href="/admin/hub-receivable" class="btn btn-info pull-right">Unit received</a>
                     </h3>
                 </div>
             </div>
@@ -32,14 +32,12 @@
                                 <tbody>
                                     @foreach ($user as $users)
                                         <?php
-                                        $checkShipment = \DB::table('shipments')
-                                            ->select('id')
-                                            ->where(['merchant_id' => $users->id, 'status' => '1', 'shipping_status' => '2'])
-                                            ->get();
-                                        $status = '1';
-                                        $shipping_status = '2';
-                                        if (Session::has('admin_hub')) {
-                                            $hubID = Session::get('admin_hub')->id;
+                                        // dd();
+                                        $checkShipment = \App\Models\Shipment::cousins()->where(['units.admin_id'=>Auth::guard('admin')->user()->id,'shipments.merchant_id'=>$user->id])->whereBetween('logistic_status',[4,5])->count();
+                                        $status=1;
+                                        $logistic_status=[4,5];
+                                        if (Session::has('admin_unit')) {
+                                            $hubID = Session::get('admin_unit')->id;
                                         } else {
                                             $hubID = 0;
                                         }

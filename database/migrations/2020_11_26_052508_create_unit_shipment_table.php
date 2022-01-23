@@ -18,12 +18,10 @@ class CreateUnitShipmentTable extends Migration
             
             $table->unsignedBigInteger('shipment_id');
             $table->unsignedBigInteger('unit_id');
-            $table->unsignedBigInteger('admin_id');
             $table->string('status')->default('on-dispatch');
 
             $table->foreign('shipment_id')->references('id')->on('shipments');
             $table->foreign('unit_id')->references('id')->on('units');
-            $table->foreign('admin_id')->references('id')->on('admins');
             $table->timestamps();
         });
     }

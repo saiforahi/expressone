@@ -160,3 +160,46 @@ if (!function_exists('active_guard')) {
         return null;
     }
 }
+
+if (!function_exists('get_shipments_for_logged_in_admin')) {
+    function get_shipments_for_logged_in_admin($logistic_step_slug_array)
+    {
+        $shipments=array();
+        if(auth()->guard('admin')->user()->hasRole('super-admin')){
+            $shipments=Shipment::cousins()->whereIn('shipments.logistic_status',$logistic_step_slug_array)->get();
+        }
+        else{
+            $shipments = Shipment::cousins()->where('admins.id',auth()->guard('admin')->user()->id)->whereIn('logistic_steps.slug',$logistic_step_slug_array)->get();
+        }
+        return $shipments;
+    }
+}
+
+if (!function_exists('user_hub_count')) {
+    function user_hub_count($logistic_step_slug_array)
+    {
+        $shipments=array();
+        if(auth()->guard('admin')->user()->hasRole('super-admin')){
+            $shipments=Shipment::cousins()->whereIn('shipments.logistic_status',$logistic_step_slug_array)->get();
+        }
+        else{
+            $shipments = Shipment::cousins()->where('admins.id',auth()->guard('admin')->user()->id)->whereIn('logistic_steps.slug',$logistic_step_slug_array)->get();
+        }
+        return $shipments;
+    }
+}
+
+if (!function_exists('count_shipment_for_delivery_unit')) {
+    function count_shipment_for_delivery_unit($unit_id,$merchant_id)
+    {
+        $shipments = Shipment::where(['merchant_id'=>$merchant_id,'logistic_status'=>6])->deliverycousins()->join('unit_shipment','unit_shipment.shipment_id','shipments.id')->where('units.id',$unit_id)->get(['shipments.*'])->count();
+        return $shipments;
+    }
+}
+
+if (!function_exists('is_courier_assign_available')) {
+    function is_courier_assign_available_for_pickup($shipments)
+    {
+        dd($shipments->select('id')->toArray());
+    }
+}
