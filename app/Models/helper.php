@@ -53,6 +53,7 @@ function user_shipment($id, $status = 1, $shipping_status = 0)
 function courier_shipments($courier_id, $merchant_id)
 {
     $shipments = Shipment::where('merchant_id', $merchant_id)->where(['status' => 1, 'shipping_status' => 1])->get();
+    //dd($shipments);
     $num = array();
     foreach ($shipments as $key => $shipment) {
         $num[] = CourierShipment::where(['courier_id' => auth()->guard('courier')->user()->id, 'shipment_id' => $shipment->id])->count();

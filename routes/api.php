@@ -26,9 +26,9 @@ Route::middleware('auth:sanctum')->get('/logout', [App\Http\Controllers\Api\Auth
 */
 
 Route::group(['prefix' => 'v1'], function () {
-    Route::group(['prefix' => 'courier'], function () {
+    Route::group(['prefix' => 'courier-app'], function () {
         Route::get('shipments', [CourierManagement::class, 'shipments']);
-        Route::get('shipment-details/{id}/{status}', [CourierManagement::class, 'shipmentDetails']);
+        Route::get('shipment-details/{merchant_id}/{shipment_status}', [CourierManagement::class, 'shipmentDetails']);
         Route::get('receive-shipment/{id}', [CourierManagement::class, 'receiveShipment']);
         Route::get('receive-all-parcel/{user}', [CourierManagement::class, 'receiveAllParcel']);
     });

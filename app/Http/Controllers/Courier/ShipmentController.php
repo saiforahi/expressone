@@ -64,8 +64,8 @@ class ShipmentController extends Controller
         // $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $status])->get();
         // $user = User::find($id);
         // return view('courier.shipment.shipment-more', compact('shipments', 'user'));
-        $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $status])->get();
         $user = User::find($id);
+        $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $status])->get();
         return view('courier.shipment.shipment-more', compact('shipments', 'user'));
     }
 

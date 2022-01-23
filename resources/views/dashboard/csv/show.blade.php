@@ -36,13 +36,33 @@
                 <form id="upload_form" method="post" action="">
                     @csrf
                     @foreach (\Session::get('csv_data') as $key => $line)
+                    
                         <div class="page">Parcel: {{ $key + 1 }}</div>
                         <div class="form_each">
                             <div class="form-row">
                                 <div class="col text-left">
-                                    <label class="" for="name">Customer Name</label>
-                                    <input type="text" id="name" class="form-control" name="recipient[]"
-                                        value="{{ $line['recipient'] }}" required>
+                                    <label class="" for="name">Recipient Name</label>
+                                    <input type="text" id="name" class="form-control" name="recipient_name[]"
+                                        value="{{ $line['recipient_name'] }}" required>
+                                </div>
+                                <div class="col text-left">
+                                    <label class="" for="name">Recipient Phone</label>
+                                    <input type="text" id="name" class="form-control" name="recipient_phone[]"
+                                        value="{{ $line['recipient_phone'] }}" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-8 text-left">
+                                    <label class="" for="name">Recipient Address</label>
+                                    <input type="text" id="name" class="form-control" name="recipient_address[]"
+                                        value="{{ $line['recipient_address'] }}" required>
+                                </div>
+                                <div class="col-md-4 text-left">
+                                    <label for="area">Delivery Area (Upazila, District)</label>
+                                    {{-- <?php dd($line['upazila_district']); ?> --}}
+                                    <input type="text" class="form-control" readonly
+                                        name="upazila_district[]" id="upazila_district{{ $key }}"
+                                        value="{{ $line['upazila_district'] }}">
                                 </div>
                             </div>
                             <div class="form-row">
@@ -52,22 +72,39 @@
                                         name="amount[]" id="amount{{ $key }}"
                                         value="{{ $line['amount'] }}">
                                 </div>
+                                <div class="col cod_target text-left">
+                                    <label for="parcel_value">Delivery Charge</label>
+                                    <input type="number" class="form-control" data-key="{{ $key }}"
+                                        name="delivery_charge[]" id="delivery_charge{{ $key }}"
+                                        value="{{ $line['delivery_charge'] }}">
+                                </div>
 
                                 <div class="col cod_target text-left">
-                                    <label for="weight_charge">Weight</label>
+                                    <label for="weight_charge">Weight (kg)</label>
                                     <input type="number" class="form-control" data-key="{{ $key }}"
-                                        name="weight[]" id="weight{{ $key }}"
-                                        value="{{ $line['weight'] }}">
+                                        name="weight[]" id="weight{{ $key }}" value="0"
+                                        >
                                 </div>
                             </div>
                             <div class="form-row">
+
                                 <div class="col-md-3 text-left">
-                                    <label for="area">Area</label>
-                                    <select class="form-control select2 area" data-key="{{ $key }}" name="area[]"
+                                    <label for="area">Pickup Location *</label>
+                                    <select required class="form-control select2 area" data-key="{{ $key }}" name="pickup_location[]"
                                         id="area{{ $key }}" style="padding:1px;">
                                         <option value="" selected disabled>Select area</option>
-                                        @foreach ($areas as $area)
-                                            <option value="{{ $area->id }}">{{ $area->name }}</option>
+                                        @foreach ($locations as $location)
+                                            <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3 text-left">
+                                    <label for="area">Delivery Location</label>
+                                    <select class="form-control select2 area" data-key="{{ $key }}" name="delivery_location[]"
+                                        id="area{{ $key }}" style="padding:1px;">
+                                        <option value="" selected disabled>Select Delivery Location</option>
+                                        @foreach ($locations as $location)
+                                            <option value="{{ $location->id }}">{{ $location->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -165,16 +202,16 @@
             }
 
         </style>
-        <link href="{{ asset('vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
-        <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/select2.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/bootstrap4-select2.css') }}">
+        <link href="{{ asset('ass_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
+        <link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/select2.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/bootstrap4-select2.css') }}">
     @endpush
 
 @endsection
 
 @push('script')
-    <script src="{{ asset('vendors/sweetalert/sweetalert.js') }}"></script>
-    <script src="{{ asset('vendors/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/sweetalert/sweetalert.js') }}"></script>
+    <script src="{{ asset('ass_vendors/select2/dist/js/select2.min.js') }}"></script>
     <script>
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         $(document).ready(function() {

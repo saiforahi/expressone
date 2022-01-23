@@ -8,6 +8,7 @@ use App\Events\SendingSMS;
 use Illuminate\Http\Request;
 use App\Models\CourierShipment;
 use App\Http\Controllers\Controller;
+use App\Models\Courier;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -15,25 +16,33 @@ class CourierManagement extends Controller
 {
     public function shipments()
     {
+        //$query->select('id', 'merchant_id','recipient','logistic_status')->orderBy('merchant_id');
+        // $courier_shipments = CourierShipment::with([
+        //     'shipment' => function ($query) {
+        //         $query->select('merchant_id')->groupBy('merchant_id');
+        //     },
+        // ])->where('status', 'received')->get();
 
-        $shipment = Shipment::where('status', 1)->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
-        $user = User::whereIn('id', $shipment)->get();
-        dd($user);
-        return view('courier.shipment.index', compact('user'));
-    }
-
-    public function shipmentDetails($id, $status)
-    {
-        //dd("okay");
-        $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $status])->get();
-        $user = User::find($id);
-        return view('courier.shipment.shipment-more', compact('shipments', 'user'));
+        // $courier_shipments = CourierShipment::with('shipment')->where('status', 'received')->get();
+        // foreach($courier_shipments as $value){
+        //     $mShipment = Shipment::where('merchant_id', $value->shipment->merchant_id)->get();
+        //     dd(count($mShipment));
+        //     $merchant = User::where('id', $value->shipment->merchant_id)->first();
+        // }
+        // exit;
+        $shipments = Shipment::where('status',1)->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
+        $merchants = User::whereIn('id', $shipments)->get();
+        //dd($user);
+        return response()->json([
+            'success' => true,
+            'data'    => $merchants
+        ], 200);
     }
 
     //Accept a paracel assigned from admin
     public function receiveShipment($id, Request $request)
     {
-        //dd($id);
+
         $shipment = Shipment::find($id);
         CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'shipment_id' => $id])->update(['status' => 'received']);
         Shipment::where('id', $id)->update(['shipping_status' => 2]);
@@ -42,7 +51,17 @@ class CourierManagement extends Controller
         return back();
     }
 
-
+    public function shipmentDetails($merchant_id, $shipment_status)
+    {
+        //$merchant_id = User::find($merchant_id);
+        //$shipments = Shipment::where(['merchant_id' => $id, 'status' => 1])->get();
+        $shipments = Shipment::where(['merchant_id' => $merchant_id, 'status' => $shipment_status])->get(); // check status on shipment assignment or movement
+        //dd($shipments);
+        return response()->json([
+            'success' => true,
+            'data'    => $shipments
+        ], 200);
+    }
 
     public function cencel_parcel($id, Request $request)
     {

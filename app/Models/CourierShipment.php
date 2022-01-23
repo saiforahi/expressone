@@ -15,8 +15,9 @@ class CourierShipment extends Model
     }
     public function shipment()
     {
-        return $this->belongsTo(Shipment::class);
+        return $this->belongsTo(Shipment::class,'shipment_id');
     }
+
     public function admin()
     {
         return $this->belongsTo(Admin::class);

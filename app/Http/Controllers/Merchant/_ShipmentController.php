@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Merchant;
 
-use App\Events\ShipmentMovementEvent;
+use App\Events\ShipmentMovement;
 use App\Model\Area;
 use App\Models\Unit;
 use App\ShippingPrice;
@@ -32,7 +32,7 @@ class ShipmentController extends Controller
         $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
         $data['locations'] = Location::select('id', 'name', 'point_id')->get();
-        return view('dashboard.addShipment', $data,compact('shipment'));
+        return view('dashboard.addShipment', $data, compact('shipment'));
     }
 
     public function saveShipment(Request $request, Shipment $shipment)
@@ -60,12 +60,13 @@ class ShipmentController extends Controller
                 $shipmentPmnt->invoice_no  = rand(2222, 222222);
                 $shipmentPmnt->cod_amount  = $shipment->amount;
                 $shipmentPmnt->delivery_charge  = $shipment->shipping_charge_id;
+                $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
                 $shipmentPmnt->save();
-                event(new ShipmentMovementEvent($shipment,LogisticStep::first(),Auth::guard('user')->user()));
+                event(new ShipmentMovementEvent($shipment, LogisticStep::first(), Auth::guard('user')->user()));
             }
             return redirect()->back()->with('success', 'Shipment has been saved successfully');
         } catch (\Throwable $th) {
-            //throw $th;
+            throw $th;
             return redirect()->back()->with('error', 'Shipment not saved');
         }
     }
@@ -77,7 +78,7 @@ class ShipmentController extends Controller
         $data['area'] = Unit::where('status', 1)->get();
         $data['shippingCharges'] = ShippingCharge::select('id', 'consignment_type', 'shipping_amount')->get();
         $data['locations'] = Location::select('id', 'name', 'point_id')->get();
-        return view('dashboard.editShipment', $data,compact('shipment'));
+        return view('dashboard.editShipment', $data, compact('shipment'));
     }
 
 
@@ -138,12 +139,12 @@ class ShipmentController extends Controller
 
     public function shipmentDelete($id)
     {
+
         try {
-            //code...
             Shipment::find($id)->delete();
             return back()->with('message', 'Shipment has been deleted successfully!');
         } catch (\Throwable $th) {
-            throw $th;
+            dd($th);
             return back()->with('message', 'Something went wrong' . $th);
         }
     }

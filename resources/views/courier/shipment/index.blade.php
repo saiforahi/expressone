@@ -30,6 +30,7 @@
                                     @foreach ($user as $users)
                                         {{-- courier_shipments is a helper --}}
                                         @if (courier_shipments(Auth::guard('courier')->user()->id, $users->id) > 0)
+                                       
                                             <tr>
                                                 <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid"
                                                         src="{{ $users->image == null ? asset('images/user.png') : asset('storage/user/' . $users->image) }}">
@@ -59,7 +60,6 @@
                                                         $action = 'javaScript:void(0)';
                                                     }
                                                     ?>
-
                                                     <a href="{{ $action }}" class="btn btn-primary"
                                                         {{ $ability }}>View</a>
                                                 </th>

@@ -62,6 +62,7 @@ class MerchantController extends Controller
     }
     public function updateMerchantStatus(Request $request)
     {
+        
         if ($request->ajax()) {
             $data = $request->all();
             if ($data['is_verified'] == "Verified") {

@@ -22,6 +22,17 @@ class Courier extends Authenticatable
         'created_at' => 'datetime:Y-m-d h:i:s A',
         'updated_at' => 'datetime:Y-m-d h:i:s A',
     ];
+
+    /**
+     * The roles that belong to the Courier
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function courierShipment()
+    {
+        return $this->hasMany(CourierShipment::class);
+    }
+
     public function guard__name(){
         return $this->guard_name;
     }
@@ -32,6 +43,8 @@ class Courier extends Authenticatable
     public function delivery_shipments(){
         return $this->hasMany(Shipment::class)->where('type','delivery');
     }
+
+
     // public function user(){
     //     return $this->morphOne(User::class, 'inheritable');
     // }

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use Auth;
 use App\Models\User;
 use App\Models\Courier;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -59,7 +59,7 @@ class AuthController extends Controller
                 'email' => ['The provided credentials are incorrect'],
             ]);
         }
-        
+
         $token=$user->createToken('api_token')->plainTextToken;
         $user['guard'] = $user->guard__name();
         return response()->json(['success'=>true,'token'=>$token,'message'=>'User Signed in!',"data"=>$user],200);
