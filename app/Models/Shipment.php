@@ -31,7 +31,7 @@ class Shipment extends Model
         return $this->belongsTo(Location::class, 'delivery_location_id', 'id');
     }
     public function payment_detail(){
-        return $this->hasOne(ShipmentPayment::class,'id','shipment_id');
+        return $this->hasOne(ShipmentPayment::class,'shipment_id','id');
     }
     /**
      * Get the deliveryCharge that owns the Shipment

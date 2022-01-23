@@ -20,7 +20,7 @@
                                     <thead>
                                     <tr class="headings selected">
                                         <th><input type="checkbox" id="checkall" onClick="checkAll();"/></th>
-                                        <th class="column-title">Parcel info</th>
+                                        <th class="column-title">Shipment info</th>
                                         <th class="column-title">Customer info</th>
                                         <th class="column-title">Payment</th>
                                         <th class="column-title">Delivery</th>
@@ -37,35 +37,31 @@
                                             <td style="width:25%">
                                                 Parcel ID: {{$shipment->id}}<br>
                                                 Invoice ID: {{$shipment->invoice_id}}<br>
-                                                Bulk
-                                                ID: <?php $bulk_id = \DB::table('hub_shipment_boxes')->whereRaw('FIND_IN_SET(?,shipment_ids)', [$shipment->id])->pluck('bulk_id')->first();echo $bulk_id; ?>
-                                                <br>
-                                                Shop ID: {{$shipment->user->shop_name}}<br>
+                                                Shop ID: {{$shipment->merchant->shop_name}}<br>
 
-                                                Resource Hub: {{$shipment->area->hub->name}}<br>
+                                                Resource Unit: {{$shipment->pickup_location->point->unit->name}}<br>
                                                 Delivry
-                                                Hub: <?php $hubInfo = \App\Hub_shipment::where('shipment_id', $shipment->id)->get();?>
-                                                @foreach($hubInfo as $hub) {{$hub->hub->name}} @endforeach
+                                                Unit: {{$shipment->delivery_location->point->unit->name}}
                                                 <br>
 
                                             </td>
                                             <td style="width:20%">
-                                                Name: {{$shipment->name}}<br>
-                                                Phone No: {{$shipment->phone}}<br>
-                                                Address: {{$shipment->address}}<br>
+                                                Name: {{$shipment->recipient['name']}}<br>
+                                                Phone No: {{$shipment->recipient['phone']}}<br>
+                                                Address: {{$shipment->recipient['address']}}<br>
                                             </td>
                                             <td style="width:10%">
                                                 Weight: {{$shipment->weight}} KG<br>
-                                                COD Amount: {{$shipment->cod_amount}}<br>
-                                                Delivery Charge: {{$shipment->delivery_charge}}<br>
-                                                @if($shipment->cod !=0)
+                                                COD Amount: {{$shipment->amount}}<br>
+                                                Delivery Charge: {{$shipment->payment_detail->delivery_charge}}<br>
+                                                @if($shipment->payment_detail->cod_amount !=0)
                                                     COD: Applied<br>
-                                                    COD value:{{$shipment->cod_amount}}% @endif
+                                                    COD value:{{$shipment->payment_detail->cod_amount}}% @endif
 
-                                                @if(($shipment->cod_amount - $shipment->delivery_charge) <0) Pay by merchant @else Pay by Customer @endif
+                                                @if(($shipment->payment_detail->cod_amount - $shipment->delivery_charge) <0) Pay by merchant @else Pay by Customer @endif
                                             </td>
                                             <td>
-                                                @if($shipment->shipping_status>5)
+                                                {{-- @if($shipment->shipping_status>5)
                                                     <?php $courier_id = \DB::table('driver_hub_shipment_box')->where('shipment_id', $shipment->id)->pluck('courier_id')->first();
                                                     $dName = \DB::table('drivers')->where('id', $courier_id)->select('first_name', 'last_name')->first(); ?>
 
@@ -83,7 +79,7 @@
                                                     <?php $dName = \DB::table('admins')->where('id', Auth::guard('admin')->user()->id)->select('first_name', 'last_name')->first();?>
                                                     @if($dName !=null) Picked up by: <b
                                                         class="label label-info">{{$dName->first_name.' '.$dName->last_name}}</b> @endif
-                                                @endif
+                                                @endif --}}
                                             </td>
                                             <td class="">Created
                                                 at: {{date('M d, y H:i:s',strtotime($shipment->created_at))}}<br>

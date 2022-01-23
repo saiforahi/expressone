@@ -6,7 +6,7 @@
             <div class="page-title">
                 <div>
                     <h3>Merchant Shipment List <small class="text-info">(Receive Point)</small>
-                        <a href="/admin/hub-receivable" class="btn btn-info pull-right">Unit received</a>
+                        <a href="/admin/unit-receivable" class="btn btn-info pull-right">Unit received</a>
                     </h3>
                 </div>
             </div>

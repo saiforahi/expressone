@@ -149,7 +149,7 @@
             $('.s' + hub_id).prop('disabled', true);
             $.ajax({
                 type: "get",
-                url: '/admin/hub-sorting/' + hub_id,
+                url: '/admin/unit-sorting/' + hub_id,
                 success: function(data) {
                     $('.hub' + hub_id).remove();
                     $('.result2').html(data);

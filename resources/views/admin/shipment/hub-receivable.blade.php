@@ -18,7 +18,7 @@
 
                                 <button class="btn pull-right btn-xs btn-warning assignAll">Sorting all together</button>
                             </div>
-                            @foreach($boxes as $key=>$box)
+                            @foreach($shipments as $key=>$box)
                             <div class="row row{{$box->id}}" style="background: #f3f3f3;margin-bottom: 1em; padding: 5px;">
                                 <div class="col-md-7">
                                     <div class="row">
@@ -27,25 +27,23 @@
                                                 
                                         </div>
                                         <div class="col-md-11">
-                                            <b>Bulk ID:</b> {{$box->bulk_id}} <br>
-                                            <b>Hub:</b> {{$box->hub->name}} <br>
-                                            Parcel count: <b>{{ COUNT(explode(',',$box->shipment_ids))}}</b>
+                                            <b>Tracking Code:</b> {{$box->tracking_code}} <br>
+                                            <b>From Unit:</b> {{$box->pickup_location->point->unit->name}} <br>
+                                            Parcel count: <b>{{ COUNT(explode(',',$box->parcel_qty))}}</b>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-5 text-right">
                                     <div class="row">
                                         <button class="btn btn-default" onclick="dispatch_shipments(<?php echo $box->id;?>)">View Parcels</button>
-
-                                        <button class="btn btn-success mts{{$box->id}}" onclick="cancel_received(<?php echo $box->id;?>)">Cancel </button>
-
-                                        <button class="btn btn-primary" onclick="sorting(<?php echo $box->id;?>)">Send to Sorting </button>
+                                        <button class="btn btn-primary" onclick="sorting(<?php echo $box->id;?>)">Receive</button>
+                                        <button class="btn btn-danger mts{{$box->id}}" onclick="cancel_received(<?php echo $box->id;?>)">Cancel </button>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
 
-                            @if($boxes->count() <1)<p class="alert alert-default text-center text-danger">No data available</p>@endif
+                            @if($shipments->count() <1)<p class="alert alert-default text-center text-danger">No data available</p>@endif
 
                         </div>
                     </div>
@@ -100,7 +98,7 @@
 
     function sorting(box_id){
         $.ajax({
-            type: "get",url: '/admin/sort-to-agent-dispatch/'+box_id,
+            type: "get",url: '/admin/receive-at-delivery-unit/'+box_id,
             success: function(data){
                 $('.row'+box_id).remove();
             }

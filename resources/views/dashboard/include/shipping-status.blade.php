@@ -13,22 +13,19 @@
     @elseif($logistic_status=='5')
         <span class="text-primary">Unit Received</span>
 
-        {{-- multi status --}}
     @elseif($logistic_status=='6')
         <span class="text-success">Unit Received (Sorted)</span>
-    @elseif($logistic_status=='on-6')
-        <span class="text-success">Delivered (init)</span>
-
+    
     @elseif($logistic_status=='7')
         <span class="text-warning">To Delivery Unit</span>
 
     @elseif($logistic_status=='8')
-        <span class="text-danger">Return</span>
-    @elseif($logistic_status=='on-8')
-        <span class="text-danger">Return (init)</span>
+        <span class="text-primary">Reached Delivery Unit</span>
     @elseif($logistic_status=='9')
-        <span class="text-danger">Return (to merchant)</span>
+        <span class="text-danger">Out for Delivery</span>
     @elseif($logistic_status=='10')
+        <span class="text-danger">Return (to merchant)</span>
+    @elseif($logistic_status=='11')
         <span class="text-success">Hand over to courier</span>
     @else
         <span class="text-warning">not labeled</span>
