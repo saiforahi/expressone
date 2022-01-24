@@ -280,17 +280,14 @@ class ShipmentController extends Controller
         } else {
             // dd(explode(',', $request->shipment_id));
             foreach (explode(',', $request->shipment_id) as $key => $id) {
-                if ($id != 'on') {
-                    $check = CourierShipment::where(['courier_id' => $request->courier_id, 'shipment_id' => $id])->count();
-                    if ($check < 1) {
-                        CourierShipment::create([
-                            'courier_id' => $request->courier_id, 'shipment_id' => $id,
-                            'admin_id' => Auth::guard('admin')->user()->id, 'note' => $request->note,'type'=>'pickup'
-                        ]);
-                        Shipment::where('id', $id)->where('logistic_status','<=',3)->update(['logistic_status' => LogisticStep::where('slug','to-pick-up')->first()->id]);
-                        event(new ShipmentMovementEvent(Shipment::find($id), LogisticStep::where('slug','to-pick-up')->first(),Auth::guard('admin')->user()));
-                    }
-                    
+                $check = CourierShipment::where(['courier_id' => $request->courier_id, 'shipment_id' => $id])->count();
+                if ($check < 1) {
+                    CourierShipment::create([
+                        'courier_id' => $request->courier_id, 'shipment_id' => $id,
+                        'admin_id' => Auth::guard('admin')->user()->id, 'note' => $request->note,'type'=>'pickup'
+                    ]);
+                    Shipment::where('id', $id)->where('logistic_status','<=',3)->update(['logistic_status' => LogisticStep::where('slug','to-pick-up')->first()->id]);
+                    event(new ShipmentMovementEvent(Shipment::find($id), LogisticStep::where('slug','to-pick-up')->first(),Auth::guard('admin')->user()));
                 }
             }
         }

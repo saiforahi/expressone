@@ -26,7 +26,7 @@
                 <div class="page-title">
                     <h3>
                         Merchant Shipment List
-                        @if ($shipments->count() > 0 && $shipments->where('logistic_status', '!=', '1')->count() == 0)
+                        @if ($shipments->count() > 0 && $shipments->whereBetween('logistic_status', [1,2])->count() == 0)
                             <a data-target="#assignShipment" data-toggle="modal" data-id="all" href="#"
                                 class="btn btn-primary assign pull-right">Assign all parcels to a Rider</a>
                         @endif
@@ -51,7 +51,7 @@
                                     <th>Customer Info</th>
                                     <th>Delivery Type</th>
                                     <th>Delivery Location</th>
-                                    <th>Assign</th>
+                                    <th>Courier</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -84,9 +84,9 @@
                                                         class="fas fa-dollar-sign"></i>Set Delivery Location</a>
                                             @endif
                                         </th>
-                                        <th class="text-right">
+                                        <th class="text-left">
                                             @if (\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->exists())
-                                                Courier :
+                                                Courier : {{\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->first()->courier->first_name}}<br>(Employee ID: {{\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->first()->courier->employee_id}})
                                             @else
                                                 <button type="button" class="btn btn-primary btn-xs assign"
                                                     data-toggle="modal" data-target="#assignShipment"
