@@ -66,7 +66,7 @@
                                             $hubID = 0;
                                         } ?>
 
-                                        @if ($checkShipment->count() > 0 && is_belongsTo_hub($user->unit_id, $hubID))
+                                        @if ($checkShipment->count() > 0)
                                             <tr>
                                                 <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid"
                                                         src="{{ $user->image == null ? asset('images/user.png') : asset('storage/user/' . $user->image) }}">
