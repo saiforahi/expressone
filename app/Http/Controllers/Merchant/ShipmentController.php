@@ -37,6 +37,8 @@ class ShipmentController extends Controller
 
     public function saveShipment(Request $request, Shipment $shipment)
     {
+
+
         try {
             $jsonData = $request->only('name', 'phone', 'address');
             $shipment->recipient = $jsonData;
@@ -51,6 +53,7 @@ class ShipmentController extends Controller
             $shipment->logistic_status = LogisticStep::first()->id; //Setting logistic status to approval from unit/super admin
             $shipment->added_by()->associate(Auth::guard('user')->user());
             $shipment->save();
+            //dd('save');
             //Make shipment Payment
             if ($shipment->save()) {
                 $shipmentPmnt = new ShipmentPayment();
@@ -65,7 +68,7 @@ class ShipmentController extends Controller
             }
             return redirect()->back()->with('success', 'Shipment has been saved successfully');
         } catch (\Throwable $th) {
-            //throw $th;
+            //dd($th);
             return redirect()->back()->with('error', 'Shipment not saved');
         }
     }

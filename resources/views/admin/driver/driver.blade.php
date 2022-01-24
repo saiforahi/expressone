@@ -1,16 +1,16 @@
 @extends('admin.layout.app')
-@section('title', 'Rider List')
+@section('title', 'Courier List')
 @section('content')
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Rider List</h3>
+                    <h3>Courier List</h3>
                 </div>
                 <div class="title_right">
                     <div class="form-group pull-right top_search">
                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">
-                            <i class="fa fa-user-plus fs-13 m-r-3"></i> Add Rider
+                            <i class="fa fa-user-plus fs-13 m-r-3"></i> Add Courier
                         </button>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                                     <tr class="bg-dark">
                                         <th>Sl.</th>
                                         <th>Name</th>
-                                        <th>Rider ID</th>
+                                        <th>Courier ID</th>
                                         <th>Phone</th>
                                         <th>Email</th>
                                         <th>Image</th>
@@ -98,7 +98,7 @@
                     <div class="x_panel">
                         <div class="x_title">
                             <h2>
-                                <small>Rider Information add</small>
+                                <small>Courier Information add</small>
                             </h2>
                             <div class="clearfix"></div>
                         </div>

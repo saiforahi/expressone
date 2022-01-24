@@ -37,6 +37,11 @@ class ShipmentController extends Controller
 
     public function saveShipment(Request $request, Shipment $shipment)
     {
+        echo '<pre>';
+        echo '======================<br>';
+        print_r($request->all());
+        echo '<br>======================<br>';
+        exit();
         try {
             $jsonData = $request->only('name', 'phone', 'address');
             $shipment->recipient = $jsonData;
@@ -66,7 +71,7 @@ class ShipmentController extends Controller
             }
             return redirect()->back()->with('success', 'Shipment has been saved successfully');
         } catch (\Throwable $th) {
-            throw $th;
+            dd($th);
             return redirect()->back()->with('error', 'Shipment not saved');
         }
     }

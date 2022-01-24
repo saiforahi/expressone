@@ -34,7 +34,7 @@
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="main-card mb-3 card card-body">
                 <form id="upload_form" method="post" action="">
-                    {{ csrf_field() }}
+                    @csrf
                     {{-- <input type="hidden" name="merchant_id" value="{{Auth::user()->id}}"/> --}}
                     @foreach (\Session::get('csv_data') as $key => $line)
                         <div class="page">Parcel: {{ $key + 1 }}</div>

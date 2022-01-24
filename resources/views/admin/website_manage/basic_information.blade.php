@@ -273,7 +273,7 @@
             @if (count($verifyMsg))
                 <div class="modal-content">
                     <form action="{{ url('/admin/update-verify-message', $item->id) }}" method="post">
-                        {{ csrf_field() }}
+                        @csrf
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLongTitle">Update</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -307,7 +307,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <form action="{{ url('/admin/add-merchant-verify-message') }}" method="post">
-                    {{ csrf_field() }}
+                    @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Add New</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

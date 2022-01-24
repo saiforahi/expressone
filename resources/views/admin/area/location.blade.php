@@ -69,7 +69,7 @@
                         <div class="x_content">
                             <form id="upload_form" autocomplete="off" method="post"
                                 class="form-horizontal form-label-left input_mask">
-                                {{ csrf_field() }}
+                                @csrf
                                 <input type="hidden" value="" name="id" id="location_id">
                                 <div class="form-group has-feedback">
                                     <label for="unit_id">Delivery Unit:</label>
@@ -84,7 +84,7 @@
                                 <div class="form-group has-feedback">
                                     <label for="point_id">Point:</label>
                                     <select class="col-md-7 col-xs-12 select2_single" name="point_id" id="point_id" required>
-                                        
+
                                     </select>
                                 </div>
                                 <div class="form-group has-feedback">

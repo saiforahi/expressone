@@ -17,10 +17,11 @@
 
         <div id="mid">
             <div class="info">
+                
                 <p> Reciepient : {{ $shipment->name}} <br/>
-                    Merchant Name : {{ $shipment->user->first_name }} {{ $shipment->user->last_name }} <br>
-                    Email : {{ $shipment->user->email }} </br>
-                    Phone : {{ $shipment->user->phone }} </br>
+                    Merchant Name : {{ $shipment->merchant->first_name }} {{ $shipment->merchant->last_name }} <br>
+                    Email : {{ $shipment->merchant->email }} </br>
+                    Phone : {{ $shipment->merchant->phone }} </br>
                     Date : {{ date('F m, Y', strtotime($shipment->created_at)) }} <br>
                 </p>
             </div>

@@ -15,21 +15,23 @@ use App\Models\Courier;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', [App\Http\Controllers\Api\AuthController::class, 'user_details']);
+//Route::middleware('auth:sanctum')->get('/user', [App\Http\Controllers\Api\AuthController::class, 'user_details']);
+
 Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login']);
 Route::post('/register', [App\Http\Controllers\Api\AuthController::class, 'register']);
-Route::middleware('auth:sanctum')->get('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
+//Route::middleware('auth:sanctum')->get('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
 /*
 |--------------------------------------------------------------------------
 | courier Route
 |--------------------------------------------------------------------------
 */
-
-Route::group(['prefix' => 'v1'], function () {
-    Route::group(['prefix' => 'courier-app'], function () {
-        Route::get('shipments', [CourierManagement::class, 'shipments']);
-        Route::get('shipment-details/{merchant_id}/{shipment_status}', [CourierManagement::class, 'shipmentDetails']);
-        Route::get('receive-shipment/{id}', [CourierManagement::class, 'receiveShipment']);
-        Route::get('receive-all-parcel/{user}', [CourierManagement::class, 'receiveAllParcel']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::group(['prefix' => 'v1'], function () {
+        Route::group(['prefix' => 'courier-app'], function () {
+            Route::get('shipments', [CourierManagement::class, 'shipments']);
+            Route::get('shipment-details/{merchant_id}/{shipment_status}', [CourierManagement::class, 'shipmentDetails']);
+            Route::get('receive-shipment/{id}', [CourierManagement::class, 'receiveShipment']);
+            Route::get('receive-all-parcel/{user}', [CourierManagement::class, 'receiveAllParcel']);
+        });
     });
 });

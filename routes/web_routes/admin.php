@@ -7,7 +7,8 @@ use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\Admin\ShipmentController;
 use App\Http\Controllers\Admin\ShippingChargeController;
 use App\Http\Controllers\Admin\BasicInformationController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AdminController;
 /*
 |--------------------------------------------------------------------------
 | Admin Route
@@ -19,14 +20,14 @@ Route::post('admin/register', [App\Http\Controllers\Admin\AuthController::class,
 Route::post('admin/logout', [App\Http\Controllers\Admin\AuthController::class,'logout'])->name('admin.logout');
 
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 'Admin'], function () {
-    Route::get('/', [AdminDashboardController::class,'index'])->name('admin-dashboard');
+    Route::get('/', [DashboardController::class,'index'])->name('admin-dashboard');
     Route::get('/basic-information', [BasicInformationController::class,'index'])->name('basic-information');
     Route::post('/basic-information', [BasicInformationController::class,'update'])->name('basic-information.update');
     Route::post('/add-merchant-verify-message', [BasicInformationController::class,'addVerifyMsg'])->name('addVerifyMsg');
     Route::post('/update-verify-message/{id}', [BasicInformationController::class,'updateVerifyMsg'])->name('updateVerifyMsg');
 
-    Route::get('/admin-change-unit/{unit}', [AdminDashboardController::class,'admin_changes_unit'])->name('admin-change-unit');
-    Route::get('/get-admin-hub-ids/{admin}', 'DashboardController@get_admin_hub_ids')->name('get-admin-hub-ids');
+    Route::get('/admin-change-unit/{unit}', [DashboardController::class,'admin_changes_unit'])->name('admin-change-unit');
+    Route::get('/get-admin-hub-ids/{admin}', [DashboardController::class,'get_admin_hub_ids'])->name('get-admin-hub-ids');
     Route::get('/unit', [App\Http\Controllers\Admin\AreaController::class,'unit'])->name('unit');
     Route::post('/unit', [App\Http\Controllers\Admin\AreaController::class,'unit_store'])->name('unit.store');
     Route::get('/get-units', [App\Http\Controllers\Admin\AreaController::class,'get_units'])->name('AdminUnitsGet');
@@ -61,7 +62,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
     //Admin Courier route
     Route::get('courier', [DriverController::class,'index'])->name('allCourier');
-    Route::post('courier-delete/{id}', [DriverController::class,'courierDelete'])->name('courierDelete');
+    Route::delete('courier-delete/{id}', [DriverController::class,'courierDelete'])->name('courierDelete');
     Route::match(['get', 'post'], 'add-edit-courier/{id?}', [DriverController::class, 'addEditCourier'])->name('addEditCourier');
     Route::get('courier-shipments/{id}', [DriverController::class,'assigned_shipments'])->name('admin-driverShipments');
     //Shipping List
@@ -210,15 +211,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/view-merchant-handover/{user}', 'HoldShipmentController@merchant_handover_parcels')->name('merchant-handover-parcels');
     Route::get('/handover-to-merchant/{user}', 'HoldShipmentController@handover2merchant')->name('handover-to-merchant');
 
-    Route::get('/admin-list', 'AdminController@index')->name('admin-list');
-    Route::get('/admins', 'AdminController@admins')->name('admins');
-    Route::get('/admin/create', 'AdminController@create')->name('create-admin');
-    Route::post('/save-admin', 'AdminController@store')->name('save-admin');
-    Route::post('/update-admin', 'AdminController@update')->name('update-admin');
-    Route::get('/admin/delete/{admin}', 'AdminController@destroy')->name('destroy-admin');
-    Route::get('/admin/show', 'AdminController@show')->name('show-admin');
-    Route::get('/role-assign', 'AdminController@role_assign')->name('role-assign');
-    Route::post('/role-assign', 'AdminController@save_role_assign')->name('save-role-assign');
+    Route::get('admin-list', [AdminController::class,'index'])->name('admin-list');
+    Route::get('admins', [AdminController::class,'admins'])->name('admins');
+    Route::get('admin-create', [AdminController::class,'create'])->name('create-admin');
+    Route::post('save-admin', [AdminController::class,'store'])->name('save-admin');
+
+    Route::post('update-admin', [AdminController::class,'update'])->name('update-admin');
+    Route::get('admin-list', [AdminController::class,'index'])->name('admin-list');
+
+    Route::get('admin-delete/{admin}', [AdminController::class,'destroy'])->name('destroy-admin');
+    Route::get('admin-show', [AdminController::class,'show'])->name('show-admin');
+
+    Route::get('role-assign', [AdminController::class,'role_assign'])->name('role-assign');
+    Route::post('role-assign', [AdminController::class,'save_role_assign'])->name('save-role-assign');
     Route::get('/get-employee-roles/{admin}', 'AdminController@employee_roles')->name('get-roles');
 
     Route::get('/sliders', 'SliderController@index')->name('adminSlider');

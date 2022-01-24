@@ -32,7 +32,7 @@
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="main-card mb-3 card card-body">
-                <form id="upload_form" method="post" action="{{ route('merchant.addShipment') }}"> {{ csrf_field() }}
+                <form id="upload_form" method="post" action="{{ route('merchant.addShipment') }}"> @csrf
                     <h5 class="card-title">Customer Details:</h5>
                     <div class="form-row my-4">
                         <div class="col text-left">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use PDF;
 use App\Models\Hub;
 use App\Models\Area;
+use App\Models\Unit;
 use App\Models\User;
 use App\Models\Courier;
 use App\Models\Shipment;
@@ -56,7 +57,7 @@ class ShipmentController extends Controller
     }
     function new_shipment_detail(Shipment $shipment)
     {
-        $zone = Area::find($shipment->area_id);
+        $zone = Unit::find($shipment->unit_id);
         // $shipping = ShippingPrice::where('zone_id', $zone->zone_id)->where('delivery_type', $shipment->delivery_type)->first();
         // if ($shipping ==null) { dd('ShippingPrice missing');}
         // $weight = (float)$shipment->weight;
@@ -109,13 +110,13 @@ class ShipmentController extends Controller
     public function shipment_received()
     {
         $date = \Carbon\Carbon::today()->subDays(7);
-        $shipment = Shipment::cousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->whereBetween('shipments.logistic_status',[4,6])->select('shipments.merchant_id')->groupBy('shipments..merchant_id')->pluck('shipments.merchant_id')->toArray();
+        $shipment = Shipment::cousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->whereBetween('shipments.logistic_status',[4,6])->select('shipments.merchant_id')->groupBy('shipments.merchant_id')->pluck('shipments.merchant_id')->toArray();
         //dd($shipment);
         $users = User::where('unit_id', '!=', null)->whereIn('id', $shipment)->get();
         // if ($users->count() == 0) {
         //     echo '<script>alert("Merchant informatin may missing!!")</script>';
         // }
-        // dd($users);
+        //dd($users);
         return view('admin.shipment.shipment-receive', compact('users'));
     }
 

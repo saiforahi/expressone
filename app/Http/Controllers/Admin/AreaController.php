@@ -86,7 +86,8 @@ class AreaController extends Controller
 
     public function delete_point(Point $point)
     {
-        if (!auth()->guard('admin')->user()->hasRole(Role::where('name','super-admin')->first()->id)) return 0;
+
+        //if (!auth()->guard('admin')->user()->hasRole(Role::where('name','super-admin')->first()->id)) return 0;
         $locations = Location::where('point_id', $point->id)->count();
         if ($locations > 0) return 0;
         $point->delete();
@@ -148,6 +149,7 @@ class AreaController extends Controller
     public function unit_delete(Request $request)
     {
         $hub = Point::where('unit_id', $request->id)->count();
+        dd($hub);
         if ($hub > 0) {
             echo 'Foreign key integrated';
             return false;
@@ -176,7 +178,7 @@ class AreaController extends Controller
     {
         // dd($request)
         $this->validate($request, [
-            'point_id' => 'required|exists:points,id', 
+            'point_id' => 'required|exists:points,id',
             'name' => 'required|max:255|unique:locations,name',
         ]);
 

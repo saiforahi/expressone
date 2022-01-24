@@ -100,7 +100,7 @@
                     </div>
                     <div class="x_content">
                         <br>
-                        <form id="demo-form2" method="post" action="{{ route('merchant.store') }}" autocomplete="off" class="form-horizontal form-label-left input_mask"> {{ csrf_field() }}
+                        <form id="demo-form2" method="post" action="{{ route('merchant.store') }}" autocomplete="off" class="form-horizontal form-label-left input_mask"> @csrf
 
                             <div class="col-xs-12 form-group has-feedback">
                                 <label for="shop_name">Shop Name:</label>
@@ -168,7 +168,7 @@
                     </div>
                     <div class="x_content">
                         <br>
-                        <form id="demo-form2" method="post" class="form-horizontal form-label-left input_mask" action="/admin/add-parcelBy-admin"> {{ csrf_field() }}
+                        <form id="demo-form2" method="post" class="form-horizontal form-label-left input_mask" action="/admin/add-parcelBy-admin"> @csrf
                             <div class="row my-4">
                                 <div class="col-md-12 text-left">
                                     <label for="Merchant">Merchant selection</label>

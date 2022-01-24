@@ -60,14 +60,14 @@
                                             href="{{ route('thirdparty-shipments', $unit->id) }}">{{ $unit->name }}</a>
                                     </li>
                                 @endif
-                            @endforeach --}}
+                            @endforeach
                         </ul>
                     </li>
 
                     <li><a><i class="fa mdi mdi-cube-send"></i> Delivered Logistics <span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (checkAdminAccess('hold-shipments') != 0)
+                            {{-- @if (checkAdminAccess('hold-shipments') != 0)
                                 <li><a href="{{ route('hold-shipments', 'hold') }}">Hold-parcels</a></li>
                             @endif
 
@@ -84,11 +84,20 @@
                             @endif
                             {{-- <li><a href="{{route('return-agent-dispatch')}}">Agent Dispatch</a></li> --}}
 
-                            @if (checkAdminAccess('receive-from-hub') != 0)
+                            {{-- @if (checkAdminAccess('receive-from-hub') != 0)
                                 <li><a href="{{ route('receive-from-hub') }}">Receive From Hub</a></li>
                             @endif
 
                             @if (checkAdminAccess('hold-shipments') != 0)
+                                <li><a href="{{ route('hold-shipments', 'partial') }}">Partially delivered</a></li>
+                            @endif --}}
+                            @if (Auth::guard('admin')->user()->hasRole('super-admin'))
+                                <li><a href="{{ route('hold-shipments', 'hold') }}">Hold-parcels</a></li>
+                                <li><a href="{{ route('hold-shipments', 'return') }}">Return-parcels</a></li>
+                                <li><a href="{{ route('return-dispatch') }}">Dispatch</a></li>
+                                <li><a href="{{ route('merchant-handover') }}">Merchant Handover</a></li>
+                                <li><a href="{{ route('return-agent-dispatch') }}">Agent Dispatch</a></li>
+                                <li><a href="{{ route('receive-from-hub') }}">Receive From Hub</a></li>
                                 <li><a href="{{ route('hold-shipments', 'partial') }}">Partially delivered</a></li>
                             @endif
                         </ul>
@@ -105,10 +114,8 @@
                         <a><i class="fa mdi mdi-account"></i> Employee Manage<span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (checkAdminAccess('admin-list') != 0)
+                            @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                                 <li><a href="{{ route('admin-list') }}">Employee List</a></li>
-                            @endif
-                            @if (checkAdminAccess('role-assign') != 0)
                                 <li><a href="{{ route('role-assign') }}">Role Assign</a></li>
                             @endif
                         </ul>

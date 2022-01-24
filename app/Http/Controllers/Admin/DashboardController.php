@@ -39,7 +39,7 @@ class DashboardController extends Controller
 
     public function get_admin_hub_ids(Admin $admin)
     {
-        $hubs = \App\Admin_hub::where('admin_id',$admin->id)->get();
+        $hubs = Admin_Unit::where('admin_id',$admin->id)->get();
         $ids = array();
         foreach ($hubs as $key => $value) {
             $ids[] = $value->hub_id;

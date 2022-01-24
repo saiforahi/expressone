@@ -5334,7 +5334,6 @@ function init_echarts() {
 
 
 $(document).ready(function () {
-
     init_sparklines();
     init_flot_chart();
     init_sidebar();
