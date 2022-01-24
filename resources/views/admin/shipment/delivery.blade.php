@@ -20,7 +20,7 @@
                                     <thead>
                                     <tr class="headings selected">
                                         <th><input type="checkbox" id="checkall" onClick="checkAll();"/></th>
-                                        <th class="column-title">Parcel info</th>
+                                        <th class="column-title">Shipment info</th>
                                         <th class="column-title">Customer info</th>
                                         <th class="column-title">Payment</th>
                                         <th class="column-title">Delivery</th>
@@ -37,53 +37,49 @@
                                             <td style="width:25%">
                                                 Parcel ID: {{$shipment->id}}<br>
                                                 Invoice ID: {{$shipment->invoice_id}}<br>
-                                                Bulk
-                                                ID: <?php $bulk_id = \DB::table('hub_shipment_boxes')->whereRaw('FIND_IN_SET(?,shipment_ids)', [$shipment->id])->pluck('bulk_id')->first();echo $bulk_id; ?>
-                                                <br>
-                                                Shop ID: {{$shipment->user->shop_name}}<br>
+                                                Shop ID: {{$shipment->merchant->shop_name}}<br>
 
-                                                Resource Hub: {{$shipment->area->hub->name}}<br>
+                                                Resource Unit: {{$shipment->pickup_location->point->unit->name}}<br>
                                                 Delivry
-                                                Hub: <?php $hubInfo = \App\Hub_shipment::where('shipment_id', $shipment->id)->get();?>
-                                                @foreach($hubInfo as $hub) {{$hub->hub->name}} @endforeach
+                                                Unit: {{$shipment->delivery_location->point->unit->name}}
                                                 <br>
 
                                             </td>
                                             <td style="width:20%">
-                                                Name: {{$shipment->name}}<br>
-                                                Phone No: {{$shipment->phone}}<br>
-                                                Address: {{$shipment->address}}<br>
+                                                Name: {{$shipment->recipient['name']}}<br>
+                                                Phone No: {{$shipment->recipient['phone']}}<br>
+                                                Address: {{$shipment->recipient['address']}}<br>
                                             </td>
                                             <td style="width:10%">
                                                 Weight: {{$shipment->weight}} KG<br>
-                                                COD Amount: {{$shipment->cod_amount}}<br>
-                                                Delivery Charge: {{$shipment->delivery_charge}}<br>
-                                                @if($shipment->cod !=0)
+                                                COD Amount: {{$shipment->amount}}<br>
+                                                Delivery Charge: {{$shipment->payment_detail->delivery_charge}}<br>
+                                                @if($shipment->payment_detail->cod_amount !=0)
                                                     COD: Applied<br>
-                                                    COD value:{{$shipment->cod_amount}}% @endif
+                                                    COD value:{{$shipment->payment_detail->cod_amount}}% @endif
 
-                                                @if(($shipment->cod_amount - $shipment->delivery_charge) <0) Pay by merchant @else Pay by Customer @endif
+                                                @if(($shipment->payment_detail->cod_amount - $shipment->delivery_charge) <0) Pay by merchant @else Pay by Customer @endif
                                             </td>
                                             <td>
-                                                @if($shipment->shipping_status>5)
-                                                    <?php $driver_id = \DB::table('driver_hub_shipment_box')->where('shipment_id', $shipment->id)->pluck('driver_id')->first();
-                                                    $dName = \DB::table('drivers')->where('id', $driver_id)->select('first_name', 'last_name')->first(); ?>
+                                                {{-- @if($shipment->shipping_status>5)
+                                                    <?php $courier_id = \DB::table('driver_hub_shipment_box')->where('shipment_id', $shipment->id)->pluck('courier_id')->first();
+                                                    $dName = \DB::table('drivers')->where('id', $courier_id)->select('first_name', 'last_name')->first(); ?>
 
                                                     @if($dName !=null) Delivery by <b
                                                         class="label label-info">{{$dName->first_name.' '.$dName->last_name}}</b>
                                                     <br> @endif
                                                 @endif
 
-                                                <?php $driver_id = \DB::table('driver_shipment')->where('shipment_id', $shipment->id)->pluck('driver_id')->first();?>
-                                                @if($driver_id !=null)
-                                                    <?php $dName = \DB::table('drivers')->where('id', $driver_id)->select('first_name', 'last_name')->first(); echo $driver_id;?>
+                                                <?php $courier_id = \DB::table('driver_shipment')->where('shipment_id', $shipment->id)->pluck('courier_id')->first();?>
+                                                @if($courier_id !=null)
+                                                    <?php $dName = \DB::table('drivers')->where('id', $courier_id)->select('first_name', 'last_name')->first(); echo $courier_id;?>
                                                     Picked up by: <b
                                                         class="label label-info">{{$dName->first_name.' '.$dName->last_name}}</b>
                                                 @else
                                                     <?php $dName = \DB::table('admins')->where('id', Auth::guard('admin')->user()->id)->select('first_name', 'last_name')->first();?>
                                                     @if($dName !=null) Picked up by: <b
                                                         class="label label-info">{{$dName->first_name.' '.$dName->last_name}}</b> @endif
-                                                @endif
+                                                @endif --}}
                                             </td>
                                             <td class="">Created
                                                 at: {{date('M d, y H:i:s',strtotime($shipment->created_at))}}<br>
@@ -147,7 +143,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">driver note at delivery time</h4>
+                <h4 class="modal-title">Courier note at delivery time</h4>
             </div>
             <div class="modal-body"><textarea class="deliveryNote form-control">Working...</textarea></div>
         </div>
@@ -266,10 +262,10 @@
             });
         }
 
-        function get_driver_shipment(driver_id) {
+        function get_driver_shipment(courier_id) {
             $('.delivery-result').html('<p class="text-center text-warning">Loading...</p>');
             $.ajax({
-                type: "get", url: '<?php echo '/admin/get-driver-shipment/';?>' + driver_id,
+                type: "get", url: '<?php echo '/admin/get-driver-shipment/';?>' + courier_id,
                 success: function (data) {
                     $('.delivery-result').html(data);
                 }
@@ -319,13 +315,13 @@
 
         function get_driver() {
             let url = window.location.href;
-            let driver_id = $('[name=driver_id]').val();
+            let courier_id = $('[name=courier_id]').val();
             url = new URL(url);
-            if (window.location.href.indexOf("driver_id") > -1) {
-                url.searchParams.set('driver_id', driver_id);
+            if (window.location.href.indexOf("courier_id") > -1) {
+                url.searchParams.set('courier_id', courier_id);
                 window.location.replace(url.href);
             } else {
-                url.searchParams.append('driver_id', driver_id);
+                url.searchParams.append('courier_id', courier_id);
                 window.location.replace(url.href);
             }
         }

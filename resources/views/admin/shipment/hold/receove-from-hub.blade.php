@@ -12,16 +12,16 @@
                             <th>Parcel info</th>
                             <th>Merchant</th>
                             <th>Amount</th>
-                        </tr>     
-                    </thead>  
-                    <tbody>   
+                        </tr>
+                    </thead>
+                    <tbody>
                         @foreach($boxes as $key=>$box)
                             @foreach(explode(',',$box->shipment_ids) as $shipment_id)
-                            <?php $shipment = \App\Shipment::where('id',$shipment_id)->first(); ?>
+                            <?php $shipment = \App\Models\Shipment::where('id',$shipment_id)->first(); ?>
                                 <tr>
                                     <td>Name: {{$shipment->name}} <br>
                                         Phone: {{$shipment->phone}} <br>
-                                        Address: {{$shipment->address}} 
+                                        Address: {{$shipment->address}}
                                     </td>
                                     <td>Invoice ID: {{$shipment->invoice_id}} <br>
                                         Area: {{$shipment->area->name}} (Hub: {{hub_from_area($shipment->area_id)->name}})<br>
@@ -29,7 +29,7 @@
                                         Delivery type: @if($shipment->delivery_type=='1') Regular @else Express @endif delivery
                                     </td>
                                     <td>{{$shipment->user->first_name}} {{$shipment->user->last_name}}</td>
-                                    <td> @if(($shipment->cod_amount-$shipment->delivery_charge) <=0) Pay by merchant @else Pay by customer @endif 
+                                    <td> @if(($shipment->cod_amount-$shipment->delivery_charge) <=0) Pay by merchant @else Pay by customer @endif
                                         ({{$shipment->cod_amount}}) <br>
                                         Status: {{$box->status}}
                                     </td>

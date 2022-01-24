@@ -1,20 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Blog;
-use Session; use Auth;
-use DataTables;
 use Validator;
-use Illuminate\Support\Facades\Hash;
-//use this library for uploading image
+use App\Models\Blog;
+use Session; use Auth;
+use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+//use this library for uploading image
+use Illuminate\Support\Facades\Hash;
 //user this intervention image library to resize/crop image
-use Intervention\Image\Facades\Image;
-// import the Intervention Image Manager Class
 use Intervention\Image\ImageManager;
+// import the Intervention Image Manager Class
+use Intervention\Image\Facades\Image;
+use Yajra\DataTables\Facades\DataTables;
 
 class BlogController extends Controller
 {
@@ -80,7 +81,7 @@ class BlogController extends Controller
         }
 
         $data = [
-            'admin_id'=>Auth::guard('admin')->user()->id,
+            'admin_id'=> Auth::guard('admin')->user()->id,
             'blog_category_id'=>$request->blog_category_id,
             'title'=>$request->title,
             'description'=>$request->description,

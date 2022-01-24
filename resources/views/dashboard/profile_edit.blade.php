@@ -44,8 +44,8 @@
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="main-card mb-3 card">
                 <div class="card-body">
-                    <form method="post" action="{{ route('ProfileUpdate') }}" enctype="multipart/form-data">
-                        {{ csrf_field() }}
+                    <form method="post" action="{{ route('profileUpdate') }}">
+                        @csrf
                         <input type="hidden" name="id" value="{{ Auth::guard('user')->user()->id }}">
                         <div class="row justify-content-center mb-4">
                             <div class="col-md-3 col-12" onclick="chooseFile()" style="cursor: pointer">
@@ -79,18 +79,19 @@
                                         class="form-control">
                                 </div>
                             </div>
+
                             <div class="col-md-4">
                                 <div class="position-relative form-group">
-                                    <label for="national_id" class="">NID</label>
-                                    <input name="national_id" value="{{ Auth::guard('user')->user()->national_id }}"
-                                        type="number" class="form-control" required placeholder="Enter NID No" readonly>
+                                    <label>NID</label>
+                                    <input name="nid_no" value="{{ Auth::guard('user')->user()->nid_no }}" type="number"
+                                        class="form-control" placeholder="Enter bin no" readonly>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="position-relative form-group">
-                                    <label for="national_id" class="">BIN</label>
+                                    <label>BIN</label>
                                     <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="number"
-                                        class="form-control" required placeholder="Enter bin no" readonly>
+                                        class="form-control" placeholder="Enter bin no" readonly>
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -131,11 +132,11 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="position-relative form-group">
-                                    <label for="shop_name" class="">Area belongs To</label>
-                                    <select class="form-control select2" name="area_id" required="">
+                                    <label>Area belongs To</label>
+                                    <select class="form-control select2" name="unit_id" required="">
                                         <option value="">Select Area</option>
                                         @foreach ($areas as $area)
-                                            <option @if ($area->id == Auth::guard('user')->user()->area_id) selected @endif value="{{ $area->id }}">{{ $area->name }}</option> @endforeach </select>
+                                            <option @if ($area->id == Auth::guard('user')->user()->unit_id) selected @endif value="{{ $area->id }}">{{ $area->name }}</option> @endforeach </select>
                                 </div>
                             </div>
 
@@ -164,13 +165,13 @@
     </div>
 @endsection
 @push('style')
-    <link href="{{ asset('_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/select2.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/bootstrap4-select2.css') }}">
+    <link href="{{ asset('ass_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('ass_vendors/select2/dist/css/bootstrap4-select2.css') }}">
 @endpush
 @push('script')
-    <script src="{{ asset('_vendors/sweetalert/sweetalert.js') }}"></script>
-    <script src="{{ asset('_vendors/select2/dist/js/select2.min.js') }}"></script>
+    <script src="{{ asset('ass_vendors/sweetalert/sweetalert.js') }}"></script>
+    <script src="{{ asset('ass_vendors/select2/dist/js/select2.min.js') }}"></script>
     <script type="text/javascript">
         $('.select2').select2({
             theme: "bootstrap",

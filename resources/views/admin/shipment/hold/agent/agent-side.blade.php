@@ -1,7 +1,7 @@
 <?php $num = 0;  ?>
 @foreach($boxes as $key=>$box)
   @foreach(explode(',',$box->shipment_ids) as $shipment_id)
-  <?php $shipment = \App\Shipment::where('id',$shipment_id)->first();?>
+  <?php $shipment = \App\Models\Shipment::where('id',$shipment_id)->first();?>
   @if(is_return_avail_agentSide($box->id,$shipment->id) ==0)
     <!-- {{$box->id}},  {{$shipment->id}}  <br> -->
     <table class="table table-xs" id="{{$shipment->id}}">

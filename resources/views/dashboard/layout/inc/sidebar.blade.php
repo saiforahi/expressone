@@ -35,7 +35,7 @@
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu">
                 <li>
-                    <a href="{{route('user.dashboard')}}" class="{{ (request()->is('dashboard')) ? 'mm-active' : '' }}">
+                    <a href="{{route('merchant.dashboard')}}" class="{{ (request()->is('dashboard')) ? 'mm-active' : '' }}">
                         <i class="metismenu-icon fa fa-tachometer"></i>
                         Merchant Dashboard
                     </a>
@@ -52,12 +52,12 @@
                         My Account
                     </a>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="{{ route('merhcant_shipments') }}" class="{{ (request()->is('prepare-shipment')) ? 'mm-active' : '' }}">
                         <i class="metismenu-icon fa fa-location-arrow" aria-hidden="true"></i>
                         Prepare Shipment
                     </a>
-                </li>
+                </li> --}}
                 <li>
                     <a href="{{route('payments')}}" class="{{ (request()->is('payments')) ? 'mm-active' : '' }}">
                         <i class="metismenu-icon fa fa-money" aria-hidden="true"></i>

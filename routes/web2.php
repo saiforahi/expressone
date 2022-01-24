@@ -48,7 +48,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/get-zone-single', 'AreaController@zoneGetSingle')->name('zone.single');
 
     Route::get('/hub', 'AreaController@index')->name('hub');
-    Route::post('/hub', 'AreaController@hubStore')->name('hub.store');
+    Route::post('/hub', 'AreaController@hubStore')->name('point.store');
     Route::get('/get-hub', 'AreaController@hubGet')->name('AdminHubGet');
     Route::post('/hub-update', 'AreaController@hubUpdate')->name('hub.update');
     Route::post('/hub-delete', 'AreaController@hubDelete')->name('hub.delete');
@@ -85,9 +85,9 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::post('/add-parcelBy-admin', 'ShipmentController@add_parcel')->name('add-parcelBy-admin');
 
 
-    Route::get('/assign-to-hub/{user_id}/{status}/{shipping_status}', 'ShipmentController@assignToHub')->name('AdminShipmentReceive');
-    Route::get('/receiving-parcels/{user_id}/{status?}/{shipping_status?}', 'ShipmentController@receving_parcels')->name('receiving-parcels');
-    Route::get('/get-hub-csv-files/{user_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
+    Route::get('/assign-to-hub/{merchant_id}/{status}/{shipping_status}', 'ShipmentController@assignToHub')->name('AdminShipmentReceive');
+    Route::get('/receiving-parcels/{merchant_id}/{status?}/{shipping_status?}', 'ShipmentController@receving_parcels')->name('receiving-parcels');
+    Route::get('/get-hub-csv-files/{merchant_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
 
     Route::get('/move-to-hub', 'ShipmentController@MoveToHub')->name('ShipmentToHub');
     Route::get('/move2hub-withPhone', 'ShipmentController@MoveToHubWithPhone')->name('move2hub-withPhone');
@@ -354,13 +354,13 @@ Route::post('/logout', 'AuthController@logout')->name('logout');
 
 Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 
-    Route::get('/dashboard', 'DashboardController@index')->name('user.dashboard');
-    Route::get('/shipment-info/{shipment}', 'ShipmentController@show')->name('single.shipment');
+    Route::get('/dashboard', 'DashboardController@index')->name('merchant.dashboard');
+    Route::get('/shipment-details/{shipment}', 'ShipmentController@show')->name('shipmentDetails');
     Route::get('/shipment-pdf/{shipment}', 'ShipmentController@shipment_pdf')->name('pdf.shipment');
 
     Route::get('/profile', 'DashboardController@profile')->name('profile');
     Route::get('/profile-edit', 'DashboardController@ProfileEdit')->name('ProfileEdit');
-    Route::post('/profile-update', 'DashboardController@ProfileUpdate')->name('ProfileUpdate');
+    Route::post('/profile-update', 'DashboardController@profileUpdate')->name('profileUpdate');
 
 
     Route::get('/account', 'DashboardController@account')->name('account');
@@ -369,7 +369,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 
     Route::get('/prepare-shipment', 'ShipmentController@index')->name('PrepareShipment');
     Route::post('/check-rate-merchant', 'ShipmentController@rateCheck')->name('merchant.rate.check');
-    Route::post('prepare-shipment-submit', 'ShipmentController@PrepareShipmentSubmit')->name('PrepareShipmentSubmit');
+    Route::post('prepare-shipment-submit', 'ShipmentController@merchant.saveShipment')->name('merchant.saveShipment');
     Route::get('/edit-shipment/{shipment}', 'ShipmentController@edit')->name('editShipment');
     Route::post('/edit-shipment/{shipment}', 'ShipmentController@update')->name('updateShipment');
 
@@ -386,17 +386,17 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'User'], function () {
 });
 
 
-Route::get('driver/login', 'driver\AuthController@index');
-Route::post('driver/login', 'driver\AuthController@login')->name('driver.login');
-Route::post('driver/register', 'driver\AuthController@store')->name('driver.register');
-Route::post('driver/logout', 'driver\AuthController@logout')->name('driver.logout');
+Route::get('driver/login', 'Courier\AuthController@index');
+Route::post('driver/login', 'Courier\AuthController@login')->name('driver.login');
+Route::post('driver/register', 'Courier\AuthController@store')->name('driver.register');
+Route::post('driver/logout', 'Courier\AuthController@logout')->name('courier.logout');
 
-Route::group(['middleware' => 'auth:driver', 'namespace' => 'driver', 'prefix' => 'driver'], function () {
+Route::group(['middleware' => 'auth:driver', 'namespace' => 'Courier', 'prefix' => 'driver'], function () {
     Route::get('/', 'DashboardController@index')->name('driver.dashboard');
     Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-driver-shipments');
     Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-driver-shipments');
 
-    Route::get('/shipments', 'ShipmentController@index')->name('driverShipments.index');
+    Route::get('/shipments', 'ShipmentController@index')->name('courierShipments');
     Route::get('/my-shipments/{type}', 'ShipmentController@my_shipments')->name('my-shipments');
     Route::get('/shipping-details/{id}/{status}', 'ShipmentController@show')->name('shipping-details');
 
@@ -408,7 +408,7 @@ Route::group(['middleware' => 'auth:driver', 'namespace' => 'driver', 'prefix' =
 
     Route::get('/my-parcels/{type}', 'ShipmentController@my_parcels')->name('my-parcel');
     Route::get('/agent-dispatch', 'ShipmentController@agent_dispatch')->name('box-for-delivery');
-    Route::get('/shipment-info/{shipment}', 'ShipmentController@shipment_info')->name('shipment-info');
+    Route::get('/shipment-details/{shipment}', 'ShipmentController@shipment_info')->name('shipment-details');
     Route::post('/shipment-delivery', 'ShipmentController@delivery_report')->name('shipment-delivery');
 
     Route::get('/return-agent-dispatch', 'ShipmentController@return_agent_dispatch')->name('return-box-for-delivery');

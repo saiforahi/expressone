@@ -15,10 +15,10 @@ class CreateUserVerificationsTable extends Migration
     {
         Schema::create('user_verifications', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('merchant_id');
             $table->string('verification_code');
             $table->enum('status',['waiting','verified'])->default('waiting');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('merchant_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

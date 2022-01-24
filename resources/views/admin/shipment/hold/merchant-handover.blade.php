@@ -12,19 +12,19 @@
                         <table id="datatable-buttons" class="table table-striped table-bordered dataTable no-footer dtr-inline">
                             <thead>
                             <tr class="bg-dark">
-                            <th>Image</th><th>Info</th> 
+                            <th>Image</th><th>Info</th>
                                 <th>Contact</th><th>Parcel/s</th><th>Area</th><th>Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             @foreach($user as $users)
-                                <?php $checkShipment = \DB::table('shipments')->select('id')->where(['user_id'=>$users->id,'status'=>'1','shipping_status'=>'on-8'])->get();
+                                <?php $checkShipment = \DB::table('shipments')->select('id')->where(['merchant_id'=>$users->id,'status'=>'1','shipping_status'=>'on-8'])->get();
                                 $status = '1'; $shipping_status = '2';
                                 if(Session::has('admin_hub'))
                                 $hubID  = Session::get('admin_hub')->id;
                                 else $hubID = 0;
                                 ?>
-                                
+
                                 <tr>
                                     <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid" src="{{$users->image == null? asset('images/user.png'):asset('storage/user/'.$users->image)}}"></th>
                                     <th scope="row">Name: {{$users['first_name']}} {{$users['last_name']}}<br>
@@ -38,21 +38,21 @@
                                         <span class="btn btn-success">
                                             @if($checkShipment->count() >
                                             0){{$checkShipment->count()}} Parcels
-                                        @else {{$checkShipment->count()}} Parcel @endif</span>  
+                                        @else {{$checkShipment->count()}} Parcel @endif</span>
                                     </th>
                                     <th class="text-info">
                                         <i class="fa fa-angle-right"></i> Hub: {{$users->area->hub->name}}
-                                        <br><i class="fa fa-angle-right"></i> 
+                                        <br><i class="fa fa-angle-right"></i>
                                     Area: {{$users->area->name}}
                                     </th>
                                     <th class="text-right">
-                                        {{-- <a href="/admin/view-merchant-handover/{{$users->id}}" 
+                                        {{-- <a href="/admin/view-merchant-handover/{{$users->id}}"
                                             class="btn btn-success btn-sm"> <i class="fa fa-search"></i> View</a> --}}
-                                            <a href="/admin/handover-to-merchant/{{$users->id}}" 
+                                            <a href="/admin/handover-to-merchant/{{$users->id}}"
                                                 class="btn btn-success btn-sm"> <i class="fa fa-exchange"></i> Handover</a>
                                         </th>
                                 </tr>
-                             
+
                             @endforeach
                             </tbody>
                         </table>
@@ -61,7 +61,7 @@
                 </div>
             </div>
         </div>
-  
+
     </div>
   </div>
 @endsection
@@ -95,7 +95,7 @@
  <script src="{{asset('vendors/pdfmake/build/vfs_fonts.js')}}"></script>
   <script>
     $(function(){
-     
+
     })
 </script>
 @endpush

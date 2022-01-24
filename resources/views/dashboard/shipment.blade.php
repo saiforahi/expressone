@@ -32,7 +32,7 @@
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="main-card mb-3 card card-body">
-                <form id="upload_form" method="post" action="{{ route('PrepareShipmentSubmit') }}"> {{ csrf_field() }}
+                <form id="upload_form" method="post" action="{{ route('merchant.saveShipment') }}"> {{ csrf_field() }}
                     <h5 class="card-title">Customer Details:</h5>
                     <div class="form-row my-4">
                         <div class="col text-left">
@@ -219,7 +219,7 @@
         //             showCancelButton: true
         //         }, function () {
         //             $.ajax({
-        //                 url: "{{ route('PrepareShipmentSubmit') }}",
+        //                 url: "{{ route('merchant.saveShipment') }}",
         //                 type: 'post',
         //                 processData: false,
         //                 contentType: false,
@@ -256,7 +256,7 @@
         //                             confirmButtonText: 'Ok'
         //                         })
         //                     } else {
-        //                         var url = '{{ route('user.dashboard') }}';
+        //                         var url = '{{ route('merchant.dashboard') }}';
         //                         window.location.href = url;
         //                     }
         //                 }

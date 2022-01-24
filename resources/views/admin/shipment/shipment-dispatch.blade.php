@@ -1,10 +1,10 @@
 @extends('admin.layout.app')
-@section('title','Shipment hub List')
+@section('title','In-transit Shipment List')
 @section('content')
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
-                <div class="title_left"><h3>Dispatch Shipment List
+                <div class="title_left"><h3>In Transit Shipment List
                 </h3></div>
             </div>
             <div class="clearfix"></div>
@@ -17,16 +17,16 @@
                             <table id="datatable-buttons" class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>
                                 <tr class="bg-dark">
-                                   <th>#</th><th>Hub info</th>  <th>Parcel/s</th><th>Action</th>
+                                   <th>#</th><th>Unit info</th>  <th>Parcel/s</th><th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($hubs as $key=>$hub)
+                                @foreach($units as $key=>$unit)
                                 <tr>
                                 	<td>{{$key+1}}</td>
-                                	<td>{{$hub->name}}</td>
-                                	<td>{{hubAt_hub_shipment_box($hub->id)}}  hubs</td>
-                                	<td class="text-right"><a class="btn btn-sm btn-primary" href="/admin/dispatch/view/{{$hub->id}}"><i class="fa fa-search"></i> More Details</a></td>
+                                	<td>{{$unit->name}}</td>
+                                	<td> </td>
+                                	<td class="text-right"><a class="btn btn-sm btn-primary" href="/admin/dispatch/view/{{$unit->id}}"><i class="fa fa-search"></i>More Details</a></td>
                                 </tr>
                                 @endforeach
                                 </tbody>

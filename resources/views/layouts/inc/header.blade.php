@@ -92,7 +92,7 @@
                         </ul>
                     </div>
                 </div>
-                @if (!Auth::guard('user')->check())
+                @if (!Auth::check())
                     <div class="col-md-1 col-sm-1 text-right hidden-xs white-clr">
                         <a href="{{ route('login') }}" class="sign-in fs-12"
                             style="background-color: #EB058D;border-radius: 10px"> sign in </a>
@@ -103,8 +103,8 @@
                     </div>
                 @else
                     <div class="col-md-3 col-sm-3 text-right hidden-xs white-clr">
-                        <a href="{{ route('user.dashboard') }}" class="sign-in fs-12 black-bg"
-                            style="background-color: #EB058D;border-radius: 10px"> Merchant Dashboard </a>
+                        <a href="{{ route('merchant.dashboard') }}" class="sign-in fs-12 black-bg"
+                            style="background-color: #504f50;border-radius: 10px"> Merchant Dashboard </a>
                     </div>
                 @endif
 

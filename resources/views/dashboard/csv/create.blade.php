@@ -20,7 +20,7 @@
             
             <div class="form-row">
                 <div class="col-md-12">
-                     <a class="pull-right btn btn-success" href="/merchant-upload-sample.csv" download=""><i class="fa fa-download"></i> Download sample file </a> 
+                     <a class="pull-right btn btn-success" href="/sample-shipment-upload.csv" download=""><i class="fa fa-download"></i> Download sample file </a> 
                 </div>
                 <div class="col-md-8 text-left">
                     <label for="name">Choose CSV-file</label>

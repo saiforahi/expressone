@@ -26,7 +26,7 @@
                 <div class="page-title">
                     <h3>
                         Merchant Shipment List
-                        @if ($shipments->count() > 0 && Request::segment(6) == '0')
+                        @if ($shipments->count() > 0 && $shipments->whereBetween('logistic_status', [1,2])->count() == 0)
                             <a data-target="#assignShipment" data-toggle="modal" data-id="all" href="#"
                                 class="btn btn-primary assign pull-right">Assign all parcels to a Rider</a>
                         @endif
@@ -49,56 +49,70 @@
                                         <!-- <input id="checkAll" type="checkbox" name="checkAll"> -->
                                     </th>
                                     <th>Customer Info</th>
-                                    <th>Area</th>
                                     <th>Delivery Type</th>
-                                    <th>Assign</th>
+                                    <th>Delivery Location</th>
+                                    <th>Courier</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($shipments as $key => $shipment)
-                                    <tr shipment_id={{ $shipment->id }}>
+                                    <tr id={{ $shipment->id }}>
                                         <th scope="row">
-                                            {{-- <input style="display:none" type="checkbox" id="ids" name="ids[]"
-                                                value="{{ $shipment->id }}"> --}}
+                                            <input style="display:none" class="hidden-checkbox" type="checkbox" id="ids"
+                                                name="ids[]" value="{{ $shipment->id }}">
                                             {{ $key + 1 }}
                                         </th>
-                                        <th scope="row">Name: {{ $shipment->name }} <br>Price:
-                                            {{ $shipment->cod_amount }}
-                                        </th>
-
-                                        <th scope="row"><i class="fa fa-phone"></i> {{ $shipment->phone }}<br>
-                                            <i class="fa fa-map-marker"></i> {{ $shipment->address }}<br>
+                                        <th scope="row">Name: {{ $shipment['recipient']['name'] }}<br>Phone:
+                                            {{ $shipment->recipient['phone'] }}<br>Address:
+                                            {{ $shipment['recipient']['address'] }}<br>
                                         </th>
                                         <th scope="row">
 
-                                            @if ($shipment->shipping_charge_id == 1)
-                                                Regular
+                                            @if ($shipment->service_type == 1)
+                                                Priority
                                             @else
                                                 Express
                                             @endif
                                         </th>
-                                        <th class="text-right">
-                                            <button type="button" class="btn btn-primary btn-xs assign" data-toggle="modal"
-                                                data-target="#assignShipment" data-id="{{ $shipment->id }}">to driver <i
-                                                    class="fa fa-truck"></i></button>
-                                        </th>
-                                        <th scope="row">
-                                            @if ($shipment->status == '1' && $shipment->shipping_status < 2)
-                                                <a onClick="return confirm('Are you sure to Delete the shipment');"
-                                                    href="/admin/delete-shipment/{{ $shipment->id }}"
-                                                    class="btn-xs btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
-                                                <a data-id="{{ $shipment->id }}" data-toggle="modal"
-                                                    data-target="#cancelNote" href="#"
-                                                    class="btn-xs btn btn-warning cancel"><i class="fa fa-times"></i>
-                                                    Cancel</a>
-                                            @elseif($shipment->status=='2')
-                                                cancelled
+                                        <th>
+                                            @if ($shipment->delivery_location != null)
+                                                {{ $shipment->delivery_location->name }}
+                                            @else
+                                                <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
+                                                    data-target="#delivery_location_modal" class="btn-xs btn btn-warning"><i
+                                                        class="fas fa-dollar-sign"></i>Set Delivery Location</a>
                                             @endif
                                         </th>
+                                        <th class="text-left">
+                                            @if (\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->exists())
+                                                Courier : {{\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->first()->courier->first_name}}<br>(Employee ID: {{\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->first()->courier->employee_id}})
+                                            @else
+                                                <button type="button" class="btn btn-primary btn-xs assign"
+                                                    data-toggle="modal" data-target="#assignShipment"
+                                                    data-id="{{ $shipment->id }}">to Courier <i
+                                                        class="fa fa-truck"></i></button>
+                                            @endif
+
+                                        </th>
+                                        <th scope="row text-align-right">
+                                            {{-- @if ($shipment->status == '1' && $shipment->shipping_status < 2) --}}
+                                            <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
+                                                data-target="#shipping_price_modal" class="btn-xs btn btn-danger"><i
+                                                    class="fas fa-dollar-sign"></i>Set Shipping Price</a>
+                                            <a onClick="return confirm('Are you sure to Delete the shipment');"
+                                                href="/admin/delete-shipment/{{ $shipment->id }}"
+                                                class="btn-xs btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                            <a data-id="{{ $shipment->id }}" data-toggle="modal"
+                                                data-target="#cancelNote" href="#" class="btn-xs btn btn-warning cancel"><i
+                                                    class="fa fa-times"></i>
+                                                Cancel</a>
+                                            {{-- @elseif($shipment->status == '2')
+                                                cancelled
+                                            @endif --}}
+                                        </th>
                                     </tr>
-                                    {{-- Assign to driver modal --}}
-                                    <!-- Modal to assign to driver -->
+                                    <!-- Modal to assign to courier -->
                                     <div id="assignShipment" class="modal fade" role="dialog">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -110,7 +124,7 @@
                                                 <div class="modal-body">
                                                     <form method="post">
                                                         @csrf
-                                                        @include('admin.shipment.includes.shipment-assign-driver-form')
+                                                        @include('admin.shipment.includes.shipment-assign-courier-form')
                                                         <input type="hidden" name="shipment_id"
                                                             value="{{ $shipment->id }}" id="shipment_id"><br>
                                                         <button type="submit" class="pull-right btn btn-info btn-sm"> <i
@@ -122,8 +136,7 @@
 
                                         </div>
                                     </div>
-                                    {{-- Assign to driver modal --}}
-
+                                    <!-- Modal to assign to courier -->
                                 @endforeach
                             </tbody>
                         </table>
@@ -132,6 +145,7 @@
             </div>
         </div>
     </div>
+
 
     <!-- Modal cancelling note-->
     <div class="modal fade" id="cancelNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -153,6 +167,60 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Cancel the Shipment</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- shipping price set modal-->
+    <div class="modal fade" id="shipping_price_modal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form id="cancelForm" class="modal-content">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Set Shipping Price
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <label>Price</label>
+                    <textarea required class="form-control" rows="3" name="note"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Delivery location select modal-->
+    <div class="modal fade" id="delivery_location_modal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form id="cancelForm" class="modal-content">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Set Delivery Location
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </h5>
+                </div>
+                <div class="modal-body">
+                    <label>Delivery Location</label>
+                    <?php $locations = \App\Models\Location::all(); ?>
+                    <select class="form-control">
+                        @foreach ($locations as $location)
+                            <option value="{{ $location->id }}">{{ $location->name }}</option>
+                        @endforeach
+
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
         </div>
@@ -193,7 +261,7 @@
                 let id = $(this).data('id');
                 $('#shipment_id').val(id);
                 if (id == 'all') {
-                    var searchIDs = $("#datatable-buttons input:checkbox").map(function() {
+                    var searchIDs = $("input.hidden-checkbox:checkbox").map(function() {
                         return $(this).val();
                     }).toArray();
                     $('#shipment_id').val(searchIDs);

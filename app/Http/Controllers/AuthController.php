@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use Exception;
 use App\Models\User;
 use App\Models\CmsPage;
 use Illuminate\Http\Request;
@@ -28,7 +30,7 @@ class AuthController extends Controller
         if (Auth::guard('user')->check()) {
             return Redirect('/dashboard');
         }
-        return view('auth.register');
+        return view('user.auth.register');
     }
 
     public function registerStore(Request $request)
@@ -38,25 +40,28 @@ class AuthController extends Controller
             'last_name' => 'required|max:50',
             'email' => 'required|email|max:100|unique:users,email',
             'phone' => 'required|max:15',
+            'shop_name' => 'required|min:5',
             'password' => 'required|max:20|min:8|confirmed',
+            'nid_no' => 'numeric|min:10'
         ]);
-
-        $user = User::create([
-            'user_id' => 'UR' . rand(100, 999) . time(),
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'shop_name' => $request->shop_name,
-            'address' => $request->address,
-            'password' => Hash::make($request->password),
-        ]);
-        return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to be verified');
-        // // Auth::guard('user')->login($user);
-        // Session::put('verification_email', $request->email);
-        // // dd(Session::get('verification_email'));
-        // $this->send_verification_code();
-        // return redirect('/verify');
+        try {
+            $merchant = new User();
+            $merchant->first_name = $request->first_name;
+            $merchant->last_name = $request->last_name;
+            $merchant->ip = $request->ip;
+            $merchant->email = $request->email;
+            $merchant->phone = $request->phone;
+            $merchant->shop_name = $request->shop_name;
+            $merchant->address = $request->address;
+            $merchant->nid_no = $request->nid_no;
+            $merchant->bin_no = $request->bin_no;
+            $merchant->password = Hash::make($request->password);
+            $merchant->save();
+            return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
+        } catch (\Throwable $th) {
+            dd($th);
+            return redirect()->back()->with('error', 'Something went wrong, please try again later..');
+        }
     }
 
     public function login(Request $request)
@@ -67,15 +72,16 @@ class AuthController extends Controller
         ]);
         if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
             if (Auth::guard('user')->user()->is_verified == 1) {
-                return redirect()->intended('/dashboard');
+                return redirect()->route('merchant.dashboard');
             } else {
                 return redirect()->route('verify-user');
-                dd('check email');
             }
         }
         $request->session()->flash('login_error', 'Wrong information or this account not login.');
         return back()->withInput($request->only('email', 'remember'));
     }
+
+
 
     public function verify()
     {
@@ -99,7 +105,7 @@ class AuthController extends Controller
         if ($check == null) {
             return back()->with('message', 'Verification code does not match!');
         } else {
-            $userinfo = User::where('id', $check->user_id)->update(['is_verified' => '1']);
+            $userinfo = User::where('id', $check->merchant_id)->update(['is_verified' => '1']);
             $userinfo = User_verification::where('id', $check->id)
                 ->update(['status' => 'verified']);
         }
@@ -112,11 +118,12 @@ class AuthController extends Controller
     public function send_verification_code()
     {
         // dd(Session::get('verification_email'));
-        $subject = 'Verification code | ' .basic_information()->company_name;
+        $subject = 'Verification code | ' . basic_information()->company_name;
+
         $code = rand();
         $user = User::where('email', Session::get('verification_email'))->first();
         $add = User_verification::create([
-            'user_id' => $user->id, 'verification_code' => $code,
+            'merchant_id' => $user->id, 'verification_code' => $code,
         ]);
 
         $this->get_config($subject);

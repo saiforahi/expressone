@@ -33,11 +33,11 @@
             </table>
         </div>
     </div>
-    
+
     <?php $total_price = array();?>
     <table style="margin-bottom:2em"></table>
         @foreach ($shipment_ids as $key=>$id)
-        @php $shipment = \App\Shipment::find($id->shipment_id);@endphp
+        @php $shipment = \App\Models\Shipment::find($id->shipment_id);@endphp
         <table class="table table-hover table-bordered">
             <tr> <td style="width:20%">Merchant info: </td> <td>{{$shipment->user->first_name}} {{$shipment->user->last_name}} - {{$shipment->user->phone}}</td></tr>
             <tr> <td style="width:20%">Customer Name: </td> <td>{{$shipment->name}}</td></tr>

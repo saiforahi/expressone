@@ -34,63 +34,84 @@
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="main-card mb-3 card card-body">
                 <form id="upload_form" method="post" action="">
-                    {{ csrf_field() }}
-                    {{-- <input type="hidden" name="user_id" value="{{Auth::user()->id}}"/> --}}
+                    @csrf
                     @foreach (\Session::get('csv_data') as $key => $line)
                         <div class="page">Parcel: {{ $key + 1 }}</div>
                         <div class="form_each">
                             <div class="form-row">
                                 <div class="col text-left">
-                                    <label class="" for="name">Customer Name</label>
-                                    <input type="text" id="name" class="form-control" name="name[]"
-                                        value="{{ $line['name'] }}" required>
+                                    <label class="" for="name">Recipient Name</label>
+                                    <input type="text" id="name" class="form-control" name="recipient_name[]"
+                                        value="{{ $line['recipient_name'] }}" required>
                                 </div>
                                 <div class="col text-left">
-                                    <label for="usr3">Phone Number</label>
-                                    <input type="text" class="form-control" name="phone[]"
-                                        value="{{ $line['phone'] }}" required>
+                                    <label class="" for="name">Recipient Phone</label>
+                                    <input type="text" id="name" class="form-control" name="recipient_phone[]"
+                                        value="{{ $line['recipient_phone'] }}" required>
                                 </div>
-                                <div class="col text-left">
-                                    <label class="" for="address">Address</label>
-                                    <input type="text" id="address" class="form-control" name="address[]"
-                                        value="{{ $line['address'] }}" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="col-md-8 text-left">
+                                    <label class="" for="name">Recipient Address</label>
+                                    <input type="text" id="name" class="form-control" name="recipient_address[]"
+                                        value="{{ $line['recipient_address'] }}" required>
+                                </div>
+                                <div class="col-md-4 text-left">
+                                    <label for="area">Delivery Area (Upazila, District)</label>
+                                    {{-- <?php dd($line['upazila_district']); ?> --}}
+                                    <input type="text" class="form-control" readonly
+                                        name="upazila_district[]" id="upazila_district{{ $key }}"
+                                        value="{{ $line['upazila_district'] }}">
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="col cod_target text-left">
                                     <label for="parcel_value">COD amount</label>
-                                    <input type="number" class="form-control cod_amount" data-key="{{ $key }}"
-                                        name="cod_amount[]" id="cod_amount{{ $key }}"
-                                        value="{{ $line['cod_amount'] }}">
+                                    <input type="number" class="form-control" data-key="{{ $key }}"
+                                        name="amount[]" id="amount{{ $key }}"
+                                        value="{{ $line['amount'] }}">
                                 </div>
-
                                 <div class="col cod_target text-left">
-                                    <label for="weight_charge">Weight Charge</label>
-                                    <input type="number" class="form-control weight_charge" data-key="{{ $key }}"
-                                        name="weight_charge[]" id="weight_charge{{ $key }}"
-                                        value="{{ $line['weight_charge'] }}">
+                                    <label for="parcel_value">Delivery Charge</label>
+                                    <input type="number" class="form-control" data-key="{{ $key }}"
+                                        name="delivery_charge[]" id="delivery_charge{{ $key }}"
+                                        value="{{ $line['delivery_charge'] }}">
                                 </div>
-
+                                
+                                <div class="col cod_target text-left">
+                                    <label for="weight_charge">Weight (kg)</label>
+                                    <input type="number" class="form-control" data-key="{{ $key }}"
+                                        name="weight[]" id="weight{{ $key }}" value="0"
+                                        >
+                                </div>
                             </div>
-
                             <div class="form-row">
-
+                                
                                 <div class="col-md-3 text-left">
-                                    <label for="area">Area</label>
-                                    <select class="form-control select2 area" data-key="{{ $key }}" name="area[]"
+                                    <label for="area">Pickup Location *</label>
+                                    <select required class="form-control select2 area" data-key="{{ $key }}" name="pickup_location[]"
                                         id="area{{ $key }}" style="padding:1px;">
                                         <option value="" selected disabled>Select area</option>
-                                        @foreach ($areas as $area)
-                                            <option value="{{ $area->id }}">{{ $area->name }}</option>
+                                        @foreach ($locations as $location)
+                                            <option value="{{ $location->id }}">{{ $location->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-
+                                <div class="col-md-3 text-left">
+                                    <label for="area">Delivery Location</label>
+                                    <select class="form-control select2 area" data-key="{{ $key }}" name="delivery_location[]"
+                                        id="area{{ $key }}" style="padding:1px;">
+                                        <option value="" selected disabled>Select Delivery Location</option>
+                                        @foreach ($locations as $location)
+                                            <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col text-left">
                                     <label for="merchant_note">Merchant note</label>
-                                    <input type="text" class="form-control merchant_note" data-key="{{ $key }}"
-                                        name="merchant_note[]" id="merchant_note{{ $key }}"
-                                        value="{{ $line['merchant_note'] }}">
+                                    <input type="text" class="form-control" data-key="{{ $key }}"
+                                        name="note[]" id="note{{ $key }}"
+                                        value="{{ $line['note'] }}">
                                 </div>
                             </div>
 
@@ -100,7 +121,7 @@
                     <button type="submit" onclick="working()" class="submit mt-2 px-4 btn btn-success float-left">
                         <b class="fa fa-send"> Save the Sheet</b>
                     </button> <br>
-                </form><br>
+                </form><br><br>
             </div>
         </div>
     </div>
@@ -266,7 +287,7 @@
                         if (data.cod == 1) {
                             $('.codHas' + key).show();
                             $('#NotFoundState1' + key).text('Price + ' + data.cod_rate + '% COD');
-                            $('#NotFoundState21' + key).text(data.price + ' + ' + data.cod_amount);
+                            $('#NotFoundState21' + key).text(data.price + ' + ' + data.amount);
                         } else $('.codHas' + key).hide();
                     }
                 }

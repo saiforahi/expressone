@@ -6,7 +6,7 @@
             <div class="page-title">
                 <div>
                     <h3>Merchant Shipment List <small class="text-info">(Receive Point)</small>
-                        <a href="/admin/hub-receivable" class="btn btn-info pull-right">Hub received</a>
+                        <a href="/admin/unit-receivable" class="btn btn-info pull-right">Unit received</a>
                     </h3>
                 </div>
             </div>
@@ -25,66 +25,60 @@
                                         <th>Info</th>
                                         <th>Contact</th>
                                         <th>Parcel/s</th>
-                                        <th>Area</th>
+                                        <th>Unit</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($user as $users)
+                                    @foreach ($users as $user)
                                         <?php
-                                        $checkShipment = \DB::table('shipments')
-                                            ->select('id')
-                                            ->where(['user_id' => $users->id, 'status' => '1', 'shipping_status' => '2'])
-                                            ->get();
-                                        $status = '1';
-                                        $shipping_status = '2';
-                                        if (Session::has('admin_hub')) {
-                                            $hubID = Session::get('admin_hub')->id;
+                                        // dd();
+                                        $checkShipment = \App\Models\Shipment::cousins()->where(['units.admin_id'=>Auth::guard('admin')->user()->id,'shipments.merchant_id'=>$user->id])->whereBetween('logistic_status',[4,5])->count();
+                                        $status=1;
+                                        $logistic_status=[4,5];
+                                        if (Session::has('admin_unit')) {
+                                            $hubID = Session::get('admin_unit')->id;
                                         } else {
                                             $hubID = 0;
                                         }
-
+                                        
                                         //user a merchant(user) did not set area/shopName, don`t show that record
-                                        if ($users->area_id == null || $users->shop_name == null) {
+                                        if ($user->unit_id == null || $user->shop_name == null) {
                                             continue;
                                         } ?>
 
-                                        @if ($checkShipment->count() > 0 && is_belongsTo_hub($users->area->hub_id, $hubID))
-                                            <tr>
-                                                <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid"
-                                                        src="{{ $users->image == null ? asset('images/user.png') : asset('storage/user/' . $users->image) }}">
-                                                </th>
-                                                <th scope="row">Name: {{ $users['first_name'] }}
-                                                    {{ $users['last_name'] }}<br>
-                                                    Shop Name: {{ $users->shop_name }}
-                                                </th>
-                                                <th scope="row"><i class="fa fa-phone"></i> {{ $users['phone'] }}<br>
-                                                    <i class="fa fa-envelope-o"></i> {{ $users['email'] }}<br>
-                                                    <i class="fa fa-map-marker"></i> {{ $users['address'] }}<br>
-                                                </th>
-                                                <th scope="row">
-                                                    <span class="btn btn-success">
-                                                        @if ($checkShipment->count() > 0)
-                                                            {{ $checkShipment->count() }} Parcels
-                                                        @else {{ $checkShipment->count() }} Parcel @endif
-                                                    </span>
-                                                </th>
-                                                <th class="text-info">
-                                                    <i class="fa fa-angle-right"></i> Hub: {{ $users->area->hub->name }}
-                                                    <br><i class="fa fa-angle-right"></i>
-                                                    Area: {{ $users->area->name }}
-                                                </th>
-                                                <th class="text-right">
-                                                    <a target="_blank"
-                                                        href="/admin/get-hub-csv-files/{{ $users->id . '/' . $status . '/' . $shipping_status }}"
-                                                        class="btn btn-info btn-sm"> <i class="fa fa-file-excel-o"></i>
-                                                        CSV</a>
-                                                    <a href="/admin/assign-to-hub/{{ $users->id . '/' . $status . '/' . $shipping_status }}"
-                                                        class="btn btn-success btn-sm"> <i class="fa fa-search"></i>
-                                                        View</a>
-                                                </th>
-                                            </tr>
-                                        @endif
+                                        <tr>
+                                            <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid"
+                                                    src="{{ $user->image == null ? asset('images/user.png') : asset('storage/user/' . $user->image) }}">
+                                            </th>
+                                            <th scope="row">Name: {{ $user['first_name'] }}
+                                                {{ $user['last_name'] }}<br>
+                                                Shop Name: {{ $user->shop_name }}
+                                            </th>
+                                            <th scope="row"><i class="fa fa-phone"></i> {{ $user['phone'] }}<br>
+                                                <i class="fa fa-envelope-o"></i> {{ $user['email'] }}<br>
+                                                <i class="fa fa-map-marker"></i> {{ $user['address'] }}<br>
+                                            </th>
+                                            <th scope="row">
+                                                <span class="btn btn-success">
+                                                    @if ($checkShipment > 1)
+                                                        {{ $checkShipment }} Parcels
+                                                    @else {{ $checkShipment }} Parcel @endif
+                                                </span>
+                                            </th>
+                                            <th class="text-info">
+                                                <i class="fa fa-angle-right"></i> Unit: {{ $user->unit->name }}
+                                            </th>
+                                            <th class="text-right">
+                                                <a target="_blank"
+                                                    href="/admin/get-hub-csv-files/{{ $user->id . '/' . $status . '/' . implode(",",$logistic_status) }}"
+                                                    class="btn btn-info btn-sm"> <i class="fa fa-file-excel-o"></i>
+                                                    CSV</a>
+                                                <a href="/admin/assign-to-unit/{{ $user->id . '/' . $status . '/' . implode(",",$logistic_status) }}"
+                                                    class="btn btn-success btn-sm"> <i class="fa fa-search"></i>
+                                                    View</a>
+                                            </th>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>

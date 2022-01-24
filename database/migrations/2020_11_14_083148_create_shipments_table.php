@@ -15,33 +15,35 @@ class CreateShipmentsTable extends Migration
     {
         Schema::create('shipments', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('phone')->nullable();
-            $table->string('address')->nullable();
-            $table->integer('cod_amount')->nullable();
-            $table->integer('shipping_charge_id')->nullable()->comment('PK of shipping_charges table');
-            $table->integer('weight_charge')->nullable();
-            $table->string('merchant_note')->nullable();
-            $table->integer('invoice_id')->unique();
-            $table->integer('tracking_code')->nullable();
-            $table->string('zip_code')->nullable();
-            $table->integer('parcel_value')->nullable();
+            $table->string('invoice_id')->nullable()->unique()->comment('Will generate when download Invoice');
+            $table->string('tracking_code')->unique();
+            $table->unsignedBigInteger('merchant_id')->nullable();
+            $table->unsignedBigInteger('shipping_charge_id')->nullable()->comment('PK of shipping_charges table');
+            $table->unsignedBigInteger('delivery_location_id')->nullable();
+            $table->unsignedBigInteger('pickup_location_id')->nullable();
+
+            $table->nullableMorphs('added_by');
+            $table->json('recipient')->nullable();
             $table->integer('weight')->nullable();
-            $table->string('delivery_type')->nullable();
-            $table->string('cod')->nullable();
-            $table->string('price')->nullable();
-            $table->string('total_price')->nullable();
-            $table->string('shipping_status')->default(0);
-            $table->string('status')->default(1);
+            $table->string('parcel_type')->nullable();
+            $table->integer('piece_qty')->nullable();
+            $table->enum('service_type',['express','priority'])->nullable();
+
+            $table->string('amount')->nullable('Amount to be collected from customer');
+
+            $table->longText('note')->nullable();
+            $table->integer('shipping_status')->default(0);
+            $table->unsignedBigInteger('logistic_status')->nullable();
+            $table->enum('status',['cancelled','delivered','returned'])->nullable();
             $table->timestamp('time_starts')->useCurrent();
-            $table->unsignedBigInteger('user_id');
-            $table->string('added_by')->default('merchant');
-            $table->unsignedBigInteger('zone_id')->nullable();
-            $table->unsignedBigInteger('area_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('zone_id')->references('id')->on('zones');
-            $table->foreign('area_id')->references('id')->on('areas');
             $table->timestamps();
+            $table->softDeletes();
+
+            $table->foreign('merchant_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('shipping_charge_id')->references('id')->on('shipping_charges')->onDelete('set null');
+            $table->foreign('delivery_location_id')->references('id')->on('locations')->onDelete('set null');
+            $table->foreign('pickup_location_id')->references('id')->on('locations')->onDelete('set null');
+            $table->foreign('logistic_status')->references('id')->on('logistic_steps')->onDelete('set null');
         });
     }
 

@@ -49,18 +49,19 @@
                                 <td>{{ Auth::guard('user')->user()->phone }}</td>
                             </tr>
                             <tr>
-                                <td>National ID:</td>
+                                <td>BIN</td>
                                 <td><button
-                                        class="btn btn-primary">{{ Auth::guard('user')->user()->national_id }}</button>
+                                        class="btn btn-primary">{{ Auth::guard('user')->user()->bin_no }}</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>BIN:</td>
-                                <td><button class="btn btn-success">{{ Auth::guard('user')->user()->bin_no }}</button>
+                                <td>NID</td>
+                                <td><button
+                                        class="btn btn-success">{{ Auth::guard('user')->user()->nid_no }}</button>
                                 </td>
                             </tr>
                             <tr>
-                                <td>Bank:</td>
+                                <td>Bank name:</td>
                                 <td>{{ Auth::guard('user')->user()->bank_name }}</td>
                             </tr>
                             <tr>

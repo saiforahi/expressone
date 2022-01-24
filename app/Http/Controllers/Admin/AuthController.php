@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers\Admin;
-use App\Admin;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -9,32 +9,25 @@ class AuthController extends Controller
 {
     public function index()
     {
-        //dd('okay');
         return view('admin.auth.login');
     }
     public function login(Request $request)
     {
         $messages = [
-            'name.required' => 'Username is required',
-            'password.required' => 'Password is required',
-            'password.min' => 'Password must be at least 3 characters',
+            "name.required" => "Username is required",
+            "password.required" => "Password is required",
+            "password.min" => "Password must be at least 3 characters"
         ];
-        $this->validate(
-            $request,
-            [
-                'name' => 'required',
-                'password' => 'required|min:3',
-            ],
-            $messages,
-        );
+        $this->validate($request, [
+            'name'   => 'required',
+            'password' => 'required|min:3'
+        ],$messages);
         if (Auth::guard('admin')->attempt(['email' => $request->name, 'password' => $request->password], $request->get('remember'))) {
-            return redirect()->intended('/admin');
+            return redirect()->route('admin-dashboard');
         }
-        return back()
-            ->withInput($request->only('name', 'remember'))
-            ->withErrors([
-                'name' => 'Wrong information or this account not login.',
-            ]);
+        return back()->withInput($request->only('name', 'remember'))->withErrors([
+            'name' => 'Wrong information or this account can not login.',
+        ]);
     }
     public function store(Request $request)
     {
@@ -56,7 +49,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
         Auth::guard('admin')->login($admin);
-        return redirect()->intended('/admin');
+        return redirect()->route('admin.dashboard');
     }
     public function logout(Request $request)
     {

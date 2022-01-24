@@ -16,12 +16,12 @@
        @if($driverAssign !=null)
     <tr>
       <td>Status: {{$driverAssign->status}} <br>
-        <?php $admin_id =  \DB::table('driver_shipment')->where(['driver_id'=>$driverAssign->user_id,'shipment_id'=>$driverAssign->shipment_id])->pluck('admin_id')->first();
+        <?php $admin_id =  \DB::table('driver_shipment')->where(['courier_id'=>$driverAssign->merchant_id,'shipment_id'=>$driverAssign->shipment_id])->pluck('admin_id')->first();
         $admin = \DB::table('admins')->select('first_name','last_name')->where('id',$admin_id)->first();?>
 
         Assigned by: {{$admin->last_name.' '.$admin->last_name}} <br>
 
-        driver: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$driverAssign->user_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
+        Courier: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$driverAssign->merchant_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
       </td>
       <td>{{date('M d, y',strtotime($driverAssign->created_at))}} <br>
         {{date('H:i:s',strtotime($driverAssign->created_at))}}</td>
@@ -32,12 +32,12 @@
     @if($driverReceive !=null)
     <tr>
       <td>Status: {{$driverReceive->status}} <br>
-        <?php $admin_id =  \DB::table('driver_shipment')->where(['driver_id'=>$driverReceive->user_id,'shipment_id'=>$driverReceive->shipment_id])->pluck('admin_id')->first();
+        <?php $admin_id =  \DB::table('driver_shipment')->where(['courier_id'=>$driverReceive->merchant_id,'shipment_id'=>$driverReceive->shipment_id])->pluck('admin_id')->first();
         $admin = \DB::table('admins')->select('first_name','last_name')->where('id',$admin_id)->first();?>
 
         Assigned by: {{$admin->last_name.' '.$admin->last_name}} <br>
 
-        driver: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$driverReceive->user_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
+        Courier: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$driverReceive->merchant_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
       </td>
       <td>{{date('M d, y',strtotime($driverReceive->created_at))}} <br>
         {{date('H:i:s',strtotime($driverReceive->created_at))}}</td>
@@ -48,7 +48,7 @@
     <tr>
       <th scope="row">Status: {{$dispatch->status}}<br>
         Performed by:
-        <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$dispatch->user_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
+        <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$dispatch->merchant_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
       </th>
       <td>{{date('M d, y',strtotime($dispatch->created_at))}} <br>
         {{date('H:i:s',strtotime($dispatch->created_at))}}</td>
@@ -59,7 +59,7 @@
     <tr>
       <th scope="row">Status: {{$transit->status}}<br>
         Performed by:
-        <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$transit->user_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
+        <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$transit->merchant_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
       </th>
       <td>{{date('M d, y',strtotime($transit->created_at))}} <br>
         {{date('H:i:s',strtotime($transit->created_at))}}</td>
@@ -70,7 +70,7 @@
     <tr>
       <th scope="row">Status: {{$outForDelivery->status}}<br>
         Performed by:
-        <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$outForDelivery->user_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
+        <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$outForDelivery->merchant_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
       </th>
       <td>{{date('M d, y',strtotime($outForDelivery->created_at))}} <br>
         {{date('H:i:s',strtotime($outForDelivery->created_at))}}</td>
@@ -81,7 +81,7 @@
     <tr>
       <th scope="row">Status: {{$assignDriver->status}}<br>
         Performed by:
-        <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$assignDriver->user_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
+        <?php $name = \DB::table('admins')->select('first_name','last_name')->where('id',$assignDriver->merchant_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
       </th>
       <td>{{date('M d, y',strtotime($assignDriver->created_at))}} <br>
         {{date('H:i:s',strtotime($assignDriver->created_at))}}</td>
@@ -92,7 +92,7 @@
     <tr>
       <th scope="row">Status: {{$deliverReport->status}}<br>
         Performed by:
-        <?php $name = \DB::table('drivers')->select('first_name','last_name')->where('id',$deliverReport->user_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
+        <?php $name = \DB::table('drivers')->select('first_name','last_name')->where('id',$deliverReport->merchant_id)->first(); echo $name->first_name.' '.$name->last_name; ?>
       </th>
       <td>{{date('M d, y',strtotime($deliverReport->created_at))}} <br>
         {{date('H:i:s',strtotime($deliverReport->created_at))}}</td>

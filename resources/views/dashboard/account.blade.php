@@ -37,26 +37,7 @@
         @endif
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="main-card mb-3 card">
-                        <div class="card-body"><h5 class="card-title">Change your email address</h5>
-                            <form class="" autocomplete="off" method="post" action="{{route('ChangeMail')}}">
-                                @csrf
-                                <input type="hidden" name="id" value="{{Auth::guard('user')->user()->id}}">
-                                <div class="position-relative form-group"><input
-                                        id="exampleEmail" value="{{Auth::guard('user')->user()->email}}" type="email"
-                                        class="form-control" readonly></div>
-                                <div class="position-relative form-group"><input
-                                        name="email" autocomplete="off" id="exampleEmail" placeholder="Enter your new email address" type="email"
-                                        class="form-control" required></div>
-                                <div class="position-relative form-group"><input
-                                        name="password" id="examplePassword" placeholder="Enter your password"
-                                        type="password" class="form-control" required></div>
-                                <button class="mt-1 btn btn-primary">Submit</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+                
                 <div class="col-md-6">
                     <div class="main-card mb-3 card">
                         <div class="card-body"><h5 class="card-title">Change your password</h5>

@@ -20,12 +20,12 @@
     @if($log->status == 'pickup' && $log->user_type=='driver')
     <tr>
       <td>Status: {{$log->status}} <br>
-        <?php $admin_id =  \DB::table('driver_shipment')->where(['driver_id'=>$log->user_id,'shipment_id'=>$log->shipment_id])->pluck('admin_id')->first();
+        <?php $admin_id =  \DB::table('driver_shipment')->where(['courier_id'=>$log->merchant_id,'shipment_id'=>$log->shipment_id])->pluck('admin_id')->first();
         $admin = \DB::table('admins')->select('first_name','last_name')->where('id',$admin_id)->first();?>
 
         Assigned by: {{$admin->last_name.' '.$admin->last_name}} <br>
 
-        driver: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$log->user_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
+        Courier: <?php $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$log->merchant_id)->first(); echo $driver->first_name.' '.$driver->last_name; ?><br>
       </td>
       <td>{{date('M d, y',strtotime($log->created_at))}} <br>
         {{date('H:i:s',strtotime($log->created_at))}}</td>
@@ -36,12 +36,12 @@
     <tr>
       <td>Status: <b class="budge">{{$log->status}}</b> <br>
         @if($log->user_type=='admin')
-        <?php  $admin = \DB::table('admins')->select('first_name','last_name')->where('id',$log->user_id)->first();?>
+        <?php  $admin = \DB::table('admins')->select('first_name','last_name')->where('id',$log->merchant_id)->first();?>
         Performed by: {{$admin->first_name}} {{$admin->last_name}}
         @endif
 
         @if($log->user_type=='driver')
-        <?php  $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$log->user_id)->first();?>
+        <?php  $driver = \DB::table('drivers')->select('first_name','last_name')->where('id',$log->merchant_id)->first();?>
         Rider: {{$driver->first_name}} {{$driver->last_name}}
         @endif
       </td>

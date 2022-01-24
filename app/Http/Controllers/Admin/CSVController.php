@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Area;
-use Session;
-use App\Shipment;
-use App\ShippingPrice;
-use App\Zone;
-use Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 class CSVController extends Controller
 {
+
     public function create()
     {
         return view('admin.shipment.csv.create');
@@ -26,27 +22,21 @@ class CSVController extends Controller
         $filename = '';
         //upload file
         if ($file = request()->file('file')) {
-            $filename = date('Ymd-his') . '.' . $file->getClientOriginalExtension();
+            $filename  = date('Ymd-his') . '.' . $file->getClientOriginalExtension();
             $file->move('./csv-file/', $filename);
         }
 
-        $file = fopen('./csv-file/' . $filename, 'r');
+        $file = fopen('./csv-file/' . $filename, "r");
         $i = 1;
-        while (($line = fgetcsv($file)) !== false) {
+        while (($line = fgetcsv($file)) !== FALSE) {
             if ($i != 1) {
-                if (empty($line[9])) {
-                    $price = 0;
-                } else {
-                    $price = $line[9];
-                }
+                if (empty($line[9])) $price = 0;
+                else $price = $line[9];
 
-                if (empty($line[0])) {
-                    $invoice = rand();
-                } else {
-                    $invoice = $line[0];
-                }
+                if (empty($line[0])) $invoice = rand();
+                else $invoice = $line[0];
 
-                $lines[] = [
+                $lines[] = array(
                     'invoice' => $invoice,
                     'reference_no' => $line[1],
                     'customer' => $line[2],
@@ -56,8 +46,8 @@ class CSVController extends Controller
                     'consignment_type' => $line[6],
                     'cod_amount' => $line[7],
                     'delivery_charge' => $line[8],
-                    'weight_charge' => $line[9],
-                ];
+                    'weight_charge' => $line[9]
+                );
             }
             $i++;
         }
@@ -171,7 +161,7 @@ class CSVController extends Controller
             // }else $invoice_id = $request->invoice_id[$key];
 
             // $insert = new Shipment();
-            // $insert->user_id = $request->user_id;
+            // $insert->merchant_id = $request->merchant_id;
             // $insert->zone_id = $zone->zone_id;
             // $insert->area_id = $request->area[$key];
             // $insert->name = $request->name[$key];
@@ -243,7 +233,7 @@ class CSVController extends Controller
     //         }else $invoice_id = $request->invoice_id[$key];
 
     //         $insert = new Shipment();
-    //         $insert->user_id = $request->user_id;
+    //         $insert->merchant_id = $request->merchant_id;
     //         $insert->zone_id = $zone->zone_id;
     //         $insert->area_id = $request->area[$key];
     //         $insert->name = $request->name[$key];
@@ -269,15 +259,18 @@ class CSVController extends Controller
     //     Session::forget('csv_data'); return redirect('/admin');
     // }
 
+
     public function edit($id)
     {
         //
     }
 
+
     public function update(Request $request, $id)
     {
         //
     }
+
 
     public function destroy($id)
     {

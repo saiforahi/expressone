@@ -27,7 +27,7 @@
     <div style="width:50%;float:left;text-align:right;padding:25px;">
         <table style="float:right">
             <tr>
-                <th><img src="data:image/png;base64,{{ DNS2D::getBarcodePNG(url('/',$shipment->tracking_code), 'QRCODE') }}" alt="qr" class="qr-image"></th>
+                <th><img src="data:image/png;base64,{{ DNS2D::getBarcodePNG(url('/', $shipment->tracking_code), 'QRCODE') }}" alt="qr" class="qr-image"></th>
             </tr>
             <tr>
                 <td colspan="2">Date: {{ date('d F, Y') }}</td>
@@ -62,13 +62,13 @@
             <td>{{ $shipment->invoice_id }}</td>
             <td>{{ $shipment->name }}</td>
             <td>{{ $shipment->phone }}</td>
-            <td>{{ $shipment->user->shop_name }}</td>
+            <td>{{ $shipment->added_by->shop_name }}</td>
             <td>{{ $shipment->cod_amount }}</td>
-            <td> {{ $shipment->area->hub->name }} </td>
+            <td> area->hub->name }} </td>
         </tr>
         <tr>
             <th colspan="2">Total Price <b>1</b></th>
-            <th colspan="4" class="text-center">New worth of parcels: {{ $shipment->cod_amount }}</th>
+            <th colspan="4" class="text-center">New worth of parcels: {{ $shipment->amount }}</th>
         </tr>
     </table>
 

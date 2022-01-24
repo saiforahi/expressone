@@ -28,7 +28,7 @@
         </div>
         <div class="col-md-6" style="float:left;text-align:right;padding:25px;">
             <table style="float:right">
-                
+
                 <tr>
                     <td colspan="2">Date: {{ date('d F, Y') }}</td>
                 </tr>
@@ -38,7 +38,7 @@
 
     @php $total_price = array();  @endphp
     @foreach ($shipment_ids as $key => $id)
-        @php $shipment = \App\Shipment::find($id);@endphp
+        @php $shipment = \App\Models\Shipment::find($id);@endphp
         <table class="table table-hover table-bordered">
             <tr>
                 <td>{{ $key + 1 }}</td>

@@ -22,7 +22,6 @@
         </div>
     </div>
 </div>
-
 <div class="tab-content">
     @if ($errors->any())
         @foreach ($errors->all() as $error)
@@ -41,22 +40,22 @@
     <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
         <div class="main-card mb-3 card">
             <div class="card-body">
-                <form method="post" action="{{ route('ProfileUpdate') }}" enctype="multipart/form-data">
-                    {{ csrf_field() }}
+                <form method="post" action="{{ route('profileUpdate') }}">
+                    @csrf
                     <input type="hidden" name="id" value="{{ Auth::guard('user')->user()->id }}">
                     <div class="form-row">
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="exampleEmail11" class="">First Name</label><input
-                                    name="first_name" id="exampleEmail11"
+                                <label for="first_name" class="">First Name</label><input
+                                    name="first_name" id="first_name"
                                     value="{{ Auth::guard('user')->user()->first_name }}" type="text" required
                                     max="100" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="examplePassword11" class="">Last
-                                    Name</label><input name="last_name" id="examplePassword11"
+                                <label for="last_name" class="">Last
+                                    Name</label><input name="last_name" id="last_name"
                                     value="{{ Auth::guard('user')->user()->last_name }}" type="text" required
                                     max="100" class="form-control">
                             </div>
@@ -71,64 +70,72 @@
                         </div>
 
                     </div>
+
                     <div class="form-row">
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="shop_name" class="">Shop Name</label>
-                                <input name="shop_name" id="shop_name"
-                                    value="{{ Auth::guard('user')->user()->shop_name }}" type="text"
-                                    class="form-control" required max="255">
+                                <input name="shop_name"
+                                    value="{{ Auth::guard('user')->user()->shop_name }}"
+                                    type="text" class="form-control" required max="255">
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <?php $areas = \DB::table('areas')->get(); ?>
+                            <?php $units = \DB::table('units')->get(); ?>
                             <div class="position-relative form-group">
-                                <label for="shop_name" class="">Area belongs To</label>
-                                <select class="form-control select2" name="area_id" required="">
-                                    <option value="">Select Area</option>
-                                    @foreach ($areas as $area)
-                                        <option @if ($area->id == Auth::guard('user')->user()->area_id) selected @endif value="{{ $area->id }}">{{ $area->name }}</option> @endforeach </select>
+                                <label for="shop_name" class="">Unit belongs To</label>
+                                <select class="form-control select2" name="unit_id" required="">
+                                    <option value="">Select Unit</option>
+                                    @foreach ($units as $unit)
+                                        <option @if ($unit->id == Auth::guard('user')->user()->unit_id) selected @endif value="{{ $unit->id }}">{{ $unit->name }}</option> @endforeach </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="position-relative form-group">
+                                <label>NID</label>
+                                <input name="nid_no" value="{{ Auth::guard('user')->user()->nid_no }}" type="text"
+                                    class="form-control" placeholder="Enter NID"
+                                    value="{{ Auth::guard('user')->user()->nid_no }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
-                                <label for="national_id" class="">NID</label>
-                                <input name="national_id" value="{{ Auth::guard('user')->user()->national_id }}"
-                                    type="number" class="form-control" required placeholder="Enter NID No">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="position-relative form-group">
-                                <label for="national_id" class="">BIN</label>
-                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="number"
-                                    class="form-control" required placeholder="Enter bin no">
+                                <label>BIN</label>
+                                <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="text"
+                                    class="form-control" placeholder="Enter BIN"
+                                    value="{{ Auth::guard('user')->user()->bin_no }}">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="bank_name" class="">Bank name</label>
-                                <input name="bank_name" value="{{ Auth::guard('user')->user()->bank_name }}"
+                                <input name="bank_name"
+                                    value="{{ Auth::guard('user')->user()->bank_name }}"
                                     type="text" class="form-control" required placeholder="Enter bank name">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="bank_br_name" class="">Bank br. name</label>
-                                <input name="bank_br_name" value="{{ Auth::guard('user')->user()->bank_br_name }}"
+                                <input name="bank_br_name"
+                                    value="{{ Auth::guard('user')->user()->bank_br_name }}"
                                     type="text" class="form-control" required placeholder="Enter bank br name">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="bank_acc_name" class="">Bank A/C name</label>
-                                <input name="bank_acc_name" value="{{ Auth::guard('user')->user()->bank_acc_name }}"
+                                <input name="bank_acc_name"
+                                    value="{{ Auth::guard('user')->user()->bank_acc_name }}"
                                     type="text" class="form-control" required placeholder="Enter bank account name">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="position-relative form-group">
                                 <label for="bank_acc_no" class="">Bank A/C no</label>
-                                <input name="bank_acc_no" value="{{ Auth::guard('user')->user()->bank_acc_no }}"
+                                <input name="bank_acc_no"
+                                    value="{{ Auth::guard('user')->user()->bank_acc_no }}"
                                     type="text" class="form-control" required placeholder="Enter bank A/c no">
                             </div>
                         </div>
@@ -143,8 +150,8 @@
                             <div class="position-relative form-group">
                                 <label for="website_link" class="">Website (optional)
                                     Link</label><input name="website_link" id="website_link"
-                                    value="{{ Auth::guard('user')->user()->website_link }}" type="url"
-                                    class="form-control" placeholder="https://findbankswiftcode.com/">
+                                    value="{{ Auth::guard('user')->user()->website_link }}"
+                                    type="url" class="form-control" placeholder="https://findbankswiftcode.com/">
                             </div>
                         </div>
                     </div>
@@ -156,16 +163,3 @@
     </div>
 
 </div>
-
-<script src="{{ asset('_vendors/jquery/dist/jquery.min.js') }}" type="text/javascript"></script>
-<link href="{{ asset('_vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />
-<link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/select2.min.css') }}">
-<link rel="stylesheet" href="{{ asset('_vendors/select2/dist/css/bootstrap4-select2.css') }}">
-<script src="{{ asset('_vendors/sweetalert/sweetalert.js') }}"></script>
-<script src="{{ asset('_vendors/select2/dist/js/select2.min.js') }}"></script>
-<script type="text/javascript">
-    $('.select2').select2({
-        theme: "bootstrap",
-        width: '100%'
-    });
-</script>

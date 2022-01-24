@@ -13,23 +13,23 @@
             <div class="menu_section">
                 <h3>General</h3>
                 <ul class="nav side-menu">
-                    <li><a href="{{ route('admin-dashboard') }} "><i class="fa fa-dashboard"></i> Dashboard</a>
+                    <li><a href="{{ route('admin-dashboard') }} "><i class="fa fa-dashboard"></i>Dashboard</a>
                     </li>
-                    <li><a><i class="fa mdi mdi-google-maps"></i> Area Manage <span
-                                class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">
-                            @if (checkAdminAccess('zone') != 0)
-                                <li><a href="{{ route('zone') }}">Distribution Zone (District)</a></li>
-                            @endif
-                            @if (checkAdminAccess('hub') != 0)
-                                <li><a href="{{ route('hub') }}">Hub (Unit)</a></li>
-                            @endif
-                            @if (checkAdminAccess('area') != 0)
-                                <li><a href="{{ route('area') }}">Area (Area)</a></li>
-                            @endif
+                    @role('super-admin|admin')
+                        <li><a><i class="fa mdi mdi-google-maps"></i>Area Manage<span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
 
-                        </ul>
-                    </li>
+                                <li><a href="{{ route('unit') }}">Unit</a></li>
+                                <li><a href="{{ route('point') }}">Point (District)</a></li>
+                                <li><a href="{{ route('location') }}">Location (Area)</a></li>
+
+                            </ul>
+                        </li>
+                        <li><a href="{{ route('shippingCharges') }}"><i class="fa mdi mdi-table"></i>Shipping Charge</a>
+                        </li>
+                        <li><a href="{{ route('all-shipments') }}"><i class="fa mdi mdi-export"></i>All shipments</a>
+                        </li>
+                    @endrole
                     {{-- <li><a><i class="fa fa-money"></i> Shipping Price <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             @if (checkAdminAccess('shipping-price-set') != 0)
@@ -37,59 +37,25 @@
                             @endif
                         </ul>
                     </li> --}}
-
-                    @if (checkAdminAccess('all-shipments') != 0)
-                        <li><a href="{{ route('shippingCharges') }}"><i class="fa mdi mdi-table"></i>Shipping
-                                Charge</a>
-                        </li>
-                    @endif
-                    @if (checkAdminAccess('all-shipments') != 0)
-                        <li><a href="{{ route('all-shipments') }}"><i class="fa mdi mdi-export"></i> All shipments</a>
-                        </li>
-                    @endif
-
-
-                    <li><a><i class="fa mdi mdi-cube-send"></i> Logistics <span class="fa fa-chevron-down"></span></a>
+                    <li>
+                        <a><i class="fa mdi mdi-cube-send"></i>Logistics<span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (checkAdminAccess('shipping-list') != 0)
-                                <li><a href="{{ route('AdminShipment.index') }}">Pick-up</a></li>
-                            @endif
+                            <li><a href="{{ route('AdminShipment.index') }}">Pick-up</a></li>
+                            <li><a href="{{ route('AdminShipmentReceived') }}">Receive</a></li>
+                            <li><a href="{{ route('AdminShipmentDispatch') }}">In-Transit</a></li>
+                            {{-- <li><a href="{{ route('AdminAgentDispatch') }}">Agent Dispatch</a></li> --}}
+                            {{-- <li><a href="{{ route('AdminReconcile') }}">Reconcile</a></li> --}}
+                            <li><a href="{{ route('AdminDelivery') }}">Delivery</a></li>
+                            <li><a href="{{ route('AdminDownload') }}">Download</a></li>
+                            <li><a href="{{ route('AdminUploadCSV') }}">Upload CSV-File</a></li>
 
-                            @if (checkAdminAccess('shipping-list/received') != 0)
-                                <li><a href="{{ route('AdminShipmentReceived') }}">Receive</a></li>
-                            @endif
-
-                            @if (checkAdminAccess('shipping-list/dispatch') != 0)
-                                <li><a href="{{ route('AdminShipmentDispatch') }}">Dispatch</a></li>
-                            @endif
-
-                            @if (checkAdminAccess('agent-dispatch') != 0)
-                                <li><a href="{{ route('AdminAgentDispatch') }}">Agent Dispatch</a></li>
-                            @endif
-
-                            @if (checkAdminAccess('reconcile') != 0)
-                                <li><a href="{{ route('AdminReconcile') }}">Reconcile</a></li>
-                            @endif
-
-                            @if (checkAdminAccess('delivery') != 0)
-                                <li><a href="{{ route('AdminDelivery') }}">Delivery</a></li>
-                            @endif
-
-                            @if (checkAdminAccess('shipment-download') != 0)
-                                <li><a href="{{ route('AdminDownload') }}">Download</a></li>
-                            @endif
-
-                            @if (checkAdminAccess('admin-upload-csv') != 0)
-                                <li><a href="{{ route('AdminUploadCSV') }}">Upload CSV-File</a></li>
-                            @endif
-
-                            <?php $zones = \DB::table('zones')
+                            <?php $units = \DB::table('units')
                                 ->where('status', '1')
                                 ->get(); ?>
-                            @foreach ($zones as $zone)
-                                @if (checkAdminAccess('thirdparty-shipments') != 0)
+                            @foreach ($units as $unit)
+                                @if (Auth::guard('admin')->user()->type == 'admin')
                                     <li><a
-                                            href="{{ route('thirdparty-shipments', $zone->id) }}">{{ $zone->name }}</a>
+                                            href="{{ route('thirdparty-shipments', $unit->id) }}">{{ $unit->name }}</a>
                                     </li>
                                 @endif
                             @endforeach
@@ -125,27 +91,24 @@
                             @endif
                         </ul>
                     </li>
-
-                    <li><a href="{{ route('driver-list.index') }} "><i class="fa mdi mdi-truck-fast"></i> Riders</a>
+                    <li><a href="{{ route('allCourier') }}"><i class="fa mdi mdi-truck-fast"></i>Couriers</a>
                     </li>
 
-                    @if (checkAdminAccess('merchant-list') != 0)
+                    @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                         <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
                                 Merchant List</a></li>
                     @endif
-
+                    
+                    @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                     <li>
                         <a><i class="fa mdi mdi-account"></i> Employee Manage<span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (checkAdminAccess('admin-list') != 0)
-                                <li><a href="{{ route('admin-list') }}">Employee List</a></li>
-                            @endif
-                            @if (checkAdminAccess('role-assign') != 0)
-                                <li><a href="{{ route('role-assign') }}">Role Assign</a></li>
-                            @endif
+                            <li><a href="{{ route('admin-list') }}">Employee List</a></li>
+                            <li><a href="{{ route('role-assign') }}">Role Assign</a></li>
                         </ul>
                     </li>
+                    @endif
                     <li><a><i class="fa fa-home"></i> Website Management <span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
@@ -202,16 +165,10 @@
                             </li>
                         </ul>
                     </li>
-
                     @if (checkAdminAccess('set-mail-info') != 0)
                         <li><a href="{{ route('mail-setup') }}"><i class="fa mdi mdi-email-open"></i> Mail SetUp</a>
                         </li>
                     @endif
-                    {{-- <li class="text-danger">
-                        <a href="javascript:;"><i class="fa mdi mdi-power"></i> Logout</a>
-
-                    </li> --}}
-
                 </ul>
             </div>
 

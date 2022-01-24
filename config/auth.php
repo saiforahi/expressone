@@ -34,7 +34,6 @@ return [
     | Supported: "session", "token"
     |
     */
-
     'guards' => [
         'user' => [
             'driver' => 'session',
@@ -50,9 +49,9 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
-        'driver' => [
+        'courier' => [
             'driver' => 'session',
-            'provider' => 'drivers',
+            'provider' => 'couriers',
         ],
 
         'api' => [
@@ -60,8 +59,12 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+        'api_admin' => [
+            'driver' => 'token',
+            'provider' => 'admins',
+            'hash' => false,
+        ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -82,16 +85,16 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\User::class,
+            'model' => App\Models\User::class,
         ],
 
         'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Admin::class,
+            'model' => App\Models\Admin::class,
         ],
-        'drivers' => [
+        'couriers' => [
             'driver' => 'eloquent',
-            'model' => App\Driver::class,
+            'model' => App\Models\Courier::class,
         ],
 
         // 'users' => [
@@ -128,8 +131,8 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
-        'drivers' => [
-            'provider' => 'drivers',
+        'couriers' => [
+            'provider' => 'couriers',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

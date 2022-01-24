@@ -10,9 +10,13 @@
                         <div class="widget-subheading">All shipment request</div>
                     </div>
                     <div class="widget-content-right">
-                        <?php $shipments = \DB::table('shipments')
-                            ->where('user_id', Auth::guard('user')->user()->id)
-                            ->count(); ?>
+                        <?php
+                        $shipments = \DB::table('shipments')
+                            ->where('merchant_id', Auth::guard('user')->user()->id)
+                            ->count();
+                        //dd($shipments);
+                        ?>
+
                         <div class="widget-numbers text-white"><span> {{ $shipments }}</span></div>
                     </div>
                 </div>
@@ -27,7 +31,7 @@
                     </div>
                     <div class="widget-content-right">
                         <?php $delivered = \DB::table('shipments')
-                            ->where('user_id', Auth::guard('user')->user()->id)
+                            ->where('merchant_id', Auth::guard('user')->user()->id)
                             ->where('shipping_status', '6')
                             ->orWhere('shipping_status', '6.5')
                             ->count(); ?>
@@ -45,7 +49,7 @@
                     </div>
                     <div class="widget-content-right">
                         <?php $rejected = \DB::table('shipments')
-                            ->where('user_id', Auth::guard('user')->user()->id)
+                            ->where('merchant_id', Auth::guard('user')->user()->id)
                             ->where('shipping_status', '5')
                             ->count(); ?>
                         <div class="widget-numbers text-white"><span> {{ $rejected }}</span></div>
@@ -57,7 +61,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="main-card mb-3 card">
-                <div class="card-header"> Your Shipment</div> <br>
+                <div class="card-header"> Your Shipment &nbsp; <a href="{{ route('merchant.addShipment') }}"
+                        class="btn btn-success"><i class="fa fa-plus-circle"></i>Add New Shipment</a> </div> <br>
                 <div class="container-fluid table-responsive">
                     <table id="dashboardDatatable"
                         class="align-middle mb-0 table table-borderless table-striped table-hover text-center">
@@ -69,13 +74,14 @@
                                 <th>Tracking No.</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Customer</th>
-                                <th class="text-center">COD Amt.</th>
-                                <th class="text-center">Wgt. charge</th>
+                                <th class="text-center">COD Amount</th>
+                                <th class="text-center">Weight</th>
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($shipment as $key => $shipments)
+
                                 <tr>
                                     <td> {{ ++$key }}</td>
                                     <td>
@@ -96,32 +102,31 @@
                                     </td>
                                     <td class="text-center">
                                         @include('dashboard.include.shipping-status',
-                                        ['status'=>$shipments['status'],'shipping_status'=>$shipments['shipping_status']])
+                                        ['status'=>$shipments['status'],'logistic_status'=>$shipments['logistic_status']])
                                     </td>
-                                    <td><a style="color: #495057;text-decoration: none"
-                                            href="/tracking?code={{ $shipments['tracking_code'] }}"
+                                    <td><a href="/tracking?code={{ $shipments['tracking_code'] }}"
                                             target="_blank">{{ $shipments['tracking_code'] }}
                                         </a></td>
                                     <td class="text-center">
-                                        <p style="color: black;font-size: 15px" class="mb-0">
+                                        <p class="mb-0">
                                             {{ date('F j, Y', strtotime($shipments['updated_at'])) }} </p>
 
                                     </td>
-                                    <td class="" style="font-size: 13px">
-                                        <i class="fa fa-user mr-1" aria-hidden="true"></i>{{ $shipments['name'] }}<br>
-                                        <i class="fa fa-phone-square mr-1"
-                                            aria-hidden="true"></i>{{ $shipments['phone'] }}
+                                    <td style="font-size: 13px">
+
+                                        {{$shipments['recipient']['name'] }}
+
                                     </td>
 
                                     <td>
-                                        {{ $shipments['cod_amount'] }}
+                                        {{ $shipments['amount'] }}
                                     </td>
 
                                     <td>
-                                        {{ $shipments['weight_charge'] }}
+                                        {{ $shipments['weight'] }}
                                     </td>
                                     <td>
-                                        @if ($shipments['status'] == 1 && $shipments['shipping_status'] == 0)
+                                        @if ($shipments['status'] == null && $shipments['logistic_status'] == 1)
                                             <form style="display: inline-block" class="form-delete" method="post"
                                                 action="{{ url('shipment-delete', $shipments['id']) }}">
                                                 @method('DELETE')
@@ -131,17 +136,15 @@
                                                     <i class="fa fa-trash text-white"></i>
                                                 </button>
                                             </form>
-                                            <a href="{{ route('editShipment', $shipments['id']) }}"
+                                            <a href="{{ route('merchant.editShipment', $shipments['id']) }}"
                                                 class="btn btn-secondary btn-sm"><i class="fa fa-edit"></i></a>
                                         @endif
-                                        <a href="/shipment-info/{{ $shipments['id'] }}"
+                                        <a href="/shipment-details/{{ $shipments['id'] }}"
                                             class="btn btn-primary btn-sm viewMore"><i class="fa fa-search-plus"></i></a>
                                         <a href="{{ route('pdf.shipment', $shipments['id']) }}"
                                             class="btn btn-info btn-sm">
                                             <i class="fa fa-file-pdf"></i></a>
-                                        <a href="{{ route('merchant.shipmentCn', $shipments['id']) }}"
-                                            class="btn btn-primary btn-sm">
-                                            <i class="fa fa-print"></i></a>
+
                                         <a target="_blank" href="{{ route('merchant.shipmentCn', $shipments['id']) }}"
                                             class="btn btn-primary btn-sm">
                                             CN</a>
