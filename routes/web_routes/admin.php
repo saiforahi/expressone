@@ -84,7 +84,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/user-hub-parcels-csv/{hub}/{user}', 'ShipmentController@hub_parcels_csv')->name('hub-parcels-csv');
     Route::get('/remove-hub-parcel/{hub_shipment}', 'ShipmentController@remove_hub_parcel')->name('remove-hub-parcel');
     Route::get('/change-hub-with-area/{id}', 'ShipmentController@change_bub')->name('change-hub-with-area');
-    Route::get('/hub-sorting/{hub}', 'ShipmentController@hub_sorting')->name('hub-sorting');
+    Route::get('/unit-sorting/{hub}', [ShipmentController::class,'unit_sorting'])->name('hub-sorting');
 
     Route::get('/shipping-list/dispatch', 'ShipmentController@shipment_dispatch')->name('AdminShipmentDispatch');
     Route::get('/dispatch/view/{hub}', 'ShipmentController@dispatch_view')->name('dispatchView');
@@ -95,11 +95,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/change-box-status-bulk-id/{hub_shipment_box}/{status}', 'ShipmentController@box_status_changes_bulk_id')->name('box-status-change-bulk-id');
     Route::get('/box-sorting/{hub}', 'ShipmentController@box_sorting')->name('box-sorting');
 
-    Route::get('/hub-receivable', 'ShipmentController@hub_receivable')->name('hub-receivable');
-    Route::get('/back2-dispatch/{hub_shipment_box}', 'ShipmentController@box_back2Dispatch')->name('box-sorting-back');
-
-    Route::get('/sort-to-agent-dispatch/{hub_shipment_box}', 'ShipmentController@sort2agentDispatch')->name('sorting-to-agent');
-    Route::get('/agent-dispatch', 'ShipmentController@agent_dispatch')->name('AdminAgentDispatch');
+    Route::get('/unit-receivable', [ShipmentController::class,'unit_receivable'])->name('hub-receivable');
+    Route::get('/back2-dispatch/{hub_shipment_box}', [ShipmentController::class,'box_back2Dispatch'])->name('box-sorting-back');
+    Route::get('sort-to-agent-dispatch/{hub_shipment_box}', [ShipmentController::class,'sort2agentDispatch'])->name('sorting-to-agent');
+    Route::get('receive-at-delivery-unit/{shipment_id}', [ShipmentController::class,'receive_at_delivery_unit'])->name('sorting-to-delivery');
+    Route::get('agent-dispatch', [ShipmentController::class,'agent_dispatch'])->name('AdminAgentDispatch');
 
     //first login design , agent-dispatch with  bulk-id
     # Route::post('/agent-dispatch/', 'ShipmentController@assigDriverForDelivery')->name('assigDriverForDelivery');
@@ -124,7 +124,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/remove-reconcile/{shipment}', 'ShipmentController@remove_reconcile');
     Route::get('/return-reconcile2receive', 'ShipmentController@return_shipments2receive');
     // delivery
-    Route::get('/delivery', 'ShipmentController@delivery')->name('AdminDelivery');
+    Route::get('/delivery', [ShipmentController::class,'delivery_shipments'])->name('AdminDelivery');
     Route::get('/get-shipment/{field}/{keyword}', 'ShipmentController@shipment_search')->name('delivery-search');
     Route::get('/get-driver-shipment/{driver}', 'ShipmentController@CourierShipment_search')->name('delivery-search-driver');
     Route::get('/get-shipment-with-invoices/{keyword}', 'ShipmentController@shipment_search_invoices')->name('delivery-search-invoices');

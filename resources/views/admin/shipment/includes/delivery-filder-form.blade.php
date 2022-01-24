@@ -2,7 +2,7 @@
     <div class="col-md-2">
         <select class="form-control select2" name="area_id" id="area_id" onchange="get_area()">
             <option value="">Search By Area</option>
-            @foreach($areas as $area)
+            @foreach($locations as $area)
             <option @if(request()->area_id==$area->id)selected @endif value="{{$area->id}}">{{$area->name}}</option>
             @endforeach
         </select>
@@ -13,7 +13,7 @@
     <div class="col-md-2">
         <select class="form-control select2" name="hub_id" id="hub_id" onchange="get_hub()">
             <option value="">Search By Hub</option>
-            @foreach($hubs as $hub)
+            @foreach($units as $hub)
             <option @if(request()->hub_id==$hub->id)selected @endif value="{{$hub->id}}">{{$hub->name}}</option>
             @endforeach
         </select>
@@ -27,7 +27,7 @@
         </select>
     </div>
     <div class="col-md-2">
-        @php $drivers = \App\Courier::where('status','1')->get(); @endphp
+        @php $drivers = \App\Models\Courier::where('status','1')->get(); @endphp
 
         <select class="form-control select2" name="courier_id" onchange="get_driver()">
             <option value="">Search By Rider</option>

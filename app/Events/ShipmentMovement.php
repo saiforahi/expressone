@@ -2,7 +2,13 @@
 
 namespace App\Events;
 
+<<<<<<< HEAD:app/Events/ShipmentMovement.php
 use Illuminate\Broadcasting\Channel;
+=======
+use App\Models\LogisticStep;
+use App\Models\Shipment;
+// use Illuminate\Broadcasting\Channel;
+>>>>>>> origin/v8:app/Events/ShipmentMovementEvent.php
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;

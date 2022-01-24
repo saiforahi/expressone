@@ -84,9 +84,8 @@ class ShipmentController extends Controller
     {
         foreach(explode(",",$shipments) as $key=>$value){
             CourierShipment::where('shipment_id',$value)->update(['status'=>'submitted_to_unit']);
-            $shipment=Shipment::where(['id'=>$value,'logistic_status'=>4])->update(['logistic_status'=>5]);//updating status to unit-received
-
-            event(new ShipmentMovementEvent(Shipment::find($shipment),LogisticStep::find(5),Auth::guard('courier')->user()));
+            Shipment::where(['id'=>$value,'logistic_status'=>4])->update(['logistic_status'=>5]);//updating status to unit-received
+            event(new ShipmentMovementEvent(Shipment::find($value),LogisticStep::find(5),Auth::guard('courier')->user()));
         }
         // dd($user);
         return back();
