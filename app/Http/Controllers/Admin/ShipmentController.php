@@ -9,7 +9,9 @@ use App\Models\Unit;
 use App\Models\User;
 use App\Models\Courier;
 use App\Models\Shipment;
+use Faker\Provider\Uuid;
 use App\Events\SendingSMS;
+use Illuminate\Support\Str;
 use App\Models\Hub_shipment;
 use App\Models\LogisticStep;
 use Illuminate\Http\Request;
@@ -110,7 +112,7 @@ class ShipmentController extends Controller
     public function shipment_received()
     {
         $date = \Carbon\Carbon::today()->subDays(7);
-        $shipment = Shipment::cousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->whereBetween('shipments.logistic_status',[4,6])->select('shipments.merchant_id')->groupBy('shipments.merchant_id')->pluck('shipments.merchant_id')->toArray();
+        $shipment = Shipment::cousins()->where('units.admin_id', Auth::guard('admin')->user()->id)->whereBetween('shipments.logistic_status', [4, 6])->select('shipments.merchant_id')->groupBy('shipments.merchant_id')->pluck('shipments.merchant_id')->toArray();
         //dd($shipment);
         $users = User::where('unit_id', '!=', null)->whereIn('id', $shipment)->get();
         // if ($users->count() == 0) {
@@ -136,54 +138,76 @@ class ShipmentController extends Controller
     }
 
     // add a parcel under a merchant
-    function add_parcel(Request $request)
+    function add_parcel(Request $request, Shipment $shipment)
     {
         $total_price = 0;
         $cod_type = 0;
         $cod_amount = 0;
-
         $checkInvoice = Shipment::where('invoice_id', $request->invoice_id)->count();
         if ($checkInvoice > 0 && $checkInvoice != null) {
             $invoice_id = $request->invoice_id . rand(222, 22);
         } else $invoice_id = $request->invoice_id;
-
-        $data = [
-            'merchant_id' => $request->merchant_id,
-            'zone_id' => Area::where('id', $request->area)->first()->zone_id,
-            'area_id' => $request->area,
-            'name' => $request->name,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'zip_code' => $request->zip_code,
-            'parcel_value' => $request->parcel_value,
-            'invoice_id' => $invoice_id,
-            'merchant_note' => $request->merchant_note,
-            'weight' => $request->weight,
-            'delivery_type' => $request->delivery_type,
-            'tracking_code' => rand(),
-            'cod' => $cod_type,
-            'cod_amount' => $cod_amount,
-            'price' => 0,
-            'total_price' => $total_price,
-            'shipping_status' => 2
-        ];
-        $shipment = Shipment::create($data);
-
-        if ($request->status != '0') {
-            if ($request->status == '1') $status = 'pending';
-
-            if ($request->status == '2') $status = 'received';
-            CourierShipment::create([
-                'courier_id' => $request->courier_id,
-                'shipment_id' => $shipment->id,
-                'admin_id' => Auth::guard('admin')->user()->id,
-                'status' => $status
-            ]);
+        // $data = [
+        //     'merchant_id' => $request->merchant_id,
+        //     'pickup_location_id' => $request->pickup_location_id,
+        //     'name' => $request->name,
+        //     'phone' => $request->phone,
+        //     'address' => $request->address,
+        //     'zip_code' => $request->zip_code,
+        //     'invoice_id' => $request->invoice_id,
+        //     'merchant_note' => $request->merchant_note,
+        //     'weight' => $request->weight,
+        //     'shipping_charge_id' => $request->shipping_charge_id,
+        //     'tracking_code' => Str::uuid(),
+        //     'shipping_status' => 1
+        // ];
+        // $shipment = Shipment::create($data);
+        // if ($request->status != '0') {
+        //     if ($request->status == '1') $status = 'pending';
+        //     if ($request->status == '2') $status = 'received';
+        //     CourierShipment::create([
+        //         'courier_id' => $request->courier_id,
+        //         'shipment_id' => $shipment->id,
+        //         'admin_id' => Auth::guard('admin')->user()->id,
+        //         'status' => $status
+        //     ]);
+        // }
+        // return back()->with('message', 'New parcel has been created successfully!!');
+        try {
+            $jsonData = $request->only('name', 'phone', 'address');
+            $shipment->recipient = $jsonData;
+            $shipment->tracking_code = uniqid();
+            $shipment->invoice_id = rand(1000, 100000);
+            $shipment->shipping_charge_id = $request->shipping_charge_id;
+            $shipment->pickup_location_id = $request->pickup_location_id;
+            $shipment->weight = $request->weight;
+            $shipment->amount = $request->amount;
+            $shipment->note = $request->note;
+            $shipment->added_by_id = Auth::guard('admin')->user()->id;
+            $shipment->logistic_status = LogisticStep::first()->id;
+            $shipment->added_by()->associate(Auth::guard('admin')->user());
+            $shipment->save();
+            //dd('save');
+            //Make shipment Payment
+            if ($shipment->save()) {
+                $shipmentPmnt = new ShipmentPayment();
+                $shipmentPmnt->shipment_id = $shipment->id;
+                $shipmentPmnt->sl_no  = rand(1, 100000);
+                $shipmentPmnt->tracking_code  = uniqid();
+                $shipmentPmnt->invoice_no  = rand(2222, 222222);
+                $shipmentPmnt->cod_amount  = $shipment->amount;
+                $shipmentPmnt->delivery_charge  = $shipment->shipping_charge_id;
+                $shipmentPmnt->save();
+                event(new ShipmentMovementEvent($shipment, LogisticStep::first(), Auth::guard('user')->user()));
+            }
+            return back()->with('message', 'New parcel has been created successfully!!');
+        } catch (\Throwable $th) {
+            dd($th);
+            return redirect()->back()->with('error', 'Shipment not saved');
         }
-        return back()->with('message', 'New parcel has been created successfully!!');
     }
 
-    public function saveCourierShipment($id, Request $request)
+    public function save_courier_shipment($id, Request $request)
     {
         if (is_numeric($request->shipment_id)) {
             $check = CourierShipment::where(['courier_id' => $request->courier_id, 'shipment_id' => $request->shipment_id])->count();
@@ -196,8 +220,8 @@ class ShipmentController extends Controller
                 'admin_id' => Auth::guard('admin')->user()->id, 'note' => $request->note
             ]);
             //dd('ok');
-            Shipment::where('id', $request->shipment_id)->where('logistic_status','<=',LogisticStep::where('slug','to-pick-up')->first()->previous->id)->update(['logistic_status' => LogisticStep::where('slug','to-pick-up')->first()->id]);
-            event(new ShipmentMovementEvent(Shipment::find($id), LogisticStep::where('slug','to-pick-up')->first(),Auth::guard('admin')->user()));
+            Shipment::where('id', $request->shipment_id)->where('logistic_status', '<=', LogisticStep::where('slug', 'to-pick-up')->first()->previous->id)->update(['logistic_status' => LogisticStep::where('slug', 'to-pick-up')->first()->id]);
+            event(new ShipmentMovementEvent(Shipment::find($id), LogisticStep::where('slug', 'to-pick-up')->first(), Auth::guard('admin')->user()));
         } else {
             dd('multiple receivde need to work');
             foreach (explode(',', $request->shipment_id) as $key => $id) {
@@ -208,10 +232,9 @@ class ShipmentController extends Controller
                             'courier_id' => $request->courier_id, 'shipment_id' => $id,
                             'admin_id' => Auth::guard('admin')->user()->id, 'note' => $request->note
                         ]);
-                        Shipment::where('id', $id)->where('logistic_status','<=',3)->update(['logistic_status' => LogisticStep::where('slug','to-pick-up')->first()->id]);
-                        event(new ShipmentMovementEvent(Shipment::find($id), LogisticStep::where('slug','to-pick-up')->first(),Auth::guard('admin')->user()));
+                        Shipment::where('id', $id)->where('logistic_status', '<=', 3)->update(['logistic_status' => LogisticStep::where('slug', 'to-pick-up')->first()->id]);
+                        event(new ShipmentMovementEvent(Shipment::find($id), LogisticStep::where('slug', 'to-pick-up')->first(), Auth::guard('admin')->user()));
                     }
-
                 }
             }
         }
@@ -252,7 +275,7 @@ class ShipmentController extends Controller
     function assignToHub($id, $status, $shipping_status)
     {
         $user = User::find($id);
-        $units = Shipment::whereBetween('logistic_status',[4,6])->deliverycousins()->join('unit_shipment','unit_shipment.shipment_id','shipments.id')->pluck('units.id')->toArray();
+        $units = Shipment::whereBetween('logistic_status', [4, 6])->deliverycousins()->join('unit_shipment', 'unit_shipment.shipment_id', 'shipments.id')->pluck('units.id')->toArray();
         $units = Unit::whereIn('id', array_unique($units))->get();
         return view('admin.shipment.assign-to-unit', compact('units', 'user', 'id', 'status', 'logistic_status'));
     }
@@ -264,7 +287,7 @@ class ShipmentController extends Controller
         //     ->where(['status' => $status, 'logistic_status' => $logistic_status])
         //     ->where('time_starts', '>=', $date)->get();
         // dd(Shipment::whereIn('logistic_status',explode(",",$logistic_status))->get());
-        $shipments= Shipment::where('logistic_status',5)->cousins()->where(['units.admin_id'=>Auth::guard('admin')->user()->id,'shipments.merchant_id'=>$id])->get(['shipments.*']);
+        $shipments = Shipment::where('logistic_status', 5)->cousins()->where(['units.admin_id' => Auth::guard('admin')->user()->id, 'shipments.merchant_id' => $id])->get(['shipments.*']);
 
         $locations = Location::orderBy('name')->get();
         return view('admin.shipment.load.receiving-parcels', compact('shipments', 'locations', 'id', 'status', 'logistic_status'));
@@ -292,14 +315,14 @@ class ShipmentController extends Controller
     function MoveToHubNew(Request $request)
     {
         // dd($request->all());
-        $merchant_id=$request->merchant_id;
+        $merchant_id = $request->merchant_id;
         UnitShipment::create([
-            'shipment_id'=>$request->shipment_id,
-            'unit_id'=>Shipment::find($request->shipment_id)->pickup_location->point->unit->id,
+            'shipment_id' => $request->shipment_id,
+            'unit_id' => Shipment::find($request->shipment_id)->pickup_location->point->unit->id,
         ]);
-        Shipment::where('id',$request->shipment_id)->update(['logistic_status'=>6,'delivery_location_id'=>$request->delivery_location_id]);
-        event(new ShipmentMovementEvent(Shipment::find($request->shipment_id),LogisticStep::find(6),Auth::guard('admin')->user()->id),);
-        $units = Shipment::deliverycousins()->join('unit_shipment','unit_shipment.shipment_id','shipments.id')->pluck('units.id')->toArray();
+        Shipment::where('id', $request->shipment_id)->update(['logistic_status' => 6, 'delivery_location_id' => $request->delivery_location_id]);
+        event(new ShipmentMovementEvent(Shipment::find($request->shipment_id), LogisticStep::find(6), Auth::guard('admin')->user()->id),);
+        $units = Shipment::deliverycousins()->join('unit_shipment', 'unit_shipment.shipment_id', 'shipments.id')->pluck('units.id')->toArray();
         $units = Unit::whereIn('id', array_unique($units))->get();
         return view('admin.shipment.load.unit-shipments', compact('units', 'merchant_id'));
     }
@@ -352,7 +375,7 @@ class ShipmentController extends Controller
     function hub_parcels(Unit $unit, $merchant_id, $status = 'on-dispatch')
     {
         $id = $unit->id;
-        $shipments= Shipment::where('logistic_status',5)->cousins()->where(['units.admin_id'=>Auth::guard('admin')->user()->id,'shipments.merchant_id'=>$id])->get(['shipments.*']);
+        $shipments = Shipment::where('logistic_status', 5)->cousins()->where(['units.admin_id' => Auth::guard('admin')->user()->id, 'shipments.merchant_id' => $id])->get(['shipments.*']);
 
         // dd($hub_id .' , '. $merchant_id);
         return view('admin.shipment.load.hub-parcels', compact('shipments', 'id'));
@@ -385,15 +408,15 @@ class ShipmentController extends Controller
         $hub_id =  Area::find($area_id)->hub_id;
         return Hub::find($hub_id);
     }
-    public function unit_sorting(Unit $unit){
-        $shipments = Shipment::where('logistic_status',6)->cousins()->where('admins.id',Auth::guard('admin')->user()->id)->get(['shipments.*']);
-        foreach($shipments as $shipment){
+    public function unit_sorting(Unit $unit)
+    {
+        $shipments = Shipment::where('logistic_status', 6)->cousins()->where('admins.id', Auth::guard('admin')->user()->id)->get(['shipments.*']);
+        foreach ($shipments as $shipment) {
             // Shipment::where('id',$shipment['id'])->update(['logistic_status'=>7]);
-            if($shipment->pickup_location->point->unit->id == $shipment->delivery_location->point->unit->id){
-                Shipment::where('id',$shipment['id'])->update(['logistic_status'=>8]);
-            }
-            else{
-                Shipment::where('id',$shipment['id'])->update(['logistic_status'=>7]);
+            if ($shipment->pickup_location->point->unit->id == $shipment->delivery_location->point->unit->id) {
+                Shipment::where('id', $shipment['id'])->update(['logistic_status' => 8]);
+            } else {
+                Shipment::where('id', $shipment['id'])->update(['logistic_status' => 7]);
             }
         }
         return 'Data has been sorted to dispatch & sent SMS to customer mobile!';
@@ -401,11 +424,11 @@ class ShipmentController extends Controller
 
     function shipment_dispatch()
     {
-        $units=[];
+        $units = [];
         if (Auth::guard('admin')->user()->hasRole('super-admin')) {
-            $units = Shipment::where('shipments.logistic_status',7)->join('locations','shipments.delivery_location_id','locations.id')->join('points','locations.point_id','points.id')->join('units','points.unit_id','units.id')->distinct()->get(['units.*']);
+            $units = Shipment::where('shipments.logistic_status', 7)->join('locations', 'shipments.delivery_location_id', 'locations.id')->join('points', 'locations.point_id', 'points.id')->join('units', 'points.unit_id', 'units.id')->distinct()->get(['units.*']);
         } else {
-            $units = Shipment::where('shipments.logistic_status',7)->join('locations','shipments.delivery_location_id','locations.id')->join('points','locations.point_id','points.id')->join('units','points.unit_id','units.id')->distinct()->get(['units.*']);
+            $units = Shipment::where('shipments.logistic_status', 7)->join('locations', 'shipments.delivery_location_id', 'locations.id')->join('points', 'locations.point_id', 'points.id')->join('units', 'points.unit_id', 'units.id')->distinct()->get(['units.*']);
         }
         // $units = array_unique($units);
 
@@ -486,13 +509,12 @@ class ShipmentController extends Controller
 
     function unit_receivable()
     {
-        try{
+        try {
             $title = 'Unit receivable Shipments';
-            $shipments = Shipment::where('logistic_status',7)->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->get(['shipments.*']);
+            $shipments = Shipment::where('logistic_status', 7)->deliverycousins()->where('units.admin_id', Auth::guard('admin')->user()->id)->get(['shipments.*']);
             // dd($shipments);
             return view('admin.shipment.hub-receivable', compact('shipments', 'title'));
-        }
-        catch(Exception $e){
+        } catch (Exception $e) {
             throw $e;
         }
         // if (Session::has('admin_sub')) {
@@ -698,21 +720,22 @@ class ShipmentController extends Controller
         }
         return back()->with('message', 'Shipments return to Receive for 7 days!');
     }
-    public function receive_at_delivery_unit($shipment_id){
-        try{
+    public function receive_at_delivery_unit($shipment_id)
+    {
+        try {
             // dd($shipment_id);
-            Shipment::where('id',$shipment_id)->update(['logistic_status' => 8]);
-            event(new ShipmentMovementEvent(Shipment::find($shipment_id),LogisticStep::find(8),Auth::guard('admin')->user()));
-            return response()->json(['success'=>true,'message'=>'Shipment marked as receive at delivery unit'],200);
-        }
-        catch(Exception $e){
+            Shipment::where('id', $shipment_id)->update(['logistic_status' => 8]);
+            event(new ShipmentMovementEvent(Shipment::find($shipment_id), LogisticStep::find(8), Auth::guard('admin')->user()));
+            return response()->json(['success' => true, 'message' => 'Shipment marked as receive at delivery unit'], 200);
+        } catch (Exception $e) {
             throw $e;
         }
     }
-    public function delivery_shipments(Request $request){
-        $shipments = Shipment::where('logistic_status',8)->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->get('shipments.*');
-        $users = User::where(['status'=>1,'is_verified'=>1])->get();
-        $units= Unit::all();
+    public function delivery_shipments(Request $request)
+    {
+        $shipments = Shipment::where('logistic_status', 8)->deliverycousins()->where('units.admin_id', Auth::guard('admin')->user()->id)->get('shipments.*');
+        $users = User::where(['status' => 1, 'is_verified' => 1])->get();
+        $units = Unit::all();
         $locations = Location::all();
         return view('admin.shipment.delivery', compact('units', 'users', 'locations', 'shipments'));
     }

@@ -37,8 +37,6 @@ class ShipmentController extends Controller
 
     public function saveShipment(Request $request, Shipment $shipment)
     {
-
-
         try {
             $jsonData = $request->only('name', 'phone', 'address');
             $shipment->recipient = $jsonData;

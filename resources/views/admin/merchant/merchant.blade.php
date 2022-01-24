@@ -184,7 +184,8 @@
                         <div class="x_content">
                             <br>
                             <form id="demo-form2" method="post" class="form-horizontal form-label-left input_mask"
-                                action="{{ route('add-parcelBy-admin') }}" method="post"> @csrf
+                                action="{{ route('add-parcelBy-admin') }}" method="post">
+                                @csrf
                                 <div class="row my-4">
                                     <div class="col-md-12 text-left">
                                         <label for="Merchant">Merchant selection</label>
@@ -213,7 +214,7 @@
                                             Rider</label>
                                     </div>
                                 </div>
-                                <div class="row my-4">
+                                {{-- <div class="row my-4">
                                     <div class="col-md-12 text-left driverArea" style="display: none">
                                         <label for="area">Rider selection</label>
                                         <?php $drivers = \DB::table('couriers')->get(); ?>
@@ -226,13 +227,13 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="row my-4" style="margin-top:1em">
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-success pull-right"><i
-                                                class="mdi mdi-content-check m-r-3"></i>Create Parcels
+                                                class="mdi mdi-content-check m-r-3"></i>Create Parcel
                                         </button>
-                                        <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">
+                                        <button type="submit" class="btn btn-primary pull-right" data-dismiss="modal">
                                             <i class="mdi mdi-cancel m-r-3"></i>Cancel
                                         </button>
                                     </div>
@@ -250,8 +251,10 @@
     <!-- Datatables -->
     <link href="{{ asset('ass_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('ass_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}"
+        rel="stylesheet">
+    <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}"
+        rel="stylesheet">
     <link href="{{ asset('ass_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
 @endpush
 @push('scripts')
@@ -294,6 +297,7 @@
                     type: 'post',
                     url: '/admin/update-merchant-verify',
                     data: {
+                        "_token": "{{ csrf_token() }}",
                         is_verified: is_verified,
                         merchant_id: merchant_id
                     },

@@ -1,17 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice {{ $shipment->invoice_id }}</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        * {
-            box-sizing: border-box
-        }
-
         .table {
             margin-top: 100px;
             border-collapse: collapse;
@@ -23,7 +17,6 @@
         .img1 {
             margin-top: 30px
         }
-
         .table td {
             border-color: #000;
             border-style: solid;
@@ -120,7 +113,7 @@
                     <div>
                         <div class="top-section">
                             <div>
-                                <p class="text-margin" style="font-weight: bold;">{{ $shipment->recipient }}</p>
+                                <p class="text-margin" style="font-weight: bold;">{{ $shipment->recipient['name'] }}</p>
                                 {{-- <p class="text-margin">House - 36, Road-13/D, Banani, Dhaka-1213</p>
                                 <p class="text-margin" style="font-weight: bold;">01844050948</p> --}}
                             </div>

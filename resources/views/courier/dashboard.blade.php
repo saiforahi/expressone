@@ -16,11 +16,11 @@
                         </div>
                     @endif
                     <div class="x_title">
-                        <h2><i class="fa fa-truck"></i> <small>My Shipments tab</small></h2>
+                        <h2><i class="fa fa-truck"></i> <small>My Shipments Dashboard</small></h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <ul class="nav nav-tabs">
+                        {{-- <ul class="nav nav-tabs">
                             <li class="nav-item  @if ($type == 'pickup')active @endif">
                                 <a class="nav-link" href="/courier?r=pickup">All Pick-Up</a>
                             </li>
@@ -34,8 +34,8 @@
                             <li class="nav-item  @if ($type == 'otp')active @endif">
                                 <a class="nav-link" href="/courier?r=otp">Confirm Delivery</a>
                             </li>
-                        </ul>
-                        <div class="tab-content"> <br>
+                        </ul> --}}
+                        {{-- <div class="tab-content"> <br>
                             <div class="tab-pane fade" id="search" role="tabpanel" aria-labelledby="search-tab">
                                 <div class="control-group ">
                                     <div class="controls row">
@@ -63,8 +63,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> <br>
-                        <table id="datatable" class="table table-striped table-bordered no-footer dtr-inline">
+                        </div> <br> --}}
+                        {{-- <table id="datatable" class="table table-striped table-bordered no-footer dtr-inline">
                             <thead>
                                 <tr class="bg-dark">
                                     <th>Date</th>
@@ -75,7 +75,7 @@
                                     <th>status</th>
                                 </tr>
                             </thead>
-                        </table>
+                        </table> --}}
                     </div>
                 </div>
             </div>

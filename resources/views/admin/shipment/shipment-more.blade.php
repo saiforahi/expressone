@@ -56,7 +56,6 @@
                             </thead>
                             <tbody>
                                 @foreach ($shipments as $key => $shipment)
-
                                     <tr shipment_id={{ $shipment->id }}>
                                         <th scope="row">
                                             <input style="display:none" type="checkbox" id="ids" name="ids[]"
