@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Shipment;
 use App\User;
-use App\Courier;
-use App\Driver_shipment;
-use App\Driver_hub_shipment_box;
-
-use App\Http\Controllers\Controller;
+use App\Models\Courier;
+use App\Models\Shipment;
 use Illuminate\Http\Request;
-use Session;
+use App\Models\CourierShipment;
+
+use App\Driver_hub_shipment_box;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class DriverController extends Controller
 {
@@ -74,7 +74,7 @@ class DriverController extends Controller
 
     public function assigned_shipments($id){
         Session::flash('message', 'Courier assigned shipments');
-        $shipments = Driver_shipment::where('courier_id',$id)->get();
+        $shipments = CourierShipment::where('courier_id',$id)->get();
         //dd($shipments);
         return view('admin.driver.shipments', compact('shipments'));
     }

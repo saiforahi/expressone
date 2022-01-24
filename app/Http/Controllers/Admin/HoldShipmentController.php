@@ -14,7 +14,7 @@ use App\Return_shipment_box;
 use Illuminate\Http\Request;
 use App\Driver_hub_shipment_box;
 use App\Events\ShipmentMovement;
-use App\Driver_shipment_delivery;
+use App\CourierShipment_delivery;
 use App\Driver_return_shipment_box;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -85,7 +85,7 @@ class HoldShipmentController extends Controller
     }
     public function move_to_hold_shipmentRider(Courier $driver)
     {
-        $dds = Driver_shipment_delivery::where(['courier_id'=>$driver->id,'type'=>'hold'])->get();
+        $dds = CourierShipment_delivery::where(['courier_id'=>$driver->id,'type'=>'hold'])->get();
         foreach($dds as $dd){
             $shipment = Shipment::where('id',$dd->shipment_id)->first();
             $check = Hold_shipment::where(['shipment_id'=>$shipment->id,'status'=>'pending']);
@@ -178,7 +178,7 @@ class HoldShipmentController extends Controller
     }
     // save shipment info at return_shipments (left to right) with driver id
     function move_to_return_shipment_withRider(Courier $driver){
-        $dds = Driver_shipment_delivery::where(['courier_id'=>$driver->id,'type'=>'return'])->get();
+        $dds = CourierShipment_delivery::where(['courier_id'=>$driver->id,'type'=>'return'])->get();
         foreach($dds as $dd){
             $shipment = Shipment::where('id',$dd->shipment_id)->first();
             $check = Return_shipment::where(['shipment_id'=>$shipment->id,'status'=>'pending']);

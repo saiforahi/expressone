@@ -74,7 +74,7 @@
                                                     <br> @endif
                                                 @endif
 
-                                                <?php $courier_id = \DB::table('driver_shipment')->where('shipment_id', $shipment->id)->pluck('courier_id')->first();?>
+                                                <?php $courier_id = \DB::table('CourierShipment')->where('shipment_id', $shipment->id)->pluck('courier_id')->first();?>
                                                 @if($courier_id !=null)
                                                     <?php $dName = \DB::table('drivers')->where('id', $courier_id)->select('first_name', 'last_name')->first(); echo $courier_id;?>
                                                     Picked up by: <b
@@ -266,7 +266,7 @@
             });
         }
 
-        function get_driver_shipment(courier_id) {
+        function get_CourierShipment(courier_id) {
             $('.delivery-result').html('<p class="text-center text-warning">Loading...</p>');
             $.ajax({
                 type: "get", url: '<?php echo '/admin/get-driver-shipment/';?>' + courier_id,

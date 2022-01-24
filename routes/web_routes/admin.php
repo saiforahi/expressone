@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AreaController;
+use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\MerchantController;
 use App\Http\Controllers\Admin\ShipmentController;
 use App\Http\Controllers\Admin\ShippingChargeController;
@@ -52,33 +53,34 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('merchant-details/{user}', [MerchantController::class,'show'])->name('merchant.details');
     Route::post('merchant-store', [MerchantController::class,'store'])->name('merchant.store');
     Route::post('update-merchant-verify', [MerchantController::class,'updateMerchantStatus'])->name('admin.merchant.status');
-
-
+    //Shipping routes
     Route::get('/shipping-price-set', 'ShippingPriceController@shippingPrice')->name('shippingPrice.set');
     Route::post('/shipping-price-set', 'ShippingPriceController@shippingPriceAdd')->name('shippingPrice.add');
     Route::post('/shipping-price-set-edit', 'ShippingPriceController@shippingPriceEdit')->name('shippingPrice.edit');
     Route::get('/delete-shipping-price/{shipping_price}', 'ShippingPriceController@destroy')->name('delete-shipping-price');
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
-    //Admin Courier  list
-    Route::resource('/driver-list', 'DriverController');
-    Route::get('/driver-shipments/{id}', 'DriverController@assigned_shipments')->name('admin-driverShipments');
+    //Admin Courier route
+    Route::get('courier', [DriverController::class,'index'])->name('allCourier');
+    Route::post('courier-delete/{id}', [DriverController::class,'courierDelete'])->name('courierDelete');
+    Route::match(['get', 'post'], 'add-edit-courier/{id?}', [DriverController::class, 'addEditCourier'])->name('addEditCourier');
+    Route::get('courier-shipments/{id}', [DriverController::class,'assigned_shipments'])->name('admin-driverShipments');
     //Shipping List
     Route::get('/shipping-list', [ShipmentController::class,'index'])->name('AdminShipment.index');
     Route::get('/shipping-list/more/{id}/{status}/{logistic_status}', [ShipmentController::class,'show'])->name('AdminShipmentMore');
-    Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', [ShipmentController::class,'saveCourierShipment'])->name('saveCourierShipment');
-    Route::get('/shipping-list/received', 'ShipmentController@shipment_received')->name('AdminShipmentReceived');
+    Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', [ShipmentController::class,'save_courier_shipment'])->name('saveDriverShipments');
+    Route::get('/shipping-list/received', [ShipmentController::class,'shipment_received'])->name('AdminShipmentReceived');
     Route::get('/shipping-list/cancelled', 'ShipmentController@shipment_cancelled')->name('AdminShipmentCancelled');
 
-    Route::post('/add-parcelBy-admin', 'ShipmentController@add_parcel')->name('add-parcelBy-admin');
-    Route::get('/assign-to-hub/{merchant_id}/{status}/{shipping_status}', 'ShipmentController@assignToHub')->name('AdminShipmentReceive');
-    Route::get('/receiving-parcels/{merchant_id}/{status?}/{shipping_status?}', 'ShipmentController@receving_parcels')->name('receiving-parcels');
-    Route::get('/get-hub-csv-files/{merchant_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
+    Route::get('/add-parcelBy-admin', [ShipmentController::class,'add_parcel'])->name('add-parcelBy-admin');
+    Route::get('/assign-to-unit/{merchant_id}/{status}/{logistic_status}', [ShipmentController::class,'unit_received'])->name('AdminShipmentReceive');
+    Route::get('/receiving-parcels/{user_id}/{status?}/{logistic_status?}', [ShipmentController::class,'receiving_parcels'])->name('receiving-parcels');
+    Route::get('/get-hub-csv-files/{user_id}/{status}/{shipping_status}', 'ShipmentController@get_hub_csv')->name('get-hub-csv');
 
     Route::get('/move-to-hub', 'ShipmentController@MoveToHub')->name('ShipmentToHub');
     Route::get('/move2hub-withPhone', 'ShipmentController@MoveToHubWithPhone')->name('move2hub-withPhone');
     Route::get('/move2hub-withInvoice', 'ShipmentController@MoveToHubWithInvoice')->name('move2hub-withInvoice');
 
-    Route::get('/user-hub-parcels/{hub}/{user}', [ShipmentController::class,'hub_parcels'])->name('hub-parcels');
+    Route::get('/user-hub-parcels/{hub}/{user}', 'ShipmentController@hub_parcels')->name('hub-parcels');
     Route::get('/user-hub-parcels-csv/{hub}/{user}', 'ShipmentController@hub_parcels_csv')->name('hub-parcels-csv');
     Route::get('/remove-hub-parcel/{hub_shipment}', 'ShipmentController@remove_hub_parcel')->name('remove-hub-parcel');
     Route::get('/change-hub-with-area/{id}', 'ShipmentController@change_bub')->name('change-hub-with-area');
@@ -124,7 +126,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     // delivery
     Route::get('/delivery', 'ShipmentController@delivery')->name('AdminDelivery');
     Route::get('/get-shipment/{field}/{keyword}', 'ShipmentController@shipment_search')->name('delivery-search');
-    Route::get('/get-driver-shipment/{driver}', 'ShipmentController@driver_shipment_search')->name('delivery-search-driver');
+    Route::get('/get-driver-shipment/{driver}', 'ShipmentController@CourierShipment_search')->name('delivery-search-driver');
     Route::get('/get-shipment-with-invoices/{keyword}', 'ShipmentController@shipment_search_invoices')->name('delivery-search-invoices');
 
     Route::get('/get-shipment-withHub/{hub}', 'ShipmentController@shipment_search_withHub')->name('delivery-search-hub');

@@ -13,8 +13,8 @@ Route::post('courier/logout', [CourierAuthController::class,'logout'])->name('co
 
 Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix' => 'courier'], function () {
     Route::get('/', [CourierDashboardController::class,'index'])->name('courier.dashboard');
-    Route::get('get-shipments/{type}', [CourierDashboardController::class,'shipments'])->name('get-driver-shipments');
-    Route::get('get-shipments-with-dates/{dates}/{type}', [CourierDashboardController::class,'shipments_dates'])->name('dateWize-driver-shipments');
+    Route::get('get-shipments/{type}', [CourierDashboardController::class,'shipments'])->name('get-courier-shipments');
+    Route::get('get-shipments-with-dates/{dates}/{type}', [CourierDashboardController::class,'shipments_dates'])->name('dateWize-courier-shipments');
 
     Route::get('shipments', [ShipmentController::class,'index'])->name('courierShipments');
     Route::get('my-shipments/{type}', [ShipmentController::class,'my_shipments'])->name('my-shipments');

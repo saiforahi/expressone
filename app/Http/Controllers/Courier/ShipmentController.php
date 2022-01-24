@@ -59,8 +59,11 @@ class ShipmentController extends Controller
         // $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $status])->get();
         // $user = User::find($id);
         // return view('courier.shipment.shipment-more', compact('shipments', 'user'));
+        //dd($id);
+        // $shipments = Shipment::where('user_id',$id)->where(['status'=>1,'shipping_status'=>1])->get();
+        $shipments = CourierShipment::where(['courier_id'=> Auth::guard('courier')->user()->id,'status'=>$status])->get();
+        // dd($status);
         $user = User::find($id);
-        $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $status])->get();
         return view('courier.shipment.shipment-more', compact('shipments', 'user'));
     }
 
@@ -82,7 +85,7 @@ class ShipmentController extends Controller
         foreach(explode(",",$shipments) as $key=>$value){
             CourierShipment::where('shipment_id',$value)->update(['status'=>'submitted_to_unit']);
             $shipment=Shipment::where(['id'=>$value,'logistic_status'=>4])->update(['logistic_status'=>5]);//updating status to unit-received
-            
+
             event(new ShipmentMovementEvent(Shipment::find($shipment),LogisticStep::find(5),Auth::guard('courier')->user()));
         }
         // dd($user);

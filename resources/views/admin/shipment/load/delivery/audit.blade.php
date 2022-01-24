@@ -20,7 +20,7 @@
     @if($log->status == 'pickup' && $log->user_type=='driver')
     <tr>
       <td>Status: {{$log->status}} <br>
-        <?php $admin_id =  \DB::table('driver_shipment')->where(['courier_id'=>$log->merchant_id,'shipment_id'=>$log->shipment_id])->pluck('admin_id')->first();
+        <?php $admin_id =  \DB::table('CourierShipment')->where(['courier_id'=>$log->merchant_id,'shipment_id'=>$log->shipment_id])->pluck('admin_id')->first();
         $admin = \DB::table('admins')->select('first_name','last_name')->where('id',$admin_id)->first();?>
 
         Assigned by: {{$admin->last_name.' '.$admin->last_name}} <br>

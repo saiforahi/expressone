@@ -35,7 +35,7 @@
           @if($dName !=null) Delivery by <b class="label label-info">{{$dName->first_name.' '.$dName->last_name}}</b> <br> @endif
         @endif
 
-        <?php $courier_id = \DB::table('driver_shipment')->where('shipment_id',$shipment->id)->pluck('courier_id')->first();?>
+        <?php $courier_id = \DB::table('CourierShipment')->where('shipment_id',$shipment->id)->pluck('courier_id')->first();?>
         @if($courier_id !=null)
           <?php $dName = \DB::table('drivers')->where('id',$courier_id)->select('first_name','last_name')->first();?>
           Picked up by<br><b class="label label-info">{{$dName->first_name.' '.$dName->last_name}}</b>

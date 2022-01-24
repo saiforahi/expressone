@@ -74,11 +74,11 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
 
     Route::resource('/driver-list', 'DriverController');
-    Route::get('/driver-shipments/{id}', 'DriverController@assigned_shipments')->name('admin-driverShipments');
+    Route::get('/courier-shipments/{id}', 'DriverController@assigned_shipments')->name('admin-driverShipments');
 
     Route::get('/shipping-list', 'ShipmentController@index')->name('AdminShipment.index');
     Route::get('/shipping-list/more/{id}/{status}/{shipping_status}', 'ShipmentController@show')->name('AdminShipmentMore');
-    Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', 'ShipmentController@save_driver_shipment')->name('saveDriverShipments');
+    Route::post('/shipping-list/more/{id}/{status}/{shipping_status}', 'ShipmentController@save_CourierShipment')->name('saveDriverShipments');
     Route::get('/shipping-list/received', 'ShipmentController@shipment_received')->name('AdminShipmentReceived');
     Route::get('/shipping-list/cancelled', 'ShipmentController@shipment_cancelled')->name('AdminShipmentCancelled');
 
@@ -148,7 +148,7 @@ Route::group(['prefix' => 'admin','middleware' => 'auth:admin', 'namespace' => '
     // delivery
     Route::get('/delivery', 'ShipmentController@delivery')->name('AdminDelivery');
     Route::get('/get-shipment/{field}/{keyword}', 'ShipmentController@shipment_search')->name('delivery-search');
-    Route::get('/get-driver-shipment/{driver}', 'ShipmentController@driver_shipment_search')->name('delivery-search-driver');
+    Route::get('/get-driver-shipment/{driver}', 'ShipmentController@CourierShipment_search')->name('delivery-search-driver');
     Route::get('/get-shipment-with-invoices/{keyword}', 'ShipmentController@shipment_search_invoices')->name('delivery-search-invoices');
 
     Route::get('/get-shipment-withHub/{hub}', 'ShipmentController@shipment_search_withHub')->name('delivery-search-hub');
@@ -393,8 +393,8 @@ Route::post('driver/logout', 'Courier\AuthController@logout')->name('courier.log
 
 Route::group(['middleware' => 'auth:driver', 'namespace' => 'Courier', 'prefix' => 'driver'], function () {
     Route::get('/', 'DashboardController@index')->name('driver.dashboard');
-    Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-driver-shipments');
-    Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-driver-shipments');
+    Route::get('/get-shipments/{type}', 'DashboardController@shipments')->name('get-courier-shipments');
+    Route::get('/get-shipments-with-dates/{dates}/{type}', 'DashboardController@shipments_dates')->name('dateWize-courier-shipments');
 
     Route::get('/shipments', 'ShipmentController@index')->name('courierShipments');
     Route::get('/my-shipments/{type}', 'ShipmentController@my_shipments')->name('my-shipments');

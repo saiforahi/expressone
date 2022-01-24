@@ -116,7 +116,7 @@ class DashboardController extends Controller
             return view('dashboard.include.shipping-status',compact('status','shipping_status'));
         })->rawColumns(['date','customer_info','merchant','amount','area','status'])->make(true);
 
-        // return DataTables::of(Driver_shipment::where(['courier_id'=>Auth::guard('courier')->user()->id])->orderBy('id', 'DESC'))
+        // return DataTables::of(CourierShipment::where(['courier_id'=>Auth::guard('courier')->user()->id])->orderBy('id', 'DESC'))
         // ->addColumn('date', function ($driverShipment) {
         //     $data = 'Date: '.date('M d, Y H:i',strtotime($driverShipment->created_at)).'<br/>';
         //     $data.= 'TracingCode: '.$driverShipment->shipment->tracking_code; return $data;
