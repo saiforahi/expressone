@@ -4,7 +4,7 @@
     <div class="right_col" role="main">
         <div class="page-title">
             <div class="title_left">
-                <h3>Admins</h3>
+                <h3>Unit Admins</h3>
             </div>
             <div class="title_right">
                 <div class="col-md-12 col-sm-12 form-group top_search">
@@ -38,12 +38,14 @@
                         <div class="table-responsive">
                             <table id="dataTable" class="table table-striped table-bordered">
                                 <thead>
-                                    <tr class="bg-dark">
-                                        <th>Employee info</th>
-                                        <th>Email</th>
-                                        <th>Address</th>
-                                        <th>Action</th>
-                                    </tr>
+                                <tr class="bg-dark">
+                                    <th>Employee info</th>
+                                    <th>Email</th>
+                                    <th>Address</th>
+                                    <th>Roles</th>
+                                    <th>Units</th>
+                                    <th>Action</th>
+                                </tr>
                                 </thead>
                             </table>
                         </div>
@@ -54,25 +56,21 @@
         </div>
     </div>
     <div class="modal fade add_employee" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add New Admin
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </h5>
-                </div>
-                <div class="modal-body">
-                    <form id="employee_form" action="{{ route('save-admin') }}" method="post"
-                        enctype="multipart/form-data">
-                        @csrf
-                        @include('admin.admins.form') <br>
-                        <span class="form_result"></span>
-                        <button class="btn btn-info" type="submit"><i class="fa fa-check"></i> Save Admin</button>
-                    </form>
-                </div>
-            </div>
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          	<div class="modal-header">
+    	        <h3 class="modal-title" id="exampleModalLabel">New admin Entry
+    	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    	          <span aria-hidden="true">&times;</span>
+    	        </button> </h3>
+    	    </div>
+    	    <div class="modal-body">
+    	    	<form id="employee_form" method="post" enctype="multipart/form-data" action>@csrf
+    	    		@include('admin.admins.form') <br>
+    	    		<span class="form_result"></span>
+    	    		<button class="btn btn-info" type="submit"><i class="fa fa-check"></i> Save Admin</button>
+    	    	</form>
+    	    </div>
         </div>
     </div>
 
@@ -199,26 +197,15 @@
                 "language": {
                     processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only"></span>'
                 },
-                serverSide: true,
-                ajax: "{{ route('admins') }}",
-                order: [
-                    [0, 'desc']
-                ],
-                columns: [{
-                        data: 'employee_info'
-                    },
-                    {
-                        data: 'email'
-                    },
-                    {
-                        data: 'address'
-                    },
-                    {
-                        data: 'action',
-                        orderable: false,
-                        searchable: false,
-                        class: 'text-right'
-                    }
+                serverSide: true,ajax: "{{route('admins')}}",
+                order: [ [0, 'desc'] ],
+                columns: [
+                    {data: 'employee_info'},
+                    {data: 'email'},
+                    {data: 'address'},
+                    {data: 'roles'},
+                    {data: 'units'},
+                    {data: 'action', orderable: false, searchable: false, class:'text-right'}
                 ]
             });
 

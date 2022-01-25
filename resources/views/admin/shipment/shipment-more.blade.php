@@ -93,7 +93,7 @@
                                             @else
                                                 <button type="button" class="btn btn-primary btn-xs assign"
                                                     data-toggle="modal" data-target="#assignShipment"
-                                                    data-id="{{ $shipment->id }}">to Courier <i
+                                                    data-id="{{ $shipment->id }}">Assign Courier <i
                                                         class="fa fa-truck"></i></button>
                                             @endif
 
@@ -103,10 +103,12 @@
                                             <a onClick="return confirm('Are you sure to Delete the shipment');"
                                                 href="/admin/delete-shipment/{{ $shipment->id }}"
                                                 class="btn-xs btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                            @if(in_array($shipment->logistic_status,[1,2]))
                                             <a data-id="{{ $shipment->id }}" data-toggle="modal"
                                                 data-target="#cancelNote" href="#" class="btn-xs btn btn-warning cancel"><i
                                                     class="fa fa-times"></i>
                                                 Cancel</a>
+                                            @endif
                                             {{-- @elseif($shipment->status == '2')
                                                 cancelled
                                             @endif --}}

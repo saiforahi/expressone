@@ -20,9 +20,9 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $admins = Admin::latest()->get();
-        $hubs = Unit::latest()->get();
-        return view('admin.admins.index', compact('admins', 'hubs'));
+        $admins= Admin::with('roles')->get();
+        $hubs= Unit::latest()->get();
+        return view('admin.admins.index',compact('admins','hubs'));
     }
 
     public function admins()
@@ -31,27 +31,40 @@ class AdminController extends Controller
             ->addColumn('action', function ($employee) {
                 $data = '<div class="btn-group  btn-group-sm">
                 <button class="btn btn-success edit" id="' . $employee->id . '" type="button"><i class="mdi mdi-table-edit m-r-3"></i>Edit</button>';
-                if ($employee->role_id == '1') {
-                    $data .= ' <button class="btn btn-info" type="button"><i class="mdi mdi-check m-r-3"></i>Super</button>';
-                } else {
-                    $data .= ' <button class="btn btn-danger delete" id="' . $employee->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>';
-                }
-                $data .= '</div>';
-                return $data;
-            })
-            ->addColumn('employee_info', function ($employee) {
-                if ($employee->image == null) $src = 'images/user.png';
-                else $src = $employee->image;
+            if ($employee->role_id=='1') {
+                $data .=' <button class="btn btn-info" type="button"><i class="mdi mdi-check m-r-3"></i>Super</button>';
+            }else{
+                $data .=' <button class="btn btn-danger delete" id="' . $employee->id . '" type="button"><i class="mdi mdi-delete m-r-3"></i>Delete</button>';
+            }
+            $data .='</div>';  return $data;
+        })
+        ->addColumn('employee_info', function ($employee) {
+            if($employee->image==null) $src= 'images/user.png';
+            else $src= $employee->image;
 
-                $data = '<img style="height:30px" src="/' . $src . '"> ' . $employee->first_name . ' ' . $employee->last_name . ' - ' . $employee->phone;
-                return $data;
-            })
-            ->addColumn('email', function ($employee) {
-                return $employee->email;
-            })
-            ->addColumn('address', function ($employee) {
-                return $employee->address;
-            })->rawColumns(['employee_info', 'email', 'address', 'action'])->make(true);
+            $data = '<img style="height:30px" src="/'.$src.'"> '.$employee->first_name.' '.$employee->last_name.' - '.$employee->phone;
+            return $data;
+        })
+        ->addColumn('email', function ($employee) {
+            return $employee->email;
+        })
+        ->addColumn('address', function ($employee) {
+            return $employee->address;
+        })
+        ->addColumn('roles', function ($employee) {
+            $roles=array();
+            foreach($employee->getRoleNames() as $role){
+                array_push($roles,ucfirst($role));
+            }
+            return $roles;
+        })
+        ->addColumn('units', function ($employee) {
+            $unit_names=array();
+            foreach(Unit::where('admin_id',$employee->id)->get() as $unit){
+                array_push($unit_names,ucfirst($unit->name));
+            }
+            return implode(',',$unit_names);
+        })->rawColumns(['employee_info','email','address','roles','units','action'])->make(true);
     }
 
     public function create()
@@ -85,25 +98,25 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-
-        $validator = $this->fields();
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()->all()]);
+        // dd($request->units);
+        $request->validate([
+            'first_name' => 'required|max:40',
+            'last_name' => 'required|max:40',
+            'phone' => 'required|max:40',
+            'address' => 'required|max:200',
+            'email' => 'required|email|max:255',
+            'password' => 'required|min:3|max:20',
+            'units' => 'sometimes|required'
+        ]);
+        
+        $admin = Admin::create($request->except('units'));
+        if($admin){
+            foreach($request->units as $unit){
+                Unit::where('id',$unit)->update(['admin_id'=>$admin->id]);
+            }
         }
-        //$units[] = $request->units;
-        $data = [
-            'role_id' => 2,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => Hash::make($request->password),
-            'address' => $request->address,
-            'units' => $request->units
-        ];
-        $admin = Admin::create($data);
-        $admin->units()->attach($request->units);
-        $this->storeImage($admin);
+        // $admin->units()->attach($request->units);
+        // $this->storeImage($admin);
         return response()->json(['success' => 'Admin hasn been created successfully.']);
     }
 

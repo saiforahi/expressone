@@ -49,7 +49,7 @@
                             <li><a href="{{ route('AdminReconcile') }}">Reconcile</a></li>
                             <li><a href="{{ route('AdminDelivery') }}">Delivery</a></li>
                             <li><a href="{{ route('AdminDownload') }}">Download</a></li>
-                            <li><a href="{{ route('AdminUploadCSV') }}">Upload CSV-File</a></li>
+                            {{-- <li><a href="{{ route('AdminUploadCSV') }}">Upload CSV-File</a></li> --}}
 
                             <?php $units = \DB::table('units')
                                 ->where('status', '1')
@@ -111,13 +111,11 @@
                     @endif
 
                     <li>
-                        <a><i class="fa mdi mdi-account"></i> Employee Manage<span
+                        <a><i class="fa mdi mdi-account"></i>Employee Manage<span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (Auth::guard('admin')->user()->hasRole('super-admin'))
-                                <li><a href="{{ route('admin-list') }}">Employee List</a></li>
-                                <li><a href="{{ route('role-assign') }}">Role Assign</a></li>
-                            @endif
+                            <li><a href="{{ route('admin-list') }}">Employee List</a></li>
+                            {{-- <li><a href="{{ route('role-assign') }}">Role Assign</a></li> --}}
                         </ul>
                     </li>
                     <li><a><i class="fa fa-home"></i> Website Management <span

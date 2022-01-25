@@ -61,6 +61,17 @@
                                                 @if(($shipment->payment_detail->cod_amount - $shipment->delivery_charge) <0) Pay by merchant @else Pay by Customer @endif
                                             </td>
                                             <td>
+                                                @if($shipment->logistic_status!=9)
+                                                <button type="button" class="btn btn-primary btn-xs assign"
+                                                    data-toggle="modal" data-target="#assignShipment"
+                                                    data-id="{{ $shipment->id }}">Assign Courier <i
+                                                        class="fa fa-truck"></i></button>
+
+                                                @elseif($shipment->logistic_status==8)
+                                                @else
+                                                Courier: {{\App\Models\CourierShipment::where(['shipment_id'=>$shipment->id,'type'=>'delivery'])->first()->courier->first_name}}
+                                                @endif
+                                                
                                                 {{-- @if($shipment->shipping_status>5)
                                                     <?php $courier_id = \DB::table('driver_hub_shipment_box')->where('shipment_id', $shipment->id)->pluck('courier_id')->first();
                                                     $dName = \DB::table('drivers')->where('id', $courier_id)->select('first_name', 'last_name')->first(); ?>
@@ -110,6 +121,41 @@
 
                                             </td>
                                         </tr>
+                                        <!-- Modal to assign to courier -->
+                                    <div id="assignShipment" class="modal fade" role="dialog">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close"
+                                                        data-dismiss="modal">&times;</button>
+                                                    <h4 class="modal-title">Assign shipments to a Courier</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form method="POST" action="{{route('assign-courier-for-delivery')}}">
+                                                        @csrf
+                                                        {{-- <input value="delivery" name="type" type="hidden"/> --}}
+                                                        <select class="form-control" name="courier_id" required="">
+                                                            <option value="">Choose Courier</option>
+                                                            <?php $couriers = \App\Models\Courier::latest()->get();?>
+                                                            @foreach ($couriers as $courier)
+                                                                <option value="{{ $courier->id }}">{{ $courier->first_name . ' ' . $courier->last_name }} ({{ $courier->phone }})
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                        <br>
+                                                        <textarea class="form-control" rows="5" placeholder="Type notes (if any)" name="note"></textarea>
+                                                        <input type="hidden" name="shipment_id"
+                                                            value="{{ $shipment->id }}" id="shipment_id"><br>
+                                                        <button type="submit" class="pull-right btn btn-info btn-sm"> <i
+                                                                class="fa fa-truck"></i>
+                                                            Assign to delivery shipment </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!-- Modal to assign to courier -->
                                     @endforeach
                                     </tbody>
                                 </table>

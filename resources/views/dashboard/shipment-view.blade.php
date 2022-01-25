@@ -45,7 +45,7 @@
                                 </td>
                                 <td>{{ $shipment->amount }}</td>
                                 <td>
-                                    {{ $shipment->shippingCharge->shipping_amount }} - {{ $shipment->shippingCharge->consignment_type }}
+                                    {{ $shipment->payment_detail->delivery_charge }}
                                 </td>
                                 <td>
                                     {{ $shipment->weight }}

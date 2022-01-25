@@ -29,7 +29,7 @@ class Admin extends Authenticatable
     }
 
     public function units(){
-        return $this->belongsToMany(Unit::class);
+        return $this->hasMany(Unit::class,'admin_id','id');
     }
 
     public function my_shipments(){
