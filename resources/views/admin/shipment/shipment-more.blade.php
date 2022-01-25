@@ -26,7 +26,7 @@
                 <div class="page-title">
                     <h3>
                         Merchant Shipment List
-                        @if ($shipments->count() > 0 && $shipments->where('logistic_status', '!=', '1')->count() == 0)
+                        @if ($shipments->count() > 0 && $shipments->whereBetween('logistic_status', [1,2])->count() > 0)
                             <a data-target="#assignShipment" data-toggle="modal" data-id="all" href="#"
                                 class="btn btn-primary assign pull-right">Assign all parcels to a Rider</a>
                         @endif
@@ -50,7 +50,8 @@
                                     </th>
                                     <th>Customer Info</th>
                                     <th>Delivery Type</th>
-                                    <th>Assign</th>
+                                    <th>Delivery Location</th>
+                                    <th>Courier</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -77,10 +78,25 @@
                                                 Express
                                             @endif
                                         </th>
-                                        <th class="text-right">
-                                            <button type="button" class="btn btn-primary btn-xs assign" data-toggle="modal"
-                                                data-target="#assignShipment" data-id="{{ $shipment->id }}">to Courier <i
-                                                    class="fa fa-truck"></i></button>
+                                        <th>
+                                            @if ($shipment->delivery_location != null)
+                                                {{ $shipment->delivery_location->name }}
+                                            @else
+                                                <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
+                                                    data-target="#delivery_location_modal" class="btn-xs btn btn-warning"><i
+                                                        class="fas fa-dollar-sign"></i>Set Delivery Location</a>
+                                            @endif
+                                        </th>
+                                        <th class="text-left">
+                                            @if (\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->exists())
+                                                Courier : {{\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->first()->courier->first_name}}<br>(Employee ID: {{\App\Models\CourierShipment::where(['shipment_id' => $shipment->id, 'type' => 'pickup'])->first()->courier->employee_id}})
+                                            @else
+                                                <button type="button" class="btn btn-primary btn-xs assign"
+                                                    data-toggle="modal" data-target="#assignShipment"
+                                                    data-id="{{ $shipment->id }}">to Courier <i
+                                                        class="fa fa-truck"></i></button>
+                                            @endif
+
                                         </th>
                                         <th scope="row">
                                             {{-- @if ($shipment->status == '1' && $shipment->shipping_status < 2) --}}

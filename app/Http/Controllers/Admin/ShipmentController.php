@@ -45,7 +45,9 @@ class ShipmentController extends Controller
             // dd($shipments_belongs_to_my_units);
             // return $shipments_belongs_to_my_units;
             $merchants = $shipments_belongs_to_my_units->pluck('merchant_id')->toArray();
-        } else $merchants = Shipment::where('logistic_status', '1')->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
+        } else {
+            $merchants = Shipment::whereBetween('logistic_status', [1,3])->select('merchant_id')->groupBy('merchant_id')->pluck('merchant_id')->toArray();
+        }
 
         $users = User::whereIn('id', array_unique($merchants))->get();
         return view('admin.shipment.shipment-list', compact('users'));
@@ -131,7 +133,16 @@ class ShipmentController extends Controller
 
     public function show($id, $status, $shipping_status)
     {
-        $shipments = Shipment::where('merchant_id', $id)->where(['status' => $status, 'shipping_status' => $shipping_status])->get();
+        $statuses=array('0'=>null,'1'=>'delivered','2'=>'returned','3'=>'cancelled');
+        $shipments=[];
+        if(auth()->guard('admin')->user()->hasRole('super-admin')){
+            $shipments = Shipment::cousins()->where(['shipments.merchant_id'=> $id,'shipments.status'=>$statuses[$status]])->whereIn('logistic_steps.slug' , array_values(explode(",",$logistic_statuses)))->get(['shipments.*']);
+        }
+        else{
+            $shipments = Shipment::cousins()->where(['shipments.merchant_id'=> $id,'shipments.status'=>$statuses[$status],'units.admin_id'=>Auth::guard('admin')->user()->id])->whereIn('logistic_steps.slug' , array_values(explode(",",$logistic_statuses)))->get(['shipments.*']);
+        }
+        
+        //dd($shipments);
         $user = User::find($id);
         $drivers = Courier::orderBy('id', 'desc')->get();
         return view('admin.shipment.shipment-more', compact('shipments', 'drivers', 'user'));
@@ -224,16 +235,14 @@ class ShipmentController extends Controller
         } else {
             dd('multiple receivde need to work');
             foreach (explode(',', $request->shipment_id) as $key => $id) {
-                if ($id != 'on') {
-                    $check = CourierShipment::where(['courier_id' => $request->courier_id, 'shipment_id' => $id])->count();
-                    if ($check < 1) {
-                        CourierShipment::create([
-                            'courier_id' => $request->courier_id, 'shipment_id' => $id,
-                            'admin_id' => Auth::guard('admin')->user()->id, 'note' => $request->note
-                        ]);
-                        Shipment::where('id', $id)->where('logistic_status', '<=', 3)->update(['logistic_status' => LogisticStep::where('slug', 'to-pick-up')->first()->id]);
-                        event(new ShipmentMovementEvent(Shipment::find($id), LogisticStep::where('slug', 'to-pick-up')->first(), Auth::guard('admin')->user()));
-                    }
+                $check = CourierShipment::where(['courier_id' => $request->courier_id, 'shipment_id' => $id])->count();
+                if ($check < 1) {
+                    CourierShipment::create([
+                        'courier_id' => $request->courier_id, 'shipment_id' => $id,
+                        'admin_id' => Auth::guard('admin')->user()->id, 'note' => $request->note,'type'=>'pickup'
+                    ]);
+                    Shipment::where('id', $id)->where('logistic_status','<=',3)->update(['logistic_status' => LogisticStep::where('slug','to-pick-up')->first()->id]);
+                    event(new ShipmentMovementEvent(Shipment::find($id), LogisticStep::where('slug','to-pick-up')->first(),Auth::guard('admin')->user()));
                 }
             }
         }
@@ -933,7 +942,7 @@ class ShipmentController extends Controller
         // $outForDelivery = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'out-for-delivery'])->first();
         // $assignDriver = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'assign-driver-for-delivery'])->first();
         // $deliverReport = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'user_type'=>'driver','report_type'=>'delivery-report'])->first();
-        $audit_logs = \App\Models\Shipment_movement::where('shipment_id', $shipment->id)->get();
+        $audit_logs = \App\Models\ShipmentMovement::where('shipment_id', $shipment->id)->orderBy('logistic_step_id','ASC')->get();
 
 
         return view('admin.shipment.load.delivery.audit', compact('shipment', 'audit_logs'));

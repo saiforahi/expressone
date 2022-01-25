@@ -166,7 +166,7 @@ if (!function_exists('get_shipments_for_logged_in_admin')) {
     {
         $shipments=array();
         if(auth()->guard('admin')->user()->hasRole('super-admin')){
-            $shipments=Shipment::cousins()->whereIn('shipments.logistic_status',$logistic_step_slug_array)->get();
+            $shipments=Shipment::cousins()->whereIn('logistic_steps.slug',$logistic_step_slug_array)->get();
         }
         else{
             $shipments = Shipment::cousins()->where('admins.id',auth()->guard('admin')->user()->id)->whereIn('logistic_steps.slug',$logistic_step_slug_array)->get();

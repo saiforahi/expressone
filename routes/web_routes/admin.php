@@ -134,7 +134,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/get-shipment-withStatus/{status}', 'ShipmentController@shipment_search_withStatus')->name('delivery-search-hub-status');
     Route::get('/get-shipment-withdate/{date1}/{date2}', 'ShipmentController@shipment_search_withDates')->name('delivery-search-dates');
 
-    Route::get('/shipment-audit/{shipment}', 'ShipmentController@shipment_audit')->name('shipment-audit');
+    Route::get('/shipment-audit/{shipment}',[ShipmentController::class,'shipment_audit'])->name('shipment-audit');
     //ajax call to show driver note during delivery
     Route::get('/driver-delivery-note/{shipment}', 'DriverController@delivery_note');
     Route::get('/export-selected/{shipment_ids}', 'ShipmentController@export_shipments')->name('export-selected');
