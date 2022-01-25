@@ -4,7 +4,7 @@
     <div class="right_col" role="main">
         <div class="page-title">
             <div class="title_left">
-                <h3>Admins dataTable</h3>
+                <h3>Unit Admins</h3>
             </div>
             <div class="title_right">
                 <div class="col-md-12 col-sm-12 form-group top_search">
@@ -41,6 +41,8 @@
                                     <th>Employee info</th>
                                     <th>Email</th>
                                     <th>Address</th>
+                                    <th>Roles</th>
+                                    <th>Units</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
@@ -56,10 +58,10 @@
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           	<div class="modal-header">
-    	        <h5 class="modal-title" id="exampleModalLabel">New admin entry form
+    	        <h3 class="modal-title" id="exampleModalLabel">New admin Entry
     	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
     	          <span aria-hidden="true">&times;</span>
-    	        </button> </h5>
+    	        </button> </h3>
     	    </div>
     	    <div class="modal-body">
     	    	<form id="employee_form" method="post" enctype="multipart/form-data" action>@csrf
@@ -181,6 +183,8 @@
                     {data: 'employee_info'},
                     {data: 'email'},
                     {data: 'address'},
+                    {data: 'roles'},
+                    {data: 'units'},
                     {data: 'action', orderable: false, searchable: false, class:'text-right'}
                 ]
             });

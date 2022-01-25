@@ -103,7 +103,7 @@ class ShipmentController extends Controller
         // ->groupBy('date')->get();
         $parcels = CourierShipment::where([
             'courier_id' => Auth::guard('courier')->user()->id,
-            'status' => 'delivered'
+            'type' => 'delivery'
         ])->get();
         //dd($parcels);
         return view('courier.shipment.agent-dispatch', compact('parcels'));

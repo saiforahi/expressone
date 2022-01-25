@@ -92,7 +92,7 @@
             <tr>
                 <th class="table-0pky extra-border-first" colspan="2">
                     <div>
-                        <div class="top-section" style="font-weight: bold;">MERCENT:</div>
+                        <div class="top-section" style="font-weight: bold;">MERCHENT:</div>
                     </div>
                 </th>
                 <th class="table-0pky extra-border" colspan="3">
@@ -120,7 +120,7 @@
                     <div>
                         <div class="top-section">
                             <div>
-                                <p class="text-margin" style="font-weight: bold;">{{ $shipment->recipient }}</p>
+                                <p class="text-margin" style="font-weight: bold;">{{ $shipment->recipient['name']}} <br/> {{$shipment->recipient['phone']}}</p>
                                 {{-- <p class="text-margin">House - 36, Road-13/D, Banani, Dhaka-1213</p>
                                 <p class="text-margin" style="font-weight: bold;">01844050948</p> --}}
                             </div>
@@ -134,11 +134,11 @@
                 <td class="table-0pky" colspan="3"><b>INVOICE#:{{ $shipment->invoice_id }}</b></td>
                 <td colspan="3">
                     <div>
-                        <p class="text-margin" style="font-weight: bold; float: left; margin-right: 2rem;">AREA:
-                            <span style="font-weight: normal;">Banani</span>
+                        <p class="text-margin" style="font-weight: bold; float: left; margin-right: 2rem;">Location/Area:
+                            <span style="font-weight: normal;">Tejgaon</span>
                         </p>
-                        <p class="text-margin" style="font-weight: bold;">HUB: <span
-                                style="font-weight: normal;">Mohakhali Hub</span></p>
+                        <p class="text-margin" style="font-weight: bold;">Unit: <span
+                                style="font-weight: normal;">Mohakhali Unit</span></p>
                     </div>
                 </td>
             </tr>

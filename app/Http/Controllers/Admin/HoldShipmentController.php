@@ -346,7 +346,7 @@ class HoldShipmentController extends Controller
         $shipments = Shipment::whereIn('id',explode(',',$return_shipment_box->shipment_ids))->get();
         return view('admin.shipment.load.dispatch.bulk-items',compact('return_shipment_box','shipments'));
     }
-
+    
     function agent_dispatch_agentSide(){
         if(Session::has('admin_hub')){
             $hub = Hub::where('id',Session::get('admin_hub')->hub_id)->first();

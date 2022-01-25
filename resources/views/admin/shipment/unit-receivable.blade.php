@@ -109,7 +109,7 @@
         $('.hub-parcles').html('Loading...');
         $('#myModal2').modal('show');
         $.ajax({
-           type: "get",url: '/admin/dispatch-box-view/'+box_id,
+           type: "get",url: '/admin/external-unit-received-shipment-view/'+box_id,
            success: function(data){$('.hub-parcles').html(data);}
         });
     }

@@ -60,6 +60,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/shipping-price-set-edit', 'ShippingPriceController@shippingPriceEdit')->name('shippingPrice.edit');
     Route::get('/delete-shipping-price/{shipping_price}', 'ShippingPriceController@destroy')->name('delete-shipping-price');
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
+    Route::post('/assign-courier-for-delivery', [ShipmentController::class,'save_courier_shipment_for_delivery'])->name('assign-courier-for-delivery');
     //Admin Courier route
     Route::get('courier', [DriverController::class,'index'])->name('allCourier');
     Route::post('courier-delete/{id}', [DriverController::class,'courierDelete'])->name('courierDelete');
@@ -195,7 +196,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/return-dispatch/view/{hub}', 'HoldShipmentController@dispatch_view')->name('return-dispatch-view');
     Route::get('/return-status-dispatch/{hub}', 'HoldShipmentController@status_dispatch')->name('return-status-dispatch');
     Route::get('/return-status-on-transit/{hub}', 'HoldShipmentController@status_on_transit')->name('return-status-on-transit');
-    Route::get('/return-dispatch-box-view/{return_shipment_box}', 'HoldShipmentController@dispatch_box_view')->name('return-box-view');
+    Route::get('/return-dispatch-box-view/{return_shipment_box}', [HoldShipmentController::class,'dispatch_box_view'])->name('return-box-view');
+    Route::get('/external-unit-received-shipment-view/{shipment}', [ShipmentController::class,'external_unit_received_shipment_view'])->name('external-unit-received-shipment-view');
     Route::get('/return-change-box-status/{return_shipment_box}/{status}', 'HoldShipmentController@box_status_changes')->name('return-box-status-change');
     Route::get('/return-change-box-status-bulk-id/{return_shipment_box}/{status}', 'HoldShipmentController@box_status_changes_bulk_id')->name('return-box-status-change-bulk-id');
     Route::get('/return-box-sorting/{hub}', 'HoldShipmentController@box_sorting')->name('return-box-sorting');
@@ -217,11 +219,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('admin-list', [AdminController::class,'index'])->name('admin-list');
     Route::get('admins', [AdminController::class,'admins'])->name('admins');
     Route::get('admin/create', [AdminController::class,'create'])->name('create-admin');
-    Route::get('save-admin', [AdminController::class,'store'])->name('save-admin');
+    Route::post('save-admin', [AdminController::class,'store'])->name('save-admin');
 
 
     Route::post('/update-admin', 'AdminController@update')->name('update-admin');
-    Route::get('/admin/delete/{admin}', 'AdminController@destroy')->name('destroy-admin');
+    Route::get('/admin/delete/{admin}', [AdminController::class,'destroy'])->name('destroy-admin');
     Route::get('/admin/show', 'AdminController@show')->name('show-admin');
     Route::get('role-assign', [AdminController::class,'role_assign'])->name('role-assign');
     Route::post('role-assign', [AdminController::class,'save_role_assign'])->name('save-role-assign');
