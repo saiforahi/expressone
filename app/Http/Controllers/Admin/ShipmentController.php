@@ -1040,7 +1040,7 @@ class ShipmentController extends Controller
         // $outForDelivery = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'out-for-delivery'])->first();
         // $assignDriver = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'assign-driver-for-delivery'])->first();
         // $deliverReport = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'user_type'=>'driver','report_type'=>'delivery-report'])->first();
-        $audit_logs = \App\Models\Shipment_movement::where('shipment_id', $shipment->id)->get();
+        $audit_logs = \App\Models\ShipmentMovement::where('shipment_id', $shipment->id)->orderBy('logistic_step_id','ASC')->get();
 
 
         return view('admin.shipment.load.delivery.audit', compact('shipment', 'audit_logs'));

@@ -26,7 +26,7 @@
                 <div class="page-title">
                     <h3>
                         Merchant Shipment List
-                        @if ($shipments->count() > 0 && $shipments->whereBetween('logistic_status', [1,2])->count() == 0)
+                        @if ($shipments->count() > 0 && $shipments->whereBetween('logistic_status', [1,2])->count() > 0)
                             <a data-target="#assignShipment" data-toggle="modal" data-id="all" href="#"
                                 class="btn btn-primary assign pull-right">Assign all parcels to a Rider</a>
                         @endif
