@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\Api\Courier\ShipmentController as CourierShipmentController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,3 +18,13 @@ Route::middleware('auth:sanctum')->get('/user', [App\Http\Controllers\Api\AuthCo
 Route::post('/login',[App\Http\Controllers\Api\AuthController::class,'login']);
 Route::post('/register',[App\Http\Controllers\Api\AuthController::class,'register']);
 Route::middleware('auth:sanctum')->get('/logout',[App\Http\Controllers\Api\AuthController::class,'logout']);
+
+//courier APIs [CourierShipmentController::class,'get_pickup_shipments']
+
+// Route::group(['middleware' => 'auth:api_courier', 'prefix' => 'courier'], function () {
+//     Route::get('/courier/shipments/pickup',[CourierShipmentController::class,'get_pickup_shipments']);
+//     Route::put('/courier/shipments/mark_as_received',[CourierShipmentController::class,'mark_shipments_as_received']);
+// });
+
+Route::middleware('auth:api_courier')->get('/courier/shipments/pickup',[CourierShipmentController::class,'get_pickup_shipments']);
+Route::middleware('auth:api_courier')->put('/courier/shipments/mark_as_received',[CourierShipmentController::class,'mark_shipments_as_received']);

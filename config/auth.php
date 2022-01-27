@@ -64,6 +64,11 @@ return [
             'provider' => 'admins',
             'hash' => false,
         ],
+        'api_courier' => [
+            'driver' => 'sanctum',
+            'provider' => 'couriers',
+            'hash' => false,
+        ],
     ],
     /*
     |--------------------------------------------------------------------------

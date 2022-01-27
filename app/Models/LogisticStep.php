@@ -15,6 +15,6 @@ class LogisticStep extends Model
         return $this->hasOne(LogisticStep::class,'id','next');
     }
     public function previous(){
-        return $this->hasOne(LogisticStep::class,'id','previous');
+        return $this->hasOne(LogisticStep::class,'previous');
     }
 }

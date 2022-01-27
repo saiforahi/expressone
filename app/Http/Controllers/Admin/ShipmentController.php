@@ -263,7 +263,8 @@ class ShipmentController extends Controller
 
     public function save_courier_shipment($id, Request $request)
     {
-        
+        // dd(LogisticStep::where('slug','to-pick-up')->first()->previous->id);
+        // dd(LogisticStep::where('slug','to-pick-up')->first()->id);
         if (is_numeric($request->shipment_id)) {
             $check = CourierShipment::where(['courier_id' => $request->courier_id, 'shipment_id' => $request->shipment_id,'type'=>'pickup'])->count();
             if ($check > 0) {
@@ -275,7 +276,9 @@ class ShipmentController extends Controller
                 'admin_id' => Auth::guard('admin')->user()->id, 'note' => $request->note,'type'=>'pickup'
             ]);
             //dd('ok');
-            Shipment::where('id', $request->shipment_id)->where('logistic_status','<=',LogisticStep::where('slug','to-pick-up')->first()->previous()->id)->update(['logistic_status' => LogisticStep::where('slug','to-pick-up')->first()->id]);
+            
+            
+            Shipment::where('id', $request->shipment_id)->where('logistic_status','<=',LogisticStep::where('slug','to-pick-up')->first()->previous)->update(['logistic_status' => LogisticStep::where('slug','to-pick-up')->first()->id]);
             event(new ShipmentMovementEvent(Shipment::find($id), LogisticStep::where('slug','to-pick-up')->first(),Auth::guard('admin')->user()));
         } else {
             // dd(explode(',', $request->shipment_id));
