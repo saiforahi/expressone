@@ -29,7 +29,7 @@ class ShipmentMovementEventListener
     {
         //
         $move = ShipmentMovement::updateOrCreate(
-            ['shipment_id'=>$event->shipment->id, 'logistic_step_id'=> $event->logistic_step->id],
+            ['shipment_id'=>$event->shipment->id, 'logistic_step_id'=> $event->logistic_step->id],[]
             // ['price' => 99, 'discounted' => 1]
         );
         $move->action_made_by()->associate($event->user);

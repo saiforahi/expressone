@@ -27,9 +27,10 @@
                         </li>
                         <li><a href="{{ route('shippingCharges') }}"><i class="fa mdi mdi-table"></i>Shipping Charge</a>
                         </li>
+                    @endrole
                         <li><a href="{{ route('all-shipments') }}"><i class="fa mdi mdi-export"></i>All shipments</a>
                         </li>
-                    @endrole
+                    
                     {{-- <li><a><i class="fa fa-money"></i> Shipping Price <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
                             @if (checkAdminAccess('shipping-price-set') != 0)
@@ -65,30 +66,16 @@
                     <li><a><i class="fa mdi mdi-cube-send"></i> Delivered Logistics <span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (checkAdminAccess('hold-shipments') != 0)
-                                <li><a href="{{ route('hold-shipments', 'hold') }}">Hold-parcels</a></li>
-                            @endif
+                            <li><a href="{{ route('hold-shipments', 'hold') }}">Hold-parcels</a></li>
 
-                            @if (checkAdminAccess('hold-shipments') != 0)
-                                <li><a href="{{ route('hold-shipments', 'return') }}">Return-parcels</a></li>
-                            @endif
+                            <li><a href="{{ route('hold-shipments', 'return') }}">Return-parcels</a></li>
 
-                            @if (checkAdminAccess('return-dispatch') != 0)
-                                <li><a href="{{ route('return-dispatch') }}">Dispatch</a></li>
-                            @endif
+                            <li><a href="{{ route('return-dispatch') }}">Dispatch</a></li>
 
-                            @if (checkAdminAccess('return-merchant-handover') != 0)
-                                <li><a href="{{ route('merchant-handover') }}">Merchant Handover</a></li>
-                            @endif
-                            {{-- <li><a href="{{route('return-agent-dispatch')}}">Agent Dispatch</a></li> --}}
+                            <li><a href="{{ route('merchant-handover') }}">Merchant Handover</a></li>
+                            {{-- <li><a href="{{ route('receive-from-hub') }}">Receive From Hub</a></li>
 
-                            @if (checkAdminAccess('receive-from-hub') != 0)
-                                <li><a href="{{ route('receive-from-hub') }}">Receive From Hub</a></li>
-                            @endif
-
-                            @if (checkAdminAccess('hold-shipments') != 0)
-                                <li><a href="{{ route('hold-shipments', 'partial') }}">Partially delivered</a></li>
-                            @endif
+                            <li><a href="{{ route('hold-shipments', 'partial') }}">Partially delivered</a></li> --}}
                         </ul>
                     </li>
                     <li><a href="{{ route('allCourier') }}"><i class="fa mdi mdi-truck-fast"></i>Couriers</a>
@@ -112,63 +99,34 @@
                     <li><a><i class="fa fa-home"></i> Website Management <span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            @if (checkAdminAccess('basic-information') != 0)
-                                <li><a href="{{ route('basic-information') }}">Basic Information</a></li>
-                            @endif
+                            <li><a href="{{ route('basic-information') }}">Basic Information</a></li>
 
-                            @if (checkAdminAccess('sliders') != 0)
-                                <li><a href="/admin/sliders">Slider Manage</a></li>
-                            @endif
+                            <li><a href="/admin/sliders">Slider Manage</a></li>
 
-                            @if (checkAdminAccess('about-us') != 0)
-                                <li><a href="{{ route('adminAbout') }}">About Us page</a></li>
-                            @endif
+                            <li><a href="{{ route('adminAbout') }}">About Us page</a></li>
 
-                            @if (checkAdminAccess('mission') != 0)
-                                <li><a href="{{ route('adminMission') }}">Mission page</a></li>
-                            @endif
+                            <li><a href="{{ route('adminMission') }}">Mission page</a></li>
 
-                            @if (checkAdminAccess('vision') != 0)
-                                <li><a href="{{ route('adminVision') }}">Vision page</a></li>
-                            @endif
+                            <li><a href="{{ route('adminVision') }}">Vision page</a></li>
 
-                            @if (checkAdminAccess('promise') != 0)
-                                <li><a href="{{ route('adminPromise') }}">Our Promise page</a></li>
-                            @endif
+                            <li><a href="{{ route('adminPromise') }}">Our Promise page</a></li>
 
-                            @if (checkAdminAccess('history') != 0)
-                                <li><a href="{{ route('adminHistory') }}">Company History page</a></li>
-                            @endif
-
-                            @if (checkAdminAccess('team') != 0)
-                                <li><a href="{{ route('adminTeam') }}">Management Team page</a></li>
-                            @endif
-
-                            @if (checkAdminAccess('client-reviews') != 0)
-                                <li><a href="{{ route('adminClientReview') }}">Client Reviews</a></li>
-                            @endif
-
-                            @if (checkAdminAccess('messages') != 0)
-                                <li><a href="{{ route('contact-messages') }} ">Contact Messages</a></li>
-                            @endif
+                            <li><a href="{{ route('adminHistory') }}">Company History page</a></li>
+                            
+                            <li><a href="{{ route('adminTeam') }}">Management Team page</a></li>
+                            <li><a href="{{ route('adminClientReview') }}">Client Reviews</a></li>
+                            <li><a href="{{ route('contact-messages') }} ">Contact Messages</a></li>
 
                             <li><a> Blogs <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu" style="display: none;">
-                                    @if (checkAdminAccess('blog/index') != 0)
-                                        <li><a href="{{ route('AdminBlog') }} ">Blog Posts</a> </li>
-                                    @endif
-
-                                    @if (checkAdminAccess('blog/category') != 0)
-                                        <li><a href="{{ route('blog-category') }}">Blog Category</a> </li>
-                                    @endif
+                                    <li><a href="{{ route('AdminBlog') }} ">Blog Posts</a> </li>
+                                    <li><a href="{{ route('blog-category') }}">Blog Category</a> </li>
                                 </ul>
                             </li>
                         </ul>
                     </li>
-                    @if (checkAdminAccess('set-mail-info') != 0)
-                        <li><a href="{{ route('mail-setup') }}"><i class="fa mdi mdi-email-open"></i> Mail SetUp</a>
-                        </li>
-                    @endif
+                    <li><a href="{{ route('mail-setup') }}"><i class="fa mdi mdi-email-open"></i> Mail SetUp</a>
+                    </li>
                 </ul>
             </div>
 

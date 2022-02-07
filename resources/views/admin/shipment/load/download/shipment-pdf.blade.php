@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>PDF shipment : {{$bulk_id}}</title>
+    <title>PDF shipment : {{$shipment_id}}</title>
 </head>
 <body>
     <div style="width:50%;float:left">
@@ -25,24 +25,22 @@
     <div style="width:50%;float:left;text-align:right;padding:25px;">
         <table class="table table-bordered">
             <tr>
-                <th><p><?php echo DNS1D::getBarcodeHTML($bulk_id, 'UPCA'); ?></p></th>
+                <th><p><?php echo DNS1D::getBarcodeHTML($shipment->invoice_id, 'UPCA'); ?></p></th>
             </tr>
             <tr>
                 <td colspan="2">Date: {{ date('d F, Y') }}</td>
             </tr>
-            <tr><td>Bulk-ID: {{$bulk_id}}</td></tr>
+            <tr><td>Invoice-ID: {{$shipment->invoice_id}}</td></tr>
         </table>
     </div>
 
     <div style="width:100%;float:left;padding:15px;">
         <table class="table table-bordered">
             <tr> @php
-                $currentHub = \App\Hub_shipment_box::where('bulk_id',$bulk_id)->first();
+                $currentHub = $shipment->pickup_location->point->unit->name;
             @endphp
-                <td class="float:left">Current Hub:
-                    @if($currentHub->box_by==null) Sorted by superadmin @else
-                        {{$currentHub->box_by->name}}
-                    @endif
+                <td class="float:left">Pickup Unit: {{$shipment->pickup_location->point->unit->name}}<br/>
+                    Pickup Unit: {{$shipment->delivery_location->point->unit->name}}
                 </td>
             </tr>
         </table>
@@ -59,22 +57,21 @@
             <th>Last Mile Hub</th>
         </tr></thead>
         <tbody>
-            @foreach($shipments as $shipment)
             <tr>
                 <td>{{$shipment->invoice_id}}</td>
-                <td>{{$shipment->name}}</td>
-                <td>{{$shipment->phone}}</td>
-                <td>{{$shipment->user->shop_name}}</td>
-                <td>{{$shipment->total_price}}</td>
-                <td>{{$shipment->area->hub->name}} </td>
+                <td>{{$shipment->recipient['name']}}</td>
+                <td>{{$shipment->recipient['phone']}}</td>
+                <td>{{$shipment->merchant->shop_name}}</td>
+                <td>{{$shipment->amount}}</td>
+                <td>{{$shipment->pickup_location->point->unit->name}} </td>
                 @php
-                    $total_price[] = $shipment->total_price;
+                    $total_price[] = $shipment->amount;
                 @endphp
             </tr>
-            @endforeach
+            
             <tr>
-                <td colspan="2">Total Prices {{$shipments->count()}}</td>
-                <td colspan="4" class="text-center">New worth of parcels: {{array_sum($total_price)}}</td>
+                <td colspan="2">Total Price {{$shipment->amount}}</td>
+                {{-- <td colspan="4" class="text-center">New worth of parcels: {{array_sum($total_price)}}</td> --}}
             </tr>
         </tbody>
     </table>
@@ -110,7 +107,7 @@
  
     </table> --}}
 
-    <table class="table" style="position:fixed;bottom:200px">
+    {{-- <table class="table" style="position:fixed;bottom:200px">
         <tbody>
             <tr>
                 <td>Received By: <br>
@@ -134,7 +131,7 @@
                 </td>
             </tr>
         </tbody>
-    </table>
+    </table> --}}
 
 </body>
 </html>

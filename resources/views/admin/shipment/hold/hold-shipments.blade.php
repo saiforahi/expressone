@@ -13,11 +13,11 @@
                     <div class="x_panel">
                         <div class="x_content">
                             <input type="search" id="invoiceID" placeholder="Invoice ID" >
-                            <?php $riders = \DB::table('drivers')->select('id','first_name','last_name','phone')->get();?>
+                            <?php $couriers = \DB::table('couriers')->select('id','first_name','last_name','phone')->get();?>
                             
                             <select id="rider" style="padding:4.3px;">
                                 <option value="">Choose Rider</option>
-                                @foreach ($riders as $rider)
+                                @foreach ($couriers as $rider)
                                     <option value="{{$rider->id}}">{{$rider->first_name.' '.$rider->last_name }}</option>
                                 @endforeach
                             </select>
@@ -63,11 +63,13 @@
 
         $('#rider').change(function (e) {
             $(this).prop('disabled',true); let rider_id = $(this).val();
-            $(".part1").html('Working...');$(".part2").html('Working...');
+            $(".part1").html('Working...');
+            $(".part2").html('Working...');
             $.ajax({
                 type: "get",url: '/admin/hold-agentDispatch-to-driverAssign-rider/'+rider_id,
                 success: function(data){
-                    $(".part1").load('/admin/driver-hub-shipment-rows/<?php echo $type;?>');
+                    $(".part1").html(data)
+                    // $(".part1").load('/admin/driver-hub-shipment-rows/<?php echo $type;?>');
                     $(".part2").load('/admin/hold-shipment-rows/<?php echo $type;?>');
                 },error: function (request, error) { alert(error);},
             });

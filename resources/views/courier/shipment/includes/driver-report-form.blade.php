@@ -39,7 +39,7 @@
             <div class="checkbox">
                 <div class="radio">
                      <label class="text-warning">
-                         <input type="radio" value="customer" id="otp1" name="otp"> OTP to Customer
+                         <input type="radio" value="recipient" id="otp1" name="otp"> OTP to Recipient
                      </label>
                  </div>
                  <div class="radio">
@@ -52,13 +52,14 @@
     </div>
 
     <div class="form-group row">
-        <label class="col-md-3 col-sm-3  control-label"> <br/>  <br/> Rider Note (if any)</label>
+        <label class="col-md-3 col-sm-3  control-label"> <br/>  <br/> Courier Note (if any)</label>
         <div class="col-md-9 col-sm-9 ">
             <textarea class="form-control" name="driver_note" rows="5"></textarea>
         </div>
     </div>
     <div class="col-md-12" style="margin-top:1em">
-        <input type="hidden" name="id"> <input type="hidden" name="price">
+        <input type="hidden" name="id"> 
+        <input type="hidden" name="price">
         <div class="row">
             <div class="result"></div>
             <button class="btn btn-sm btn-info pull-right" type="submit"><i class="fa fa-send"></i> Submit Report</button>

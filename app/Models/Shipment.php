@@ -52,6 +52,10 @@ class Shipment extends Model
         return $this->belongsTo(User::class);
         //return $this->belongsTo(User::class, 'foreign_key', 'other_key');
     }
+
+    public function logistic_step(){
+        return $this->hasOne(LogisticStep::class,'id','logistic_status');
+    }
     // public function inheritable(){
     //     return $this->morphTo();
     // }

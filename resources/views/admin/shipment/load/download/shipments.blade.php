@@ -8,24 +8,29 @@
         <th class="column-title">Invoice ID</th>
         <th class="column-title">Source Hub</th>
         <th class="column-title">Date </th>
-        <th class="text-right">Status </th>			
+        <th class="text-center">Status </th>	
+        <th class="text-center">Action</th>		
       </tr>
     </thead>
 
     @foreach($shipments as $shipment)
-      @if(is_in_reconcile_shipments($shipment->id))
+      
       <tr class="row{{$shipment->id}}">
         <td> 
             <input type="checkbox" class="checkbox" id="ids" name="ids[]" value="{{$shipment->id}}">
         </td>
-        <td>{{$shipment->name}} - {{$shipment->phone}}</td>
+        <td>{{$shipment->recipient['name']}} - {{$shipment->recipient['phone']}}</td>
         <td>{{$shipment->invoice_id}}</td>
-        <td>{{$shipment->area->hub->name}}</td>
+        <td>{{$shipment->pickup_location->point->unit->name}}</td>
         <td>{{date('M d, Y H:i',strtotime($shipment->created_at))}}</td>
         <td class="text-right">
-         @include('admin.shipment.status',['status'=>$shipment->status,'shipping_status'=>$shipment->shipping_status])
+         @include('admin.shipment.status',['status'=>$shipment->status,'logistic_status'=>$shipment->logistic_status])
         </td>
-      </tr> @endif
+        <td class="text-center">
+          <a class="btn csv_file btn-sm btn-default" onclick="get_csv({{$shipment->id}})">CSV</a>
+          <a class="btn csv_file btn-sm btn-default" onclick="get_pdf({{$shipment->id}})">PDF</a>
+        </td>
+      </tr>
     @endforeach
       
     </tbody>

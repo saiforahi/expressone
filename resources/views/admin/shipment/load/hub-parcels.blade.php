@@ -1,47 +1,47 @@
-<?php $areas = \DB::table('areas')->get(); ?>
+<?php $units = \DB::table('units')->get(); ?>
 @foreach ($shipments as $key => $item)
     <table class="table table-xs row{{ $item->id }}">
         <tbody>
             <tr>
-                <td>Invoice ID: {{ $item->shipment->invoice_id }}</td>
+                <td>Invoice ID: {{ $item->invoice_id }}</td>
                 <td></td>
                 <td class="text-right">
                     <select class="select select2_single" id="area{{ $key }}" disabled>
-                        @foreach ($areas as $area)
-                            <option value="{{ $area->id }}" @if ($item->shipment->area_id == $area->id)selected @endif>
-                                {{ $area->name }}</option>
+                        @foreach ($units as $unit)
+                            <option value="{{ $unit->id }}" @if ($item->pickup_location->point->unit->id == $unit->id)selected @endif>
+                                {{ $unit->name }}</option>
                         @endforeach
                     </select>
                 </td>
             </tr>
             <tr>
-                <td>Customer: {{ $item->shipment->name }} </td>
+                <td>Customer: {{ $item->recipient['name'] }} </td>
                 <td></td>
                 <td></td>
             </tr>
             <tr>
-                <td>Price: {{ $item->shipment->cod_amount }}</td>
+                <td>Price: {{ $item->amount }}</td>
                 <td></td>
                 <td class="text-right">
                     Weight: <input style="width:100px" type="number" id="weight{{ $key }}"
-                        value="{{ $item->shipment->weight }}" readonly=""></td>
+                        value="{{ $item->weight }}" readonly=""></td>
             </tr>
             <tr>
-                <td>Phone: {{ $item->shipment->phone }} </td>
+                <td>Phone: {{ $item->recipient['phone'] }} </td>
                 <td></td>
-                <td class="text-right">Hub: {{ hub_from_area($item->shipment->area_id)->name }}</td>
+                <td class="text-right">Unit: {{ $item->pickup_location->point->unit->name }}</td>
             </tr>
             <tr>
-                <td colspan="3">Address: {{ $item->shipment->address }} </td>
+                <td colspan="3">Address: {{ $item->recipient['address'] }} </td>
             </tr>
             <tr class="text-right">
                 <td class="text-left" style="width:50%">Date:
-                    <small>{{ date('M d, Y', strtotime($item->shipment->created_at)) }} (<b
-                            class="text-info">{{ $item->shipment->created_at->diffForHumans() }}</b>)</small> </td>
+                    <small>{{ date('M d, Y', strtotime($item->created_at)) }} (<b
+                            class="text-info">{{ $item->created_at->diffForHumans() }}</b>)</small> </td>
                 <td></td>
                 <td>
                     <button class="btn btn-xs btn-default" onclick="move_item(<?php echo $item->id . ',' . $item->merchant_id; ?>)"><i
-                            class="fa fa-arrow-left"></i> Move </button>
+                            class="fa fa-arrow-left"></i> Move Back</button>
                 </td>
             </tr>
 
@@ -62,6 +62,7 @@
 
                 let num = parseInt($('.num<?php echo $id; ?>').text());
                 $('.num<?php echo $id; ?>').text(num - 1);
+                // location.reload()
             }
         });
         setTimeout(function() {

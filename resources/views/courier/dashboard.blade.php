@@ -32,7 +32,7 @@
                                     aria-controls="search" aria-selected="false">Search Shipments</a>
                             </li>
                             <li class="nav-item  @if ($type == 'otp')active @endif">
-                                <a class="nav-link" href="/courier?r=otp">Confirm Delivery</a>
+                                <a class="nav-link" href="/courier?r=otp">Confirm Delivery / Returned</a>
                             </li>
                         </ul>
                         <div class="tab-content"> <br>
@@ -101,10 +101,10 @@
                                 <input type="hidden" id="shipment_id" name="shipment_id">
                             </div>
                             <div class="col-md-4 col-xs-6">
-                                <select name="collect_by" class="form-control">
+                                <select name="collect_from" class="form-control">
                                     <option value="">Collect From</option>
                                     <option value="merchant">Merchant</option>
-                                    <option value="customer">Customer</option>
+                                    <option value="recipient">Recipient</option>
                                 </select>
                             </div>
                             <div class="col-md-2 col-xs-5">

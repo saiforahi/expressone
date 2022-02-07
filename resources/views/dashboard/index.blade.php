@@ -11,9 +11,7 @@
                     </div>
                     <div class="widget-content-right">
                         <?php
-                        $shipments = \DB::table('shipments')
-                            ->where('merchant_id', Auth::guard('user')->user()->id)
-                            ->count();
+                        $shipments = \DB::table('shipments')->where('merchant_id', Auth::guard('user')->user()->id)->count();
                         //dd($shipments);
                         ?>
 
@@ -32,8 +30,8 @@
                     <div class="widget-content-right">
                         <?php $delivered = \DB::table('shipments')
                             ->where('merchant_id', Auth::guard('user')->user()->id)
-                            ->where('shipping_status', '6')
-                            ->orWhere('shipping_status', '6.5')
+                            ->where('logistic_status', \DB::table('logistic_steps')->where('slug','delivered')->first()->id)
+                            ->orWhere('logistic_status', \DB::table('logistic_steps')->where('slug','delivery-confirmed')->first()->id)
                             ->count(); ?>
                         <div class="widget-numbers text-white"><span> {{ $delivered }}</span></div>
                     </div>
@@ -50,7 +48,7 @@
                     <div class="widget-content-right">
                         <?php $rejected = \DB::table('shipments')
                             ->where('merchant_id', Auth::guard('user')->user()->id)
-                            ->where('shipping_status', '5')
+                            ->where('status', 'cancelled')
                             ->count(); ?>
                         <div class="widget-numbers text-white"><span> {{ $rejected }}</span></div>
                     </div>
@@ -68,14 +66,15 @@
                         class="align-middle mb-0 table table-borderless table-striped table-hover text-center">
                         <thead>
                             <tr>
-                                <th>##</th>
-                                <th>Shipping Type</th>
+                                <th>#</th>
+                                <th>Service Type</th>
                                 <th class="text-center">Status</th>
                                 <th>Tracking No.</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Customer</th>
                                 <th class="text-center">COD Amount</th>
                                 <th class="text-center">Weight</th>
+                                <th class="text-center">Delivery<br/>(Unit > Point > Location)</th>
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
@@ -85,20 +84,26 @@
                                 <tr>
                                     <td> {{ ++$key }}</td>
                                     <td>
+                                        @if($shipments->service_type == null && $shipments->logistic_status<=2)
                                         <form action="{{ route('setShippingCharge', $shipments['id']) }}"
                                             id="formSubmit_{{ $shipments['id'] }}" method="post">
                                             @csrf
                                             <select name="result[{{ $shipments['id'] }}]" class="form-control"
                                                 onchange="formSubmit({{ $shipments['id'] }})">
                                                 <option value="">Select Type</option>
-                                                @foreach ($shippingCharges as $shipping)
+                                                <option value="express" @if($shipments->service_type=='express')selected @endif>Express</option>
+                                                <option value="priority" @if($shipments->service_type=='priority')selected @endif>Priority</option>
+                                                {{-- @foreach ($shippingCharges as $shipping)
                                                     <option value="{{ $shipping->id }}"
                                                         {{ $shipping->id == $shipments['shipping_charge_id'] ? 'selected' : '' }}>
                                                         {{ $shipping->consignment_type }}-{{ $shipping->shipping_amount }}
                                                     </option>
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
                                         </form>
+                                        @else
+                                        {{ucfirst($shipments->service_type)}}
+                                        @endif
                                     </td>
                                     <td class="text-center">
                                         @include('dashboard.include.shipping-status',
@@ -114,8 +119,9 @@
                                     </td>
                                     <td style="font-size: 13px">
 
-                                        {{$shipments['recipient']['name'] }}
-
+                                        {{$shipments['recipient']['name'] }}<br/>
+                                        {{$shipments['recipient']['phone']}}<br/>
+                                        {{$shipments['recipient']['address']}}
                                     </td>
 
                                     <td>
@@ -125,6 +131,7 @@
                                     <td>
                                         {{ $shipments['weight'] }}
                                     </td>
+                                    <td>Unit: {{$shipments->delivery_location->point->unit->name}}</td>
                                     <td>
                                         @if ($shipments['status'] == null && $shipments['logistic_status'] == 1)
                                             <form style="display: inline-block" class="form-delete" method="post"

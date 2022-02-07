@@ -24,7 +24,7 @@
                                         <th>Image</th>
                                         <th>Info</th>
                                         <th>Contact</th>
-                                        <th>Parcel/s</th>
+                                        <th>Shipment/s</th>
                                         <th>Unit</th>
                                         <th>Action</th>
                                     </tr>
@@ -33,9 +33,10 @@
                                     @foreach ($users as $user)
                                         <?php
                                         // dd();
-                                        $checkShipment = \App\Models\Shipment::cousins()->where(['units.admin_id'=>Auth::guard('admin')->user()->id,'shipments.merchant_id'=>$user->id])->whereBetween('logistic_status',[4,5])->count();
+                                        $logistic_status=\App\Models\LogisticStep::where('slug','picked-up')->orWhere('slug','dropped-at-pickup-unit')->orWhere('slug','unit-received')->pluck('id')->toArray();
+                                        $checkShipment = \App\Models\Shipment::cousins()->where(['units.admin_id'=>Auth::guard('admin')->user()->id,'shipments.merchant_id'=>$user->id])->whereIn('logistic_status',$logistic_status)->count();
                                         $status=1;
-                                        $logistic_status=[4,5];
+                                        
                                         if (Session::has('admin_unit')) {
                                             $hubID = Session::get('admin_unit')->id;
                                         } else {
@@ -62,8 +63,8 @@
                                             <th scope="row">
                                                 <span class="btn btn-success">
                                                     @if ($checkShipment > 1)
-                                                        {{ $checkShipment }} Parcels
-                                                    @else {{ $checkShipment }} Parcel @endif
+                                                        {{ $checkShipment }} Shipments
+                                                    @else {{ $checkShipment }} Shipment @endif
                                                 </span>
                                             </th>
                                             <th class="text-info">

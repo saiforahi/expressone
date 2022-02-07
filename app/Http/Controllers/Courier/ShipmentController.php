@@ -7,6 +7,7 @@ use App\Models\Shipment;
 use App\Events\SendingSMS;
 use Illuminate\Http\Request;
 use App\Models\CourierShipment;
+use App\Models\ShipmentOTP;
 use App\Events\ShipmentMovement;
 use App\Events\ShipmentMovementEvent;
 use App\Http\Controllers\Controller;
@@ -38,18 +39,35 @@ class ShipmentController extends Controller
     {
         CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id,'shipment_id' => $id])->update(['status' => 'received']);
         Shipment::where('id', $id)->where('logistic_status', '<=',4)->update(['logistic_status' => 4]);
+        event(new ShipmentMovementEvent(Shipment::find($id),LogisticStep::where('slug','picked-up')->first(),Auth::guard('courier')->user()));
+        return back()->with('success','Shipment received');
+    }
+    public function submit_parcel($id, Request $request)
+    {
+        CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id,'shipment_id' => $id])->update(['status' => 'submitted_to_unit']);
+        Shipment::where('id', $id)->update(['logistic_status' => LogisticStep::where('slug','dropped-at-pickup-unit')->first()->id]);
+        event(new ShipmentMovementEvent(Shipment::find($id),LogisticStep::where('slug','dropped-at-pickup-unit')->first(),Auth::guard('courier')->user()));
         return back()->with('success','This parcel submittd to unit');
     }
-
-    public function my_shipments($type)
-    {
-        if ($type = 'return') {
-            $shipments = Driver_hub_shipment_box::latest()->where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $type])->get();
+    public function my_shipments($type){
+        if ($type == 'return') {
+            $shipments = CourierShipment::latest()->where(['courier_id' => Auth::guard('courier')->user()->id, 'type'=>'delivery'])->join('shipments','shipments.id','courier_shipment.shipment_id')->where('shipments.logistic_status',13)->get(['courier_shipment.*']);
         }
-
-        return view('driver.shipment.my-shipments', compact('shipments', 'type'));
+        elseif($type=='hold'){
+            $shipments = CourierShipment::latest()->where(['courier_id' => Auth::guard('courier')->user()->id, 'type'=>'delivery'])->join('shipments','shipments.id','courier_shipment.shipment_id')->where('shipments.logistic_status',12)->get(['courier_shipment.*']);
+        }
+        return view('courier.shipment.my-shipments', compact('shipments', 'type'));
     }
-
+    public function return_shipment($shipment_id){
+        try{
+            Shipment::where('id',$shipment_id)->update(['logistic_status'=>13]);
+            CourierShipment::where(['shipment_id'=>$shipment_id,'courier_id'=>Auth::guard('courier')->user()->id,'type'=>'delivery'])->update(['status'=>'returned']);
+            return redirect()->route('my-shipments',['type'=>'return']);
+        }
+        catch(Exception $e){
+            throw $e;
+        }
+    }
     function my_parcels($type)
     {
         $shipments = CourierShipment::latest()->where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $type])->get();
@@ -59,7 +77,7 @@ class ShipmentController extends Controller
     public function show($id)
     {
         //dd($id);
-        $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id])->get();
+        $shipments = CourierShipment::where(['type'=>'pickup','courier_id' => Auth::guard('courier')->user()->id])->get();
         $user = User::find($id);
         return view('courier.shipment.shipment-more', compact('shipments', 'user'));
 
@@ -73,9 +91,10 @@ class ShipmentController extends Controller
         $shipments = DB::table('courier_shipment')
                     ->where(['type'=>'pickup','courier_id'=>Auth::guard('courier')->user()->id])
                     ->join('shipments','courier_shipment.shipment_id','shipments.id')
-                    ->where('shipments.merchant_id',$user->id)
+                    ->where(['shipments.merchant_id'=>$user->id,'shipments.logistic_status'=>LogisticStep::where('slug','to-pick-up')->first()->id])
                     ->get(['courier_shipment.*','shipments.*','courier_shipment.id as courier_shipment_id']);
         // $shipments = CourierShipment::with('shipment')->where(['type'=>'pickup','courier_id'=>Auth::guard('courier')->user()->id])->where('shipments.merchant_id',$user->id)->get();
+        // dd($shipments);
         foreach ($shipments as $key => $shipment) {
             // dd($shipment);
             // dd(Shipment::find($shipment->shipment_id)->logistic_status);
@@ -88,10 +107,13 @@ class ShipmentController extends Controller
     function submit_at_unit($shipments)
     {
         foreach(explode(",",$shipments) as $key=>$value){
-            CourierShipment::where('shipment_id',$value)->update(['status'=>'submitted_to_unit']);
-            Shipment::where(['id'=>$value,'logistic_status'=>4])->update(['logistic_status'=>5]);//updating status to unit-received
+            $courier_shipment=CourierShipment::find($value);
+            if($courier_shipment->shipment->logistic_status == 4){
+                $courier_shipment->update(['status'=>'submitted_to_unit']);
+                Shipment::where(['id'=>$courier_shipment->shipment_id,'logistic_status'=>LogisticStep::where('slug','picked-up')->first()->id])->update(['logistic_status'=>LogisticStep::where('slug','dropped-at-pickup-unit')->first()->id]);//updating status to unit-received
+                event(new ShipmentMovementEvent(Shipment::find($courier_shipment->shipment_id)->first(),LogisticStep::find(5),Auth::guard('courier')->user()));
+            }
             
-            event(new ShipmentMovementEvent(Shipment::find($value),LogisticStep::find(5),Auth::guard('courier')->user()));
         }
         return back();
     }
@@ -103,7 +125,7 @@ class ShipmentController extends Controller
         // ->groupBy('date')->get();
         $parcels = CourierShipment::where([
             'courier_id' => Auth::guard('courier')->user()->id,
-            'type' => 'delivery'
+            'type' => 'delivery','status'=>'pending'
         ])->get();
         //dd($parcels);
         return view('courier.shipment.agent-dispatch', compact('parcels'));
@@ -114,9 +136,65 @@ class ShipmentController extends Controller
         $crShipment = $shipment;
         return view('courier.shipment.includes.shipment-details', compact('crShipment'));
     }
+    public function shipment_delivery_report(Request $req){
+        try{
+            // dd($req->all());
+            $shipment = Shipment::find(CourierShipment::find($req->id)->shipment_id);
+            // dd($shipment);
+            switch($req->status){
+                case 'delivered':
+                    $shipment->logistic_status = LogisticStep::where('slug','delivered')->first()->id;
+                    $shipment->save();
+                    CourierShipment::where('id',$req->id)->update(['status'=>'delivered']);
+                    ShipmentOTP::create([
+                        'shipment_id'=>$shipment->id,
+                        'courier_id'=> auth()->guard('courier')->user()->id,
+                        'otp'=>'1234',
+                        'sent_to_phone_number'=>$req->otp=='merchant'?$shipment->merchant->phone:$shipment->recipient['phone'],
+                        'sent_to'=>$req->otp
+                    ]);
+                    event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','delivered')->first(),Auth::guard('courier')->user()));
+                    break;
 
+                case 'hold':
+                    $shipment->logistic_status = LogisticStep::where('slug','on-hold')->first()->id;
+                    $shipment->save();
+                    CourierShipment::where('id',$req->id)->update(['status'=>'hold']);
+                    event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','on-hold')->first(),Auth::guard('courier')->user()));
+                    break;
+                
+                case 'partial':
+                    $shipment->logistic_status = LogisticStep::where('slug','partially-delivered')->first()->id;
+                    $shipment->save();
+                    CourierShipment::where('id',$req->id)->update(['status'=>'partially-delivered']);
+                    event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','partially-delivered')->first(),Auth::guard('courier')->user()));
+                    break;
+
+                case 'return':
+                    $shipment->logistic_status = LogisticStep::where('slug','returned-by-recipient')->first()->id;
+                    $shipment->save();
+                    CourierShipment::where('id',$req->id)->update(['status'=>'returned']);
+                    
+                    ShipmentOTP::create([
+                        'shipment_id'=>$shipment->id,
+                        'courier_id'=> auth()->guard('courier')->user()->id,
+                        'otp'=>'1234',
+                        'sent_to_phone_number'=>$req->otp=='merchant'?$shipment->merchant->phone:$shipment->recipient['phone'],
+                        'sent_to'=>$req->otp
+                    ]);
+                    event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','returned-by-recipient')->first(),Auth::guard('courier')->user()));
+                    break;
+            }
+            return back()->with('message', 'Your report has been successfully submited!');
+            // CourierShipment::where
+        }
+        catch(Exception $e){
+            throw $e;
+        }
+    }
     function delivery_report(Request $request)
     {
+        dd($request->all());
         if ($request->status == 'partial' && $request->price == '') {
             dd('Please set customer given price field');
         }
@@ -210,16 +288,34 @@ class ShipmentController extends Controller
 
     function otp_confirmation(Request $request)
     {
-        $shipment = Shipment::where('id', $request->shipment_id);
-        $status = substr($shipment->first()->shipping_status, -1, strpos($shipment->first()->shipping_status, '-'));
-        Shipmnet_OTP_confirmation::create([
-            'otp' => $request->otp,
-            'collect_by' => $request->collect_by,
-            'shipment_id' => $shipment->first()->id,
-            'courier_id' => Auth::guard('courier')->user()->id,
-        ]);
-        $shipment->update(['shipping_status' => $status]);
-        return back()->with('message', 'The Shipment OTP has been confirmed successfully!');
+        try{
+            $shipment = Shipment::where('id', $request->shipment_id)->first();
+            $shipment_otp=ShipmentOTP::where('shipment_id',$request->shipment_id)->where('courier_id',auth()->guard('courier')->user()->id)->first();
+            if($request->otp == $shipment_otp->otp){
+                $shipment_otp->collect_by()->associate(Auth::guard('courier')->user());
+                $shipment_otp->confirmed=true;
+                $shipment_otp->save();
+                
+                if($shipment->logistic_step->slug=='returned-by-recipient'){
+                    // dd($shipment->logistic_step->slug);
+                    $shipment->logistic_status = LogisticStep::where('slug','returned-by-recipient-confirmed')->first()->id;
+                    $shipment->save();
+                    event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','returned-by-recipient-confirmed')->first(),Auth::guard('courier')->user()));
+                }
+                else if($shipment->logistic_step->slug=='delivered'){
+                    $shipment->logistic_status = LogisticStep::where('slug','delivery-confirmed')->first()->id;
+                    $shipment->save();
+                    event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','delivery-confirmed')->first(),Auth::guard('courier')->user()));
+                }
+                
+                return back()->with('message', 'The Shipment OTP has been confirmed successfully!');
+            }
+            return back()->with('message', 'OTP mismatched!');
+        }
+        catch(Exception $e){
+            throw $e;
+        }
+        
     }
 
     public function drop_in_unit_shipment(){

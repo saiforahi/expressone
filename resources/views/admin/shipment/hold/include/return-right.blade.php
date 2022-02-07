@@ -2,7 +2,7 @@
     <div class="row hub{{$hub->id}}" style="background:#f7f7f7;margin-bottom:1em">
     <div class="col-md-6">
         <p class="alert">
-        Hub: {{$hub->name}} <br>Number of parcels: <b class="num{{$hub->id}}">{{ return_hub_count($hub->id,'assigning')}}</b>
+        Unit: {{$hub->name}} <br>Number of parcels: <b class="num{{$hub->id}}">2</b>
         </p>
     </div>
     <div class="col-md-6 m-b-0 m-t-5">

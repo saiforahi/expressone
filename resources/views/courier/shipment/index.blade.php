@@ -44,8 +44,12 @@
                                                 </th>
                                                 <th scope="row">
                                                     <button class="btn btn-info">
-                                                        {{-- {{ courier_shipments(Auth::guard('courier')->user()->id, $users->id) }} --}}
-                                                        parcel
+                                                        <?php $total=merchant_wise_total_shipments_for_logged_in_courier_to_pickup($users,auth()->guard('courier')->user()) ?>
+                                                        @if($total==1)
+                                                        {{$total}} shipment
+                                                        @elseif($total>1)
+                                                        {{$total}} shipments
+                                                        @endif
                                                     </button>
 
                                                 </th>

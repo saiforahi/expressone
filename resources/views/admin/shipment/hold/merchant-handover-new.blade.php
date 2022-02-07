@@ -11,44 +11,49 @@
 
                         <table id="datatable-buttons" class="table table-striped table-bordered dataTable no-footer dtr-inline">
                             <thead>
-                            <tr class="bg-dark">
-                            <th>Image</th><th>Info</th>
-                                <th>Contact</th><th>Parcel/s</th><th>Area</th><th>Action</th>
-                            </tr>
+                                <tr class="bg-dark">
+                                    <th>Customer Info</th>
+                                    <th>Merchant Info</th>
+                                    <th>Pickup Location</th>
+                                    <th>Delivery Location</th>
+                                    <th>Action</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            @foreach($users as $user)
+                            @foreach($shipments as $shipment)
                                 <?php 
-                                $statuses=\App\Models\LogisticStep::where('slug','returned-in-transit')->orWhere('slug','returned-received')->select('slug')->get();
-                                $checkShipment = merchant_wise_reurn_in_transit_shipments_for_logged_in_admin($user,$statuses); 
+                                // $statuses=\App\Models\LogisticStep::where('slug','returned-in-transit')->orWhere('slug','returned-received')->select('slug')->get();
+                                // $checkShipment = merchant_wise_reurn_in_transit_shipments_for_logged_in_admin($user,$statuses); 
                                 
                                 ?>
 
                                 <tr>
-                                    <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid" src="{{$user->image == null? asset('images/user.png'):asset('storage/user/'.$user->image)}}"></th>
-                                    <th scope="row">Name: {{$user['first_name']}} {{$user['last_name']}}<br>
-                                        Shop Name: {{$user->shop_name}}
+                                    {{-- <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid" src="{{$user->image == null? asset('images/user.png'):asset('storage/user/'.$user->image)}}"></th> --}}
+                                    <th class="text-left" scope="row">Name: {{$shipment->recipient['name']}} <br/><i class="fa fa-phone"></i> Phone: {{$shipment->recipient['phone']}}
+                                        <br/><i class="fa fa-map-marker"></i> Address: {{$shipment->recipient['address']}}
                                     </th>
-                                    <th scope="row"><i class="fa fa-phone"></i> {{$user['phone']}}<br>
-                                        <i class="fa fa-envelope-o"></i> {{$user['email']}}<br>
-                                        <i class="fa fa-map-marker"></i> {{$user['address']}}<br>
+                                    <th scope="row">Name: {{$shipment->merchant->first_name}}<br>
+                                        <i class="fa fa-phone"></i> {{$shipment->merchant->phone}}<br>
+                                        <i class="fa fa-envelope-o"></i> {{$shipment->merchant->email}}<br>
                                     </th>
                                     <th scope="row">
-                                        <span class="btn btn-success">
-                                            @if($checkShipment >
-                                            0){{$checkShipment}} Parcels
-                                        @else {{$checkShipment}} Parcel @endif</span>
+                                        <i class="fa fa-angle-right"></i> Location: {{$shipment->pickup_location->name}}
                                     </th>
-                                    <th class="text-info">
-                                        <i class="fa fa-angle-right"></i> Unit: {{$user->unit->name}}
-                                        <br><i class="fa fa-angle-right"></i>
-                                    Area/Location: {{$user->unit->name}}
+                                    <th scope="row">
+                                        <i class="fa fa-angle-right"></i> Location: {{$shipment->delivery_location->name}}
                                     </th>
                                     <th class="text-right">
-                                        {{-- <a href="/admin/view-merchant-handover/{{$user->id}}"
+                                        {{-- <a href="/admin/view-merchant-handover/{{$shipment->id}}"
                                             class="btn btn-success btn-sm"> <i class="fa fa-search"></i> View</a> --}}
-                                            <a href="/admin/handover-to-merchant/{{$user->id}}"
+                                            @if($shipment->logistic_step->slug=='returned-in-transit')
+                                            <a href="/admin/returned-received/{{$shipment->id}}"
+                                                class="btn btn-success btn-sm"> <i class="fa fa-exchange"></i> Receive</a>
+                                            @elseif($shipment->logistic_step->slug == 'returned-received')
+                                            <a href="/admin/handover-to-merchant/{{$shipment->id}}"
                                                 class="btn btn-success btn-sm"> <i class="fa fa-exchange"></i> Handover</a>
+                                            @elseif($shipment->logistic_step->slug == 'returned-handover-to-merchant')
+                                            Handed over to merchant
+                                            @endif
                                         </th>
                                 </tr>
 

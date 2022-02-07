@@ -79,13 +79,13 @@
             type: "get", url: '/admin/move-to-hub',
             data: {shipment_id: shipment_id, delivery_location_id: del_location_id, merchant_id: merchant_id, weight: weight},
             success: function (data) {
-                console.log(data);
+                // console.log(data);
                 // alert('blah')
                 $('#' + shipment_id).remove();
                 $('.result').html(data);
                 // $('.r' + key).prop('disabled', false);
-                // $('.r' + key).html('Receive <i class="fa fa-arrow-right"></i>');
-                
+                $('.r' + key).html('Receive <i class="fa fa-arrow-right"></i>');
+                location.reload();
             }
         });
     }

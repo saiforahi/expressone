@@ -1,7 +1,7 @@
 <div class="row">
     <div class="col-md-2">
         <select class="form-control select2" name="area_id" id="area_id" onchange="get_area()">
-            <option value="">Search By Area</option>
+            <option value="">Search By Area/Location</option>
             @foreach($locations as $area)
             <option @if(request()->area_id==$area->id)selected @endif value="{{$area->id}}">{{$area->name}}</option>
             @endforeach
@@ -12,7 +12,7 @@
     </div>
     <div class="col-md-2">
         <select class="form-control select2" name="hub_id" id="hub_id" onchange="get_hub()">
-            <option value="">Search By Hub</option>
+            <option value="">Search By Unit</option>
             @foreach($units as $hub)
             <option @if(request()->hub_id==$hub->id)selected @endif value="{{$hub->id}}">{{$hub->name}}</option>
             @endforeach
@@ -30,7 +30,7 @@
         @php $drivers = \App\Models\Courier::where('status','1')->get(); @endphp
 
         <select class="form-control select2" name="courier_id" onchange="get_driver()">
-            <option value="">Search By Rider</option>
+            <option value="">Search By Courier</option>
             @foreach($drivers as $driver)
             <option @if(request()->courier_id==$driver->id)selected @endif  value="{{$driver->id}}">{{$driver->first_name}} {{$driver->last_name}}</option>
             @endforeach
@@ -45,7 +45,10 @@
     <div class="col-md-2">
         <select class="form-control select2" name="status" id="status" onchange="get_status()">
             <option value="">Status</option>
-            <option value="0" @if(request()->status=='0')selected @endif >Pickup from merchant</option>
+            @foreach (\App\Models\LogisticStep::orderBy('id','ASC')->get() as $item)
+                <option value="{{$item->id}}">{{$item->step_name}}</option>    
+            @endforeach
+            {{-- <option value="0" @if(request()->status=='0')selected @endif >Pickup from merchant</option>
             <option value="1" @if(request()->status=='1')selected @endif >Assigned rider for pickup</option>
             <option value="2" @if(request()->status=='2')selected @endif >Receive parcel by Rider</option>
             <option value="3" @if(request()->status=='3')selected @endif >Sorted for Dispatch center</option>
@@ -54,7 +57,7 @@
             <option value="6" @if(request()->status=='6')selected @endif > Delivered</option>
             <option value="6.5" @if(request()->status=='6.5')selected @endif > Partially delivered</option>
             <option value="7" @if(request()->status=='7')selected @endif > Hold shipments</option>
-            <option value="8" @if(request()->status=='8')selected @endif > Return shipments</option>
+            <option value="8" @if(request()->status=='8')selected @endif > Return shipments</option> --}}
         </select>
     </div>
     <div class="col-md-2">

@@ -33,11 +33,12 @@
                     </p>
                     <hr>
                     <div class="x_content result">
-                        @foreach ($units as $unit)
+                        
+                        @foreach (delivery_units() as $unit)
                         
                             <div class="row hub{{ $unit->id }}" style="background:#f7f7f7;margin-bottom:1em">
                                 <div class="col-md-6">
-                                    <p class="alert">Delivery Point:
+                                    <p class="alert">Delivery Unit:
                                         {{ $unit->name }}
                                         {{-- <br>Number of parcels: <b
                                             class="num{{ $unit->id }}">{{ user_hub_count($unit->id, $id, 'on-dispatch') }}</b> --}}
@@ -45,7 +46,7 @@
                                 </div>
                                 <div class="col-md-6 m-b-0 m-t-5">
                                     <button class="btn btn-xs btn-info form-control s{{ $unit->id }}"
-                                        onclick="sorting(<?php echo $unit->id; ?>)">Send to In-Transit</button>
+                                        onclick="sorting(<?php echo $unit->id; ?>)">Send to {{$unit->admin_id==auth()->guard('admin')->user()->id?'Delivery':'In-Transit'}}</button>
                                     <button class="btn btn-xs btn-default form-control viewParcel" data-toggle="modal"
                                         data-target="#viewParcel" data-hub_id="{{ $unit->id }}">View Parcels</button>
                                     <a class="btn btn-xs btn-success form-control"

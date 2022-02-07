@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Courier;
 use App\Models\Shipment;
 use Illuminate\Http\Request;
 use App\Models\CourierShipment;
-use App\Driver_hub_shipment_box;
+use App\Models\LogisticStep;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -53,78 +53,74 @@ class DashboardController extends Controller
 
     public function delivery_shipments()
     {
-        return DataTables::of(Driver_hub_shipment_box::where('courier_id', Auth::guard('courier')->user()->id)
-            ->where('status', '!=', 'assigned')
+        return DataTables::of(CourierShipment::where('courier_id', Auth::guard('courier')->user()->id)
+            ->where('status', '!=', 'pending')->where('type','delivery')
             ->orderBy('id', 'DESC'))
-            ->addColumn('date', function ($driverShipment) {
-                $data = 'Date: ' . date('M d, Y H:i', strtotime($driverShipment->created_at)) . '<br/>';
-                $data .= 'TracingCode: ' . $driverShipment->shipment->tracking_code;
+            ->addColumn('date', function ($courierShipment) {
+                $data = 'Date: ' . date('M d, Y H:i', strtotime($courierShipment->created_at)) . '<br/>';
+                $data .= 'TrackingCode: ' . $courierShipment->shipment->tracking_code;
                 return $data;
             })
-            ->addColumn('customer_info', function ($driverShipment) {
-                $data =  $driverShipment->shipment->name . '<br/>';
-                $data .= $driverShipment->shipment->phone;
+            ->addColumn('customer_info', function ($courierShipment) {
+                $data =  $courierShipment->shipment->recipient['name'] . '<br/>';
+                $data .= $courierShipment->shipment->recipient['phone'];
                 return  $data;
             })
-            ->addColumn('merchant', function ($driverShipment) {
-                $data =  $driverShipment->shipment->user->first_name . ' ';
-                $data .=  $driverShipment->shipment->user->last_name;
+            ->addColumn('merchant', function ($courierShipment) {
+                $data =  $courierShipment->shipment->merchant->first_name . ' ';
+                $data .=  $courierShipment->shipment->merchant->last_name;
                 return $data;
             })
             ->addColumn('amount', function ($driverShipment) {
-                if ($driverShipment->shipment->cod_amount == 0) {
-                    $data = 'Pay by merchant (' . $driverShipment->shipment->cod_amount . ')';
+                if ($driverShipment->shipment->payment_detail->cod_amount == 0) {
+                    $data = 'Pay by merchant (' . $driverShipment->shipment->payment_detail->cod_amount . ')';
                 } else {
-                    $data = 'Pay by customer (' . $driverShipment->shipment->cod_amount . ')';
+                    $data = 'Pay by customer (' . $driverShipment->shipment->payment_detail->cod_amount . ')';
                 }
                 return $data;
             })
             ->addColumn('area', function ($driverShipment) {
-                return $driverShipment->shipment->area->name;
+                return $driverShipment->shipment->pickup_location->point->unit->name;
             })
             ->addColumn('status', function ($driverShipment) {
                 $status = $driverShipment->shipment->status;
-                $shipping_status = $driverShipment->shipment->shipping_status;
+                $logistic_status = $driverShipment->shipment->logistic_status;
                 // return $shipping_status;
-                return view('dashboard.include.shipping-status', compact('status', 'shipping_status'));
+                return view('dashboard.include.shipping-status', compact('status', 'logistic_status'));
             })->rawColumns(['date', 'customer_info', 'merchant', 'amount', 'area', 'status'])->make(true);
     }
 
 
     function pickup_shipments()
     {
-        return DataTables::of(Driver_hub_shipment_box::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => 'assigned'])->orderBy('id', 'DESC'))
+        return DataTables::of(CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'type' => 'pickup'])->join('shipments','shipments.id','courier_shipment.shipment_id')->where('shipments.logistic_status','<=',LogisticStep::where('slug','dropped-at-pickup-unit')->first()->id)->orderBy('courier_shipment.id', 'DESC')->get(['courier_shipment.*']))
             ->addColumn('date', function ($driverShipment) {
-                $data = 'Date: ' . date('M d, Y H:i', strtotime($driverShipment->created_at)) . '<br/>';
+                $data = '<strong>Date:</strong> ' . date('M d, Y H:i', strtotime($driverShipment->created_at)) . '<br/>';
                 $data .= 'TrackingCode: ' . $driverShipment->shipment->tracking_code;
                 return $data;
             })
             ->addColumn('customer_info', function ($driverShipment) {
-                $data =  $driverShipment->shipment->name . '<br/>';
-                $data .= $driverShipment->shipment->phone;
+                $data =  $driverShipment->shipment->recipient['name'] . '<br/>';
+                $data .= $driverShipment->shipment->recipient['phone'];
+                $data .= $driverShipment->shipment->recipient['address'];
                 return  $data;
             })
             ->addColumn('merchant', function ($driverShipment) {
-                $data =  $driverShipment->shipment->user->first_name . ' ';
-                $data .=  $driverShipment->shipment->user->last_name;
+                $data =  $driverShipment->shipment->merchant->first_name . ' ';
+                $data .=  $driverShipment->shipment->merchant->last_name;
                 return $data;
             })
             ->addColumn('amount', function ($driverShipment) {
-                if ($driverShipment->shipment->cod_amount == 0) {
-                    $data = 'Pay by merchant (' . $driverShipment->shipment->cod_amount . ')';
-                } else {
-                    $data = 'Pay by customer (' . $driverShipment->shipment->cod_amount . ')';
-                }
-                return $data;
+                return $driverShipment->shipment->payment_detail->cod_amount;
             })
             ->addColumn('area', function ($driverShipment) {
-                return $driverShipment->shipment->area->name;
+                return $driverShipment->shipment->pickup_location->name;
             })
             ->addColumn('status', function ($driverShipment) {
                 $status = $driverShipment->shipment->status;
-                $shipping_status = $driverShipment->shipment->shipping_status;
-                // return $shipping_status;
-                return view('dashboard.include.shipping-status', compact('status', 'shipping_status'));
+                $logistic_status = $driverShipment->shipment->logistic_status;
+                // return $logistic_status;
+                return view('dashboard.include.shipping-status', compact('status', 'logistic_status'));
             })->rawColumns(['date', 'customer_info', 'merchant', 'amount', 'area', 'status'])->make(true);
 
         // return DataTables::of(Driver_shipment::where(['courier_id'=>Auth::guard('courier')->user()->id])->orderBy('id', 'DESC'))
@@ -160,8 +156,9 @@ class DashboardController extends Controller
 
     public function otp_shipments()
     {
-        return DataTables::of(Shipment::where('shipping_status', 'LIKE', 'on%')
-            ->where('status', '!=', 'assigned')
+        $statuses=LogisticStep::where('slug','returned-by-recipient')->orWhere('slug','delivered')->pluck('id')->toArray();
+        return DataTables::of(Shipment::whereIn('logistic_status', $statuses)
+            // ->where('status', '!=', 'assigned')
             ->orderBy('id', 'DESC'))
             ->addColumn('date', function ($shipment) {
                 $data = 'Date: ' . date('M d, Y H:i', strtotime($shipment->created_at)) . '<br/>';
@@ -169,31 +166,31 @@ class DashboardController extends Controller
                 return $data;
             })
             ->addColumn('customer_info', function ($shipment) {
-                $data =  $shipment->name . '<br/>';
-                $data .= $shipment->phone;
+                $data =  $shipment->recipient['name'] . '<br/>';
+                $data .= $shipment->recipient['phone'];
                 return  $data;
             })
             ->addColumn('merchant', function ($shipment) {
-                $data =  $shipment->user->first_name . ' ';
-                $data .=  $shipment->user->last_name;
+                $data =  $shipment->merchant->first_name . ' ';
+                $data .=  $shipment->merchant->last_name;
                 return $data;
             })
             ->addColumn('amount', function ($shipment) {
-                if ($shipment->cod_amount == 0) {
-                    $data = 'Pay by merchant (' . $shipment->cod_amount . ')';
+                if ($shipment->amount == 0) {
+                    $data = 'Pay by merchant (' . $shipment->payment_detail->cod_amount . ')';
                 } else {
-                    $data = 'Pay by customer (' . $shipment->cod_amount . ')';
+                    $data = 'Pay by customer (' . $shipment->payment_detail->cod_amount . ')';
                 }
                 return $data;
             })
             ->addColumn('area', function ($shipment) {
-                return $shipment->area->name;
+                return $shipment->pickup_location->point->unit->name;
             })
             ->addColumn('status', function ($shipment) {
                 $status = $shipment->status;
-                $shipping_status = $shipment->shipping_status;
+                $logistic_status = $shipment->logistic_status;
 
-                return  view('dashboard.include.shipping-status', compact('status', 'shipping_status')) . ' <button class="btn btn-warning btn-xs openModal" id="' . $shipment->id . '"> Confirm OTP</button>';
+                return  view('dashboard.include.shipping-status', compact('status', 'logistic_status')) . ' <button class="btn btn-warning btn-xs openModal" id="' . $shipment->id . '"> Confirm OTP</button>';
             })->rawColumns(['date', 'customer_info', 'merchant', 'amount', 'area', 'status'])->make(true);
     }
 }

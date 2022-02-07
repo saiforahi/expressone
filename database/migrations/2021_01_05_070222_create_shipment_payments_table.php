@@ -22,9 +22,10 @@ class CreateShipmentPaymentsTable extends Migration
             // $table->unsignedBigInteger('admin_id');
             $table->float('cod_amount',8,2)->nullable();
             $table->float('delivery_charge',8,2)->nullable();
-            $table->integer('weight_charge')->nullable();
+            $table->float('weight_charge',8,2)->nullable();
             $table->float('outstanding_amount',8,2)->nullable();
             $table->enum('status',['paid','due'])->nullable();
+            $table->float('paid_amount',8,2)->nullable()->comment('amount paid to merchant');
 
             $table->foreign('shipment_id')->references('id')->on('shipments');
             // $table->foreign('admin_id')->references('id')->on('admins');

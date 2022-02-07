@@ -27,7 +27,7 @@
                                         <th>#</th>
                                         <th>Customer info</th>
                                         <th>Address</th>
-                                        <th>Amount</th>
+                                        <th>Payable Amount</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -36,14 +36,12 @@
 
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
-                                            <td>Name: {{ $row->shipment->shipments }} <br>
+                                            <td>Name: {{ $row->shipment->recipient['name'] }} <br>Phone: {{ $row->shipment->recipient['phone'] }}<br>Address:{{ $row->shipment->recipient['address'] }}
 
                                             <td> Parcel Pickup :{{ $row->shipment->pickup_location->name }}
                                             </td>
-                                            <td>
-                                                @if ($row->shipment->cod_amount == 0) Pay by merchant @else Pay by customer @endif
-                                                <br>
-                                                Payable: ( {{ $row->shipment->cod_amount }} )
+                                            <td class="text-center">
+                                                {{ $row->shipment->payment_detail->cod_amount }}
                                             </td>
                                             <td class="text-right">
                                                 <button class="btn btn-info btn-sm more"
@@ -84,7 +82,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Parcel Delivery Report Need to do</h4>
+                    <h4 class="modal-title">Shipment Delivery Report</h4>
                 </div>
                 <div class="modal-body">
                     @include('courier.shipment.includes.driver-report-form')

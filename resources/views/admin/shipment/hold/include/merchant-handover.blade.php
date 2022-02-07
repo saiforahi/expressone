@@ -17,10 +17,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($users as $user)
+                            @foreach($shipments as $shipment)
                                 <?php 
-                                $statuses=\App\Models\LogisticStep::where('slug','returned-in-transit')->orWhere('slug','returned-received')->select('slug')->get();
-                                $checkShipment = merchant_wise_reurn_in_transit_shipments_for_logged_in_admin($user,$statuses); 
+                                // $statuses=\App\Models\LogisticStep::where('slug','returned-in-transit')->orWhere('slug','returned-received')->select('slug')->get();
+                                // $checkShipment = merchant_wise_reurn_in_transit_shipments_for_logged_in_admin($user,$statuses); 
                                 
                                 ?>
 

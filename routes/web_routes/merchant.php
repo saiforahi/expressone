@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function 
     Route::get('payments', [ShipmentController::class, 'payments'])->name('payments');
     Route::get('payments-load', [ShipmentController::class, 'payments_loading'])->name('payments-load');
     Route::get('show-payment/{shipment}', [ShipmentController::class, 'show_payment'])->name('show_payment');
+    Route::get('mark-payment-received/{payment}', [ShipmentController::class, 'mark_payment_received'])->name('mark_payment_received');
     //Merchant CSV
     Route::get('csv-upload', [CSVController::class, 'create'])->name('csv-upload');
     Route::post('csv-upload', [CSVController::class, 'get_csv_data'])->name('get-csv');

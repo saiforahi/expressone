@@ -77,13 +77,11 @@ class ShippingChargeController extends Controller
     public function setShippingCharge(Request $request, $id)
     {
         try {
+            // dd($request->all());
             $parcel = Shipment::findOrFail($id);
-            $parcel->shipping_charge_id = $request->result[$id];
-            //Update shipment_payments
-            if ($parcel) {
-                DB::table('shipment_payments')->where('shipment_id', $id)->update(['delivery_charge' => $parcel->shippingCharge->shipping_amount]);
-            }
+            $parcel->service_type = $request->result[$id];
             $parcel->save();
+            
             return redirect()->back();
         } catch (\Throwable $th) {
             return redirect()->back();

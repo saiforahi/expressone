@@ -1,12 +1,12 @@
 @foreach ($shipments as $item)
-    <table class="table tbl{{$item->shipment_id}}">
-        <tr><td><b> Customer Name: </b>{{$item->shipment->name}}</td></tr>
-        <tr><td><b>Invoice ID: </b>{{$item->shipment->invoice_id}}
+    <table class="table tbl{{$item->id}}">
+        <tr><td><b> Customer Name: </b>{{$item->recipient['name']}}</td></tr>
+        <tr><td><b>Invoice ID: </b>{{$item->invoice_id}}
         <i class="pull-right"><strong>{{$type}}</strong> at {{date('M d, Y H:i',strtotime($item->created_at))}}</i>
         </td></tr>
-        <tr><td><b>Tracking Code: </b>{{$item->shipment->tracking_code}}</td></tr>
-        <tr><td><b>Parcel Value: </b>{{$item->shipment->total_price}}
-            <button class="btn btn-info btn-xs pull-right m{{$item->shipment_id}}" onclick="moveback(<?php echo $item->shipment_id.','.$item->hub_shipment_box->hub->id;?>)">Move <i class="fa fa-long-arrow-right"></i> </button>
+        <tr><td><b>Tracking Code: </b>{{$item->tracking_code}}</td></tr>
+        <tr><td><b>Parcel Value: </b>{{$item->amount}}
+            <button class="btn btn-info btn-xs pull-right m{{$item->id}}" onclick="moveback(<?php echo $item->id.','.$item->pickup_location->point->unit->id;?>)">Move <i class="fa fa-long-arrow-right"></i> </button>
         </td></tr>
     </table>
 @endforeach

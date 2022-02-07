@@ -1,10 +1,10 @@
 @foreach ($shipments as $item)
-    <table class="table tbl2{{$item->shipment_id}}">
-        <tr><td><b>Customer Name: </b>{{$item->shipment->name}}</td></tr>
-        <tr><td><b>Invoice ID: </b>{{$item->shipment->invoice_id}} </td></tr>
-        <tr><td><b>Tracking Code: </b>{{$item->shipment->tracking_code}}</td></tr>
-        <tr><td><b>Parcel Value: </b>{{$item->shipment->total_price}}
-            <button class="btn btn-info btn-xs pull-right mb{{$item->shipment_id}}" onclick="move(<?php echo $item->shipment_id;?>)"><i class="fa fa-long-arrow-left"></i> Move back</button>
+    <table class="table tbl2{{$item->id}}">
+        <tr><td><b>Customer Name: </b>{{$item->recipient['name']}}</td></tr>
+        <tr><td><b>Invoice ID: </b>{{$item->invoice_id}} </td></tr>
+        <tr><td><b>Tracking Code: </b>{{$item->tracking_code}}</td></tr>
+        <tr><td><b>Parcel Value: </b>{{$item->amount}}
+            <button class="btn btn-info btn-xs pull-right mb{{$item->id}}" onclick="move(<?php echo $item->id;?>)"><i class="fa fa-long-arrow-left"></i> Move back</button>
         </td></tr>
     </table>
 @endforeach

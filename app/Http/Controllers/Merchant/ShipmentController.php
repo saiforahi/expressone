@@ -16,6 +16,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use App\Http\Controllers\Controller;
 use App\Models\LogisticStep;
 use Illuminate\Support\Facades\Auth;
+use App\Models\MerchantPayment;
 
 class ShipmentController extends Controller
 {
@@ -243,48 +244,30 @@ class ShipmentController extends Controller
                 return $shipment->invoice_id;
             })
             ->addColumn('payment_by', function ($shipment) {
-                if ($shipment->cod_amount == 0) {
+                if ($shipment->payment_detail->cod_amount < $shipment->payment_detail->delivery_charge) {
                     $price = 'Merchant will pay';
                 } else $price = 'Reciepient will pay';
                 return $price;
             })
             ->addColumn('amount', function ($shipment) {
-                $price = 0;
-                $zone = Area::find($shipment->area_id);
-                $shipping = ShippingPrice::where('zone_id', $zone->id)->first();
-                if ($shipping != '') {
-                    if ($shipping->cod == 1 && $shipping != null) {
-                        $cod_type = 1;
-                        if (!$shipment->parcel_value) {
-                            $cod_amount = 0;
-                        } else {
-                            $cod_amount = ((int) $shipment->parcel_value / 100) * $shipping->cod_value;
-                        }
-                    }
-                    $weight = (float) $shipment->weight;
-                    if ($weight > $shipping->max_weight) {
-                        $ExtraWeight = ($weight - $shipping->max_weight) / $shipping->per_weight;
-                        if ((int) $ExtraWeight < $ExtraWeight) {
-                            $ExtraWeight = (int) $ExtraWeight + 1;
-                        }
-                        $price = ($ExtraWeight * $shipping->price) + $shipping->max_price;
-                    } else {
-                        $price = (int) $shipping->max_price;
-                    }
-                    $total_price = $price + (int) $shipment->parcel_value;
-                    if ($shipment->price == 0) return $price . ' Tk';
-                    else return $total_price . ' Tk';
-                } else {
-                    $price = (int)$shipment->cod_amount - (int) $shipment->delivery_charge;
-                    return '<span class="text-danger">' . $price . ' Tk</span>';
-                }
+                $price = (int)$shipment->payment_detail->cod_amount - (int) $shipment->payment_detail->delivery_charge;
+                return '<span class="text-danger">' . $price . ' Tk</span>';
             })
             ->rawColumns(['id', 'tracking_code', 'invoice_no', 'payment_by', 'amount', 'action'])->make(true);
     }
 
     function show_payment(Shipment $shipment)
     {
-        $payments =  ShipmentPayment::where('shipment_id', $shipment->id)->get();
+        $payments =  MerchantPayment::where('shipment_id', $shipment->id)->get();
         return view('dashboard.include.shipment-delivery-payment', compact('payments'));
+    }
+    function mark_payment_received(MerchantPayment $payment){
+        try{
+            $payment->collected_by_merchant=true;
+            $payment->save();
+        }
+        catch(Exception $e){
+            throw $e;
+        }
     }
 }

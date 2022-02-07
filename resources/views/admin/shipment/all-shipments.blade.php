@@ -18,7 +18,8 @@
                   <th>Date</th>
                    <th>Customer info</th><th>Merchant</th> 
                     <th>Amount</th><th>Pick up</th><th>Delivery</th><th>Trackings</th>
-                    <th>Status</th><th class="text-right">Action</th>
+                    <th>Status</th>
+                    <th class="text-right">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -28,14 +29,14 @@
                     <td>{{$shipment->recipient['name']}} - {{$shipment->recipient['phone']}}</td>
                     <td>{{$shipment->recipient['name']}}</td>
                     <td>
-                      {{$shipment->cod_amount}}
+                      {{$shipment->amount}}
                     </td>
                     <td> {{$shipment->pickup_location->name??null}} </td>
                     <td> {{$shipment->delivery_location->name??null}} </td>
                     <td> <a target="_blank" href="/tracking?code={{$shipment->tracking_code}}">{{$shipment->tracking_code}} </a></td>
-                    <td>@include('admin.shipment.status',['status'=>$shipment->status,'shipping_status'=>$shipment->shipping_status])</td>
+                    <td>@include('admin.shipment.status',['status'=>$shipment->status,'logistic_status'=>$shipment->logistic_status])</td>
                     <td class="text-right">
-                      <button class="btn btn-xs btn-warning reset" id="{{$shipment->id}}">Reset</button>
+                      {{-- <button class="btn btn-xs btn-warning reset" id="{{$shipment->id}}">Reset</button> --}}
                       <a href="/admin/shipment-details/{{$shipment->id}}" target="_blank" class="btn btn-xs btn-info">View</a>
                     </td>
                   </tr>

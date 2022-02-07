@@ -20,7 +20,7 @@ class DashboardController extends Controller
         // dd(Auth::user()->morphClass);
         // dd(Auth::user()->inheritable->getMorphClass());
         //$shipment = Shipment::orderBy('created_at', 'DESC')->where('merchant_id', Auth::guard('user')->user()->id)->get()->toArray();
-        $shipment = Shipment::orderBy('created_at', 'DESC')->where('merchant_id', Auth::guard('user')->user()->id)->get();
+        $shipment = Shipment::where('merchant_id', Auth::guard('user')->user()->id)->get();
         //dd(gettype($shipment));
         $shippingCharges =  DB::table('shipping_charges')->select('id', 'consignment_type', 'shipping_amount')->get();
         return view('dashboard.index', compact('shipment', 'shippingCharges'));

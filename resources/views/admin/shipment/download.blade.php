@@ -8,13 +8,13 @@
 				<div class="x_panel">
 					<div class="row">
 						<div class="col-md-5">
-							<input  class="form-control" type="search" name="bulk_id" placeholder="search By Bulk ID" />
+							<input  class="form-control" type="search" name="bulk_id" placeholder="search By tracking code or invoice ID" />
 						</div>
 
-						<div class="col-md-7 text-right">
+						{{-- <div class="col-md-7 text-right">
 							<a href="#" class="btn csv_file btn-sm btn-default" disabled onclick="get_csv()">Download CSV</a>
 							<a href="#" onclick="get_pdf()" class="btn btn-sm pdf_file btn-default" disabled>Download PDF</a>
-						</div>
+						</div> --}}
 						
 					</div><br>
 					<div class="row download-result"></div>
@@ -39,20 +39,20 @@
 			}
 		});
 	}
-	function get_csv(){
-		let bulk_id = $('[name=bulk_id]').val();
-		if(bulk_id.length <1){
-			alert('Set bulk ID first please!');return false;
-		}
-		window.open("/admin/get-shipment-files/csv/"+bulk_id,'Download CSV')
+	function get_csv(shipment_id){
+		// let bulk_id = $('[name=bulk_id]').val();
+		// if(bulk_id.length <1){
+		// 	alert('Choose a shipment first!!');return false;
+		// }
+		window.open("/admin/get-shipment-files/csv/"+shipment_id,'Download CSV')
 	}
 
-	function get_pdf(){
-		let bulk_id = $('[name=bulk_id]').val();
-		if(bulk_id.length <1){
-			alert('Set bulk ID first please!');return false;
-		}
-		window.open("/admin/get-shipment-files/pdf/"+bulk_id,'Download PDF')
+	function get_pdf(shipment_id){
+		// let bulk_id = $('[name=bulk_id]').val();
+		// if(bulk_id.length <1){
+		// 	alert('Choose a shipment first!');return false;
+		// }
+		window.open("/admin/get-shipment-files/pdf/"+shipment_id,'Download PDF')
 	}
 
 	$(function(){

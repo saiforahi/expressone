@@ -26,6 +26,7 @@
                                         <th class="column-title">Delivery</th>
                                         <th class="column-title">Date</th>
                                         <th class="column-title">Status</th>
+                                        <th class="column-title">Actions</th>
                                     </tr>
                                     </thead>
 
@@ -61,13 +62,11 @@
                                                 @if(($shipment->payment_detail->cod_amount - $shipment->delivery_charge) <0) Pay by merchant @else Pay by Customer @endif
                                             </td>
                                             <td>
-                                                @if($shipment->logistic_status!=9)
+                                                @if(!is_courier_assigned_for_delivery($shipment))
                                                 <button type="button" class="btn btn-primary btn-xs assign"
                                                     data-toggle="modal" data-target="#assignShipment"
                                                     data-id="{{ $shipment->id }}">Assign Courier <i
                                                         class="fa fa-truck"></i></button>
-
-                                                @elseif($shipment->logistic_status==8)
                                                 @else
                                                 Courier: {{\App\Models\CourierShipment::where(['shipment_id'=>$shipment->id,'type'=>'delivery'])->first()->courier->first_name}}
                                                 @endif
@@ -95,16 +94,19 @@
                                             <td class="">Created
                                                 at: {{date('M d, y H:i:s',strtotime($shipment->created_at))}}<br>
                                                 Delivery at:
-                                                @if($shipment->shipping_status>5)
-                                                    <?php $created_at = \DB::table('driver_hub_shipment_box')->where('shipment_id', $shipment->id)->pluck('created_at')->first(); ?>
-                                                    {{date('M d, y H:i:s',strtotime($created_at))}}
-                                                @endif
+                                                
                                             </td>
                                             <td class="">
                                                 Status:
-                                                @include('admin.shipment.status',['status'=>$shipment->status,'shipping_status'=>$shipment->shipping_status])
+                                                @include('admin.shipment.status',['status'=>$shipment->status,'logistic_status'=>$shipment->logistic_status])
+                                                @if($shipment->logistic_step->slug == 'delivered')
+                                                <button onclick="mark_confirmed(<?php echo $shipment->id;?>)"
+                                                    class="btn btn-xs pull-left btn-warning" type="button">Mark Confirmed
+                                                </button>
+                                                @endif
                                                 <br><br>
-
+                                            </td>
+                                            <td class="">
                                                 <b data-toggle="modal" data-target="#DriverNote"
                                                    class="btn btn-xs btn-info pull-right"
                                                    onclick="get_driver_note(<?php echo $shipment->id;?>)"> <i
@@ -134,6 +136,7 @@
                                                     <form method="POST" action="{{route('assign-courier-for-delivery')}}">
                                                         @csrf
                                                         {{-- <input value="delivery" name="type" type="hidden"/> --}}
+                                                        
                                                         <select class="form-control" name="courier_id" required="">
                                                             <option value="">Choose Courier</option>
                                                             <?php $couriers = \App\Models\Courier::latest()->get();?>
@@ -292,7 +295,17 @@
                 }
             });
         }
-
+        function mark_confirmed(shipment_id){
+            if(confirm('Are you sure to mark this shipment delivery as confirmed?')==true){
+                $.ajax({
+                    type: "get", url: '<?php echo '/admin/shipment-mark-delivered/';?>' + shipment_id,
+                    success: function (data) {
+                        // $('.audit-result').html(data);
+                        location.reload();
+                    }
+                });
+            }
+        }
         $(".btnPrint").printPage();
 
         function get_shipment(field, param) {
@@ -451,5 +464,14 @@
                 }
             });
         });
+    </script>
+    <script type="text/javascript">
+        $(function() {
+            $('.assign').on('click', function() {
+                let id = $(this).data('id');
+                $('#shipment_id').val(id);
+            });
+            
+        })
     </script>
 @endpush

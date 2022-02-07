@@ -196,9 +196,44 @@ if (!function_exists('count_shipment_for_delivery_unit')) {
     }
 }
 
-if (!function_exists('is_courier_assign_available')) {
+if (!function_exists('is_courier_assign_available_for_pickup')) {
     function is_courier_assign_available_for_pickup($shipments)
     {
         dd($shipments->select('id')->toArray());
+    }
+}
+
+if (!function_exists('is_courier_assigned_for_delivery')) {
+    function is_courier_assigned_for_delivery($shipment)
+    {
+        return CourierShipment::where(['shipment_id'=>$shipment->id,'type'=>'delivery'])->exists();
+    }
+}
+
+if (!function_exists('merchant_wise_reurn_in_transit_shipments_for_logged_in_admin')) {
+    function merchant_wise_reurn_in_transit_shipments_for_logged_in_admin($user,$logistic_statuses)
+    {
+        $total=Shipment::whereIn('logistic_status',$logistic_statuses)->where('merchant_id',$user->id)->cousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->count();
+        return $total;
+    }
+}
+
+if (!function_exists('merchant_wise_total_shipments_for_logged_in_courier_to_pickup')) {
+    function merchant_wise_total_shipments_for_logged_in_courier_to_pickup($user,$courier)
+    {
+        $statuses=LogisticStep::where('slug','to-pick-up')->orWhere('slug','picked-up')->orWhere('slug','dropped-at-pickup-unit')->pluck('id')->toArray();
+        $total=Shipment::where('merchant_id',$user->id)->whereIn('logistic_status',$statuses)
+            ->join('courier_shipment','courier_shipment.shipment_id','shipments.id')
+            ->where(['courier_shipment.courier_id'=>$courier->id,'courier_shipment.type'=>'pickup'])->count();
+            // dd($total);
+        return $total;
+    }
+}
+
+if (!function_exists('delivery_units')) {
+    function delivery_units()
+    {
+        $units=Shipment::where('logistic_status',LogisticStep::where('slug','unit-received')->first()->id)->deliverycousins()->get(['units.*']);
+        return $units;
     }
 }

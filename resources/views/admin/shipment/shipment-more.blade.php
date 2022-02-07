@@ -28,7 +28,7 @@
                         Merchant Shipment List
                         @if ($shipments->count() > 0 && $shipments->whereBetween('logistic_status', [1,2])->count() > 0)
                             <a data-target="#assignShipment" data-toggle="modal" data-id="all" href="#"
-                                class="btn btn-primary assign pull-right">Assign all parcels to a Rider</a>
+                                class="btn btn-primary assign pull-right">Assign all parcels to a Courier</a>
                         @endif
                     </h3>
                 </div>
@@ -98,8 +98,8 @@
                                         <th scope="row text-align-right">
                                             {{-- @if ($shipment->status == '1' && $shipment->shipping_status < 2) --}}
                                             <a data-id="{{ $shipment->id }}" data-toggle="modal" href="#"
-                                                data-target="#shipping_price_modal" class="btn-xs btn btn-danger"><i
-                                                    class="fas fa-dollar-sign"></i>Set Shipping Price</a>
+                                                data-target="#shipping_price_modal" class="btn-xs btn btn-warning set_charge"><i
+                                                    class="fas fa-dollar-sign"></i>{{$shipment->payment_detail->delivery_charge!=null?'Update':'Set'}} Delivery Charge</a>
                                             <a onClick="return confirm('Are you sure to Delete the shipment');"
                                                 href="/admin/delete-shipment/{{ $shipment->id }}"
                                                 class="btn-xs btn btn-danger"><i class="fa fa-trash"></i> Delete</a>
@@ -177,18 +177,19 @@
     <div class="modal fade" id="shipping_price_modal" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <form id="cancelForm" class="modal-content">
+            <form class="modal-content" action="{{route('set-delivery-charge')}}" method="POST">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Set Shipping Price
+                    <h5 class="modal-title" id="exampleModalLongTitle">Set Delivery Charge
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </h5>
                 </div>
                 <div class="modal-body">
-                    <label>Price</label>
-                    <textarea required class="form-control" rows="3" name="note"></textarea>
+                    <label>Delivery Charge</label>
+                    <input id="shipment_id_delivery_charge" type="hidden" name="shipment_id"/>
+                    <input required class="form-control" name="delivery_charge" type="number">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -276,6 +277,11 @@
             $('.cancel').on('click', function() {
                 let id = $(this).data('id');
                 $('#cancelForm').attr('action', '/admin/cencell-shipment/' + id)
+            });
+            $('.set_charge').on('click', function() {
+                let id = $(this).data('id');
+                console.log(id)
+                $('#shipment_id_delivery_charge').attr('value',id)
             });
         })
     </script>

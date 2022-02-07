@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\ShipmentController;
 use App\Http\Controllers\Admin\ShippingChargeController;
 use App\Http\Controllers\Admin\BasicInformationController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\HoldShipmentController;
+use App\Http\Controllers\Admin\MessageController;
 /*
 |--------------------------------------------------------------------------
 | Admin Route
@@ -85,8 +87,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/move2hub-withInvoice', 'ShipmentController@MoveToHubWithInvoice')->name('move2hub-withInvoice');
 
     Route::get('/user-hub-parcels/{hub}/{user}', [ShipmentController::class,'hub_parcels'])->name('hub-parcels');
-    Route::get('/user-hub-parcels-csv/{hub}/{user}', 'ShipmentController@hub_parcels_csv')->name('hub-parcels-csv');
-    Route::get('/remove-hub-parcel/{hub_shipment}', 'ShipmentController@remove_hub_parcel')->name('remove-hub-parcel');
+    Route::get('/user-hub-parcels-csv/{hub}/{user}', [ShipmentController::class,'hub_parcels_csv'])->name('hub-parcels-csv');
+    Route::get('/remove-hub-parcel/{hub_shipment}', [ShipmentController::class,'remove_hub_parcel'])->name('remove-hub-parcel');
     Route::get('/change-hub-with-area/{id}', 'ShipmentController@change_bub')->name('change-hub-with-area');
     Route::get('/unit-sorting/{hub}', [ShipmentController::class,'unit_sorting'])->name('hub-sorting');
 
@@ -117,6 +119,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/agent-dispatch-assing-to-driver', 'ShipmentController@agent_dispatchAssigning')->name('agent-dispatch-assing2Driver');
     Route::get('/all-shipments', [ShipmentController::class,'all_shipments'])->name('all-shipments');
     Route::get('/shipment-details/{shipment}', [ShipmentController::class,'new_shipment_detail'])->name('shipment-details');
+    Route::post('/shipment/set-delivery-charge', [ShipmentController::class,'set_delivery_charge'])->name('set-delivery-charge');
     Route::get('/shipment-print/{shipment}', 'ShipmentController@shipment_print')->name('shipment-print');
     Route::post('/reset-shipment', 'ShipmentController@reset_shipment')->name('reset-shipment');
     // ajax call, get zone wize area
@@ -139,17 +142,18 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/get-shipment-withdate/{date1}/{date2}', 'ShipmentController@shipment_search_withDates')->name('delivery-search-dates');
 
     Route::get('/shipment-audit/{shipment}',[ShipmentController::class,'shipment_audit'])->name('shipment-audit');
+    Route::get('/shipment-mark-delivered/{shipment}',[ShipmentController::class,'mark_shipment_delivery_confirmed'])->name('mark-delivery-confirmed');
     //ajax call to show driver note during delivery
     Route::get('/driver-delivery-note/{shipment}', 'DriverController@delivery_note');
     Route::get('/export-selected/{shipment_ids}', 'ShipmentController@export_shipments')->name('export-selected');
-    Route::get('/delivery-payment-form/{shipment_ids}', 'ShipmentController@deliveryPaymentsForMerchant')->name('delivery-payment-form');
-    Route::post('/save-delivery-payment', 'ShipmentController@save_delivery_payment')->name('delivery-payment-save');
+    Route::get('/delivery-payment-form/{shipment_ids}', [ShipmentController::class,'deliveryPaymentsForMerchant'])->name('delivery-payment-form');
+    Route::post('/save-delivery-payment', [ShipmentController::class,'save_delivery_payment'])->name('delivery-payment-save');
     Route::get('/return-selected-to-merchant/{shipment_ids}', 'ShipmentController@return_shipments');
 
     // download
-    Route::get('/shipment-download', 'ShipmentController@download')->name('AdminDownload');
-    Route::get('/get-shipment-withBulkID/{bulk_id}', 'ShipmentController@shipment_search_withBulkID')->name('delivery-search-bulkid');
-    Route::get('/get-shipment-files/{type}/{bulk_id}', 'ShipmentController@download_file')->name('get-shipment-files');
+    Route::get('/shipment-download', [ShipmentController::class,'download'])->name('AdminDownload');
+    Route::get('/get-shipment-withBulkID/{bulk_id}', [ShipmentController::class,'shipment_search_withBulkID'])->name('delivery-search-bulkid');
+    Route::get('/get-shipment-files/{type}/{shipment_id}', [ShipmentController::class,'download_file'])->name('get-shipment-files');
 
     Route::get('/admin-upload-csv', 'CSVController@create')->name('AdminUploadCSV');
     Route::post('/admin-upload-csv', 'CSVController@get_csv_data')->name('AdminShowCSV');
@@ -174,27 +178,27 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/thirdparty-csv-pdf/{type}', 'ShipmentController@get_csv_pdf');
     Route::get('/thirdparty-rightWithInvoice/{invoice_id}', 'ThirdpartyShipmentController@show_right_withInvoice')->name('thirdparty-rightWithInvoice');
     // hold
-    Route::get('/hold-shipments/{hold}', 'HoldShipmentController@index')->name('hold-shipments');
-    Route::get('/move-to-hold_shipment/{shipment}/{hub}', 'HoldShipmentController@move_to_hold_shipment')->name('move-to-hold_shipment');
-    Route::get('/hold-agentDispatch-to-driverAssign-withInvoice/{invce_id}', 'HoldShipmentController@move_to_hold_shipmentWithInvoice');
-    Route::get('/hold-agentDispatch-to-driverAssign-rider/{driver}', 'HoldShipmentController@move_to_hold_shipmentRider');
-    Route::get('/hold-shipment-rows/{type}', 'HoldShipmentController@hold_shipment_rows');
-    Route::get('/driver-hub-shipment-rows/{type}', 'HoldShipmentController@driver_hub_shipments');
-    Route::get('/move-back-to-hold_shipment/{shipment}/{type}', 'HoldShipmentController@move_back2hold_shipment');
-    Route::get('/sendToSorting-hold_shipment', 'HoldShipmentController@sendToSorting');
+    Route::get('/hold-shipments/{hold}', [HoldShipmentController::class,'index'])->name('hold-shipments');
+    Route::get('/move-to-hold_shipment/{shipment}/{hub}', [HoldShipmentController::class,'move_to_hold_shipment'])->name('move-to-hold_shipment');
+    Route::get('/hold-agentDispatch-to-driverAssign-withInvoice/{invce_id}', [HoldShipmentController::class,'move_to_hold_shipmentWithInvoice']);
+    Route::get('/hold-agentDispatch-to-driverAssign-rider/{driver}', [HoldShipmentController::class,'move_to_hold_shipmentRider']);
+    Route::get('/hold-shipment-rows/{type}', [HoldShipmentController::class,'hold_shipment_rows']);
+    Route::get('/driver-hub-shipment-rows/{type}', [HoldShipmentController::class,'driver_hub_shipments']);
+    Route::get('/move-back-to-hold_shipment/{shipment}/{type}', [HoldShipmentController::class,'move_back2hold_shipment']);
+    Route::get('/sendToSorting-hold_shipment', [HoldShipmentController::class,'sendToSorting']);
 
-    Route::get('/move-to-return_shipment/{shipment}/{hub}', 'HoldShipmentController@move_to_return_shipment');
+    Route::get('/move-to-return_shipment/{shipment}/{hub}', [HoldShipmentController::class,'move_to_return_shipment']);
     Route::get('/move-to-return_shipment-withInvoice/{inviceid}', 'HoldShipmentController@move_to_return_shipment_withInvoice');
-    Route::get('/move-to-return_shipment-withRider/{driver}', 'HoldShipmentController@move_to_return_shipment_withRider');
+    Route::get('/move-to-return_shipment-withRider/{driver}', [HoldShipmentController::class,'move_to_return_shipment_withRider']);
 
-    Route::get('/return-shipment-rows/{type}', 'HoldShipmentController@return_shipment_rows');
+    Route::get('/return-shipment-rows/{type}', [HoldShipmentController::class,'return_shipment_rows']);
     Route::get('/return-shipments-parcels/{hub}', 'HoldShipmentController@return_shipments_parcels');
     Route::get('/move-back-to-return_shipment/{return_shipment}/{type}', 'HoldShipmentController@move_back2return_shipment');
 
-    Route::get('/return-sorting/{hub}', 'HoldShipmentController@return_sorting')->name('return-sorting');
-    Route::get('/return-dispatch', 'HoldShipmentController@return_dispatch')->name('return-dispatch');
-    Route::get('/return-dispatch/view/{hub}', 'HoldShipmentController@dispatch_view')->name('return-dispatch-view');
-    Route::get('/return-status-dispatch/{hub}', 'HoldShipmentController@status_dispatch')->name('return-status-dispatch');
+    Route::get('/return-sorting/{hub}', [HoldShipmentController::class,'return_sorting'])->name('return-sorting');
+    Route::get('/return-dispatch', [HoldShipmentController::class,'return_dispatch'])->name('return-dispatch');
+    Route::get('/return-dispatch/view/{hub}', [HoldShipmentController::class,'dispatch_view'])->name('return-dispatch-view');
+    Route::get('/return-status-dispatch/{hub}', [HoldShipmentController::class,'status_dispatch'])->name('return-status-dispatch');
     Route::get('/return-status-on-transit/{hub}', 'HoldShipmentController@status_on_transit')->name('return-status-on-transit');
     Route::get('/return-dispatch-box-view/{return_shipment_box}', [HoldShipmentController::class,'dispatch_box_view'])->name('return-box-view');
     Route::get('/external-unit-received-shipment-view/{shipment}', [ShipmentController::class,'external_unit_received_shipment_view'])->name('external-unit-received-shipment-view');
@@ -212,9 +216,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
 
     Route::get('/return-to-return-delivery/{type}/{hub_shipmentBox}', 'HoldShipmentController@return2return_delivery')->name('return-to-return-delivery');
     // return to merchant
-    Route::get('/return-merchant-handover', 'HoldShipmentController@merchant_handover')->name('merchant-handover');
+    Route::get('/return-merchant-handover', [HoldShipmentController::class,'merchant_handover'])->name('merchant-handover');
     Route::get('/view-merchant-handover/{user}', 'HoldShipmentController@merchant_handover_parcels')->name('merchant-handover-parcels');
-    Route::get('/handover-to-merchant/{user}', 'HoldShipmentController@handover2merchant')->name('handover-to-merchant');
+    Route::get('/handover-to-merchant/{shipment}', [HoldShipmentController::class,'handover2merchant'])->name('handover-to-merchant');
+    Route::get('/returned-received/{shipment}', [HoldShipmentController::class,'receive_return_shipment_by_pickup_unit'])->name('returned-received');
 
     Route::get('admin-list', [AdminController::class,'index'])->name('admin-list');
     Route::get('admins', [AdminController::class,'admins'])->name('admins');
@@ -291,7 +296,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/delete-history-post/{about}', 'AboutController@destroyHistory')->name('delete-history-post');
     Route::get('/delete-team-post/{about}', 'AboutController@destroyTeam')->name('delete-team-post');
 
-    Route::get('/messages', 'MessageController@index')->name('contact-messages');
+    Route::get('/messages', [MessageController::class,'index'])->name('contact-messages');
     Route::get('/view-messages', 'MessageController@messages')->name('messages');
     Route::get('/message-show/{message}', 'MessageController@show')->name('view-message');
     Route::get('/delete-message/{message}', 'MessageController@destroy')->name('delete-message');

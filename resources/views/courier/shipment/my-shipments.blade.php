@@ -17,23 +17,24 @@
                                    class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>
                                 <tr class="bg-dark">
-                                    <th>Customer Name</th>
+                                    <th>Customer Info</th>
                                     <th>Contact</th>
                                     <th>Address</th>
-                                    <th>Total Price</th>
+                                    <th>COD Amount</th>
                                     <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($shipments as $key=>$row)
                                     <tr>
-                                        <td>{{$row->shipment->name}}</td>
-                                        <td>{{$row->shipment->phone}}</td>
-                                        <td>{{$row->shipment->address}}</td>
-                                        <td>{{$row->shipment->total_price}}</td>
+                                        <td>{{$row->shipment->recipient['name']}}</td>
+                                        <td>{{$row->shipment->recipient['phone']}}</td>
+                                        <td>{{$row->shipment->recipient['address']}}</td>
+                                        <td>{{$row->shipment->payment_detail->cod_amount}}</td>
                                         <td> @if($type=='cancelled')
-                                            <a href="#" class="btn btn-xs btn-info"><i class="fa fa-undo"> </i> Undo Cancel</a> @else
-                                            <a href="#" disabled class="btn btn-xs btn-success"><i class="fa fa-check"> </i> {{$type}}</a> @endif
+                                            <a href="#" class="btn btn-xs btn-info"><i class="fa fa-undo"> </i> Undo Cancel</a> 
+                                            @elseif($type == 'hold')
+                                            <a href="{{route('return-shipment',['shipment_id'=>$row->shipment_id])}}" class="btn btn-xs btn-success"><i class="fa fa-check"> </i>Return</a> @endif
                                         </td>
                                     </tr>
                                 @endforeach

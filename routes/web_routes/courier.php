@@ -23,6 +23,7 @@ Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix'
 
     Route::get('cencell-parcel/{id}', [ShipmentController::class,'cencel_parcel'])->name('cancel-parcel');
     Route::get('receive-shipment/{id}', [ShipmentController::class,'receive_parcel'])->name('receive-parcel');
+    Route::get('submit-shipment/{id}', [ShipmentController::class,'submit_parcel'])->name('submit-parcel');
     Route::get('receive-all-shipment/{user}', [ShipmentController::class,'receive_all_parcel'])->name('receive-all-parcel');
     Route::get('submit-all-shipments/{shipments}', [ShipmentController::class,'submit_at_unit'])->name('submit-all-shipments');
 
@@ -31,10 +32,11 @@ Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix'
     Route::get('agent-dispatch', [ShipmentController::class,'agent_dispatch'])->name('box-for-delivery');
     Route::get('shipment-details/{shipment}', [ShipmentController::class,'shipment_info'])->name('shipment-details');
 
-    Route::post('shipment-delivery', [ShipmentController::class,'delivery_report'])->name('shipment-delivery');
+    Route::post('shipment-delivery', [ShipmentController::class,'shipment_delivery_report'])->name('shipment-delivery');
 
     Route::get('return-agent-dispatch', [ShipmentController::class,'return_agent_dispatch'])->name('return-box-for-delivery');
 
     Route::post('return-shipment-delivery', [ShipmentController::class,'return_delivery_report'])->name('return-shipment-delivery');
     Route::post('confirm-otp', [ShipmentController::class,'otp_confirmation'])->name('confirm-opt');
+    Route::get('return-shipment/{shipment_id}', [ShipmentController::class,'return_shipment'])->name('return-shipment');
 });

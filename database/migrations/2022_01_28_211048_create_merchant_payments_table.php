@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateShipmentOtpConfirmationsTable extends Migration
+class CreateMerchantPaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,16 @@ class CreateShipmentOtpConfirmationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('shipment_otp_confirmations', function (Blueprint $table) {
+        Schema::create('merchant_payments', function (Blueprint $table) {
             $table->id();
-            $table->string('otp');
-            $table->string('collected_by');
             $table->unsignedBigInteger('shipment_id');
-            $table->unsignedBigInteger('courier_id');
+            $table->unsignedBigInteger('merchant_id');
+            $table->nullableMorphs('paid_by');
+            $table->float('amount',8,2)->comment('amount paid');
+            $table->boolean('collected_by_merchant')->default(false);
             
             $table->foreign('shipment_id')->references('id')->on('shipments');
-            $table->foreign('courier_id')->references('id')->on('couriers');
+            $table->foreign('merchant_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
@@ -33,6 +34,6 @@ class CreateShipmentOtpConfirmationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shipment_otp_confirmations');
+        Schema::dropIfExists('merchant_payments');
     }
 }

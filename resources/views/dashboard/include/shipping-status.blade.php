@@ -22,13 +22,19 @@
     @elseif($logistic_status=='8')
         <span class="text-primary">Reached Delivery Unit</span>
     @elseif($logistic_status=='9')
-        <span class="text-danger">Out for Delivery</span>
+        <span class="text-primary">Out for Delivery</span>
     @elseif($logistic_status=='10')
-        <span class="text-danger">Return (to merchant)</span>
+        <span class="text-warning">Delivered (not confirmed)</span>
     @elseif($logistic_status=='11')
-        <span class="text-success">Hand over to courier</span>
+        <span class="text-success">Delivered (confirmed)</span>
+    @elseif($logistic_status=='12' || $logistic_status=='13')
+        <span class="text-warning">On Hold</span>
+    @elseif($logistic_status=='14' || $logistic_status=='15' || $logistic_status=='16' || $logistic_status=='17' || $logistic_status=='18')
+        <span class="text-warning">Returned</span>
+    @elseif($logistic_status=='19')
+        <span class="text-warning">Handed over to merchant</span>
     @else
-        <span class="text-warning">not labeled</span>
+        <span class="text-warning">Not labeled</span>
     @endif
 
 @elseif($status=='cancelled')

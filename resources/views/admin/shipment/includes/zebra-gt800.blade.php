@@ -17,10 +17,10 @@
 
         <div id="mid">
             <div class="info">
-                <p> Reciepient : {{ $shipment->name}} <br/>
-                    Merchant Name : {{ $shipment->user->first_name }} {{ $shipment->user->last_name }} <br>
-                    Email : {{ $shipment->user->email }} </br>
-                    Phone : {{ $shipment->user->phone }} </br>
+                <p> Reciepient : {{ $shipment->recipient['name']}} <br/>
+                    Merchant Name : {{ $shipment->merchant->first_name }} {{ $shipment->merchant->last_name }} <br>
+                    Email : {{ $shipment->merchant->email }} </br>
+                    Phone : {{ $shipment->merchant->phone }} </br>
                     Date : {{ date('F m, Y', strtotime($shipment->created_at)) }} <br>
                 </p>
             </div>
@@ -37,9 +37,9 @@
                     </tr>
                     <tr style="border-bottom:1px solid silver">
                         <td>1</td>
-                        <td>@if ($shipment->delivery_type == '1') Regular @else Express @endif</td>
+                        <td>@if ($shipment->service_type == '1') Express @else Priority @endif</td>
                         <td>{{ $shipment->weight }} Kg</td>
-                        <td>{{ $shipment->cod_amount }}</td>
+                        <td>{{ $shipment->amount }}</td>
                     </tr>
                     <tr class="tabletitle" style="border-bottom:1px solid silver">
                         <td></td>

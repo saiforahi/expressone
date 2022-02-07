@@ -72,6 +72,7 @@
                                         </th>
                                         <th scope="row">
                                             Location: {{ $courierShipment->shipment->pickup_location->name }} <br>
+                                            <Address>Address: {{ $courierShipment->shipment->merchant->address }}</Address>
 
                                         </th>
                                         <th scope="row"><i class="fa fa-phone"></i> {{ $courierShipment->shipment->recipient['phone'] }}<br>
@@ -81,7 +82,7 @@
                                         <th scope="row">
                                             @if ($courierShipment->shipment->service_type == 'priority')
                                                 Priority
-                                            @else
+                                            @elseif($courierShipment->shipment->service_type == 'express')
                                                 Express
                                             @endif
                                         </th>
@@ -94,7 +95,7 @@
                                         <th class="text-right">
                                             @if ($courierShipment->status == 'received')
                                                 {{-- <form action="{{route('')}}"></form> --}}
-                                                <button class="btn-xs btn btn-success">Submitted at Unit</button>
+                                                <a type="button" href="/courier/submit-shipment/{{ $courierShipment->shipment_id }}" class="btn-xs btn btn-success">Submit at Unit</a>
                                             @elseif($courierShipment->status == 'pending')
                                             <a  onClick="return confirm('Are you sure to receive the shipment');"
                                                 href="/courier/receive-shipment/{{ $courierShipment->shipment->id }}"

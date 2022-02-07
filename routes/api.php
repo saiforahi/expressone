@@ -26,5 +26,11 @@ Route::middleware('auth:sanctum')->get('/logout',[App\Http\Controllers\Api\AuthC
 //     Route::put('/courier/shipments/mark_as_received',[CourierShipmentController::class,'mark_shipments_as_received']);
 // });
 
-Route::middleware('auth:api_courier')->get('/courier/shipments/pickup',[CourierShipmentController::class,'get_pickup_shipments']);
-Route::middleware('auth:api_courier')->put('/courier/shipments/mark_as_received',[CourierShipmentController::class,'mark_shipments_as_received']);
+
+// Route::put('/courier/shipments/mark_as_received',[CourierShipmentController::class,'mark_shipments_as_received']);
+
+Route::middleware(['auth:api_courier'])->prefix('courier')->group(function () {
+    Route::get('/shipments/{type}',[CourierShipmentController::class,'get_shipments']);
+    Route::put('/shipments/mark_as_received',[CourierShipmentController::class,'mark_shipments_as_received']);
+    Route::put('/shipments/mark_as_submitted',[CourierShipmentController::class,'mark_shipments_as_submitted']);
+});
