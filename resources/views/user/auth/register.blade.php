@@ -27,6 +27,9 @@
                     <div class="regi_form_wrapper">
                         <div class="quote_form">
                             @include('flash.message')
+                            @if ($errors->any())
+                                {{$errors}}
+                            @endif
                             <form class="row" id="reg_form" action="{{ route('register.store') }}" method="post">
                                 @csrf
                                 <div class="form-group col-md-4">
@@ -46,6 +49,9 @@
                                     <label class="title-2">Shop name</label>
                                     <input type="text" class="form-control" name="shop_name" placeholder="Shop name"
                                         value="{{ old('shop_name') }}">
+                                    @error('shop_name')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label class="title-2">Contact No:</label>

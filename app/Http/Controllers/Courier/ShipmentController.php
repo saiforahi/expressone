@@ -77,7 +77,7 @@ class ShipmentController extends Controller
     public function show($id)
     {
         //dd($id);
-        $shipments = CourierShipment::where(['type'=>'pickup','courier_id' => Auth::guard('courier')->user()->id])->get();
+        $shipments = CourierShipment::where(['type'=>'pickup','courier_id' => Auth::guard('courier')->user()->id])->join('shipments','shipments.id','courier_shipment.shipment_id')->where('shipments.merchant_id',$id)->get(['courier_shipment.*']);
         $user = User::find($id);
         return view('courier.shipment.shipment-more', compact('shipments', 'user'));
 

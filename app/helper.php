@@ -13,7 +13,7 @@ use App\Models\LogisticStep;
 use App\Models\UnitShipment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+// use Hash;
 // use Illuminate\Support\Facades\Auth;
 
 function basic_information()
@@ -222,8 +222,9 @@ if (!function_exists('merchant_wise_total_shipments_for_logged_in_courier_to_pic
     function merchant_wise_total_shipments_for_logged_in_courier_to_pickup($user,$courier)
     {
         $statuses=LogisticStep::where('slug','to-pick-up')->orWhere('slug','picked-up')->orWhere('slug','dropped-at-pickup-unit')->pluck('id')->toArray();
-        $total=Shipment::where('merchant_id',$user->id)->whereIn('logistic_status',$statuses)
-            ->join('courier_shipment','courier_shipment.shipment_id','shipments.id')
+        // dd($statuses);
+        $total=Shipment::join('courier_shipment','courier_shipment.shipment_id','shipments.id')
+            ->where('shipments.merchant_id',$user->id)
             ->where(['courier_shipment.courier_id'=>$courier->id,'courier_shipment.type'=>'pickup'])->count();
             // dd($total);
         return $total;
@@ -235,5 +236,17 @@ if (!function_exists('delivery_units')) {
     {
         $units=Shipment::where('logistic_status',LogisticStep::where('slug','unit-received')->first()->id)->deliverycousins()->get(['units.*']);
         return $units;
+    }
+}
+
+if (!function_exists('hash_password')) {
+    function hash_password($password,$type)
+    {
+        // if($type=='hash'){
+        //     return Hash::make($password);
+        // }
+        // else{
+        //     return Hash::
+        // }
     }
 }

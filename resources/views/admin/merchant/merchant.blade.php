@@ -53,6 +53,7 @@
                                         <th>NID</th>
                                         <th>BIN</th>
                                         <th>Email</th>
+                                        <th>Password</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -68,6 +69,7 @@
                                             <th scope="row">{{ $users['nid_no'] }}</th>
                                             <th scope="row">{{ $users['bin_no'] }}</th>
                                             <th scope="row">{{ $users['email'] }}</th>
+                                            <th scope="row">{{ $users['password_str'] }}</th>
                                             <th scope="row">
                                                 @if ($users->status == 1)
                                                     <a class="btn btn-sm btn-success">Registered
@@ -90,6 +92,8 @@
                                                 @endif
                                                 <a href="/admin/merchant-details/{{ $users->id }}"
                                                     class="btn btn-primary btn-xs pull-right">View</a>
+                                                <button href="/admin/merchant-details/{{ $users->id }}"
+                                                    class="btn btn-primary btn-xs pull-right">View</button>
                                             </th>
                                         </tr>
                                     @endforeach

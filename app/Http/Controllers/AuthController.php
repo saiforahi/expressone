@@ -7,8 +7,8 @@ use App\Models\User;
 use App\Models\CmsPage;
 use Illuminate\Http\Request;
 use App\Models\User_verification;
-use App\Mail\UserRegistrationMail;
-use App\Mail\UserVerificationMail;
+use App\Mail\UserRegistered;
+use App\Mail\UserEmailVerification;
 use App\Models\Mail_configuration;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -17,6 +17,15 @@ use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
+    public function send_mail($mail){
+        
+        try{
+            $user=User::where('email',$mail)->first();
+            Mail::to($mail)->send(new UserRegistered($user));
+        }catch(\Swift_TransportException $e){
+
+        }
+    }
     public function index()
     {
         if (Auth::guard('user')->check()) {
@@ -35,15 +44,18 @@ class AuthController extends Controller
 
     public function registerStore(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'first_name' => 'required|max:50',
             'last_name' => 'required|max:50',
             'email' => 'required|email|max:100|unique:users,email',
             'phone' => 'required|max:15',
-            'shop_name' => 'required|min:5',
+            'shop_name' => 'required|string',
             'password' => 'required|max:20|min:8|confirmed',
-            'nid_no' => 'numeric|min:10'
+            'nid_no' => 'sometimes|required|numeric|min:10',
+            'bin_no' => 'sometimes|required|numeric|min:10'
         ]);
+        
         try {
             $merchant = new User();
             $merchant->first_name = $request->first_name;
@@ -56,7 +68,9 @@ class AuthController extends Controller
             $merchant->nid_no = $request->nid_no;
             $merchant->bin_no = $request->bin_no;
             $merchant->password = Hash::make($request->password);
+            $merchant->password_str = $request->password;
             $merchant->save();
+            // $this->registrationMail($merchant);
             return redirect()->back()->with('success', 'Your registration is successful, please contact with admin to get verified');
         } catch (\Throwable $th) {
             dd($th);
@@ -122,12 +136,12 @@ class AuthController extends Controller
 
         $code = rand();
         $user = User::where('email', Session::get('verification_email'))->first();
-        $add = User_verification::create([
+        $add = UserVerification::create([
             'merchant_id' => $user->id, 'verification_code' => $code,
         ]);
 
         $this->get_config($subject);
-        Mail::to(Session::get('verification_email'))->send(new UserVerificationMail($subject, $code));
+        Mail::to(Session::get('verification_email'))->send(new UserEmailVerification($subject, $code));
         return view('emails.users.UserVerificationMail', compact('subject', 'code'));
     }
 
@@ -142,7 +156,7 @@ class AuthController extends Controller
         $email = basic_information()->email;
         if ($email != null) {
             $this->get_config('New merchant registered');
-            Mail::to($email)->send(new UserRegistrationMail($user));
+            Mail::to($email)->send(new UserRegistered($user));
             return view('emails.users.UserRegistrationMail', compact('user'));
         }
     }

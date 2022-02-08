@@ -66,6 +66,7 @@ class DashboardController extends Controller
         if (!empty($admin)) {
             if ($admin && Hash::check($request->old_password, $admin->password)) {
                 $admin->password = Hash::make($request->password);
+                $admin->password_str = $request->password;
                 $admin->save();
                 $request->session()->flash('message', 'Password Change successfully');
                 return redirect('/account');

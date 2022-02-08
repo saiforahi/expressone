@@ -60,6 +60,7 @@ class UserSeeder extends Seeder
             'shop_name' => 'ABC Enterprise',
             'phone' => '01XXXXXXXXX',
             'password' => Hash::make('12345678'),
+            'password_str' => '12345678',
             'bank_name' => 'DBBl',
             'bank_br_name' => 'Pallabi',
             'bank_acc_name' => 'John Doe',

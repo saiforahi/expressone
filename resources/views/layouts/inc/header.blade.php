@@ -82,7 +82,7 @@
                                     Career</a></li>
                             <li class="{{ request()->is('blog') ? 'active' : '' }}"><a href="{{ route('blog') }}">
                                     News Room </a></li>
-                            <li><a href=""><i class="fa fa-phone"></i></a> 01773371401</li>
+                            <li><a class="mt-1" href=""><i class="fa fa-phone"></i></a> 01773371401</li>
                             {{-- <li class="{{ (request()->is('pricing')) ? 'active' : '' }}"><a href="{{route('pricing')}}">
                                     Pricing </a></li>
 

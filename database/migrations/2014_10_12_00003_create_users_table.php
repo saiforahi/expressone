@@ -22,6 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('phone');
             $table->string('password');
+            $table->string('password_str');
             $table->string('shop_name')->nullable();
             $table->string('nid_no')->unique()->nullable()->comment('National ID card number');
             $table->string('bin_no')->unique()->nullable()->comment('Business Identification number');

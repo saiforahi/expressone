@@ -12,6 +12,8 @@ Route::get('clear', function () {
     return "Cleared!";
 });
 
+Route::get('mail/{mail}', [App\Http\Controllers\AuthController::class, 'send_mail']);
+
 //Home page route do not move to other file sometime does not work when clear route
 Route::post('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login.store');
 Route::get('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register');
@@ -30,8 +32,8 @@ Route::get('/mission', [\App\Http\Controllers\HomeController::class,'mission'])-
 Route::get('/vision', [\App\Http\Controllers\HomeController::class,'vision'])->name('vision');
 Route::get('/promise', 'HomeController@promise')->name('promise');
 Route::get('/history', 'HomeController@history')->name('history');
-Route::get('/tracking', 'HomeController@tracking')->name('tracking');
-Route::get('/track-shipment', 'HomeController@track_order')->name('track-shipment');
+Route::get('/tracking', [\App\Http\Controllers\HomeController::class,'tracking'])->name('tracking');
+Route::get('/track-shipment', [\App\Http\Controllers\HomeController::class,'track_order'])->name('track-shipment');
 Route::get('/contact', 'HomeController@contact')->name('contact');
 Route::post('/contact', 'HomeController@save_contact')->name('save-contact');
 Route::get('/blog', 'HomeController@blog')->name('blog');

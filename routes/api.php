@@ -33,4 +33,6 @@ Route::middleware(['auth:api_courier'])->prefix('courier')->group(function () {
     Route::get('/shipments/{type}',[CourierShipmentController::class,'get_shipments']);
     Route::put('/shipments/mark_as_received',[CourierShipmentController::class,'mark_shipments_as_received']);
     Route::put('/shipments/mark_as_submitted',[CourierShipmentController::class,'mark_shipments_as_submitted']);
+    Route::post('/shipments/submit_report',[CourierShipmentController::class,'submit_delivery_report']);
+    Route::post('/shipments/confirm_report',[CourierShipmentController::class,'confirm_delivery_report']);
 });

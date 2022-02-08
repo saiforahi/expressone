@@ -52,12 +52,12 @@
                         My Account
                     </a>
                 </li>
-                {{-- <li>
+                <li>
                     <a href="{{ route('merhcant_shipments') }}" class="{{ (request()->is('prepare-shipment')) ? 'mm-active' : '' }}">
                         <i class="metismenu-icon fa fa-location-arrow" aria-hidden="true"></i>
                         Prepare Shipment
                     </a>
-                </li> --}}
+                </li>
                 <li>
                     <a href="{{route('payments')}}" class="{{ (request()->is('payments')) ? 'mm-active' : '' }}">
                         <i class="metismenu-icon fa fa-money" aria-hidden="true"></i>

@@ -229,7 +229,7 @@ class ShipmentController extends Controller
 
     public function payments_loading()
     {
-        return DataTables::of(Shipment::orderBy('id', 'DESC'))
+        return DataTables::of(Shipment::where('merchant_id',Auth::guard('user')->user()->id)->orderBy('id', 'DESC'))
             ->addColumn('action', function ($shipment) {
                 return '<a href="/shipment-details/' . $shipment->id . '">View</a> |
             <button type="button" class="btnNew" id="' . $shipment->id . '">Payment</button>';

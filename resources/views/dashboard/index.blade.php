@@ -69,6 +69,7 @@
                                 <th>#</th>
                                 <th>Service Type</th>
                                 <th class="text-center">Status</th>
+                                <th>Invoice No.</th>
                                 <th>Tracking No.</th>
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Customer</th>
@@ -109,9 +110,11 @@
                                         @include('dashboard.include.shipping-status',
                                         ['status'=>$shipments['status'],'logistic_status'=>$shipments['logistic_status']])
                                     </td>
+                                    <td>{{ $shipments['invoice_id'] }}</td>
                                     <td><a href="/tracking?code={{ $shipments['tracking_code'] }}"
                                             target="_blank">{{ $shipments['tracking_code'] }}
                                         </a></td>
+                                    
                                     <td class="text-center">
                                         <p class="mb-0">
                                             {{ date('F j, Y', strtotime($shipments['updated_at'])) }} </p>
@@ -148,10 +151,12 @@
                                         @endif
                                         <a href="/shipment-details/{{ $shipments['id'] }}"
                                             class="btn btn-primary btn-sm viewMore"><i class="fa fa-search-plus"></i></a>
-                                        <a href="{{ route('pdf.shipment', $shipments['id']) }}"
+                                        {{-- <a href="{{ route('pdf.shipment', $shipments['id']) }}"
+                                            class="btn btn-info btn-sm">
+                                            <i class="fa fa-file-pdf"></i></a> --}}
+                                        <a href="{{ route('merchant.shipmentCn', $shipments['id']) }}"
                                             class="btn btn-info btn-sm">
                                             <i class="fa fa-file-pdf"></i></a>
-
                                         <a target="_blank" href="{{ route('merchant.shipmentCn', $shipments['id']) }}"
                                             class="btn btn-primary btn-sm">
                                             CN</a>

@@ -33,8 +33,8 @@
         <div class="tab-pane tabs-animation fade show active" id="tab-content-0" role="tabpanel">
             <form id="upload_form" method="post" action="{{ route('merchant.saveShipment') }}">
                 {{-- invoice no --}}
-                <input type="hidden" value="{{ $invoice_id }}" name="invoice_id">
-                <input type="text" value="{{ $trackingCode }}" name="invoice_id">
+                {{-- <input type="hidden" value="{{ $invoice_id }}" name="invoice_id"> --}}
+                {{-- <input type="text" value="{{ $trackingCode }}" name="invoice_id"> --}}
                 @csrf
                 <div class="main-card mb-3 card card-body">
                     <h5 class="card-title">Customer Details:</h5>
@@ -63,8 +63,9 @@
                             <label>Pickup Location</label> <span class="text-danger">*</span>
                             <select class="form-control" name="pickup_location_id">
                                 <option>Select location</option>
+                                <?php $locations=\App\Models\Location::all();?>
                                 @foreach ($locations as $loc)
-                                <option value="{{ $loc->id }}">{{ $loc->name }}</option>
+                                    <option value="{{ $loc->id }}">{{ $loc->name }}</option>
                                 @endforeach
                             </select>
                         </div>
