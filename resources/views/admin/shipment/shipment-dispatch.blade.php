@@ -25,8 +25,11 @@
                                 <tr>
                                 	<td>{{$key+1}}</td>
                                 	<td>{{$unit->name}}</td>
-                                	<td> </td>
-                                	<td class="text-right"><a class="btn btn-sm btn-primary" href="/admin/dispatch/view/{{$unit->id}}"><i class="fa fa-search"></i>More Details</a></td>
+                                	<td>{{unit_wise_in_transit_shipments($unit->id)}}</td>
+                                	<td class="text-right">
+                                        <a class="btn btn-sm btn-primary" onclick="javascript:void(0);" href="#"><i class="fa fa-search"></i>More Details</a>
+                                        {{-- <a class="btn btn-sm btn-primary" onclick="javascript:void(0);swal('Under Development','warning');" href="/admin/dispatch/view/{{$unit->id}}"><i class="fa fa-search"></i>More Details</a> --}}
+                                    </td>
                                 </tr>
                                 @endforeach
                                 </tbody>

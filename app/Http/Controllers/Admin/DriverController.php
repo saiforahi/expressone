@@ -10,6 +10,8 @@ use App\Models\CourierShipment;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use SebastianBergmann\LinesOfCode\Counter;
+use App\Models\LogisticStep;
+use App\Models\ShipmentMovement;
 
 class DriverController extends Controller
 {
@@ -22,7 +24,9 @@ class DriverController extends Controller
 
     public function delivery_note(Shipment $shipment)
     {
-        return Driver_hub_shipment_box::where('shipment_id', $shipment->id)->pluck('driver_note')->first();
+        $slugs=['delivered','delivery-confirmed'];
+        $statuses=LogisticStep::whereIn('slug',$slugs)->pluck('id')->toArray();
+        return ShipmentMovement::where('shipment_id', $shipment->id)->where('logistic_step_id',$statuses)->pluck('note')->first();
     }
 
     public function addEditCourier(Request $request, $id = null)

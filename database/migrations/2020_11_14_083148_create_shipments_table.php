@@ -26,6 +26,7 @@ class CreateShipmentsTable extends Migration
             $table->json('recipient')->nullable();
             $table->integer('weight')->nullable();
             $table->string('parcel_type')->nullable();
+            $table->string('upazila_district')->nullable();
             $table->integer('piece_qty')->nullable();
             $table->enum('service_type',['express','priority'])->nullable();
 

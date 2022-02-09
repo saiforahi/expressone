@@ -52,9 +52,10 @@
                                             $status = '2';
                                             $shipping_status = '6';
                                         } else {
-                                            $checkShipment = get_shipments_for_logged_in_admin(['label-create','approval','to-pick-up']);
-                                            $status = 0;
                                             $shipping_status = ['label-create','approval','to-pick-up'];
+                                            $checkShipment = get_shipments_for_logged_in_admin($shipping_status,$user);
+                                            $status = 0;
+                                            
                                         } ?>
 
                                         <?php if (Session::has('admin_unit')) {
@@ -79,8 +80,8 @@
                                                 <th scope="row">
                                                     <span class="btn btn-success">
                                                         @if ($checkShipment->count() > 0)
-                                                            {{ $checkShipment->count() }} Parcels
-                                                        @else {{ $checkShipment->count() }} Parcel @endif
+                                                            {{ $checkShipment->count() }} Shipments
+                                                        @else {{ $checkShipment->count() }} Shipment @endif
                                                     </span>
                                                 </th>
                                                 <th class="text-info">
@@ -92,11 +93,9 @@
                                                     <a href="/admin/shipping-list/more/{{ $user->id . '/' . $status . '/' . implode(",",$shipping_status) }}"
                                                         class="btn btn-primary">View</a>
 
-                                                    <?php $is_cencell = \DB::table('shipments')
-                                                        ->select('id')
-                                                        ->where(['merchant_id' => $user->id, 'status' => 'cancelled']); ?>
+                                                    <?php $is_cencell = \DB::table('shipments')->select('id')->where(['merchant_id' => $user->id, 'logistic_status' => \App\Models\LogisticStep::where('slug','cancelled')->first()->id]); ?>
                                                     @if ($is_cencell->count() > 0)
-                                                        <!-- <a href="/admin/shipping-list/cencelled-items/{{ $user->id }}" class="btn btn-warning">Cencelled items</a> -->
+                                                        <a href="/admin/shipping-list/cencelled-items/{{ $user->id }}" class="btn btn-warning">Cancelled items</a>
                                                     @endif
                                                 </th>
                                             </tr>

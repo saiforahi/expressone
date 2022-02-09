@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\CourierShipment;
 use Session; use Auth;
 use App\Events\ShipmentMovementEvent;
+use App\Models\ShipmentMovement;
 
 class HoldShipmentController extends Controller
 {
@@ -159,17 +160,20 @@ class HoldShipmentController extends Controller
         $hubs = Unit::whereIn('id',$hub)->get();
         return view('admin.shipment.hold.include.return-right',compact('type','hubs'));
     }
-    function return_shipments_parcels(Hub $hub){
-        $shipments = Return_shipment::where(['hub_id'=>$hub->id, 'status'=>'assigning'])->get();
+    function return_shipments_parcels(Unit $hub,$logistic_step_slug_array=array('returned-sorted')){
+        $statuses=LogisticStep::whereIn('slug',$logistic_step_slug_array)->pluck('id')->toArray();
+        $shipments = Unit::join('points','points.unit_id','units.id')->join('locations','locations.point_id','points.id')->join('shipments','shipments.pickup_location_id','locations.id')
+            ->where('units.id',$hub->id)->whereIn('shipments.logistic_status',$statuses)->pluck('shipments.id')->toArray();
+        $shipments=Shipment::whereIn('id',$shipments)->get();
         return view('admin.shipment.hold.include.return-parcels',compact('shipments'));
     }
-    public function move_back2return_shipment(Return_shipment $return_shipment,$type)
+    public function move_back2return_shipment(Shipment $return_shipment,$type)
     {
         // dd($return_shipment);
-        Return_shipment::where(['id'=>$return_shipment->id,'status'=>'assigning'])->delete();
-        Driver_hub_shipment_box::where(['shipment_id'=>$return_shipment->shipment_id,'status'=>$type])->update([
-                'status_in'=>null
-        ]);
+        ShipmentMovement::where('shipment_id',$return_shipment->id)->whereIn('logistic_step_id',[9,15])->delete();
+
+        Shipment::where(['id'=>$return_shipment->id])->update(['logistic_status'=>LogisticStep::where('slug','delivery-unit-received')->first()->id]);
+        CourierShipment::where(['shipment_id'=>$return_shipment->id,'type'=>'delivery'])->delete();
     }
     function return_sorting(Unit $hub){
         $shipments=Shipment::where('logistic_status',LogisticStep::where('slug','returned-sorted')->first()->id)->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->get(['shipments.*']);
@@ -187,8 +191,8 @@ class HoldShipmentController extends Controller
             ->select('hub_id')->groupBy('hub_id')->pluck('hub_id')->toArray();
         }else{
             // dd(Session::get('admin_hub')->hub_id);
-            $hub = Unit::where('id',Session::get('admin_unit')->id)->first();
-            $shipment = Shipment::where('logistic_status',LogisticStep::where('slug','returned-in-transit')->first()->id)->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->select('units.id')->groupBy('units.id')->pluck('units.id')->toArray();
+            
+            $shipment = Shipment::where('logistic_status',LogisticStep::where('slug','returned-in-transit')->first()->id)->cousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->select('units.id')->groupBy('units.id')->pluck('units.id')->toArray();
         }
         $hubs = Unit::whereIn('id',$shipment)->get();
 

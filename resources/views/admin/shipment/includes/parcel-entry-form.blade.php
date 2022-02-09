@@ -14,16 +14,33 @@
         <input type="text" id="address" class="form-control" name="address" required>
     </div>
 </div>
-<h5 class="card-title mt-4">Shipment Details:</h5>
+<h4 class="card-title mt-4">Shipment Details:</h4>
+<div class="row my-4">
+    
+    <div class="col-md-4">
+        <label>Delivery Type:</label>
+        <select class="form-control" name="shipping_charge_id">
+            <option>Select type</option>
+            <option value="express">Express</option>
+            <option value="priority">Priority</option>
+        </select>
+    </div>
+</div>
+<h4 class="card-title mt-4">Payment Details:</h4>
 <div class="row my-4">
     <div class="col-md-4 text-left">
-        <label class="" for="weight">Weight</label>
-        <input type="text" id="weight" class="form-control" name="weight" value="1">
+        <label class="" for="weight">COD Amount</label>
+        <input type="number" id="cod_amount" class="form-control" name="cod_amount" value="1">
+
+    </div>
+    <div class="col-md-4 text-left">
+        <label class="" for="weight">Weight Charge</label>
+        <input type="number" id="weight" class="form-control" name="weight" value="1">
 
     </div>
     <div class="col-md-4 cod_target text-left">
-        <label for="parcel_value">Declared Parcel Value</label>
-        <input type="number" id="parcel_value" class="form-control" name="parcel_value" value="0">
+        <label for="parcel_value">Delivery Charge</label>
+        <input type="number" id="deliver_charge" class="form-control" name="deliver_charge" value="0">
     </div>
 </div>
 <div class="row my-4">
@@ -33,16 +50,5 @@
     </div>
 </div>
 <div class="row"> <br>
-    <label class="col-md-3">Delivery Type:</label>
-    <div class="col-md-4">
-        @php
-            $deliveryType = \DB::table('shipping_charges')->get();
-        @endphp
-        <select class="form-control" name="shipping_charge_id">
-            <option>Select type</option>
-            @foreach ($deliveryType as $item)
-                <option value="{{ $item->id }}">{{ $item->consignment_type }}</option>
-            @endforeach
-        </select>
-    </div>
+    
 </div>

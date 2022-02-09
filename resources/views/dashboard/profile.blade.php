@@ -79,6 +79,12 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td>Unit:</td>
+                                <td><button
+                                        class="btn btn-success">{{ Auth::guard('user')->user()->unit->name }}</button>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td>Address:</td>
                                 <td>{{ Auth::guard('user')->user()->address }}</td>
                             </tr>

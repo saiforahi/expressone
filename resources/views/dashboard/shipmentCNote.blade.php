@@ -1,5 +1,5 @@
 @extends('dashboard.layout.app')
-@section('pageTitle', 'Consignment Note')
+@section('pageTitle', 'Shipment Invoice')
 @section('content')
     <div class="toolbar hidden-print">
         <div class="text-right">
@@ -49,18 +49,21 @@
                                     <th>Customer name</th>
                                     <th class="text-right">Mobile no</th>
                                     <th class="text-right">Status</th>
-                                    <th class="text-right">COD Amount</th>
+                                    {{-- <th class="text-right">COD Amount</th> --}}
                                     <th class="text-right">Cashpaid</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach(\App\Models\MerchantPayment::where('shipment_id',$shipment->id)->get() as $payment)
                                 <tr>
-                                    <td>Joh Doe</td>
-                                    <td class="text-right">Delivered</td>
-                                    <td class="text-right">Delivered</td>
-                                    <td class="text-right">120</td>
-                                    <td class="text-right">500</td>
+                                    <td>{{$shipment->recipient['name']}}</td>
+                                    <td class="text-right">{{$shipment->recipient['phone']}}</td>
+                                    <td class="text-right">{{$shipment->logistic_step->slug}}</td>
+                                    {{-- <td class="text-right">{{$shipment->amount}}</td> --}}
+                                    <td class="text-right">{{$payment->amount}}</td>
                                 </tr>
+                                @endforeach
+                                
                             </tbody>
                             <tfoot>
                                 <tr>

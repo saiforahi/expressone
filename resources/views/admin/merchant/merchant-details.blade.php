@@ -7,7 +7,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Merchant <b>{{ $user->first_name }}</b> details</h3>
+                    <h3>Merchant <b>{{ ucfirst($user->first_name) }}</b> details</h3>
                 </div>
                 <div class="title_right">
                     <div class="pull-right top_search">
@@ -83,7 +83,7 @@
                 <div class="col-12">
                     <div class="x_panel">
                         <div class="x_content">
-                            <h3>Parcels of <b>{{ $user->first_name . ' ' . $user->last_name }}</b></h3>
+                            <h3>Shipments of <b>{{ ucfirst($user->first_name) . ' ' . ucfirst($user->last_name) }}</b></h3>
                             <table id="datatable-buttons"
                                 class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>

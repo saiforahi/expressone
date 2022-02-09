@@ -1,38 +1,38 @@
-<?php $areas = \DB::table('areas')->get(); ?>
+<?php $areas = \DB::table('locations')->get(); ?>
 @foreach($shipments as $key=>$item)
 	<table class="table table-xs row{{$item->id}}">
       <tbody>
         <tr>
-          <td>Invoice ID: {{$item->shipment->invoice_id}}</td>
+          <td>Invoice ID: {{$item->invoice_id}}</td>
           <td></td><td class="text-right">
             <select class="select select2_single" id="area{{$key}}" disabled>
               @foreach($areas as $area)
-                <option value="{{$area->id}}" @if($item->shipment->area_id==$area->id)selected @endif >
+                <option value="{{$area->id}}" @if($item->pickup_location_id==$area->id)selected @endif >
                 {{$area->name}}</option>
              @endforeach
           </select> </td>
         </tr>
         <tr>
-          <td>Customer: {{$item->shipment->name}} </td>
+          <td>Customer: {{$item->recipient['name']}} </td>
           <td></td><td></td>
         </tr>
         <tr>
-          <td>Price: {{$item->shipment->price}}</td>
+          <td>Price: {{$item->amount}}</td>
           <td></td><td class="text-right">
-            Weight: <input style="width:100px" type="number" id="weight{{$key}}" value="{{$item->shipment->weight}}" readonly=""></td>
+            Weight: <input style="width:100px" type="number" id="weight{{$key}}" value="{{$item->weight}}" readonly=""></td>
         </tr>
         <tr>
-          <td>Phone: {{$item->shipment->phone}} </td>
-          <td></td><td class="text-right">Hub: {{hub_from_area($item->shipment->area_id)->name}}</td>
+          <td>Phone: {{$item->phone}} </td>
+          <td></td><td class="text-right">Unit: {{$item->pickup_location->point->unit->name}}</td>
         </tr>
         <tr>
-          <td colspan="3">Address: {{$item->shipment->address}} </td>  
+          <td colspan="3">Address: {{$item->recipient['address']}} </td>  
         </tr>
         <tr class="text-right">
-          <td class="text-left" style="width:50%">Date: <small>{{date('M d, Y',strtotime($item->shipment->created_at))}} (<b class="text-info">{{$item->shipment->created_at->diffForHumans()}}</b>)</small> </td>
+          <td class="text-left" style="width:50%">Date: <small>{{date('M d, Y',strtotime($item->created_at))}} (<b class="text-info">{{$item->created_at->diffForHumans()}}</b>)</small> </td>
           <td></td>
             <td>
-                <button class="btn btn-xs btn-default" onclick="move(<?php echo $item->id.','.$item->hub_id;?>)"><i class="fa fa-arrow-left"></i> Move </button>
+                <button class="btn btn-xs btn-default" onclick="move(<?php echo $item->id.','.$item->pickup_location->point->unit->id;?>)"><i class="fa fa-arrow-left"></i> Move back to delivery</button>
             </td>
         </tr>
         

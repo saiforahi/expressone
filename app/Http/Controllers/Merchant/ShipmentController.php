@@ -27,6 +27,19 @@ class ShipmentController extends Controller
         //$data['locations'] = Location::select('id', 'name', 'point_id', 'unit_id')->get();
         return view('dashboard.shipment-create', $data);
     }
+    public function take_shipment_back(Request $req){
+        try{
+            $shipment=Shipment::find($req->shipment_id);
+            $shipment->logistic_status=LogisticStep::where('slug','received-shipment-back')->first()->id;
+            if($shipment->save()){
+                event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','received-shipment-back')->first(),Auth::guard('user')->user()));
+            }
+
+        }
+        catch(Exception $e){
+
+        }
+    }
     public function addShipment(Shipment $shipment)
     {
         $data['title'] = "Add Shipment";
@@ -35,7 +48,10 @@ class ShipmentController extends Controller
         $data['locations'] = Location::select('id', 'name', 'point_id')->get();
         return view('dashboard.addShipment', $data,compact('shipment'));
     }
-
+    public function show_cn_view(Shipment $shipment){
+        $total_price=$price = $shipment->amount;
+        return view('dashboard.shipment-cn-view', compact('shipment', 'price', 'total_price'));
+    }
     public function saveShipment(Request $request, Shipment $shipment)
     {
         try {
@@ -45,6 +61,7 @@ class ShipmentController extends Controller
             $shipment->invoice_id = rand(1000, 100000);
             $shipment->shipping_charge_id = $request->shipping_charge_id;
             $shipment->pickup_location_id = $request->pickup_location_id;
+            $shipment->delivery_location_id = $request->delivery_location_id;
             $shipment->weight = $request->weight;
             $shipment->amount = $request->amount;
             $shipment->note = $request->note;
@@ -60,7 +77,8 @@ class ShipmentController extends Controller
                 $shipmentPmnt->tracking_code  = uniqid();
                 $shipmentPmnt->invoice_no  = rand(2222, 222222);
                 $shipmentPmnt->cod_amount  = $shipment->amount;
-                $shipmentPmnt->delivery_charge  = $shipment->shipping_charge_id;
+                $shipmentPmnt->delivery_charge  = $shipment->delivery_charge;
+                $shipmentPmnt->weight_charge  = $shipment->weight_charge;
                 $shipmentPmnt->save();
                 event(new ShipmentMovementEvent($shipment,LogisticStep::first(),Auth::guard('user')->user()));
             }

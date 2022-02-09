@@ -61,7 +61,17 @@
                     <div class="form-row">
                         <div class="col-md-4 text-left">
                             <label>Pickup Location</label> <span class="text-danger">*</span>
-                            <select class="form-control" name="pickup_location_id">
+                            <select class="form-control" name="pickup_location_id" required>
+                                <option>Select location</option>
+                                <?php $locations=\App\Models\Location::all();?>
+                                @foreach ($locations as $loc)
+                                    <option value="{{ $loc->id }}">{{ $loc->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <label>Delivery Location</label> <span class="text-danger">*</span>
+                            <select class="form-control" name="delivery_location_id" required>
                                 <option>Select location</option>
                                 <?php $locations=\App\Models\Location::all();?>
                                 @foreach ($locations as $loc)
@@ -83,8 +93,16 @@
                             <input type="number" name="weight" placeholder="Enter weight" class="form-control">
                         </div>
                         <div class="col-md-4 text-left">
-                            <label>Amount</label>
-                            <input type="number" name="amount" placeholder="Enter amount" class="form-control" min="10">
+                            <label>COD Amount</label>
+                            <input type="number" name="amount" placeholder="Enter amount" class="form-control">
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <label>Delivery Charge Amount</label>
+                            <input type="number" name="delivery_charge" placeholder="Enter amount" class="form-control">
+                        </div>
+                        <div class="col-md-4 text-left">
+                            <label>Weight Charge Amount</label>
+                            <input type="number" name="weight_charge" placeholder="Enter amount" class="form-control">
                         </div>
                         <div class="col-md-4 text-left">
                             <label>Note</label>

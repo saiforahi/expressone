@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
-class Courier extends Authenticatable
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+class Courier extends Authenticatable implements HasMedia
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens,InteractsWithMedia;
     protected $table="couriers";
     protected $guard_name = 'courier';
     protected $fillable = [
@@ -40,7 +42,21 @@ class Courier extends Authenticatable
     public function delivery_shipments(){
         return $this->hasMany(Shipment::class)->where('type','delivery');
     }
-    // public function user(){
-    //     return $this->morphOne(User::class, 'inheritable');
-    // }
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('profile_pic')
+              ->width(286)
+              ->height(286)
+              ->sharpen(10)
+              ->queued();
+    }
+    public function registerMediaCollections(): void
+    {
+        // $this->addMediaCollection('thumb')->useDisk('public')->acceptsMimeTypes(['image/jpeg','image/jpg','image/png','image/webp'])->withResponsiveImages();
+        $this
+            ->addMediaCollection('profile_pic')
+            // ->useDisk('media')
+            ->acceptsMimeTypes(['image/jpeg','image/jpg','image/png','image/webp'])
+            ->withResponsiveImages();
+    }
 }

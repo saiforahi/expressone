@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
-class User extends Authenticatable
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+class User extends Authenticatable implements HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable,InteractsWithMedia;
+
     protected $guard_name = 'user';
     protected $fillable = [
         'first_name', 'last_name','email', 'phone', 'ip','password','image','status','is_verified','unit_id'
@@ -42,4 +45,21 @@ class User extends Authenticatable
     // public function morphClass(){
     //     return $this->hasOne(get_class($this->inheritable),'id','inheritable_id');
     // }
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('profile_pic')
+              ->width(247)
+              ->height(300)
+              ->sharpen(10)
+              ->queued();
+    }
+    public function registerMediaCollections(): void
+    {
+        // $this->addMediaCollection('thumb')->useDisk('public')->acceptsMimeTypes(['image/jpeg','image/jpg','image/png','image/webp'])->withResponsiveImages();
+        $this
+            ->addMediaCollection('profile_pic')
+            ->useDisk('public')
+            ->acceptsMimeTypes(['image/jpeg','image/jpg','image/png','image/webp'])
+            ->withResponsiveImages();
+    }
 }

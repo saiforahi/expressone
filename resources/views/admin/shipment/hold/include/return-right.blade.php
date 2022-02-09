@@ -2,12 +2,12 @@
     <div class="row hub{{$hub->id}}" style="background:#f7f7f7;margin-bottom:1em">
     <div class="col-md-6">
         <p class="alert">
-        Unit: {{$hub->name}} <br>Number of parcels: <b class="num{{$hub->id}}">2</b>
+        Unit: {{$hub->name}} <br>Number of parcels: <b class="num{{$hub->id}}">{{unit_wise_return_shipment_count($hub->id)}}</b>
         </p>
     </div>
     <div class="col-md-6 m-b-0 m-t-5">
 
-        <button class="btn btn-xs btn-info form-control s{{$hub->id}}" onclick="sorting(<?php echo $hub->id;?>)">Send to sorting</button>
+        <button class="btn btn-xs btn-info form-control s{{$hub->id}}" onclick="sorting(<?php echo $hub->id;?>)">Send to Dispatch</button>
 
         <button class="btn btn-xs btn-default form-control viewParcel" data-toggle="modal" data-target="#viewParcel" data-hub_id="{{$hub->id}}">View Parcels</button>
 

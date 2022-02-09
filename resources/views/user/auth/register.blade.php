@@ -74,43 +74,29 @@
                                     <label class="title-2">Address: </label>
                                     <textarea class="form-control" name="address" id="" cols="30" rows="1"></textarea>
                                 </div>
+                                
                                 <div class="form-group col-md-12">
-                                    <div class="row">
-                                        {{-- <div class="col-md-4">
-                                            <label class="title-2">Identification Type</label>
-                                            <select class="form-control" name="id_type">
-                                                <option>-- Select Type --</option>
-                                                <option value="NID">NID</option>
-                                                <option value="BIN">BIN</option>
+                                    <div class="row m-auto">
+                                        <div class="col-md-4">
+                                            <label class="title-2">Identification Type:</label>
+                                            <select class="form-control" value="{{ old('id_type') }}" name="id_type" required>
+                                                <option value="nid" selected>NID</option>
+                                                <option value="bin">BIN</option>
                                             </select>
+                                            @error('id_type')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                         <div class="col-md-8">
                                             <label class="title-2">Identification Number:</label>
-                                            <input type="text" value="{{ old('id_no') }}" class="form-control"
-                                                placeholder="Enter valid identification number" name="id_no">
-                                            @error('id_no')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div> --}}
-                                        <div class="col-md-6">
-                                            <label class="title-2">NID:</label>
-                                            <input type="text" value="{{ old('nid_no') }}" class="form-control"
-                                                placeholder="Enter valid NID number" name="nid_no">
-                                            @error('nid_no')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="title-2">BIN:</label>
-                                            <input type="text" value="{{ old('bin_no') }}" class="form-control"
-                                                placeholder="Enter valid NID number" name="bin_no">
-                                            @error('bin_no')
+                                            <input required maxlength="13" minlength="10" type="text" value="{{ old('id_value') }}" class="form-control"
+                                                placeholder="Enter valid number" name="id_value">
+                                            @error('id_value')
                                                 <span class="invalid-feedback">{{ $message }}</span>
                                             @enderror
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="form-group col-md-4">
                                     <label class="title-2">Password: </label>
                                     <input type="password" class="form-control" min="8" max="20"

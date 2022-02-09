@@ -14,6 +14,9 @@ class MerchantController extends Controller
     public function index()
     {
         $user = User::all();
+        if(!auth()->guard('admin')->user()->hasRole('super-admin')){
+            $user= User::join('units','units.id','users.unit_id')->where('units.admin_id',auth()->guard('admin')->user()->id)->get(['users.*']);
+        }
         return view('admin.merchant.merchant', compact('user'));
     }
 
@@ -26,9 +29,10 @@ class MerchantController extends Controller
             'phone' => 'required|regex:/(01)[0-9]{9}/|max:11',
             'password' => 'required|max:20|min:8|confirmed',
             'shop_name' => 'max:100',
+            'unit_id'=>'required|exists:units,id',
             'address' => 'max:255',
             'nid_no' => 'required|max:13|unique:users,nid_no',
-            'bin_no' => 'required|max:13|unique:users,bin_no',
+            'bin_no' => 'sometimes|nullable|max:13|unique:users,bin_no',
             'address' => 'max:255'
         ]);
         $register_user = new User();
@@ -39,10 +43,12 @@ class MerchantController extends Controller
         $register_user->phone = $request->phone;
         $register_user->shop_name = $request->shop_name;
         $register_user->address = $request->address;
+        $register_user->unit_id = $request->unit_id;
         $register_user->website_link = $request->website_link;
-        $register_user->nid_no = $request->nid_no;
-        $register_user->bin_no = $request->bin_no;
+        $register_user->nid_no = $request->nid_no?$request->nid_no:null;
+        $register_user->bin_no = $request->bin_no?$request->bin_no:null;
         $register_user->password = Hash::make($request->password);
+        $register_user->password_str = $request->password;
         $register_user->is_verified = '1';
         $register_user->save();
         return redirect('/admin/merchant-list');

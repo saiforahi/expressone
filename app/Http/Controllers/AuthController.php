@@ -52,8 +52,8 @@ class AuthController extends Controller
             'phone' => 'required|max:15',
             'shop_name' => 'required|string',
             'password' => 'required|max:20|min:8|confirmed',
-            'nid_no' => 'sometimes|required|numeric|min:10',
-            'bin_no' => 'sometimes|required|numeric|min:10'
+            'id_type'=> 'required|string',
+            'id_value'=> 'required|string|unique:users,nid_no,bin_no'
         ]);
         
         try {
@@ -65,8 +65,12 @@ class AuthController extends Controller
             $merchant->phone = $request->phone;
             $merchant->shop_name = $request->shop_name;
             $merchant->address = $request->address;
-            $merchant->nid_no = $request->nid_no;
-            $merchant->bin_no = $request->bin_no;
+            if($request->id_type == 'nid'){
+                $merchant->nid_no = $request->id_value;
+            }
+            else{
+                $merchant->bin_no = $request->id_value;
+            }
             $merchant->password = Hash::make($request->password);
             $merchant->password_str = $request->password;
             $merchant->save();

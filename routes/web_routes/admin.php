@@ -94,8 +94,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
 
     Route::get('/send-to-dispatch', [ShipmentController::class,'shipment_dispatch'])->name('send-to-dispatch');
     Route::get('/shipping-list/dispatch', [ShipmentController::class,'shipment_dispatch'])->name('AdminShipmentDispatch');
-    Route::get('/dispatch/view/{hub}', 'ShipmentController@dispatch_view')->name('dispatchView');
-    Route::get('/status-dispatch/{hub}', 'ShipmentController@status_dispatch')->name('status-dispatch');
+    Route::get('/dispatch/view/{hub}', [ShipmentController::class,'dispatch_view'])->name('dispatchView');
+    Route::get('/status-dispatch/{hub}', [ShipmentController::class,'status_dispatch'])->name('status-dispatch');
     Route::get('/status-on-transit/{hub}', 'ShipmentController@status_on_transit')->name('status-on-transit');
     Route::get('/dispatch-box-view/{hub_shipment_box}', 'ShipmentController@dispatch_box_view')->name('box-view');
     Route::get('/change-box-status/{hub_shipment_box}/{status}', 'ShipmentController@box_status_changes')->name('box-status-change');
@@ -144,7 +144,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/shipment-audit/{shipment}',[ShipmentController::class,'shipment_audit'])->name('shipment-audit');
     Route::get('/shipment-mark-delivered/{shipment}',[ShipmentController::class,'mark_shipment_delivery_confirmed'])->name('mark-delivery-confirmed');
     //ajax call to show driver note during delivery
-    Route::get('/driver-delivery-note/{shipment}', 'DriverController@delivery_note');
+    Route::get('/driver-delivery-note/{shipment}', [DriverController::class,'delivery_note']);
     Route::get('/export-selected/{shipment_ids}', 'ShipmentController@export_shipments')->name('export-selected');
     Route::get('/delivery-payment-form/{shipment_ids}', [ShipmentController::class,'deliveryPaymentsForMerchant'])->name('delivery-payment-form');
     Route::post('/save-delivery-payment', [ShipmentController::class,'save_delivery_payment'])->name('delivery-payment-save');
@@ -161,8 +161,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/csv-temporary', 'CSVController@show')->name('admin-csv-temporary');
     Route::post('/csv-temporary', 'CSVController@store')->name('admin-csv-save');
 
-    Route::get('/shipping-list/cencelled-items/{id}', 'ShipmentController@cencelled_shippings')->name('CencelledShipping');
-    Route::get('/back-to-shipment/{id}', 'ShipmentController@back2shipment')->name('back2shipment');
+    Route::get('/shipping-list/cencelled-items/{id}', [ShipmentController::class,'cencelled_shippings'])->name('CencelledShipping');
+    Route::get('/back-to-shipment/{id}', [ShipmentController::class,'back2shipment'])->name('back2shipment');
 
     Route::get('delete-shipment/{id}', [ShipmentController::class,'destroy'])->name('destroy-shipment');
     Route::get('cencell-shipment/{id}', [ShipmentController::class,'cencel'])->name('cencel-shipment');
@@ -192,8 +192,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/move-to-return_shipment-withRider/{driver}', [HoldShipmentController::class,'move_to_return_shipment_withRider']);
 
     Route::get('/return-shipment-rows/{type}', [HoldShipmentController::class,'return_shipment_rows']);
-    Route::get('/return-shipments-parcels/{hub}', 'HoldShipmentController@return_shipments_parcels');
-    Route::get('/move-back-to-return_shipment/{return_shipment}/{type}', 'HoldShipmentController@move_back2return_shipment');
+    Route::get('/return-shipments-parcels/{hub}', [HoldShipmentController::class,'return_shipments_parcels']);
+    Route::get('/move-back-to-return_shipment/{return_shipment}/{type}', [HoldShipmentController::class,'move_back2return_shipment']);
 
     Route::get('/return-sorting/{hub}', [HoldShipmentController::class,'return_sorting'])->name('return-sorting');
     Route::get('/return-dispatch', [HoldShipmentController::class,'return_dispatch'])->name('return-dispatch');

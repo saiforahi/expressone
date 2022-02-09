@@ -19,16 +19,18 @@ class ShipmentMovementEvent
     public $shipment;
     public $logistic_step;
     public $user;
+    public $note;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Shipment $shipment, LogisticStep $step,$user)
+    public function __construct(Shipment $shipment, LogisticStep $step,$user,$note='')
     {
         $this->shipment = $shipment;
         $this->logistic_step = $step;
         $this->user = $user;
+        $this->note=$note;
         //
     }
 

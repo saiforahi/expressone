@@ -18,10 +18,12 @@ class CreateCouriersTable extends Migration
             $table->string('employee_id')->unique()->nullable();
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('image')->nullable();
             $table->integer('nid_no')->nullable()->comment('National ID card number');
             $table->ipAddress('ip')->nullable();
 
             $table->string('email')->unique();
+            $table->text('address')->nullable();
             $table->string('phone');
             $table->string('password');
             $table->date('joining_date')->nullable();

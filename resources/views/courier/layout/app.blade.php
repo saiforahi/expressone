@@ -41,6 +41,7 @@
     <!-- Custom Theme Style -->
     <link href="{{ asset('build/css/custom.css') }}" rel="stylesheet">
     <link href="{{ asset('build/css/util.css') }}" rel="stylesheet">
+    
 </head>
 
 <body class="nav-md">
@@ -92,6 +93,7 @@
     <script src="{{ asset('ass_vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js') }}"></script>
     <!-- starrr -->
     <script src="{{ asset('ass_vendors/starrr/dist/starrr.js') }}"></script>
+    
     @stack('scripts')
     <style type="text/css">
         #datatable-buttons_filter {

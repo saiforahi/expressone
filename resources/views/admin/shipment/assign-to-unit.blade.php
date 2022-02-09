@@ -16,8 +16,8 @@
 
             <div class="col-md-6 ">
                 <div class="x_panel row">
-                    <p>Parcel Receiving panel
-                        <a href="#" class="pull-right">my-unit parcels</a>
+                    <h4>Parcel Receiving panel</h4>
+                        <p><a href="#" class="pull-right">My Unit parcels</a>
                     </p>
                     <hr>
                     <!-- <button class="btn-success btn-xs btn pull-right">Move all <i class="fa fa-arrow-right"></i> </button></p><hr> -->
@@ -27,10 +27,11 @@
 
             <div class="col-md-6 ">
                 <div class="x_panel row">
-                    <p>Sorted Shipments
+                    <h4>Sorted Shipments</h4>
+                    {{-- <p> --}}
                         {{-- <input type="text" name="phoneNo" placeholder="Customer phone No.">
                         <input type="text" name="invoice_id" placeholder="Invoice number"> --}}
-                    </p>
+                    {{-- </p> --}}
                     <hr>
                     <div class="x_content result">
                         
@@ -40,8 +41,8 @@
                                 <div class="col-md-6">
                                     <p class="alert">Delivery Unit:
                                         {{ $unit->name }}
-                                        {{-- <br>Number of parcels: <b
-                                            class="num{{ $unit->id }}">{{ user_hub_count($unit->id, $id, 'on-dispatch') }}</b> --}}
+                                        <br>Number of parcels: <b
+                                            class="num{{ $unit->id }}">{{count_shipment_for_delivery_unit($unit->id,$user->id)}}</b>
                                     </p>
                                 </div>
                                 <div class="col-md-6 m-b-0 m-t-5">
@@ -233,5 +234,17 @@
             function() {
                 $("#extraParcel").attr("tabindex", "-1");
             })
+            function viewParcel(hub_id, merchant_id) {
+                // alert()
+                $('.hub-shipments').css('min-height', '500px')
+                $('.hub-parcels').html('Loading...');
+                $.ajax({
+                    type: "get",
+                    url: '/admin/user-hub-parcels/' + hub_id + '/' + merchant_id,
+                    success: function(data) {
+                        $('.hub-parcels').html(data);
+                    }
+                });
+            }
     </script>
 @endpush

@@ -81,10 +81,8 @@
                     <li><a href="{{ route('allCourier') }}"><i class="fa mdi mdi-truck-fast"></i>Couriers</a>
                     </li>
 
-                    @if (Auth::guard('admin')->user()->hasRole('super-admin'))
-                        <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
-                                Merchant List</a></li>
-                    @endif
+                    <li><a href="{{ route('merchant.list') }}"><i class="fa mdi mdi-account-multiple-plus"></i>
+                        Merchant List</a></li>
                     
                     @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                     <li>

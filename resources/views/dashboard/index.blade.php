@@ -59,8 +59,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="main-card mb-3 card">
-                <div class="card-header"> Your Shipment &nbsp; <a href="{{ route('merchant.addShipment') }}"
-                        class="btn btn-success"><i class="fa fa-plus-circle"></i>Add New Shipment</a> </div> <br>
+                <div class="card-header"> <h4>Your Shipments</h4> &nbsp; </div> <br>
                 <div class="container-fluid table-responsive">
                     <table id="dashboardDatatable"
                         class="align-middle mb-0 table table-borderless table-striped table-hover text-center">
@@ -74,8 +73,8 @@
                                 <th class="text-center">Date</th>
                                 <th class="text-center">Customer</th>
                                 <th class="text-center">COD Amount</th>
-                                <th class="text-center">Weight</th>
-                                <th class="text-center">Delivery<br/>(Unit > Point > Location)</th>
+                                
+                                {{-- <th class="text-center">Delivery<br/>(Unit > Point > Location)</th> --}}
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
@@ -108,7 +107,7 @@
                                     </td>
                                     <td class="text-center">
                                         @include('dashboard.include.shipping-status',
-                                        ['status'=>$shipments['status'],'logistic_status'=>$shipments['logistic_status']])
+                                        ['status'=>$shipments['status'],'logistic_status'=>$shipments['logistic_status'],'shipment_id'=>$shipments['id']])
                                     </td>
                                     <td>{{ $shipments['invoice_id'] }}</td>
                                     <td><a href="/tracking?code={{ $shipments['tracking_code'] }}"
@@ -131,10 +130,8 @@
                                         {{ $shipments['amount'] }}
                                     </td>
 
-                                    <td>
-                                        {{ $shipments['weight'] }}
-                                    </td>
-                                    <td>Unit: {{$shipments->delivery_location->point->unit->name}}</td>
+                                    
+                                    {{-- <td>Unit: {{$shipments->delivery_location->point->unit->name}}</td> --}}
                                     <td>
                                         @if ($shipments['status'] == null && $shipments['logistic_status'] == 1)
                                             <form style="display: inline-block" class="form-delete" method="post"
@@ -157,7 +154,7 @@
                                         <a href="{{ route('merchant.shipmentCn', $shipments['id']) }}"
                                             class="btn btn-info btn-sm">
                                             <i class="fa fa-file-pdf"></i></a>
-                                        <a target="_blank" href="{{ route('merchant.shipmentCn', $shipments['id']) }}"
+                                        <a target="_blank" href="{{ route('merchant.showCN', $shipments['id']) }}"
                                             class="btn btn-primary btn-sm">
                                             CN</a>
                                     </td>
@@ -195,6 +192,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
     <script type="text/javascript">
+        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         $(function() {
             $('#dashboardDatatable').dataTable({
                 order: [
@@ -205,6 +203,20 @@
         //Set shipping charage
         function formSubmit(id) {
             $('#formSubmit_' + id).submit();
+        }
+        function mark_received(shipment_id){
+            $.ajax({
+                url: "{{ route('merchant.receive.shipment.back') }}",
+                type: 'post',
+                data: {
+                    _token: CSRF_TOKEN,
+                    shipment_id: shipment_id,
+                },
+                dataType: 'json',
+                success: function(data) {
+                    window.location.reload()
+                }
+            });
         }
     </script>
 @endpush

@@ -10,7 +10,7 @@
                         <a onclick="export_selected();" class="btn btn-xs btn-info pull-right export" disabled>Export
                             selected</a>
                         <a onclick="deliverypayment();" class="btn btn-xs btn-primary pull-right delivery_payment"
-                           disabled>Delivery payment</a>
+                           >Delivery payment</a>
                         {{-- <a onclick="returnToMerchant();" class="btn btn-xs btn-warning pull-right returnToMerchant" disabled>Return to Merchant</a> --}}
                     </div>
                     <div class="row">
@@ -38,6 +38,7 @@
                                             <td style="width:25%">
                                                 Parcel ID: {{$shipment->id}}<br>
                                                 Invoice ID: {{$shipment->invoice_id}}<br>
+                                                Merchanrt: {{$shipment->merchant->first_name.' '.$shipment->merchant->last_name}}<br>
                                                 Shop ID: {{$shipment->merchant->shop_name}}<br>
 
                                                 Resource Unit: {{$shipment->pickup_location->point->unit->name}}<br>
@@ -55,11 +56,8 @@
                                                 Weight: {{$shipment->weight}} KG<br>
                                                 COD Amount: {{$shipment->amount}}<br>
                                                 Delivery Charge: {{$shipment->payment_detail->delivery_charge}}<br>
-                                                @if($shipment->payment_detail->cod_amount !=0)
-                                                    COD: Applied<br>
-                                                    COD value:{{$shipment->payment_detail->cod_amount}}% @endif
-
-                                                @if(($shipment->payment_detail->cod_amount - $shipment->delivery_charge) <0) Pay by merchant @else Pay by Customer @endif
+                                                Weight Charge: {{$shipment->payment_detail->weight_charge}}<br>
+                                                
                                             </td>
                                             <td>
                                                 @if(!is_courier_assigned_for_delivery($shipment))
@@ -260,6 +258,7 @@
             $.ajax({
                 type: "get", url: '/admin/delivery-payment-form/' + searchIDs,
                 success: function (data) {
+                    
                     $('.deliveryPaymentForm').html(data);
                 }
             })

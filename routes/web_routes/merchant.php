@@ -21,7 +21,7 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function 
     Route::post('save-shipment', [ShipmentController::class, 'saveShipment'])->name('merchant.saveShipment');
     Route::get('edit-shipment/{shipment}', [ShipmentController::class, 'editShipment'])->name('merchant.editShipment');
     Route::put('update-shipment/{shipment}', [ShipmentController::class, 'updateShipment'])->name('merchant.updateShipment');
-
+    Route::get('shipment/cn-note/{shipment}', [ShipmentController::class, 'show_cn_view'])->name('merchant.showCN');
 
     Route::get('/shipments', [ShipmentController::class, 'index'])->name('merhcant_shipments');
     Route::get('/shipment-details/{shipment}', [ShipmentController::class, 'show'])->name('shipmentDetails');
@@ -42,4 +42,6 @@ Route::group(['middleware' => 'auth:user', 'namespace' => 'Merchant'], function 
     Route::get('csv-temporary', [CSVController::class, 'csvTemp'])->name('csv-temporary');
     Route::post('csv-temporary', [CSVController::class, 'store_new'])->name('csv-save');
     Route::get('prepare-shipment-details/{id}', 'ShipmentController@PrepareShipmentEdit')->name('PrepareShipmentEdit');
+
+    Route::post('take-shipment-back', [ShipmentController::class,'take_shipment_back'])->name('merchant.receive.shipment.back');
 });

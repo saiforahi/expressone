@@ -13,6 +13,8 @@
     <meta name="description" content="This is an example dashboard created using build-in elements and components.">
     <meta name="msapplication-tap-highlight" content="no">
     <link href="{{ asset('dashboards/main.css') }}" rel="stylesheet">
+    {{-- <link href="{{ asset('build/css/custom.css') }}" rel="stylesheet"> --}}
+    {{-- <link href="{{ asset('build/css/util.css') }}" rel="stylesheet"> --}}
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/plugins/font-awesome-4.6.1/css/font-awesome.min.css') }}" />
     @stack('style')

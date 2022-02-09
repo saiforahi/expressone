@@ -48,15 +48,15 @@
                                         <img width="42" height="42" class="img-thumbnail img-fluid" src="{{$shipment->image == null? asset('images/user.png'):asset('storage/user/'.$shipment->image)}}">
                                     </th>
 
-                                    <th scope="row">Name: {{$shipment->name}} <br>Price: {{$shipment->cod_amount}}
+                                    <th scope="row">Name: {{$shipment->recipient['name']}} <br>Price: {{$shipment->amount}}
                                     </th>
-                                    <th scope="row"><i class="fa fa-phone"></i> {{$shipment->phone}}<br>
+                                    <th scope="row"><i class="fa fa-phone"></i> {{$shipment->recipient['phone']}}<br>
 
-                                    <i class="fa fa-map-marker"></i> {{$shipment->address}}<br>
+                                    <i class="fa fa-map-marker"></i> {{$shipment->recipient['address']}}<br>
                                     </th>
                                     <th scope="row">
                                         @include('admin.shipment.status',
-                                        ['status'=>$shipment->status,'shipping_status'=>$shipment->shipping_status])
+                                        ['status'=>$shipment->status,'logistic_status'=>$shipment->logistic_status])
                                     </th>
                                     <th scope="row">
                                         <a href="/admin/back-to-shipment/{{$shipment->id}}" class="btn btn-primary btn-xs">back To Shipment <i class="fa fa-undo"></i></a>

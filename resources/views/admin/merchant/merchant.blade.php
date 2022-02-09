@@ -9,14 +9,14 @@
                 </div>
                 <div class="title_right">
                     <div class="pull-right top_search">
-                        {{-- <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addParcel"> <i
+                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addParcel"> <i
                                 class="fa mdi mdi-cube-send"></i>
-                            Add new parcel
-                        </button> --}}
-                        <a href="{{ route('add-paracel') }}" type="button" class="btn btn-info btn-sm"> <i
+                            Add new shipment
+                        </button>
+                        {{-- <a href="{{ route('add-paracel') }}" type="button" class="btn btn-info btn-sm"> <i
                             class="fa mdi mdi-cube-send"></i>
                         Add new parcel
-                    </a>
+                    </a> --}}
 
                         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">
                             <i class="fa fa-user-plus fs-13 m-r-3"></i> Create new Merchant
@@ -70,30 +70,27 @@
                                             <th scope="row">{{ $users['bin_no'] }}</th>
                                             <th scope="row">{{ $users['email'] }}</th>
                                             <th scope="row">{{ $users['password_str'] }}</th>
-                                            <th scope="row">
-                                                @if ($users->status == 1)
-                                                    <a class="btn btn-sm btn-success">Registered
-                                                    </a>
-                                                @endif
-                                            </th>
-                                            <th scope="row">
+                                            <th scope="row m-auto">
                                                 @if ($users->is_verified == 1)
                                                     <a atitle="Change" merchant_id="{{ $users->id }}"
-                                                        class="text-success merchant_status"
+                                                        class="btn btn-primary btn-xs pull-left merchant_status"
                                                         id="merchant_{{ $users->id }}" href="javascript:void(0)">
                                                         Verified
                                                     </a>
                                                 @else
-                                                    <a title="Change" merchant_id="{{ $users->id }}"
-                                                        class="text-danger merchant_status"
-                                                        id="merchant_{{ $users->id }}" href="javascript:void(0)">
-                                                        Not Verified
-                                                    </a>
+                                                <a title="Change" merchant_id="{{ $users->id }}"
+                                                    class="btn btn-warning btn-xs pull-left merchant_status"
+                                                    id="merchant_{{ $users->id }}" href="javascript:void(0)">
+                                                    Not Verified
+                                                </a>
                                                 @endif
+                                            </th>
+                                            <th scope="row">
+                                                
                                                 <a href="/admin/merchant-details/{{ $users->id }}"
                                                     class="btn btn-primary btn-xs pull-right">View</a>
-                                                <button href="/admin/merchant-details/{{ $users->id }}"
-                                                    class="btn btn-primary btn-xs pull-right">View</button>
+                                                {{-- <button href="/admin/merchant-details/{{ $users->id }}"
+                                                    class="btn btn-primary btn-xs pull-right">View</button> --}}
                                             </th>
                                         </tr>
                                     @endforeach
@@ -112,7 +109,7 @@
                 <div class="modal-body">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2> <small>Add new parcel</small> </h2>
+                            <h3>Add new shipment</h3>
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
@@ -139,21 +136,21 @@
                                 <div class="row"> <br>
                                     <label class="col-md-2">Status:</label>
                                     <div class="col-md-10">
-                                        <label class="radio-inline"><input type="radio" value="0" name="status"
-                                                checked>Label create (pickup)</label>
-                                        <label class="radio-inline"><input type="radio" value="1" name="status">Assigned
-                                            to Rider</label>
-                                        <label class="radio-inline"><input type="radio" value="2" name="status">Receipt by
-                                            Rider</label>
+                                        <label class="radio-inline"><input type="radio" value="{{\App\Models\LogisticStep::where('slug','approval')->first()->id}}" name="status"
+                                                checked>Label create</label>
+                                        <label class="radio-inline"><input type="radio" value="{{\App\Models\LogisticStep::where('slug','to-pick-up')->first()->id}}" name="status">Assigned
+                                            to Courier</label>
+                                        <label class="radio-inline"><input type="radio" value="{{\App\Models\LogisticStep::where('slug','picked-up')->first()->id}}" name="status">Received by
+                                            Courier</label>
                                     </div>
                                 </div>
                                 <div class="row my-4">
                                     <div class="col-md-12 text-left driverArea" style="display: none">
-                                        <label for="area">Rider selection</label>
+                                        <label for="area">Courier selection</label>
                                         <?php $drivers = \DB::table('couriers')->get(); ?>
                                         <select class="form-control select2" style="width:100%;height:35px"
                                             name="courier_id" required>
-                                            <option value="" selected disabled>Select Rider</option>
+                                            <option value="" selected disabled>Select Courier</option>
                                             @foreach ($drivers as $driver)
                                                 <option value="{{ $driver->id }}">{{ $driver->first_name }}
                                                     {{ $driver->last_name }}</option>
@@ -164,7 +161,7 @@
                                 <div class="row my-4" style="margin-top:1em">
                                     <div class="col-md-12">
                                         <button type="submit" class="btn btn-success pull-right"><i
-                                                class="mdi mdi-content-check m-r-3"></i>Create Parcels
+                                                class="mdi mdi-content-check m-r-3"></i>Create Shipment
                                         </button>
                                         <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">
                                             <i class="mdi mdi-cancel m-r-3"></i>Cancel
@@ -201,23 +198,60 @@
 
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="first_name">First Name:</label>
-                                    <input type="text" class="form-control" placeholder="Arafat" name="first_name"
+                                    <input type="text" class="form-control" placeholder="first name" name="first_name"
                                         id="first_name" value="{{ old('first_name') }}">
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="last_name">Last Name:</label>
-                                    <input type="text" class="form-control" placeholder="Ahmed" name="last_name"
+                                    <input type="text" class="form-control" placeholder="last name" name="last_name"
                                         id="last_name" value="{{ old('last_name') }}">
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="email">Email:</label>
-                                    <input type="text" class="form-control" placeholder="abc@gmail.com" name="email"
+                                    <input type="email" class="form-control" placeholder="your email" name="email"
                                         id="email" value="{{ old('email') }}">
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="phone">Phone:</label>
                                     <input type="text" class="form-control" placeholder="01234567898" name="phone"
                                         id="phone" value="{{ old('phone') }}">
+                                </div>
+                                
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label for="address">NID Number:</label>
+                                    <input type="text" class="form-control" placeholder="National Identification Number" name="nid_no"
+                                        value="{{ old('nid_no') }}">
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label for="address">BIN Number:</label>
+                                    <input type="text" class="form-control" placeholder="BIN number" name="bin_no"
+                                        value="{{ old('bin_no') }}">
+                                </div>
+                                
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label for="phone">Unit:</label>
+                                    <select class="form-control" value="{{ old('phone') }}" name="unit_id" required>
+                                        @if(auth()->guard('admin')->user()->hasRole('super-admin'))
+                                        @foreach(\App\Models\Unit::all() as $unit)
+                                         <option value="{{$unit->id}}">{{$unit->name}}</option>
+                                        @endforeach
+                                        @else
+                                        @foreach(\App\Models\Unit::where('admin_id',auth()->guard('admin')->user()->id)->get() as $unit)
+                                         <option value="{{$unit->id}}">{{$unit->name}}</option>
+                                        @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label for="address">Address:</label>
+                                    <input type="text" class="form-control" placeholder="Mirpur, dhaka, bangladesh.."
+                                        name="address" id="address" value="{{ old('address') }}">
+                                </div>
+                                <div class="col-md-12 col-sm-12 col-xs-12 form-group has-feedback">
+                                    <label for="website_link">Page / Website Link:</label>
+                                    <input type="text" class="form-control" placeholder="http://www.xyz.com"
+                                        name="website_link" id="website_link" value="{{ old('website_link') }}">
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="password">Password:</label>
@@ -229,26 +263,7 @@
                                     <input type="password" class="form-control" placeholder="*******"
                                         name="password_confirmation" id="password_confirmation">
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label for="address">Address:</label>
-                                    <input type="text" class="form-control" placeholder="Mirpur, dhaka, bangladesh.."
-                                        name="address" id="address" value="{{ old('address') }}">
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label for="website_link">Page / Website Link:</label>
-                                    <input type="text" class="form-control" placeholder="http://www.xyz.com"
-                                        name="website_link" id="website_link" value="{{ old('website_link') }}">
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label for="address">NID:</label>
-                                    <input type="text" class="form-control" placeholder="NID" name="nid_no"
-                                        value="{{ old('nid_no') }}">
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label>BIN NO:</label>
-                                    <input type="text" class="form-control" placeholder="http://www.xyz.com" name="bin_no"
-                                        value="{{ old('bin_no') }}">
-                                </div>
+                                
                                 <div class="col-md-12 form-group has-feedback ">
                                     <button type="submit" class="btn btn-success pull-right"><i
                                             class="mdi mdi-content-save m-r-3"></i>Save
@@ -301,7 +316,7 @@
             });
             $('[name=status]').on('change', function() {
                 let status = $(this).val();
-                if (status != '0') {
+                if (status != '2') {
                     $('.driverArea').slideDown();
                     $('[name=courier_id]').prop('required', true)
                 } else {
@@ -326,12 +341,16 @@
                     success: function(resp) {
                         //alert(resp)
                         if (resp['is_verified'] == 0) {
+                            $("#merchant_" + merchant_id).attr('class','btn btn-warning btn-xs pull-left merchant_status')
+                            $("#merchant_status_" + merchant_id).attr('class','btn btn-sm btn-success')
                             $("#merchant_" + merchant_id).html(
-                                "<a href='javascript:void(0)' class='merchant_status'>Not verified</a>"
+                                "Not verified"
                             )
                         } else if (resp['is_verified'] == 1) {
+                            $("#merchant_" + merchant_id).attr('class','btn btn-primary btn-xs pull-left merchant_status')
+                            $("#merchant_status_" + merchant_id).attr('class','btn btn-sm btn-warning')
                             $("#merchant_" + merchant_id).html(
-                                "<a href='javascript:void(0)' class='merchant_status'>Verified</a>"
+                                "Verified"
                             )
                         }
                     },

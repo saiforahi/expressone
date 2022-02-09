@@ -13,6 +13,9 @@ Route::post('courier/logout', [CourierAuthController::class,'logout'])->name('co
 
 Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix' => 'courier'], function () {
     Route::get('/', [CourierDashboardController::class,'index'])->name('courier.dashboard');
+    Route::get('/profile', [CourierDashboardController::class,'show_profile'])->name('courier.profile');
+    Route::get('/profile-edit', [CourierDashboardController::class,'show_profile_edit'])->name('courier.profileEdit');
+    Route::post('/profile-update', [CourierDashboardController::class,'profile_update'])->name('courier.profileUpdate');
     Route::get('get-shipments/{type}', [CourierDashboardController::class,'shipments'])->name('get-driver-shipments');
     Route::get('get-shipments-with-dates/{dates}/{type}', [CourierDashboardController::class,'shipments_dates'])->name('dateWize-driver-shipments');
 

@@ -102,7 +102,8 @@
                                     <select class="form-control select2 area" data-key="{{ $key }}" name="delivery_location[]"
                                         id="area{{ $key }}" style="padding:1px;">
                                         <option value="" selected disabled>Select Delivery Location</option>
-                                        @foreach ($locations as $location)
+                                        <?php $delivery_locations = \App\Models\Location::latest()->get();?>
+                                        @foreach ($delivery_locations as $location)
                                             <option value="{{ $location->id }}">{{ $location->name }}</option>
                                         @endforeach
                                     </select>

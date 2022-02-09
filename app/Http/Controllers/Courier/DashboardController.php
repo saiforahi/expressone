@@ -17,7 +17,39 @@ class DashboardController extends Controller
     {
         return view('courier.dashboard');
     }
+    public function show_profile(){
+        return view('courier.profile');
+    }
+    public function show_profile_edit(){
+        return view('courier.profile-edit');
+    }
+    public function profile_update(Request $req){
+        try{
+            $req->validate([
+                'first_name'=>'required|string',
+                'last_name'=> 'required|string',
+                'email'=>'sometimes|required|string|email',
+                'phone'=> 'required|string|min:11|max:11|min:11',
+                'address'=> 'required|string|max:1055',
+                'image'=> 'sometimes|nullable'
+            ]);
+            $courier=Auth::guard('courier')->user();
+            $courier->first_name=$req->first_name;
+            $courier->last_name=$req->last_name;
+            $courier->phone=$req->phone;
+            $courier->address=$req->address;
 
+            if($courier->save() && $req->hasFile('image')){
+                $courier->clearMediaCollection('profile_pic');
+                $courier->addMedia($req->image)->toMediaCollection('profile_pic');
+            }
+            
+            return back()->with('message','Profile Updated!');
+        }
+        catch(Exception $e){
+            throw $e;
+        }
+    }
     public function shipments($type)
     {
         if ($type == 'delivery') {

@@ -77,7 +77,7 @@ class CSVController extends Controller
             Session::flash('message', 'No CSV-file upload! Please submit a CSV file first!!');
             return redirect('/dashboard');
         }
-        $locations = Location::latest()->get();
+        $locations=Location::join('points','points.id','locations.point_id')->join('units','units.id','points.unit_id')->where('units.id',auth()->guard('user')->user()->unit_id)->get(['locations.*']);
         return view('dashboard.csv.show', compact('locations'));
     }
     public function store_new(Request $request)
@@ -96,14 +96,15 @@ class CSVController extends Controller
                 $invoice_no = $invoice_data + 1;
             }
             $insert = new Shipment();
-            $recipient_data['name']=$line['recipient_name'];
+            $recipient_data['name']=$request->recipient_name[$key];
             // dd(json_encode(array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address'])));
-            $insert->recipient = array('name'=>$line['recipient_name'],'phone'=>$line['recipient_phone'],'address'=>$line['recipient_address']);
-            $insert->amount = $line['amount'];
+            $insert->recipient = array('name'=>$request->recipient_name[$key],'phone'=>$request->recipient_phone[$key],'address'=>$request->recipient_address[$key]);
+            $insert->amount = $request->amount[$key];
             $insert->weight = $request->weight[$key];
+            $insert->upazila_district = $request->upazila_district[$key];
             $insert->pickup_location_id=$request->pickup_location[$key];
             $insert->delivery_location_id=$request->delivery_location[$key]??null;
-            $insert->note = $line['note'];
+            $insert->note = $request->note[$key];
             //CSV Data
             $insert->merchant_id = Auth::guard('user')->user()->id;
             $insert->added_by()->associate(Auth::guard('user')->user());

@@ -44,7 +44,12 @@ class ShipmentController extends Controller
     {
         $merchants = array();
         if (!Auth::guard('admin')->user()->hasRole('super-admin')) {
-            $shipments_belongs_to_my_units = DB::table('units')->where('admin_id', Auth::guard('admin')->user()->id)->join('points', 'points.unit_id', 'units.id')->join('locations', 'points.id', 'locations.point_id')->join('shipments', 'locations.id', 'shipments.pickup_location_id')->whereBetween('shipments.logistic_status', [1,3])->select('shipments.*', 'locations.name as location_name', 'units.name as unit_name')->get();
+            $shipments_belongs_to_my_units = DB::table('units')->where('admin_id', Auth::guard('admin')->user()->id)
+            ->join('points', 'points.unit_id', 'units.id')
+            ->join('locations', 'points.id', 'locations.point_id')
+            ->join('shipments', 'locations.id', 'shipments.pickup_location_id')
+            ->whereBetween('shipments.logistic_status', [1,3])
+            ->select('shipments.*', 'locations.name as location_name', 'units.name as unit_name')->get();
             // dd($shipments_belongs_to_my_units);
             // return $shipments_belongs_to_my_units;
             $merchants = $shipments_belongs_to_my_units->pluck('merchant_id')->toArray();
@@ -335,7 +340,7 @@ class ShipmentController extends Controller
 
     public function cencelled_shippings($merchant_id)
     {
-        $shipments = Shipment::where('merchant_id', $merchant_id)->where(['status' => 2])->get();
+        $shipments = Shipment::where('merchant_id', $merchant_id)->where(['logistic_status' => LogisticStep::where('slug','cancelled')->first()->id])->get();
         $user = User::find($merchant_id);
         $drivers = Courier::orderBy('first_name')->get();
         return view('admin.shipment.cencelled-shipments', compact('shipments', 'drivers', 'user'));
@@ -343,7 +348,8 @@ class ShipmentController extends Controller
 
     function back2shipment($id)
     {
-        Shipment::where('id', $id)->update(['status' => '1', 'shipping_status' => '0']);
+        Shipment::where('id', $id)->update(['logistic_status' => LogisticStep::where('slug','approval')->first()->id]);
+        event(new ShipmentMovementEvent(Shipment::find($id), LogisticStep::where('slug','approval')->first(),Auth::guard('admin')->user()));
         Session::flash('message', 'Shipment has been backed successfully!');
         return back();
     }
@@ -357,9 +363,10 @@ class ShipmentController extends Controller
 
     public function cencel($id, Request $request)
     {
-        Shipment::where('id', $id)->update(['status' => 'cancelled']);
-        CourierShipment::where('shipment_id', $id)->update(['note' => $request->note, 'status' => 'cancelled']);
-        Session::flash('message', 'Shipment has been Cencelled successfully!');
+        Shipment::where('id', $id)->update(['logistic_status' => LogisticStep::where('slug','cancelled')->first()->id]);
+        event(new ShipmentMovementEvent(Shipment::find($id),LogisticStep::where('slug','cancelled')->first(),Auth::guard('admin')->user()));
+        ShipmentMovement::where(['shipment_id'=>$id,'logistic_step_id'=>LogisticStep::where('slug','cancelled')->first()->id])->update(['note'=>$request->note]);
+        Session::flash('message', 'Shipment has been Cancelled successfully!');
         return back();
     }
 
@@ -1026,7 +1033,7 @@ class ShipmentController extends Controller
 
     function deliveryPaymentsForMerchant($shipment_ids)
     {
-        $shipments = Shipment::whereIn('id', explode(',', $shipment_ids))->get();   
+        $shipments = Shipment::whereIn('id', explode(',', $shipment_ids))->whereIn('logistic_status',LogisticStep::where('slug','delivered')->orWhere('slug','delivery-confirmed')->pluck('id')->toArray())->get();   
         return view('admin.shipment.load.delivery.payment-delivery-form', compact('shipments'));
     }
 

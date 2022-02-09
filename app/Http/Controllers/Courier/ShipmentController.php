@@ -21,7 +21,7 @@ class ShipmentController extends Controller
 {
     public function index()
     {
-        $merchants = DB::table('courier_shipment')->where('courier_id',Auth::guard('courier')->user()->id)->join('shipments','courier_shipment.shipment_id','shipments.id')->select('shipments.merchant_id')->groupBy('shipments.merchant_id')->pluck('shipments.merchant_id')->toArray();
+        $merchants = DB::table('courier_shipment')->where('courier_id',Auth::guard('courier')->user()->id)->join('shipments','courier_shipment.shipment_id','shipments.id')->whereIn('shipments.logistic_status',LogisticStep::where('slug','to-pick-up')->orWhere('slug','picked-up')->pluck('id')->toArray())->select('shipments.merchant_id')->groupBy('shipments.merchant_id')->pluck('shipments.merchant_id')->toArray();
         $user = User::whereIn('id',$merchants)->get();
         return view('courier.shipment.index',compact('user'));
     }
@@ -76,14 +76,10 @@ class ShipmentController extends Controller
 
     public function show($id)
     {
-        //dd($id);
-        $shipments = CourierShipment::where(['type'=>'pickup','courier_id' => Auth::guard('courier')->user()->id])->join('shipments','shipments.id','courier_shipment.shipment_id')->where('shipments.merchant_id',$id)->get(['courier_shipment.*']);
+        $statuses=LogisticStep::where('slug','to-pick-up')->orWhere('slug','picked-up')->pluck('id')->toArray();
+        $shipments = CourierShipment::where(['type'=>'pickup','courier_id' => Auth::guard('courier')->user()->id])->join('shipments','shipments.id','courier_shipment.shipment_id')->where('shipments.merchant_id',$id)->whereIn('shipments.logistic_status',$statuses)->get(['courier_shipment.*']);
         $user = User::find($id);
         return view('courier.shipment.shipment-more', compact('shipments', 'user'));
-
-        // $shipments = CourierShipment::where(['courier_id' => Auth::guard('courier')->user()->id, 'status' => $status])->get();
-        // $user = User::find($id);
-        // return view('courier.shipment.shipment-more', compact('shipments', 'user'));
     }
 
     function receive_all_parcel(User $user)
@@ -153,7 +149,7 @@ class ShipmentController extends Controller
                         'sent_to_phone_number'=>$req->otp=='merchant'?$shipment->merchant->phone:$shipment->recipient['phone'],
                         'sent_to'=>$req->otp
                     ]);
-                    event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','delivered')->first(),Auth::guard('courier')->user()));
+                    event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','delivered')->first(),Auth::guard('courier')->user(),$req->note));
                     break;
 
                 case 'hold':

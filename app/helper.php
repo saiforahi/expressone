@@ -161,16 +161,35 @@ if (!function_exists('active_guard')) {
 }
 
 if (!function_exists('get_shipments_for_logged_in_admin')) {
-    function get_shipments_for_logged_in_admin($logistic_step_slug_array)
+    function get_shipments_for_logged_in_admin($logistic_step_slug_array,$user)
     {
+        $statuses=LogisticStep::whereIn('slug',$logistic_step_slug_array)->pluck('id')->toArray();
+        // dd($statuses);
         $shipments=array();
         if(auth()->guard('admin')->user()->hasRole('super-admin')){
-            $shipments=Shipment::cousins()->whereIn('logistic_steps.slug',$logistic_step_slug_array)->get();
+            $shipments=Shipment::where('merchant_id',$user->id)->cousins()->whereIn('logistic_steps.id',$statuses)->get(['shipments.*']);
         }
         else{
-            $shipments = Shipment::cousins()->where('admins.id',auth()->guard('admin')->user()->id)->whereIn('logistic_steps.slug',$logistic_step_slug_array)->get();
+            $shipments = Shipment::whereIn('logistic_status',$statuses)->where('merchant_id',$user->id)->cousins()->where('units.admin_id',auth()->guard('admin')->user()->id)->get(['shipments.*']);
         }
+        // dd($shipments);
         return $shipments;
+    }
+}
+if (!function_exists('unit_wise_in_transit_shipments')) {
+    function unit_wise_in_transit_shipments($unit_id,$logistic_step_slug_array=array('in-transit'))
+    {
+        $statuses=LogisticStep::whereIn('slug',$logistic_step_slug_array)->pluck('id')->toArray();
+        $shipments=array();
+        if(Auth::guard('admin')->user()->hasRole('super-admin')){
+            $shipments=Shipment::cousins()->whereIn('logistic_steps.id',$statuses)->where('units.id',$unit_id)->get();
+        }
+        else{
+            $shipments = Unit::join('points','points.unit_id','units.id')->join('locations','locations.point_id','points.id')->join('shipments','shipments.delivery_location_id','locations.id')
+            ->where('units.id',$unit_id)->whereIn('shipments.logistic_status',$statuses)->get(['shipments.*']);
+            
+        }
+        return $shipments->count();
     }
 }
 
@@ -221,9 +240,9 @@ if (!function_exists('merchant_wise_reurn_in_transit_shipments_for_logged_in_adm
 if (!function_exists('merchant_wise_total_shipments_for_logged_in_courier_to_pickup')) {
     function merchant_wise_total_shipments_for_logged_in_courier_to_pickup($user,$courier)
     {
-        $statuses=LogisticStep::where('slug','to-pick-up')->orWhere('slug','picked-up')->orWhere('slug','dropped-at-pickup-unit')->pluck('id')->toArray();
+        $statuses=LogisticStep::where('slug','to-pick-up')->orWhere('slug','picked-up')->pluck('id')->toArray();
         // dd($statuses);
-        $total=Shipment::join('courier_shipment','courier_shipment.shipment_id','shipments.id')
+        $total=Shipment::whereIn('logistic_status',$statuses)->join('courier_shipment','courier_shipment.shipment_id','shipments.id')
             ->where('shipments.merchant_id',$user->id)
             ->where(['courier_shipment.courier_id'=>$courier->id,'courier_shipment.type'=>'pickup'])->count();
             // dd($total);
@@ -239,14 +258,21 @@ if (!function_exists('delivery_units')) {
     }
 }
 
-if (!function_exists('hash_password')) {
-    function hash_password($password,$type)
+if (!function_exists('unit_wise_return_shipment_count')) {
+    function unit_wise_return_shipment_count($unit_id,$logistic_step_slug_array=array('returned-sorted'))
     {
-        // if($type=='hash'){
-        //     return Hash::make($password);
-        // }
-        // else{
-        //     return Hash::
-        // }
+        $statuses=LogisticStep::whereIn('slug',$logistic_step_slug_array)->pluck('id')->toArray();
+        $shipments=array();
+        if(Auth::guard('admin')->user()->hasRole('super-admin')){
+            $shipments=Shipment::cousins()->whereIn('logistic_steps.id',$statuses)->where('units.id',$unit_id)->get();
+        }
+        else{
+            $shipments = DB::table('units')->join('points','points.unit_id','units.id')
+            ->join('locations','locations.point_id','points.id')
+            ->join('shipments','shipments.pickup_location_id','locations.id')
+            ->where('units.id',$unit_id)->whereIn('shipments.logistic_status',$statuses)->get(['shipments.*']);
+            
+        }
+        return $shipments->count();
     }
 }

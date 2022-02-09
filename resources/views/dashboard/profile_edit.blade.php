@@ -84,14 +84,14 @@
                                 <div class="position-relative form-group">
                                     <label>NID</label>
                                     <input name="nid_no" value="{{ Auth::guard('user')->user()->nid_no }}" type="number"
-                                        class="form-control" placeholder="Enter bin no" readonly>
+                                        class="form-control" placeholder="Enter NID no" readonly>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="position-relative form-group">
                                     <label>BIN</label>
                                     <input name="bin_no" value="{{ Auth::guard('user')->user()->bin_no }}" type="number"
-                                        class="form-control" placeholder="Enter bin no" readonly>
+                                        class="form-control" placeholder="Enter BIN no" readonly>
                                 </div>
                             </div>
                             <div class="col-md-4">

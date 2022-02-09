@@ -11,11 +11,11 @@
                     <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu pull-right">
-                    <li><a href=""> Profile</a></li>
+                    <li><a href="{{route('courier.profile')}}">Profile</a></li>
                     <li>
                         <a class="dropdown-item" href="{{ route('courier.logout') }}"
                            onclick="event.preventDefault(); document.getElementById('frm-logout').submit();"><i
-                                class="fa fa-sign-out pull-right"></i> Log Out</a>
+                                class="fa fa-sign-out pull-right"></i>Log Out</a>
                     </li>
                 </ul>
             </li>
