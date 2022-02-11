@@ -74,7 +74,7 @@
     <div class="col-md-12"><br><hr></div>
 
     <div class="col-md-7 pad-30 wow fadeInLeft" data-wow-offset="50" data-wow-delay=".30s">
-        <center><img style="max-height:180px" src="/images/{{basic_information()->company_logo}}"></center>
+        {{-- <center><img style="max-height:180px" src="/images/{{basic_information()->company_logo}}"></center> --}}
         <div class="alert alert-info">
             Dear <b>{{$shipment->name}}</b>,<br>
             item(s) from your order #{{$shipment->invoice_id}} is now in @include('includes.shipment-status',['status'=>$shipment->status,'logistic_status'=>$shipment->logistic_status]) stage. <br><br>

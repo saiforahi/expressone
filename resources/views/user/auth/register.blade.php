@@ -27,9 +27,6 @@
                     <div class="regi_form_wrapper">
                         <div class="quote_form">
                             @include('flash.message')
-                            @if ($errors->any())
-                                {{$errors}}
-                            @endif
                             <form class="row" id="reg_form" action="{{ route('register.store') }}" method="post">
                                 @csrf
                                 <div class="form-group col-md-4">

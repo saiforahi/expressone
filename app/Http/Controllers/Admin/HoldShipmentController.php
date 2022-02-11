@@ -49,7 +49,7 @@ class HoldShipmentController extends Controller
             $shipments = Shipment::where('logistic_status',LogisticStep::where('slug','on-hold')->first()->id)->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->get(['shipments.*']);
             return view('admin.shipment.hold.include.driver_hub_shipments',compact('type','shipments'));
         }elseif($type=='return'){
-            $shipments = Shipment::where('logistic_status',LogisticStep::where('slug','returned-by-recipient-confirmed')->first()->id)->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->get(['shipments.*']);
+            $shipments = Shipment::whereIn('logistic_status',LogisticStep::where('slug','returned-by-recipient-confirmed')->orWhere('slug','returned-by-recipient')->pluck('id')->toArray())->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->get(['shipments.*']);
             $units = Shipment::where('logistic_status',LogisticStep::where('slug','returned-by-recipient-confirmed')->first()->id)->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->select('units.id')->groupBy('units.id')->pluck('units.id')->toArray();
             // dd($units);
             $hubs = Unit::whereIn('id',$units)->get();

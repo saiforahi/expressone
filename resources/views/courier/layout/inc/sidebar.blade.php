@@ -17,8 +17,8 @@
                         <ul class="nav child_menu">
                             <li><a href="{{ route('courierShipments') }}">Pickup</a></li>
                             <li><a href="/courier/agent-dispatch">Delivery Parcels</a></li>
-                            <li><a href="/courier/my-shipments/hold">Hold Deliveries</a></li>
-                            <li><a href="/courier/my-shipments/return">Return Deliveries</a></li>
+                            {{-- <li><a href="/courier/my-shipments/hold">Hold Deliveries</a></li>
+                            <li><a href="/courier/my-shipments/return">Return Deliveries</a></li> --}}
 
                         </ul>
                     </li>

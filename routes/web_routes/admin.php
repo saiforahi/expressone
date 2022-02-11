@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\BasicInformationController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\HoldShipmentController;
 use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\PaymentController;
 /*
 |--------------------------------------------------------------------------
 | Admin Route
@@ -68,6 +69,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('courier-delete/{id}', [DriverController::class,'courierDelete'])->name('courierDelete');
     Route::match(['get', 'post'], 'add-edit-courier/{id?}', [DriverController::class, 'addEditCourier'])->name('addEditCourier');
     Route::get('courier-shipments/{id}', [DriverController::class,'assigned_shipments'])->name('admin-driverShipments');
+    //payments
+    Route::get('/payments-list', [PaymentController::class,'show_all_payments'])->name('allPayments');
     //Shipping List
     Route::get('/shipping-list', [ShipmentController::class,'index'])->name('AdminShipment.index');
     Route::get('/shipping-list/more/{id}/{status}/{logistic_statuses}', [ShipmentController::class,'show'])->name('AdminShipmentMore');

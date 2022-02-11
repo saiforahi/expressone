@@ -24,7 +24,7 @@
             success: function(data){
                 $('.tbl'+shipment_id).remove();
                 $(".part2").html(data)
-                // $(".part2").load('/admin/return-shipment-rows/<?php echo $type;?>');
+                $(".part2").load('/admin/return-shipment-rows/<?php echo $type;?>');
             },error: function (request, error) {
                 alert(" Can't do because: " + error);
             },

@@ -78,6 +78,8 @@
                             <li><a href="{{ route('hold-shipments', 'partial') }}">Partially delivered</a></li> --}}
                         </ul>
                     </li>
+                    <li><a href="{{ route('allPayments') }}"><i class="fa mdi mdi-cash"></i>Payments</a>
+                    </li>
                     <li><a href="{{ route('allCourier') }}"><i class="fa mdi mdi-truck-fast"></i>Couriers</a>
                     </li>
 

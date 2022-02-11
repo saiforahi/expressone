@@ -77,8 +77,8 @@ class ShipmentController extends Controller
                 $shipmentPmnt->tracking_code  = uniqid();
                 $shipmentPmnt->invoice_no  = rand(2222, 222222);
                 $shipmentPmnt->cod_amount  = $shipment->amount;
-                $shipmentPmnt->delivery_charge  = $shipment->delivery_charge;
-                $shipmentPmnt->weight_charge  = $shipment->weight_charge;
+                $shipmentPmnt->delivery_charge  = $request->delivery_charge;
+                $shipmentPmnt->weight_charge  = $request->weight_charge;
                 $shipmentPmnt->save();
                 event(new ShipmentMovementEvent($shipment,LogisticStep::first(),Auth::guard('user')->user()));
             }
