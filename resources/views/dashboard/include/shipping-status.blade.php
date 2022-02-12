@@ -31,12 +31,14 @@
         <span class="text-warning">On Hold</span>
     @elseif($logistic_status=='14' || $logistic_status=='15' || $logistic_status=='16' || $logistic_status=='17' || $logistic_status=='18')
         <span class="text-warning">Returned</span>
-    @elseif($logistic_status=='19')
+        @elseif($logistic_status=='19')
+        <span class="text-warning">Courier assigned to return</span>
+    @elseif($logistic_status=='20')
         <span class="text-warning">Handed over to merchant</span>
         @auth('user')
         <button class="btn btn-primary btn-sm" type="button" onclick="mark_received({{$shipment_id}})">Receive</button>
         @endauth
-    @elseif($logistic_status=='20')
+    @elseif($logistic_status=='21')
         <span class="text-warning">Received Shipment Back</span>
     @else
         <span class="text-warning">Not labeled</span>

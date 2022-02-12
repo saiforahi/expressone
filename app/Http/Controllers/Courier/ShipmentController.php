@@ -51,7 +51,7 @@ class ShipmentController extends Controller
     }
     public function my_shipments($type){
         if ($type == 'return') {
-            $shipments = CourierShipment::latest()->where(['courier_id' => Auth::guard('courier')->user()->id, 'type'=>'delivery'])->join('shipments','shipments.id','courier_shipment.shipment_id')->where('shipments.logistic_status',13)->get(['courier_shipment.*']);
+            $shipments = CourierShipment::latest()->where(['courier_id' => Auth::guard('courier')->user()->id, 'type'=>'return'])->join('shipments','shipments.id','courier_shipment.shipment_id')->where('shipments.logistic_status',LogisticStep::where('slug','courier-assigned-to-return')->first()->id)->get(['courier_shipment.*']);
         }
         elseif($type=='hold'){
             $shipments = CourierShipment::latest()->where(['courier_id' => Auth::guard('courier')->user()->id, 'type'=>'delivery'])->join('shipments','shipments.id','courier_shipment.shipment_id')->where('shipments.logistic_status',12)->get(['courier_shipment.*']);
@@ -180,6 +180,21 @@ class ShipmentController extends Controller
                     ]);
                     event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','returned-by-recipient')->first(),Auth::guard('courier')->user()));
                     break;
+
+                case 'return-to-merchant':
+                    $shipment->logistic_status = LogisticStep::where('slug','returned-handover-to-merchant')->first()->id;
+                    $shipment->save();
+                    CourierShipment::where('id',$req->id)->update(['status'=>'delivered']);
+                    
+                    ShipmentOTP::create([
+                        'shipment_id'=>$shipment->id,
+                        'courier_id'=> auth()->guard('courier')->user()->id,
+                        'otp'=>'1234',
+                        'sent_to_phone_number'=>$shipment->merchant->phone,
+                        'sent_to'=>'merchant'
+                    ]);
+                    event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','returned-handover-to-merchant')->first(),Auth::guard('courier')->user()));
+                    break;
             }
             return back()->with('message', 'Your report has been successfully submited!');
             // CourierShipment::where
@@ -302,6 +317,11 @@ class ShipmentController extends Controller
                     $shipment->logistic_status = LogisticStep::where('slug','delivery-confirmed')->first()->id;
                     $shipment->save();
                     event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','delivery-confirmed')->first(),Auth::guard('courier')->user()));
+                }
+                else if($shipment->logistic_step->slug=='returned-handover-to-merchant'){
+                    $shipment->logistic_status = LogisticStep::where('slug','received-shipment-back')->first()->id;
+                    $shipment->save();
+                    event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','received-shipment-back')->first(),Auth::guard('courier')->user()));
                 }
                 
                 return back()->with('message', 'The Shipment OTP has been confirmed successfully!');

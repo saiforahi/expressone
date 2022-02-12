@@ -123,7 +123,8 @@ class CSVController extends Controller
                 $shipmentPmnt->invoice_no  = $invoice_no;
                 // $shipmentPmnt->admin_id  = Auth::guard('user')->user()->id;
                 $shipmentPmnt->cod_amount  = $insert->amount;
-                $shipmentPmnt->delivery_charge  = $insert->shipping_charge_id;
+                $shipmentPmnt->delivery_charge  = $request->delivery_charge[$key];
+                $shipmentPmnt->weight_charge  = $request->weight_charge[$key];
                 $shipmentPmnt->save();
                 event(new ShipmentMovementEvent($insert,LogisticStep::first(),Auth::guard('user')->user()));
             }

@@ -34,6 +34,7 @@ class ShipmentController extends Controller
             if($shipment->save()){
                 event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','received-shipment-back')->first(),Auth::guard('user')->user()));
             }
+            return response()->json(['success'=>true,'message'=>'Shipment received!'],200);
 
         }
         catch(Exception $e){
@@ -59,7 +60,7 @@ class ShipmentController extends Controller
             $shipment->recipient = $jsonData;
             $shipment->tracking_code = uniqid();
             $shipment->invoice_id = rand(1000, 100000);
-            $shipment->shipping_charge_id = $request->shipping_charge_id;
+            $shipment->service_type = $request->service_type;
             $shipment->pickup_location_id = $request->pickup_location_id;
             $shipment->delivery_location_id = $request->delivery_location_id;
             $shipment->weight = $request->weight;
@@ -107,15 +108,22 @@ class ShipmentController extends Controller
             $shipment->recipient = $jsonData;
             $shipment->tracking_code = uniqid();
             $shipment->invoice_id = rand(1000, 100000);
-            $shipment->shipping_charge_id = $request->shipping_charge_id;
+            $shipment->service_type = $request->service_type;
             $shipment->pickup_location_id = $request->pickup_location_id;
+            $shipment->delivery_location_id = $request->delivery_location_id;
             $shipment->weight = $request->weight;
             $shipment->amount = $request->amount;
             $shipment->note = $request->note;
             $shipment->merchant_id = Auth::guard('user')->user()->id;
             $shipment->logistic_status = LogisticStep::first()->id; //Setting logistic status to approval from unit/super admin
             $shipment->added_by()->associate(Auth::guard('user')->user());
-            $shipment->update();
+            // $shipment->update();
+            if($shipment->update()){
+                ShipmentPayment::where('shipment_id',$shipment->id)->update([
+                    'delivery_charge'=>$request->delivery_charge,
+                    'weight_charge'=>$request->weight_charge
+                ]);
+            }
             return redirect()->back()->with('success', 'Shipment has been saved successfully');
         } catch (\Throwable $th) {
             //throw $th;

@@ -170,10 +170,10 @@ class HoldShipmentController extends Controller
     public function move_back2return_shipment(Shipment $return_shipment,$type)
     {
         // dd($return_shipment);
-        ShipmentMovement::where('shipment_id',$return_shipment->id)->whereIn('logistic_step_id',[9,15])->delete();
-
+        // ShipmentMovement::where('shipment_id',$return_shipment->id)->whereIn('logistic_step_id',[9,15])->delete();
         Shipment::where(['id'=>$return_shipment->id])->update(['logistic_status'=>LogisticStep::where('slug','delivery-unit-received')->first()->id]);
         CourierShipment::where(['shipment_id'=>$return_shipment->id,'type'=>'delivery'])->delete();
+        event(new ShipmentMovementEvent($return_shipment,LogisticStep::where('slug','delivery-unit-received')->first(),auth()->guard('admin')->user()));
     }
     function return_sorting(Unit $hub){
         $shipments=Shipment::where('logistic_status',LogisticStep::where('slug','returned-sorted')->first()->id)->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->get(['shipments.*']);
@@ -367,11 +367,11 @@ class HoldShipmentController extends Controller
 
 
     function merchant_handover(){
-        $merchants = Shipment::where('logistic_status',LogisticStep::where('slug','returned-in-transit')->first()->id)->cousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->select('shipments.merchant_id')
+        $statuses=LogisticStep::where('slug','returned-in-transit')->orWhere('slug','returned-received')->orWhere('slug','returned-handover-to-merchant')->orWhere('slug','courier-assigned-to-return')->orWhere('slug','returned-handover-to-merchan')->orWhere('slug','received-shipment-back')->pluck('id')->toArray();
+        $merchants = Shipment::whereIn('logistic_status',$statuses)->cousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->select('shipments.merchant_id')
         ->groupBy('shipments.merchant_id')->pluck('shipments.merchant_id')->toArray();
         $users = User::whereIn('id',$merchants)->get();
 
-        $statuses=LogisticStep::where('slug','returned-in-transit')->orWhere('slug','returned-received')->orWhere('slug','returned-handover-to-merchant')->pluck('id')->toArray();
         $shipments=Shipment::whereIn('logistic_status',$statuses)->cousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->get(['shipments.*']);
         // dd($user);
         return view('admin.shipment.hold.merchant-handover-new',compact('users','shipments'));

@@ -77,6 +77,12 @@
                                         name="delivery_charge[]" id="delivery_charge{{ $key }}"
                                         value="{{ $line['delivery_charge'] }}">
                                 </div>
+                                <div class="col cod_target text-left">
+                                    <label for="parcel_value">Weight Charge</label>
+                                    <input type="number" class="form-control" data-key="{{ $key }}"
+                                        name="weight_charge[]" id="weight_charge{{ $key }}"
+                                        value="{{ $line['weight_charge'] }}">
+                                </div>
                                 
                                 <div class="col cod_target text-left">
                                     <label for="weight_charge">Weight (kg)</label>

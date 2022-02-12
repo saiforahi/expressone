@@ -32,7 +32,7 @@
                             <form action="/track-shipment" method="get" id="trackForm">@csrf
                                 <div class="col-md-7 col-sm-7">
                                     <div class="form-group">
-                                        <input type="text" placeholder="Enter your product ID" name="tracking_code" required="" class="form-control box-shadow">
+                                        <input type="text" value="{{$code?$code:''}}" placeholder="Enter your product ID" name="tracking_code" required="" class="form-control box-shadow">
                                     </div>
                                 </div>
                                 <div class="col-md-5 col-sm-5">
@@ -51,11 +51,12 @@
 
 @endsection
 @push('script')
-@if(request()->code)
+@if($code != null)
     <script>
         $('.get-tracking').html('Processing...');
+        alert('rregr')
         $.ajax({
-            type: "get", url: '/track-shipment',data: {tracking_code:<?php echo request()->code;?>}, 
+            type: "get", url: '/track-shipment',data: {tracking_code:<?php echo $code;?>}, 
             success: function(data){
                 $('.get-tracking').html(data);
             }

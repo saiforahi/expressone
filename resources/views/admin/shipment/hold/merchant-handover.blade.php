@@ -45,13 +45,13 @@
                                     Area/Location: {{$user->unit->name}}
                                     </th>
                                     <th class="text-right">
-                                        {{-- <a href="/admin/view-merchant-handover/{{$user->id}}"
-                                            class="btn btn-success btn-sm"> <i class="fa fa-search"></i> View</a> --}}
-                                            <a href="/admin/handover-to-merchant/{{$user->id}}"
-                                                class="btn btn-success btn-sm"> <i class="fa fa-exchange"></i> Handover</a>
-                                        </th>
+                                    {{-- <a href="/admin/view-merchant-handover/{{$user->id}}"
+                                        class="btn btn-success btn-sm"> <i class="fa fa-search"></i> View</a> --}}
+                                        <a href="/admin/handover-to-merchant/{{$user->id}}"
+                                            class="btn btn-success btn-sm"> <i class="fa fa-exchange"></i> Handover</a>
+                                    </th>
                                 </tr>
-
+                                
                             @endforeach
                             </tbody>
                         </table>

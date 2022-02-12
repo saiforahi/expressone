@@ -81,11 +81,10 @@
                         </div>
                         <div class="col-md-4 text-left">
                             <label>Shipping Type</label> <span class="text-danger">*</span>
-                            <select class="form-control" name="shipping_charge_id">
+                            <select class="form-control" name="service_type">
                                 <option>Select type</option>
-                                @foreach ($shippingCharges as $charge)
-                                <option value="{{ $charge->id }}">{{ $charge->consignment_type }}</option>
-                                @endforeach
+                                <option value="priority" @if(old('service_type') == 'priority') selected @endif>Priority</option>
+                                <option value="express" @if(old('service_type') == 'express') selected @endif>Express</option>
                             </select>
                         </div>
                         <div class="col-md-4 text-left">

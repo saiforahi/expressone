@@ -71,7 +71,7 @@
                             <li><a href="{{ route('hold-shipments', 'return') }}">Return-parcels</a></li>
 
                             <li><a href="{{ route('return-dispatch') }}">Dispatch</a></li>
-
+                            {{-- <li><a href="{{ route('merchant-handover') }}">Return Handover</a></li> --}}
                             <li><a href="{{ route('merchant-handover') }}">Merchant Handover</a></li>
                             {{-- <li><a href="{{ route('receive-from-hub') }}">Receive From Hub</a></li>
 

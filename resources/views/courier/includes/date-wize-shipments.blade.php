@@ -26,16 +26,13 @@
                     {{ $courierShipment->admin->last_name }}
                 </td>
                 <td>
-                    @if ($courierShipment->shipment->amount == 0)
-                    Pay by merchant ({{ $courierShipment->shipment->amount }})
-                    @else
-                    Pay by customer ({{ $courierShipment->shipment->amount  }})
-                    @endif
+                    {{ $courierShipment->shipment->amount }}
 
                 </td>
                 <td> {{ $courierShipment->shipment->pickup_location->name }} </td>
                 <td>
-                    @include('dashboard.include.shipping-status',['status'=>$courierShipment->shipment->status,'shipping_status'=>$courierShipment->shipment->shipping_status])
+                    {{ $courierShipment->status }}
+                    {{-- @include('dashboard.include.shipping-status',['status'=>$courierShipment->shipment->status,'logistic_status'=>$courierShipment->shipment->logistic_status]) --}}
                 </td>
             </tr>
         @endforeach

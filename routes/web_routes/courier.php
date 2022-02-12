@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix'
     Route::get('shipment-details/{shipment}', [ShipmentController::class,'shipment_info'])->name('shipment-details');
 
     Route::post('shipment-delivery', [ShipmentController::class,'shipment_delivery_report'])->name('shipment-delivery');
+    Route::post('shipment-return-delivery', [ShipmentController::class,'shipment_return_delivery_report'])->name('shipment-return-delivery');
 
     Route::get('return-agent-dispatch', [ShipmentController::class,'return_agent_dispatch'])->name('return-box-for-delivery');
 

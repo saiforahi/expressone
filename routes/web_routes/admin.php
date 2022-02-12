@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\HoldShipmentController;
 use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\SliderController;
+use App\Http\Controllers\Admin\AboutController;
 /*
 |--------------------------------------------------------------------------
 | Admin Route
@@ -64,6 +66,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/delete-shipping-price/{shipping_price}', 'ShippingPriceController@destroy')->name('delete-shipping-price');
     Route::get('/show-shipping-price/{shipping_price}', 'ShippingPriceController@show')->name('show-shipping-price');
     Route::post('/assign-courier-for-delivery', [ShipmentController::class,'save_courier_shipment_for_delivery'])->name('assign-courier-for-delivery');
+    Route::post('/assign-courier-for-return', [ShipmentController::class,'save_courier_shipment_for_return'])->name('assign-courier-for-return');
     //Admin Courier route
     Route::get('courier', [DriverController::class,'index'])->name('allCourier');
     Route::post('courier-delete/{id}', [DriverController::class,'courierDelete'])->name('courierDelete');
@@ -237,20 +240,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('role-assign', [AdminController::class,'save_role_assign'])->name('save-role-assign');
     Route::get('get-employee-roles/{admin}', [AdminController::class,'employee_roles'])->name('get-roles');
 
-    Route::get('/sliders', 'SliderController@index')->name('adminSlider');
-    Route::get('/sliders-show', 'SliderController@sliders')->name('sliders');
-    Route::post('/save-slider', 'SliderController@store')->name('save-slider');
-    Route::post('/update-slider', 'SliderController@update')->name('update-slider');
-    Route::get('/slider-show/{slider}', 'SliderController@show')->name('show-slider');
+    Route::get('/sliders', [SliderController::class,'index'])->name('adminSlider');
+    Route::get('/sliders-show', [SliderController::class,'sliders'])->name('sliders');
+    Route::post('/save-slider', [SliderController::class,'store'])->name('save-slider');
+    Route::post('/update-slider', [SliderController::class,'update'])->name('update-slider');
+    Route::get('/slider-show/{slider}', [SliderController::class,'show'])->name('show-slider');
 
-    Route::get('/about-us', 'AboutController@index')->name('adminAbout');
-    Route::get('/mission', 'AboutController@mission')->name('adminMission');
-    Route::get('/vision', 'AboutController@vision')->name('adminVision');
-    Route::get('/promise', 'AboutController@promise')->name('adminPromise');
-    Route::get('/history', 'AboutController@history')->name('adminHistory');
-    Route::get('/team', 'AboutController@team')->name('adminTeam');
-    Route::get('/client-reviews', 'ClientReviewController@index')->name('adminClientReview');
-    Route::get('/review-posts', 'ClientReviewController@ajax_get')->name('review-posts');
+    Route::get('/about-us', [AboutController::class,'index'])->name('adminAbout');
+    Route::get('/mission', [AboutController::class,'mission'])->name('adminMission');
+    Route::get('/vision', [AboutController::class,'vision'])->name('adminVision');
+    Route::get('/promise', [AboutController::class,'promise'])->name('adminPromise');
+    Route::get('/history', [AboutController::class,'history'])->name('adminHistory');
+    Route::get('/team', [AboutController::class,'team'])->name('adminTeam');
+    Route::get('/client-reviews', [ClientReviewController::class,'index'])->name('adminClientReview');
+    Route::get('/review-posts', [ClientReviewController::class,'ajax_get'])->name('review-posts');
 
     Route::post('/save-review', 'ClientReviewController@store')->name('save-review');
     Route::post('/update-review', 'ClientReviewController@update')->name('update-review');
@@ -292,7 +295,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/update-history-post', 'AboutController@updateHistory')->name('update-history-post');
     Route::post('/update-team-post', 'AboutController@updateTeam')->name('update-team-post');
 
-    Route::get('/delete-about-post/{about}', 'AboutController@destroy')->name('delete-about-post');
+    Route::get('/delete-about-post/{about}', [AboutController::class,'destroy'])->name('delete-about-post');
     Route::get('/delete-mission-post/{about}', 'AboutController@destroyMission')->name('delete-mission-post');
     Route::get('/delete-vision-post/{about}', 'AboutController@destroyVision')->name('delete-vision-post');
     Route::get('/delete-promise-post/{about}', 'AboutController@destroyPromise')->name('delete-promise-post');

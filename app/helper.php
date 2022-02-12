@@ -228,6 +228,13 @@ if (!function_exists('is_courier_assigned_for_delivery')) {
         return CourierShipment::where(['shipment_id'=>$shipment->id,'type'=>'delivery'])->exists();
     }
 }
+if (!function_exists('is_courier_assigned_for_return_delivery')) {
+    function is_courier_assigned_for_return_delivery($shipment)
+    {
+        // dd($shipment);
+        return CourierShipment::where(['shipment_id'=>$shipment->id,'type'=>'return'])->exists();
+    }
+}
 
 if (!function_exists('merchant_wise_reurn_in_transit_shipments_for_logged_in_admin')) {
     function merchant_wise_reurn_in_transit_shipments_for_logged_in_admin($user,$logistic_statuses)
@@ -253,7 +260,7 @@ if (!function_exists('merchant_wise_total_shipments_for_logged_in_courier_to_pic
 if (!function_exists('delivery_units')) {
     function delivery_units()
     {
-        $units=Shipment::where('logistic_status',LogisticStep::where('slug','unit-received')->first()->id)->deliverycousins()->get(['units.*']);
+        $units=Shipment::where('logistic_status',LogisticStep::where('slug','unit-received')->first()->id)->deliverycousins()->select('units.*')->distinct()->get();
         return $units;
     }
 }

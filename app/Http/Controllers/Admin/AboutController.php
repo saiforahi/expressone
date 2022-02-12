@@ -4,12 +4,12 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\About;
-use App\History;
-use App\Mission;
-use App\Promise;
-use App\Team;
-use App\Vision;
+use App\Models\About;
+use App\Models\History;
+use App\Models\Mission;
+use App\Models\Promise;
+use App\Models\Team;
+use App\Models\Vision;
 use Session;
 use DataTables;
 use Validator;

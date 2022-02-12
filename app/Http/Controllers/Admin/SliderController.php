@@ -4,7 +4,7 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Slider;
+use App\Models\Slider;
 use Session;
 use DataTables;
 use Validator;

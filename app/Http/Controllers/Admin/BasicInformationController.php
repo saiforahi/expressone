@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\CmsPage;
-use App\BasicInformation;
-use App\Mail_configuration;
+use App\Models\CmsPage;
+use App\Models\BasicInformation;
+use App\Models\Mail_configuration;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

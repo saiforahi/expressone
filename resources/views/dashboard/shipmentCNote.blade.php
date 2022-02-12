@@ -39,47 +39,47 @@
                                 <div class="email">{{ $shipment->phone }}</div>
                             </div>
                             <div class="col invoice-details">
-                                <h4 class="invoice-id">Traching no: {{ $shipment->tracking_code }}</h4>
+                                <h4 class="invoice-id">Tracking no: {{ $shipment->tracking_code }}</h4>
                                 <div class="date font-weight-bold">Date of CN Print: {{ date('F j, Y H:i:s') }}</div>
                             </div>
                         </div>
                         <table border="0" cellspacing="0" cellpadding="0" class="table table-sm">
                             <thead>
                                 <tr>
-                                    <th>Customer name</th>
-                                    <th class="text-right">Mobile no</th>
-                                    <th class="text-right">Status</th>
-                                    {{-- <th class="text-right">COD Amount</th> --}}
+                                    <th>Shipment info</th>
+                                    <th class="text-right">COD Amount</th>
+                                    <th class="text-right">Delivery Charge</th>
+                                    <th class="text-right">Weight Charge</th>
                                     <th class="text-right">Cashpaid</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach(\App\Models\MerchantPayment::where('shipment_id',$shipment->id)->get() as $payment)
                                 <tr>
-                                    <td>{{$shipment->recipient['name']}}</td>
-                                    <td class="text-right">{{$shipment->recipient['phone']}}</td>
-                                    <td class="text-right">{{$shipment->logistic_step->slug}}</td>
-                                    {{-- <td class="text-right">{{$shipment->amount}}</td> --}}
+                                    <td>Invoice ID: {{$shipment->invoice_id}}</td>
+                                    <td class="text-right">{{$shipment->amount}}</td>
+                                    <td class="text-right">{{$shipment->payment_detail->delivery_charge}}</td>
+                                    <td class="text-right">{{$shipment->payment_detail->weight_charge}}</td>
                                     <td class="text-right">{{$payment->amount}}</td>
                                 </tr>
                                 @endforeach
                                 
                             </tbody>
                             <tfoot>
-                                <tr>
+                                {{-- <tr>
                                     <td colspan="2"></td>
                                     <td colspan="2">Sub Total</td>
-                                    <td>5,200.00</td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2"></td>
                                     <td colspan="2">XYZ</td>
-                                    <td>1,300.00</td>
-                                </tr>
+                                    <td></td>
+                                </tr> --}}
                                 <tr>
                                     <td colspan="2"></td>
                                     <td colspan="2">Total Cash Paid</td>
-                                    <td>6,500.00</td>
+                                    <td>{{\App\Models\MerchantPayment::where('shipment_id',$shipment->id)->sum('merchant_payments.amount')}} tk</td>
                                 </tr>
                             </tfoot>
                         </table>

@@ -70,9 +70,9 @@ class DashboardController extends Controller
             $shipments = CourierShipment::where('type', '=', 'delivery')->where(['courier_id' => Auth::guard('courier')->user()->id])
                 ->whereBetween('created_at', [$dateFrom . " 00:00:00", $dateTo . " 23:59:59"])
                 ->orderBy('id', 'DESC')->get();
-            dd($shipments);
-        } else {
-            $shipments = CourierShipment::with('shipment')->with('admin')->where(['courier_id' => Auth::guard('courier')->user()->id])
+           
+        } elseif ($type == 'pickup') {
+            $shipments = CourierShipment::where('type', '=', 'pickup')->with('shipment')->where(['courier_id' => Auth::guard('courier')->user()->id])
                 ->whereBetween('created_at', [$dateFrom . " 00:00:00", $dateTo . " 23:59:59"])
                 ->orderBy('id', 'DESC')->get();
             //dd($shipments);
@@ -188,7 +188,7 @@ class DashboardController extends Controller
 
     public function otp_shipments()
     {
-        $statuses=LogisticStep::where('slug','returned-by-recipient')->orWhere('slug','delivered')->pluck('id')->toArray();
+        $statuses=LogisticStep::where('slug','returned-by-recipient')->orWhere('slug','delivered')->orWhere('slug','returned-handover-to-merchant')->pluck('id')->toArray();
         return DataTables::of(Shipment::whereIn('logistic_status', $statuses)
             // ->where('status', '!=', 'assigned')
             ->orderBy('id', 'DESC'))
@@ -213,6 +213,7 @@ class DashboardController extends Controller
                 } else {
                     $data = 'Pay by customer (' . $shipment->payment_detail->cod_amount . ')';
                 }
+                $data = $shipment->payment_detail->cod_amount;
                 return $data;
             })
             ->addColumn('area', function ($shipment) {

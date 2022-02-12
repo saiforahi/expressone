@@ -17,7 +17,7 @@
                             <table id="datatable-buttons" class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>
                                 <tr class="bg-dark">
-                                   <th>#</th><th>Hub info</th>  <th>Parcel/s</th><th>Action</th>
+                                   <th>#</th><th>Unit info</th>  <th>Shipment/s</th><th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -25,7 +25,7 @@
                                 <tr>
                                 	<td>{{$key+1}}</td>
                                 	<td>{{$hub->name}}</td>
-                                	<td>Count: {{2}} </td>
+                                	<td>Count: {{unit_wise_return_shipment_count($hub->id,array('returned-in-transit'))}} </td>
                                 	<td class="text-right"><a class="btn btn-sm btn-primary" href="/admin/return-dispatch/view/{{$hub->id}}"><i class="fa fa-search"></i> More Details</a></td>
                                 </tr>
                                 @endforeach

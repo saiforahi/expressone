@@ -303,6 +303,29 @@ class ShipmentController extends Controller
         Session::flash('message', 'Shipments are handover to Courier');
         return back();
     }
+    public function save_courier_shipment_for_return(Request $request)
+    {
+        // dd($request->all());
+        
+        if ($request->shipment_id) {
+            $check = CourierShipment::where(['courier_id' => $request->courier_id, 'shipment_id' => $request->shipment_id,'type'=>'return'])->count();
+            if ($check > 0) {
+                Session::flash('message', 'Data already exist!!');
+                return back();
+            }
+            CourierShipment::create([
+                'courier_id' => $request->courier_id, 'shipment_id' => $request->shipment_id,
+                'admin_id' => Auth::guard('admin')->user()->id, 'note' => $request->note,'type'=>'return'
+            ]);
+            //dd('ok');
+            Shipment::where('id', $request->shipment_id)->update(['logistic_status' => LogisticStep::where('slug','courier-assigned-to-return')->first()->id]);
+            event(new ShipmentMovementEvent(Shipment::find($request->shipment_id), LogisticStep::where('slug','courier-assigned-to-return')->first(),Auth::guard('admin')->user()));
+        } else {
+            
+        }
+        Session::flash('message', 'Courier is assigned for return delivery');
+        return back();
+    }
     public function save_courier_shipment_for_delivery(Request $request)
     {
         // dd($request->all());
@@ -357,6 +380,8 @@ class ShipmentController extends Controller
     public function destroy($id)
     {
         Shipment::where('id', $id)->delete();
+        CourierShipment::where('shipment_id',$id)->delete();
+        ShipmentPayment::where('shipment_id',$id)->delete();
         Session::flash('message', 'Shipment has been removed successfully!');
         return back();
     }
@@ -1063,7 +1088,7 @@ class ShipmentController extends Controller
         // $outForDelivery = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'out-for-delivery'])->first();
         // $assignDriver = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'status'=>'assign-driver-for-delivery'])->first();
         // $deliverReport = \App\Models\Shipment_movement::where(['shipment_id'=>$shipment->id,'user_type'=>'driver','report_type'=>'delivery-report'])->first();
-        $audit_logs = \App\Models\ShipmentMovement::where('shipment_id', $shipment->id)->orderBy('logistic_step_id','ASC')->get();
+        $audit_logs = \App\Models\ShipmentMovement::where('shipment_id', $shipment->id)->orderBy('updated_at','ASC')->get();
 
 
         return view('admin.shipment.load.delivery.audit', compact('shipment', 'audit_logs'));

@@ -44,10 +44,11 @@ class CreateLogisticStepsTable extends Migration
         $step16=LogisticStep::create(['step_name'=>'Shipment returned sorted','slug'=>'returned-sorted']);
         $step17=LogisticStep::create(['step_name'=>'Shipment returned in transit','slug'=>'returned-in-transit']);
         $step18=LogisticStep::create(['step_name'=>'Shipment returned received by pickup unit admin','slug'=>'returned-received']);
-        $step19=LogisticStep::create(['step_name'=>'Shipment handed over to merchant','slug'=>'returned-handover-to-merchant']);
-        $step20=LogisticStep::create(['step_name'=>'Returned Shipment received by marchent','slug'=>'received-shipment-back']);
-        $step21=LogisticStep::create(['step_name'=>'Patially delivered','slug'=>'partially-delivered']);
-        $step22=LogisticStep::create(['step_name'=>'Cancelled','slug'=>'cancelled']);
+        $step19=LogisticStep::create(['step_name'=>'Courier assigned for returning shipment to merchant','slug'=>'courier-assigned-to-return']);
+        $step20=LogisticStep::create(['step_name'=>'Shipment handed over to merchant','slug'=>'returned-handover-to-merchant']);
+        $step21=LogisticStep::create(['step_name'=>'Returned Shipment received by marchent','slug'=>'received-shipment-back']);
+        $step22=LogisticStep::create(['step_name'=>'Patially delivered','slug'=>'partially-delivered']);
+        $step23=LogisticStep::create(['step_name'=>'Cancelled','slug'=>'cancelled']);
         //step1
         $step1->next=$step2->id;
         //step2

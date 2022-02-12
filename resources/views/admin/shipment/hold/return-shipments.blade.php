@@ -23,7 +23,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="x_content part1"> </div>
+                        <div class="x_content part1"></div>
                     </div> 
                 </div>
                 <div class="col-md-6">

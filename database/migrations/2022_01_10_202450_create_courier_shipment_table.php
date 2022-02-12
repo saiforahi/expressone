@@ -19,7 +19,7 @@ class CreateCourierShipmentTable extends Migration
             $table->unsignedBigInteger('shipment_id');
             $table->unsignedBigInteger('admin_id');
             $table->text('note')->nullable();
-            $table->enum('type',['delivery','pickup'])->nullable()->comment('Types of shipment assigned to courier');
+            $table->enum('type',['delivery','pickup','return'])->nullable()->comment('Types of shipment assigned to courier');
             $table->enum('status',['pending','delivered','partially-delivered','lost','received','cancelled','submitted_to_unit','hold','returned'])->default('pending');
             $table->foreign('courier_id')->references('id')->on('couriers');
             $table->foreign('shipment_id')->references('id')->on('shipments');

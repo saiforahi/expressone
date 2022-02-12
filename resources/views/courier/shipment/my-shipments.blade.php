@@ -34,7 +34,12 @@
                                         <td> @if($type=='cancelled')
                                             <a href="#" class="btn btn-xs btn-info"><i class="fa fa-undo"> </i> Undo Cancel</a> 
                                             @elseif($type == 'hold')
-                                            <a href="{{route('return-shipment',['shipment_id'=>$row->shipment_id])}}" class="btn btn-xs btn-success"><i class="fa fa-check"> </i>Return</a> @endif
+                                            <a href="{{route('return-shipment',['shipment_id'=>$row->shipment_id])}}" class="btn btn-xs btn-success"><i class="fa fa-check"> </i>Return</a>
+                                            @elseif($type == 'return')
+                                            <button class="btn btn-success btn-sm report"
+                                                    data-price="{{ $row->shipment->amount }}"
+                                                    data-id="{{ $row->id }}">Delivery Report</button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -48,7 +53,20 @@
         </div>
     </div>
 
-
+    <!-- Modal for reporting-->
+    <div class="modal fade" id="reportModal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Shipment Delivery Report</h4>
+                </div>
+                <div class="modal-body">
+                    @include('courier.shipment.includes.return-report-form')
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('style')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.css" rel="stylesheet"/>
@@ -79,6 +97,56 @@
     <script src="{{asset('vendors/jszip/dist/jszip.min.js')}}"></script>
     <script src="{{asset('vendors/pdfmake/build/pdfmake.min.js')}}"></script>
     <script src="{{asset('vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+    <script>
+        jQuery('[name=status]').change(function() {
+            if ($(this).prop('checked') && $(this).val() == 'partial') {
+                $('.pirceArea').slideDown();
+            } else $('.pirceArea').slideUp();
 
+            if ($(this).val() == 'hold' || $(this).val() == 'delivered') {
+                $('.otpArea').hide();
+                $('[name=otp]').prop('required', false);
+            } else {
+                $('.otpArea').show();
+                $('[name=otp]').prop('required', true);
+            }
+        });
+        $('.report').on('click', function() {
+            let id = $(this).data('id');
+            let price = $(this).data('price');
+            $('#reportModal').modal('show');
+            $('[name=id]').val(id);
+            $('[name=price]').val(price);
+            // alert(price);return false;
+            if (price == '0') {
+                $('.otpArea').show();
+                $('[name=otp]').prop('required', true);
+            } else {
+                $('[name=otp]').prop('required', false);
+                $('.otpArea').hide();
+            }
+        });
+
+        $("#reportSubmitT").submit(function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            $('[type=submit]').html('Working...');
+            alert(form.serialize())
+            // $.ajax({
+            //     type: "POST",
+            //     url: url,
+            //     data: form.serialize(),
+            //     success: function(data) {
+            //         $('[type=submit]').html('<i class="fa fa-send"></i> Submit Report');
+            //         $('.result').html(data);
+            //         if (data == 'success') {
+            //             alert("Your Report has been saved successfully!");
+            //             location.reload();
+            //         }
+            //     }
+            // });
+        });
+    </script>
 
 @endpush

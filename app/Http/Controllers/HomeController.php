@@ -68,9 +68,10 @@ class HomeController extends Controller
         return view('pricing');
     }
 
-    public function tracking()
+    public function tracking(Request $request)
     {
-        return view('tracking');
+        $code=$name = $request->query('code');
+        return view('tracking',compact('code'));
     }
     public function track_order(Request $request){
         // dd($request->all());

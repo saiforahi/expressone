@@ -16,7 +16,8 @@
                                     <th>Merchant Info</th>
                                     <th>Pickup Location</th>
                                     <th>Delivery Location</th>
-                                    <th>Action</th>
+                                    <th>Delivery Info</th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -42,21 +43,66 @@
                                     <th scope="row">
                                         <i class="fa fa-angle-right"></i> Location: {{$shipment->delivery_location->name}}
                                     </th>
-                                    <th class="text-right">
-                                        {{-- <a href="/admin/view-merchant-handover/{{$shipment->id}}"
-                                            class="btn btn-success btn-sm"> <i class="fa fa-search"></i> View</a> --}}
-                                            @if($shipment->logistic_step->slug=='returned-in-transit')
-                                            <a href="/admin/returned-received/{{$shipment->id}}"
-                                                class="btn btn-success btn-sm"> <i class="fa fa-exchange"></i> Receive</a>
-                                            @elseif($shipment->logistic_step->slug == 'returned-received')
-                                            <a href="/admin/handover-to-merchant/{{$shipment->id}}"
-                                                class="btn btn-success btn-sm"> <i class="fa fa-exchange"></i> Handover</a>
-                                            @elseif($shipment->logistic_step->slug == 'returned-handover-to-merchant')
-                                            Handed over to merchant
-                                            @endif
-                                        </th>
-                                </tr>
+                                    <th scope="row">
+                                        @if($shipment->logistic_step->slug == 'returned-received' && !is_courier_assigned_for_return_delivery($shipment))
+                                        <button type="button" class="btn btn-primary btn-xs assign" data-toggle="modal" data-target="#assignShipment" data-id="{{ $shipment->id }}">Assign Courier <i class="fa fa-truck"></i></button>
+                                        @else
+                                        Courier: {{is_courier_assigned_for_return_delivery($shipment)?\App\Models\CourierShipment::where(['shipment_id'=>$shipment->id,'type'=>'return'])->first()->courier->first_name:''}}
+                                        @endif
+                                    </th>
+                                    <th class="text-center">
+                                    {{-- <a href="/admin/view-merchant-handover/{{$shipment->id}}"
+                                        class="btn btn-success btn-sm"> <i class="fa fa-search"></i> View</a> --}}
+                                        @if($shipment->logistic_step->slug=='returned-in-transit')
+                                        <a href="/admin/returned-received/{{$shipment->id}}"
+                                            class="btn btn-success btn-sm"> <i class="fa fa-exchange"></i> Receive</a>
+                                       
+                                        {{-- <a href="/admin/handover-to-merchant/{{$shipment->id}}"
+                                            class="btn btn-success btn-sm"> <i class="fa fa-exchange"></i> Handover</a> --}}
+                                        @elseif($shipment->logistic_step->slug == 'returned-handover-to-merchant')
+                                        <span>Handed over to merchant</span>
+                                        @elseif($shipment->logistic_step->slug == 'received-shipment-back')
+                                        <span class="btn btn-success btn-sm">Received by merchant</span>
+                                        @endif
 
+                                        
+                                    </th>
+                                </tr>
+                                <div id="assignShipment" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close"
+                                                    data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">Assign shipments to a Courier</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form method="POST" action="{{route('assign-courier-for-return')}}">
+                                                    @csrf
+                                                    {{-- <input value="delivery" name="type" type="hidden"/> --}}
+                                                    
+                                                    <select class="form-control" name="courier_id" required="">
+                                                        <option value="">Choose Courier</option>
+                                                        <?php $couriers = \App\Models\Courier::latest()->get();?>
+                                                        @foreach ($couriers as $courier)
+                                                            <option value="{{ $courier->id }}">{{ $courier->first_name . ' ' . $courier->last_name }} ({{ $courier->phone }})
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <br>
+                                                    <textarea class="form-control" rows="5" placeholder="Type notes (if any)" name="note"></textarea>
+                                                    <input type="hidden" name="shipment_id"
+                                                        value="{{ $shipment->id }}" id="shipment_id"><br>
+                                                    <button type="submit" class="pull-right btn btn-info btn-sm"> <i
+                                                            class="fa fa-truck"></i>
+                                                        Assign to return shipment </button>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- Modal to assign to courier -->
                             @endforeach
                             </tbody>
                         </table>

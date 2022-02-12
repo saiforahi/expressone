@@ -28,7 +28,7 @@ class ShipmentMovementEventListener
     public function handle(ShipmentMovementEvent $event)
     {
         //
-        $move = ShipmentMovement::updateOrCreate(
+        $move = ShipmentMovement::create(
             ['shipment_id'=>$event->shipment->id, 'logistic_step_id'=> $event->logistic_step->id],['note'=>$event->note]
             // ['price' => 99, 'discounted' => 1]
         );

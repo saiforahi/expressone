@@ -174,6 +174,7 @@
 @endsection
 
 @push('style')
+    <link href="{{ asset('vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />  
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css" rel="stylesheet" />
     <link href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
     <style type="text/css">
@@ -188,6 +189,7 @@
     </style>
 @endpush
 @push('script')
+    <script src="{{ asset('vendors/sweetalert/sweetalert.js') }}"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
@@ -205,18 +207,26 @@
             $('#formSubmit_' + id).submit();
         }
         function mark_received(shipment_id){
-            $.ajax({
-                url: "{{ route('merchant.receive.shipment.back') }}",
-                type: 'post',
-                data: {
-                    _token: CSRF_TOKEN,
-                    shipment_id: shipment_id,
-                },
-                dataType: 'json',
-                success: function(data) {
-                    window.location.reload()
-                }
-            });
+            swal({
+                    title: "Confirmed?",
+                    text: "You will not be able to revert!",
+                    type: "warning",
+                    showCancelButton: true
+                },function(){
+                    $.ajax({
+                        url: "{{ route('merchant.receive.shipment.back') }}",
+                        type: 'post',
+                        data: {
+                            _token: CSRF_TOKEN,
+                            shipment_id: shipment_id,
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            window.location.reload()
+                        }
+                    });
+                })
+            
         }
     </script>
 @endpush
