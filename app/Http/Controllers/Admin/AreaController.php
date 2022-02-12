@@ -186,6 +186,7 @@ class AreaController extends Controller
             $insert = Location::find($request->id);
         }
         $insert->point_id = $request->point_id;
+        $insert->unit_id = $request->unit_id;
         $insert->name = $request->name;
         $insert->save();
 

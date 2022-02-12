@@ -1058,7 +1058,13 @@ class ShipmentController extends Controller
 
     function deliveryPaymentsForMerchant($shipment_ids)
     {
-        $shipments = Shipment::whereIn('id', explode(',', $shipment_ids))->whereIn('logistic_status',LogisticStep::where('slug','delivered')->orWhere('slug','delivery-confirmed')->pluck('id')->toArray())->get();   
+        $allshipments = Shipment::whereIn('id', explode(',', $shipment_ids))->whereIn('logistic_status',LogisticStep::where('slug','delivered')->orWhere('slug','delivery-confirmed')->pluck('id')->toArray())->get();   
+        $shipments=array();
+        foreach($allshipments as $item){
+            if(is_shipment_payable($item)){
+                array_push($shipments,$item);
+            }
+        }
         return view('admin.shipment.load.delivery.payment-delivery-form', compact('shipments'));
     }
 

@@ -274,12 +274,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/team', 'AboutController@saveTeam')->name('save-team');
     Route::post('/history', 'AboutController@saveHistory')->name('save-history');
 
-    Route::get('/about-posts', 'AboutController@about_posts')->name('about-posts');
-    Route::get('/mission-posts', 'AboutController@mission_posts')->name('mission-posts');
-    Route::get('/vision-posts', 'AboutController@vision_posts')->name('vision-posts');
-    Route::get('/promise-posts', 'AboutController@promise_posts')->name('promise-posts');
-    Route::get('/team-posts', 'AboutController@team_posts')->name('team-posts');
-    Route::get('/history-posts', 'AboutController@history_posts')->name('history-posts');
+    Route::get('/about-posts', [AboutController::class,'about_posts'])->name('about-posts');
+    Route::get('/mission-posts', [AboutController::class,'mission_posts'])->name('mission-posts');
+    Route::get('/vision-posts', [AboutController::class,'vision_posts'])->name('vision-posts');
+    Route::get('/promise-posts', [AboutController::class,'promise_posts'])->name('promise-posts');
+    Route::get('/team-posts', [AboutController::class,'team_posts'])->name('team-posts');
+    Route::get('/history-posts', [AboutController::class,'history_posts'])->name('history-posts');
 
     Route::get('/about-show/{about}', 'AboutController@show')->name('about-show');
     Route::get('/mission-show/{about}', 'AboutController@showMission')->name('mission-show');

@@ -6,7 +6,7 @@ use App\Models\Courier;
 use App\Models\CourierShipment;
 use App\Models\Shipment;
 use App\Models\Unit;
-
+use App\Models\MerchantPayment;
 use App\Models\User;
 use App\Models\Location;
 use App\Models\LogisticStep;
@@ -281,5 +281,25 @@ if (!function_exists('unit_wise_return_shipment_count')) {
             
         }
         return $shipments->count();
+    }
+}
+if (!function_exists('payable_amount')) {
+    function payable_amount(Shipment $shipment)
+    {
+        return $shipment->payment_detail->cod_amount-($shipment->payment_detail->delivery_charge+$shipment->payment_detail->weight_charge);
+    }
+}
+if (!function_exists('total_paid')) {
+    function total_paid(Shipment $shipment)
+    {
+        return MerchantPayment::where('shipment_id',$shipment->id)->sum('amount');
+    }
+}
+
+if (!function_exists('is_shipment_payable')) {
+    function is_shipment_payable(Shipment $shipment)
+    {
+        // dd(payable_amount($shipment));
+        return MerchantPayment::where('shipment_id',$shipment->id)->sum('amount') < payable_amount($shipment);
     }
 }

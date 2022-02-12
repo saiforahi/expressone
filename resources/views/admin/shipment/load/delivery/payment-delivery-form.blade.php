@@ -25,7 +25,7 @@
                 {{ $shipment->merchant->first_name . ' ' . $shipment->merchant->last_name }}
                 <br><small>{{ $shipment->pickup_location->name }}</small></label>
             <div class="col-sm-7">
-                <input type="text" class="form-control" name="amount[]" placeholder="Amount" required>
+                <input type="text" class="form-control" value="{{payable_amount($shipment)}}" name="amount[]" placeholder="Amount" required>
             </div>
         </div>
         <input type="hidden" name="shipment_ids[]" value="{{ $shipment->id }}">

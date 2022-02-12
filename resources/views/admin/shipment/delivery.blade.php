@@ -57,7 +57,11 @@
                                                 COD Amount: {{$shipment->amount}}<br>
                                                 Delivery Charge: {{$shipment->payment_detail->delivery_charge}}<br>
                                                 Weight Charge: {{$shipment->payment_detail->weight_charge}}<br>
-                                                
+                                                @if(payable_amount($shipment)>=0)
+                                                <strong>Payable by expressone {{abs(payable_amount($shipment))}}</strong>
+                                                @elseif(payable_amount($shipment) < 0)
+                                                <strong>Payable by merchant {{abs(payable_amount($shipment))}}</strong>
+                                                @endif
                                             </td>
                                             <td>
                                                 @if(!is_courier_assigned_for_delivery($shipment))

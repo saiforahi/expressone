@@ -18,6 +18,8 @@ use Intervention\Image\ImageManager;
 use Intervention\Image\Facades\Image;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
+
 
 class AdminController extends Controller
 {
@@ -101,6 +103,9 @@ class AdminController extends Controller
                 Unit::where('id',$unit)->update(['admin_id'=>$admin->id]);
             }
         }
+        $admin->assignRole(Role::where('name','unit-admin')->first()->id);
+        $admin->password = Hash::make($request->password);
+        $admin->save();
         // $admin->units()->attach($request->units);
         // $this->storeImage($admin);
         return response()->json(['success' => 'Admin hasn been created successfully.']);
