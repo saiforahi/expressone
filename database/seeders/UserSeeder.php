@@ -79,6 +79,9 @@ class UserSeeder extends Seeder
             'phone' => '01XXXXXXXXX',
             'employee_id' => '1',
             'password' => Hash::make('12345678'),
+            'password_str' => '12345678',
+            'unit_id'=>1,
+            'nid_no'=>'12345678923'
         ]);
     }
 }

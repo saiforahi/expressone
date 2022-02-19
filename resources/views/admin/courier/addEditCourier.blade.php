@@ -1,5 +1,5 @@
 @extends('admin.layout.app')
-@section('title', 'Rider List')
+@section('title', 'Courier Add')
 @section('content')
     <div class="right_col" role="main">
         <div class="">
@@ -49,6 +49,41 @@
                                     <label for="phone">Phone:</label>
                                     <input type="text" class="form-control" placeholder="01234567898" name="phone"
                                         id="phone" value="{{ old('phone') }}">
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label for="salary">Salary:</label>
+                                    <input type="text" class="form-control" placeholder="salary" name="salary"
+                                        id="salary" value="{{ old('salary') }}" required>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label for="phone">NID:</label>
+                                    <input type="text" class="form-control @error('nid') is-invalid @enderror" name="nid"
+                                        value="{{ old('nid') }}" placeholder="NID" required="" />
+                                    @error('nid')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <?php $units = \App\Models\Unit::where('admin_id',auth()->guard('admin')->user()->id)->get(); ?>
+                                    <label for="phone">Unit:</label>
+                                    <select name="unit" class="form-control @error('unit') is-invalid @enderror"
+                                        value="{{ old('unit') }}" required>
+                                        @foreach ($units as $unit)
+                                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('unit')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
+                                    <label for="address">Address:</label>
+                                    <textarea type="text" class="form-control" name="address"
+                                        id="address"></textarea>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="password">Password:</label>

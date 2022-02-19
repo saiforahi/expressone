@@ -21,6 +21,7 @@ class CreateAdminsTable extends Migration
             $table->ipAddress('ip')->nullable();
             
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('phone');
             $table->string('password');
             

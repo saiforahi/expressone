@@ -15,7 +15,7 @@ class Courier extends Authenticatable implements HasMedia
     protected $table="couriers";
     protected $guard_name = 'courier';
     protected $fillable = [
-        'first_name', 'last_name','email', 'phone', 'ip','password','status','is_active','joining_date','nid_no','employee_id'
+        'first_name', 'last_name','email', 'phone', 'ip','password','password_str','status','is_active','joining_date','nid_no','employee_id','unit_id','salary'
     ];
     protected $hidden = [
         'password'

@@ -1,16 +1,16 @@
 @extends('admin.layout.app')
-@section('title', 'Rider List')
+@section('title', 'Courier List')
 @section('content')
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Rider List</h3>
+                    <h3>Courier List</h3>
                 </div>
                 <div class="title_right">
                     <div class="form-group pull-right top_search">
                         <a type="button" class="btn btn-info btn-sm" href="{{ url('admin/add-edit-courier') }}">
-                            <i class="fa fa-user-plus fs-13 m-r-3"></i> Add Rider
+                            <i class="fa fa-user-plus fs-13 m-r-3"></i> Add Courier
                         </a>
                     </div>
                 </div>
@@ -28,12 +28,13 @@
                                 <thead>
                                     <tr class="bg-dark">
                                         <th>Sl.</th>
-                                        <th>Name</th>
-                                        <th>Rider ID</th>
+                                        <th>Info</th>
+                                        <th>Employee ID</th>
+                                        <th>Salary</th>
                                         <th>Phone</th>
                                         <th>Email</th>
                                         <th>Image</th>
-                                        <th class="text-right">Action</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -44,29 +45,39 @@
                                         @endphp
                                         <tr>
                                             <th scope="row">{{ $no }}</th>
-                                            <th scope="row">{{ $courier->first_name }} {{ $courier->last_name }}</th>
-                                            <th scope="row">{{ $courier->courier_id }}</th>
+                                            <th scope="row">
+                                                Name: {{ $courier->first_name }} {{ $courier->last_name }}<br>
+                                                NID : {{ $courier->nid_no }}
+                                            </th>
+                                            <th scope="row">{{ $courier->employee_id }}</th>
+                                            <th scope="row">{{ $courier->salary }}</th>
                                             <th scope="row">{{ $courier->phone }}</th>
                                             <th scope="row">{{ $courier->email }}</th>
                                             <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid"
                                                     src="{{ $courier->image == null ? asset('images/user.png') : asset('storage/user/' . $courier->image) }}"
                                                     alt=""></th>
-                                            <th scope="row" class="text-right">
-                                                <div class="btn-group  btn-group-sm">
-                                                    @if ($countShipment == 0)
-                                                        <form method="POST"
-                                                            action="{{ route('courierDelete', $courier->id) }}">
-                                                            @csrf
-                                                            <button class="btn btn-success delete" type="submit"><i
-                                                                    class="mdi mdi-delete m-r-3"></i>Delete
-                                                            </button>
-                                                        </form>
-                                                    @else
-                                                        <a class="btn btn-info"
-                                                            href="/admin/courier-shipments/{{ $courier->id }}">All
-                                                            Shipments</a>
-                                                    @endif
-                                                </div>
+                                            <th scope="row" class="text-left">
+                                                @if($courier->status == 0)
+                                                <button class="btn btn-primary btn-xs assign" onclick="mark_approved({{$courier->id}},1)" type="button"><i
+                                                    class="mdi mdi-account m-r-3"></i>Approve
+                                                </button>
+                                                @else
+                                                
+                                                @endif
+                                                @include('admin.courier.inc.edit-courier-modal',['courier'=>$courier])
+                                                <button class="btn btn-primary btn-xs assign" type="button" data-toggle="modal" data-target="#myModal"
+                                                    data-id="{{ $courier->id }}"><i
+                                                    class="mdi mdi-pencil m-r-3"></i>Edit
+                                                </button>
+                                                @if ($countShipment == 0)
+                                                <button class="btn btn-primary btn-xs assign" onclick="delete_courier({{$courier->id}})" type="button"><i
+                                                        class="mdi mdi-delete m-r-3"></i>Delete
+                                                </button>
+                                                @else
+                                                    <a class="btn btn-info"
+                                                        href="/admin/courier-shipments/{{ $courier->id }}">All
+                                                        Shipments</a>
+                                                @endif
                                             </th>
                                         </tr>
                                         @php $no++ @endphp
@@ -81,76 +92,11 @@
         </div>
     </div>
     <!-- Modal -->
-    <div id="myModal" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2>
-                                <small>Rider Information add</small>
-                            </h2>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <br>
-                            <form id="demo-form2" method="post" action="{{ route('addEditCourier', $courier->id) }}"
-                                autocomplete="off" class="form-horizontal form-label-left input_mask">
-                                @csrf
-
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label for="first_name">First Name:</label>
-                                    <input type="text" class="form-control" placeholder="Arafat" name="first_name"
-                                        id="first_name" value="{{ old('first_name') }}">
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label for="last_name">Last Name:</label>
-                                    <input type="text" class="form-control" placeholder="Ahmed" name="last_name"
-                                        id="last_name" value="{{ old('last_name') }}">
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label for="email">Email:</label>
-                                    <input type="text" class="form-control" placeholder="abc@gmail.com" name="email"
-                                        id="email" value="{{ old('email') }}">
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label for="phone">Phone:</label>
-                                    <input type="text" class="form-control" placeholder="01234567898" name="phone"
-                                        id="phone" value="{{ old('phone') }}">
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label for="password">Password:</label>
-                                    <input type="password" class="form-control" placeholder="*******" name="password"
-                                        id="password">
-                                </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
-                                    <label for="password_confirmation ">Confirm Password:</label>
-                                    <input type="password" class="form-control" placeholder="*******"
-                                        name="password_confirmation" id="password_confirmation">
-                                </div>
-                                <hr>
-                                <div class="col-md-12 form-group has-feedback ">
-                                    <button type="submit" class="btn btn-success pull-right"><i
-                                            class="mdi mdi-content-save m-r-3"></i>Save
-                                    </button>
-                                    <button type="button" class="btn btn-primary pull-right" data-dismiss="modal">
-                                        <i class="mdi mdi-cancel m-r-3"></i>Cancel
-                                    </button>
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                </form>
-
-            </div>
-        </div>
-    </div>
+    
 @endsection
 @push('style')
     <!-- Datatables -->
+    <link href="{{ asset('vendors/sweetalert/sweetalert.css') }}" rel="stylesheet" />  
     <link href="{{ asset('ass_vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('ass_vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('ass_vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css') }}"
@@ -158,10 +104,21 @@
     <link href="{{ asset('ass_vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css') }}"
         rel="stylesheet">
     <link href="{{ asset('ass_vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css') }}" rel="stylesheet">
+    <style type="text/css">
+        .modal-backdrop {
+            display: none;
+        }
+
+        .modal-dialog {
+            margin-top: 6%;
+        }
+
+    </style>
 @endpush
 
 @push('scripts')
     <!-- Datatables -->
+    <script src="{{ asset('vendors/sweetalert/sweetalert.js') }}"></script>
     <script src="{{ asset('ass_vendors/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('ass_vendors/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
     <script src="{{ asset('ass_vendors/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
@@ -177,4 +134,61 @@
     <script src="{{ asset('ass_vendors/jszip/dist/jszip.min.js') }}"></script>
     <script src="{{ asset('ass_vendors/pdfmake/build/pdfmake.min.js') }}"></script>
     <script src="{{ asset('ass_vendors/pdfmake/build/vfs_fonts.js') }}"></script>
+    <script type="text/javascript">
+        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+        
+        function mark_approved(courier_id,status){
+            swal({
+                    title: "Confirmed?",
+                    text: "You will not be able to revert!",
+                    type: "warning",
+                    showCancelButton: true
+                },function(){
+                    $.ajax({
+                        url: "{{ route('courierStatusUpdate') }}",
+                        type: 'post',
+                        data: {
+                            _token: CSRF_TOKEN,
+                            id: courier_id,
+                            status:status
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            swal('Deleted!','Courier status has been updated','success').then(()=>{
+                                window.location.reload()
+                            })
+                            
+                        }
+                    });
+                })
+            
+        }
+        function delete_courier(courier_id){
+            swal({
+                    title: "Confirmed?",
+                    text: "You will not be able to revert!",
+                    type: "warning",
+                    showCancelButton: true
+                },function(){
+                    
+                    $.ajax({
+                        url: "{{ route('courierDelete') }}",
+                        type: 'post',
+                        data: {
+                            _token: CSRF_TOKEN,
+                            id: courier_id,
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            swal('Deleted!','Courier has been deleted','success').then(()=>{
+                                window.location.href = "/admin/courier"
+                            })
+                            
+                        }
+                    });
+                })
+            
+        }
+
+    </script>
 @endpush

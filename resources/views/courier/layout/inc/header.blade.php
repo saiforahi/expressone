@@ -7,7 +7,7 @@
             <li class="">
                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                    aria-expanded="false">
-                    <img src="{{asset('images/user.png')}}" alt="">Courier
+                    <img src="{{asset('images/user.png')}}" alt="">{{Auth::guard('courier')->user()->first_name}}
                     <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu pull-right">

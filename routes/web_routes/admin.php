@@ -69,7 +69,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::post('/assign-courier-for-return', [ShipmentController::class,'save_courier_shipment_for_return'])->name('assign-courier-for-return');
     //Admin Courier route
     Route::get('courier', [DriverController::class,'index'])->name('allCourier');
-    Route::post('courier-delete/{id}', [DriverController::class,'courierDelete'])->name('courierDelete');
+    Route::post('courier-delete', [DriverController::class,'courierDelete'])->name('courierDelete');
+    Route::post('courier-status-update', [DriverController::class,'courierStatusUpdate'])->name('courierStatusUpdate');
     Route::match(['get', 'post'], 'add-edit-courier/{id?}', [DriverController::class, 'addEditCourier'])->name('addEditCourier');
     Route::get('courier-shipments/{id}', [DriverController::class,'assigned_shipments'])->name('admin-driverShipments');
     //payments
