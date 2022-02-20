@@ -33,32 +33,32 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="first_name">First Name:</label>
                                     <input type="text" class="form-control" placeholder="Arafat" name="first_name"
-                                        id="first_name" value="{{ old('first_name') }}">
+                                        id="first_name" value="{{ $courier->first_name }}">
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="last_name">Last Name:</label>
                                     <input type="text" class="form-control" placeholder="Ahmed" name="last_name"
-                                        id="last_name" value="{{ old('last_name') }}">
+                                        id="last_name" value="{{ $courier->last_name }}">
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="email">Email:</label>
                                     <input type="text" class="form-control" placeholder="abc@gmail.com" name="email"
-                                        id="email" value="{{ old('email') }}">
+                                        id="email" value="{{ $courier->email }}" readonly>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="phone">Phone:</label>
                                     <input type="text" class="form-control" placeholder="01234567898" name="phone"
-                                        id="phone" value="{{ old('phone') }}">
+                                        id="phone" value="{{ $courier->phone }}">
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="salary">Salary:</label>
                                     <input type="text" class="form-control" placeholder="salary" name="salary"
-                                        id="salary" value="{{ old('salary') }}" required>
+                                        id="salary" value="{{ $courier->salary }}" required>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="phone">NID:</label>
                                     <input type="text" class="form-control @error('nid') is-invalid @enderror" name="nid"
-                                        value="{{ old('nid') }}" placeholder="NID" required="" />
+                                        value="{{ $courier->nid_no }}" placeholder="NID" required="" />
                                     @error('nid')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -71,7 +71,7 @@
                                     <select name="unit" class="form-control @error('unit') is-invalid @enderror"
                                         value="{{ old('unit') }}" required>
                                         @foreach ($units as $unit)
-                                            <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                            <option value="{{ $unit->id }}" @if($unit->id == $courier->unit_id) selected @endif>{{ $unit->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('unit')
@@ -83,7 +83,7 @@
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="address">Address:</label>
                                     <textarea type="text" class="form-control" name="address"
-                                        id="address"></textarea>
+                                        id="address">{{$courier->address}}</textarea>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                     <label for="password">Password:</label>

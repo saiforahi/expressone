@@ -26,15 +26,21 @@ class AuthController extends Controller
             'email'   => 'required',
             'password' => 'required|min:3'
         ],$messages);
-
-        if (Courier::where('email',$request->email)->first()->status == 1 && Auth::guard('courier')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))) {
-
-            return redirect()->route('courier.dashboard');
+        
+        if (Courier::where('email',$request->email)->exists() && Courier::where('email',$request->email)->first()->status == 1 ) {
+            if(Auth::guard('courier')->attempt(['email' => $request->email, 'password' => $request->password], $request->get('remember'))){
+                return redirect()->route('courier.dashboard');
+            }
+            else{
+                return back()->withInput($request->only('email', 'remember'))->withErrors([
+                    'email' => 'Wrong information',
+                ]);
+            }
         }
-
-        return back()->withInput($request->only('email', 'remember'))->withErrors([
-            'email' => 'Wrong information or account is not approved yet',
-        ]);
+        return back()->withInput($request->only('email', 'remember'))->with(
+            'error','Account does not exist or is not approved yet'
+        );
+        
     }
     public function generate_employee_id($length=10){
         

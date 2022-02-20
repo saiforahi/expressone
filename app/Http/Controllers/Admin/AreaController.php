@@ -147,13 +147,12 @@ class AreaController extends Controller
 
     public function unit_delete(Request $request)
     {
-        $hub = Point::where('unit_id', $request->id)->count();
-        if ($hub > 0) {
-            echo 'Foreign key integrated';
-            return false;
-        } else {
+        try{
             Unit::where('id', $request->id)->delete();
             return true;
+        }
+        catch(Exception $e){
+            throw $e;
         }
     }
 

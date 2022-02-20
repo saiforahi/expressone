@@ -35,6 +35,12 @@
                             {{ session()->get('message') }}
                         </div>
                     @endif
+                    @if (session()->has('error'))
+                        <div class="alert alert-danger alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            {{ session()->get('error') }}
+                        </div>
+                    @endif
                     <form action="{{ route('courier.login') }}" method="post">
                         <h1>Login Form</h1>
                         @csrf

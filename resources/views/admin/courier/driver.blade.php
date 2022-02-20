@@ -10,7 +10,7 @@
                 <div class="title_right">
                     <div class="form-group pull-right top_search">
                         <a type="button" class="btn btn-info btn-sm" href="{{ url('admin/add-edit-courier') }}">
-                            <i class="fa fa-user-plus fs-13 m-r-3"></i> Add Courier
+                            <i class="fa fa-user-plus fs-13 m-r-3"></i>Add Courier
                         </a>
                     </div>
                 </div>
@@ -30,6 +30,7 @@
                                         <th>Sl.</th>
                                         <th>Info</th>
                                         <th>Employee ID</th>
+                                        <th>Joining Date</th>
                                         <th>Salary</th>
                                         <th>Phone</th>
                                         <th>Email</th>
@@ -50,6 +51,7 @@
                                                 NID : {{ $courier->nid_no }}
                                             </th>
                                             <th scope="row">{{ $courier->employee_id }}</th>
+                                            <th scope="row">{{ $courier->created_at }}</th>
                                             <th scope="row">{{ $courier->salary }}</th>
                                             <th scope="row">{{ $courier->phone }}</th>
                                             <th scope="row">{{ $courier->email }}</th>
@@ -58,23 +60,20 @@
                                                     alt=""></th>
                                             <th scope="row" class="text-left">
                                                 @if($courier->status == 0)
-                                                <button class="btn btn-primary btn-xs assign" onclick="mark_approved({{$courier->id}},1)" type="button"><i
+                                                <button class="btn btn-success btn-xs assign" onclick="mark_approved({{$courier->id}},1)" type="button"><i
                                                     class="mdi mdi-account m-r-3"></i>Approve
                                                 </button>
                                                 @else
                                                 
                                                 @endif
-                                                @include('admin.courier.inc.edit-courier-modal',['courier'=>$courier])
-                                                <button class="btn btn-primary btn-xs assign" type="button" data-toggle="modal" data-target="#myModal"
-                                                    data-id="{{ $courier->id }}"><i
-                                                    class="mdi mdi-pencil m-r-3"></i>Edit
-                                                </button>
+                                                {{-- <button class="btn btn-primary btn-xs assign" type="button" data-toggle="modal" data-target="#myModal" data-id="{{ $courier->id }}"><i class="mdi mdi-pencil m-r-3"></i>Edit</button> --}}
+                                                <a class="btn btn-warning btn-xs assign" type="button" href="{{route('addEditCourier',['id'=>$courier->id])}}"><i class="mdi mdi-pencil m-r-3"></i>Edit</a>
                                                 @if ($countShipment == 0)
-                                                <button class="btn btn-primary btn-xs assign" onclick="delete_courier({{$courier->id}})" type="button"><i
+                                                <button class="btn btn-danger btn-xs assign" onclick="delete_courier({{$courier->id}})" type="button"><i
                                                         class="mdi mdi-delete m-r-3"></i>Delete
                                                 </button>
                                                 @else
-                                                    <a class="btn btn-info"
+                                                    <a class="btn btn-primary btn-xs"
                                                         href="/admin/courier-shipments/{{ $courier->id }}">All
                                                         Shipments</a>
                                                 @endif

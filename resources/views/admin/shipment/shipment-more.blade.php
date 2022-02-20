@@ -126,6 +126,7 @@
                                                 <div class="modal-body">
                                                     <form method="post">
                                                         @csrf
+                                                        <?php $drivers= \App\Models\Courier::where('unit_id',$shipment->pickup_location->point->unit->id)->get();?>
                                                         @include('admin.shipment.includes.shipment-assign-courier-form')
                                                         <input type="hidden" name="shipment_id"
                                                             value="{{ $shipment->id }}" id="shipment_id"><br>
@@ -135,7 +136,6 @@
                                                     </form>
                                                 </div>
                                             </div>
-
                                         </div>
                                     </div>
                                     <!-- Modal to assign to courier -->
@@ -147,7 +147,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Modal cancelling note-->
     <div class="modal fade" id="cancelNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -268,6 +267,7 @@
                         return $(this).val();
                     }).toArray();
                     $('#shipment_id').val(searchIDs);
+                    alert(searchIDs)
                     // if(searchIDs==''){
                     //     alert('Please check some Merchant/s ');
                     //     $('#assignShipment').modal().hide();

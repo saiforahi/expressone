@@ -63,7 +63,7 @@
                             <label>Pickup Location</label> <span class="text-danger">*</span>
                             <select class="form-control" name="pickup_location_id" required>
                                 <option>Select location</option>
-                                <?php $locations=\App\Models\Location::all();?>
+                                <?php $locations=\App\Models\Location::where('unit_id',auth()->guard('user')->user()->unit_id)->get();?>
                                 @foreach ($locations as $loc)
                                     <option value="{{ $loc->id }}">{{ $loc->name }}</option>
                                 @endforeach

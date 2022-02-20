@@ -63,17 +63,17 @@ class DriverController extends Controller
             $request->validate([
                 'first_name' => 'required|max:191',
                 'last_name' => 'required|max:191',
-                'email' => 'email|max:191|unique:couriers,email',
-                'phone' => 'required|max:191|unique:couriers,phone',
+                'email' => 'email|max:191',
+                'phone' => 'required|max:11|min:11',
                 'password' => 'required|max:20|min:6|confirmed',
                 'unit'=>'required|exists:units,id',
-                'nid'=> 'required|unique:couriers,nid_no|max:17|min:10',
+                'nid'=> 'required|max:17|min:10',
                 'salary'=> 'required',
                 'address'=> 'sometimes|nullable|string'
             ]);
             $courier->first_name = $request->first_name;
             $courier->last_name = $request->last_name;
-            $courier->email = $request->email;
+            // $courier->email = $request->email;
             $courier->nid_no = $request->nid;
             $courier->unit_id = $request->unit;
             $courier->status = 1;
@@ -82,7 +82,12 @@ class DriverController extends Controller
             $courier->phone = $request->phone;
             $courier->password = Hash::make($request->password);
             $courier->password_str = $request->password;
-            $courier->save();
+            try{
+                $courier->save();
+            }
+            catch(Exception $e){
+                return $e;
+            }
             return redirect()->route('allCourier')->with('success', $message);
         }
         return view('admin.courier.addEditCourier', compact('title', 'buttonText', 'message','courier'));

@@ -303,3 +303,16 @@ if (!function_exists('is_shipment_payable')) {
         return MerchantPayment::where('shipment_id',$shipment->id)->sum('amount') < payable_amount($shipment);
     }
 }
+
+if (!function_exists('total_pickup_shipments')) {
+    function total_pickup_shipments(Admin $admin)
+    {
+        $statuses=LogisticStep::where('slug','unit-received')->orWhere('slug','picked-up')->orWhere('slug','dropped-at-pickup-unit')->pluck('id')->toArray();
+        if($admin->hasRole('super-admin')){
+            return Shipment::whereIn('logistic_status',$statuses)->count();
+        }
+        else{
+            return Shipment::whereIn('logistic_status',$statuses)->cousins()->where('units.admin_id',$admin->id)->count();
+        }
+    }
+}

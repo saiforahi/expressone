@@ -15,13 +15,10 @@
                 <div class="tile-stats">
                     <div class="icon"><i class="fa fa-shopping-cart"></i>
                     </div>
-                    <?php $shipments = \DB::table('shipments')
-                        ->select('id')
-                        ->count(); ?>
-                    <div class="count">{{ sprintf('%02d', $shipments) }}</div>
+                    <div class="count">{{ sprintf('%02d', total_pickup_shipments(auth()->guard('admin')->user())) }}</div>
 
-                    <h3>Total shipments</h3>
-                    <p><a href="/admin/shipping-list/">All shipments from the scratch</a></p>
+                    <h3>Total Pickup shipments</h3>
+                    <p><a href="/admin/shipping-list/">All pickup shipments from the scratch</a></p>
                 </div>
             </div>
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">

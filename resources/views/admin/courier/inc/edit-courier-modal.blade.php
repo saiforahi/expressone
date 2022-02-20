@@ -18,18 +18,18 @@
 
                             <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                 <label for="first_name">First Name:</label>
-                                <input type="text" class="form-control" placeholder="Arafat" name="first_name"
+                                <input type="text" class="form-control" placeholder="First Name" name="first_name"
                                     id="first_name" value="{{ $courier->first_name }}">
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                 <label for="last_name">Last Name:</label>
-                                <input type="text" class="form-control" placeholder="Ahmed" name="last_name"
+                                <input type="text" class="form-control" placeholder="Last Name" name="last_name"
                                     id="last_name" value="{{ $courier->last_name }}">
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                 <label for="email">Email:</label>
                                 <input type="text" class="form-control" placeholder="abc@gmail.com" name="email"
-                                    id="email" value="{{ $courier->email }}">
+                                    id="email" value="{{ $courier->email }}" readonly>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12 form-group has-feedback">
                                 <label for="phone">Phone:</label>

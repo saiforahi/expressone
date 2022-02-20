@@ -271,9 +271,6 @@ class ShipmentController extends Controller
     }
     public function save_courier_shipment($id, Request $request)
     {
-        // dd(LogisticStep::where('slug','to-pick-up')->first()->previous->id);
-        // dd(LogisticStep::where('slug','to-pick-up')->first()->id);
-        // dd($request->shipment_id);
         if (is_numeric($request->shipment_id)) {
             $check = CourierShipment::where(['courier_id' => $request->courier_id, 'shipment_id' => $request->shipment_id,'type'=>'pickup'])->count();
             if ($check > 0) {
@@ -287,7 +284,6 @@ class ShipmentController extends Controller
             Shipment::where('id', $request->shipment_id)->where('logistic_status','<=',LogisticStep::where('slug','to-pick-up')->first()->previous)->update(['logistic_status' => LogisticStep::where('slug','to-pick-up')->first()->id]);
             event(new ShipmentMovementEvent(Shipment::find($request->shipment_id), LogisticStep::where('slug','to-pick-up')->first(),Auth::guard('admin')->user()));
         } else {
-            // dd(explode(',', $request->shipment_id));
             foreach (explode(',', $request->shipment_id) as $key => $id) {
                 $check = CourierShipment::where(['courier_id' => $request->courier_id, 'shipment_id' => $id])->count();
                 if ($check < 1) {
@@ -300,7 +296,7 @@ class ShipmentController extends Controller
                 }
             }
         }
-        Session::flash('message', 'Shipments are handover to Courier');
+        Session::flash('message', 'Courier is assigned to pickup shipment');
         return back();
     }
     public function save_courier_shipment_for_return(Request $request)
