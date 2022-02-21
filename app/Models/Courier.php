@@ -23,6 +23,7 @@ class Courier extends Authenticatable implements HasMedia
     protected $casts = [
         'created_at' => 'datetime:Y-m-d h:i:s A',
         'updated_at' => 'datetime:Y-m-d h:i:s A',
+        'joining_date' => 'datetime:Y-m-d h:i:s A',
     ];
     public function guard__name(){
         return $this->guard_name;
@@ -35,6 +36,10 @@ class Courier extends Authenticatable implements HasMedia
     public function courierShipments()
     {
         return $this->hasMany(CourierShipment::class,);
+    }
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
     }
     public function pickup_shipments(){
         return $this->hasMany(Shipment::class)->where('type','pickup');

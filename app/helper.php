@@ -316,3 +316,29 @@ if (!function_exists('total_pickup_shipments')) {
         }
     }
 }
+
+if (!function_exists('total_delivered_shipments')) {
+    function total_delivered_shipments(Admin $admin)
+    {
+        $statuses=LogisticStep::where('slug','delivery-confirmed')->pluck('id')->toArray();
+        if($admin->hasRole('super-admin')){
+            return Shipment::whereIn('logistic_status',$statuses)->count();
+        }
+        else{
+            return Shipment::whereIn('logistic_status',$statuses)->deliverycousins()->where('units.admin_id',$admin->id)->count();
+        }
+    }
+}
+
+if (!function_exists('total_cod_outstanding')) {
+    function total_cod_outstanding(Admin $admin)
+    {
+        $statuses=LogisticStep::where('slug','delivery-confirmed')->pluck('id')->toArray();
+        if($admin->hasRole('super-admin')){
+            return Shipment::whereIn('logistic_status',$statuses)->count();
+        }
+        else{
+            return Shipment::whereIn('logistic_status',$statuses)->deliverycousins()->where('units.admin_id',$admin->id)->count();
+        }
+    }
+}

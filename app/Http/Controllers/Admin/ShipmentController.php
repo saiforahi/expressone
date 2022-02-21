@@ -261,7 +261,6 @@ class ShipmentController extends Controller
     }
     public function set_delivery_charge(Request $req){
         try{
-            // dd(ShipmentPayment::where('shipment_id',$req->shipment_id)->first());
             ShipmentPayment::where('shipment_id',$req->shipment_id)->update(['delivery_charge'=>$req->delivery_charge]);
             return back()->with('message', 'Shipment delivery charge updated');
         }

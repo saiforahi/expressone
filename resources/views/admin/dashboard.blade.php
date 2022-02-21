@@ -11,16 +11,8 @@
                     </div>
                 </div>
             @endif
-            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
-                <div class="tile-stats">
-                    <div class="icon"><i class="fa fa-shopping-cart"></i>
-                    </div>
-                    <div class="count">{{ sprintf('%02d', total_pickup_shipments(auth()->guard('admin')->user())) }}</div>
-
-                    <h3>Total Pickup shipments</h3>
-                    <p><a href="/admin/shipping-list/">All pickup shipments from the scratch</a></p>
-                </div>
-            </div>
+        </div>
+        <div class="row">
             <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
                 <div class="tile-stats">
                     <div class="icon"><i class="fa fa-truck"></i>
@@ -58,15 +50,48 @@
                 </div>
             </div>
         </div>
+        <div class="row justify-content-center">
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-shopping-cart"></i>
+                    </div>
+                    <div class="count">{{ sprintf('%02d', total_pickup_shipments(auth()->guard('admin')->user())) }}</div>
+
+                    <h3>Total Pickup shipments</h3>
+                    {{-- <p><a href="/admin/shipping-list/">All pickup shipments from the scratch</a></p> --}}
+                </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-shopping-cart"></i>
+                    </div>
+                    <div class="count">{{ sprintf('%02d', total_delivered_shipments(auth()->guard('admin')->user())) }}</div>
+
+                    <h3>Total Delivered shipments</h3>
+                    {{-- <p><a href="/admin/shipping-list/">All Delivered shipments from the scratch</a></p> --}}
+                </div>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6  ">
+                <div class="tile-stats">
+                    <div class="icon"><i class="fa fa-money"></i>
+                    </div>
+                    <div class="count">{{ sprintf('%02d', total_delivered_shipments(auth()->guard('admin')->user())) }}</div>
+
+                    <h3>Total COD Outstanding</h3>
+                    {{-- <p><a href="/admin/shipping-list/">All Delivered shipments from the scratch</a></p> --}}
+                </div>
+            </div>
+        </div>
+        
 
         <div class="row">
             <div class="col-md-6 ">
                 <div class="x_panel">
                     <div class="x_content">
                         <p style="padding: 20px" class="text-right">
-                            <b class="pull-left fa-2x">Shop summary </b>
+                            <b class="pull-left fa-2x">Pickup summary </b>
                             <strong class="p5">{{ sprintf('%02d', $users) }} </strong><br>
-                            Registerd Shop(s)
+                            Merchant(s)
                         </p> <br><br>
                         <?php $todayShop = \DB::table('users')
                             ->whereDate('created_at', \Carbon\Carbon::today())
@@ -100,7 +125,7 @@
                 <div class="x_panel">
                     <div class="x_content">
                         <p class="text-right" style="padding: 20px">
-                            <b class="pull-left fa-2x">Sales summary </b>
+                            <b class="pull-left fa-2x">Delivery summary </b>
                             <strong class="p5">{{ sprintf('%02d', $users) }} </strong><br>
                             Total transaction(s)
                         </p> <br><br>
@@ -123,15 +148,6 @@
                                 <strong>{{ sprintf('%02d', $orderYesterday) }}</strong><br>
                                 <p>Orders, yesterday</p>
                             </div>
-                            {{-- <div class="col-md-3">
-                                <?php $salesYesterday = \DB::table('driver_hub_shipment_box')
-                                    ->where('status', 'partial')
-                                    ->orWhere('status', 'delivery')
-                                    ->whereDate('created_at', \Carbon\Carbon::yesterday())
-                                    ->count(); ?>
-                                <strong>{{ sprintf('%02d', $salesYesterday) }}</strong><br>
-                                <p>Sales, yesterday</p>
-                            </div> --}}
                         </div>
                     </div>
                 </div>

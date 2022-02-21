@@ -95,15 +95,15 @@
                                         <th class="text-right">
                                             @if ($courierShipment->status == 'received')
                                                 {{-- <form action="{{route('')}}"></form> --}}
-                                                <a type="button" href="/courier/submit-shipment/{{ $courierShipment->shipment_id }}" class="btn-xs btn btn-success">Submit at Unit</a>
+                                                <a onclick="mark_submitted({{$courierShipment->shipment->id}})" type="button" href="#" class="btn-xs btn btn-success">Submit at Unit</a>
                                             @elseif($courierShipment->status == 'pending')
-                                            <a  onClick="return confirm('Are you sure to receive the shipment');"
+                                            <a onclick="mark_received({{$courierShipment->shipment->id}})"
                                                 href="/courier/receive-shipment/{{ $courierShipment->shipment->id }}"
                                                 class="btn-xs btn btn-success"><i class="fa fa-check"></i> Receive</a>
-                                                <a data-toggle="modal" data-target="#cancelParcel"
-                                                    data-id="{{ $courierShipment->shipment->id }}"
-                                                    class="btn-xs btn btn-warning cencel"><i class="fa fa-times"></i>
-                                                    Cancel</a>
+                                            <a data-toggle="modal" data-target="#cancelParcel"
+                                                data-id="{{ $courierShipment->shipment->id }}"
+                                                class="btn-xs btn btn-warning cencel"><i class="fa fa-times"></i>
+                                                Cancel</a>
                                             @endif
                                         </th>
                                     </tr>
@@ -156,7 +156,7 @@
 @endpush
 
 @push('scripts')
-
+<script src="{{ asset('vendors/sweetalert/sweetalert.js') }}"></script>
     <script type="text/javascript">
         $(function() {
             $('.cencel').on('click', function() {
@@ -164,5 +164,26 @@
                 $('#cancelForm').attr('action', '/driver/cencell-parcel/' + id)
             });
         })
+
+        function mark_received(shipment_id){
+            swal({
+                    title: "Confirmed?",
+                    text: "You will not be able to revert!",
+                    type: "warning",
+                    showCancelButton: true
+                },function(){
+                    window.location.href='/courier/receive-shipment/'+shipment_id
+                })
+        }
+        function mark_submitted(shipment_id){
+            swal({
+                    title: "Confirmed?",
+                    text: "You will not be able to revert!",
+                    type: "warning",
+                    showCancelButton: true
+                },function(){
+                    window.location.href='/courier/submit-shipment/'+shipment_id
+                })
+        }
     </script>
 @endpush

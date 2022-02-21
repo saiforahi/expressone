@@ -32,6 +32,7 @@
                                         <th>Employee ID</th>
                                         <th>Joining Date</th>
                                         <th>Salary</th>
+                                        <th>Unit</th>
                                         <th>Phone</th>
                                         <th>Email</th>
                                         <th>Image</th>
@@ -53,6 +54,7 @@
                                             <th scope="row">{{ $courier->employee_id }}</th>
                                             <th scope="row">{{ $courier->created_at }}</th>
                                             <th scope="row">{{ $courier->salary }}</th>
+                                            <th scope="row">{{ $courier->unit->name }}</th>
                                             <th scope="row">{{ $courier->phone }}</th>
                                             <th scope="row">{{ $courier->email }}</th>
                                             <th scope="row"><img width="42" height="42" class="img-thumbnail img-fluid"
