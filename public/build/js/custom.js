@@ -2822,6 +2822,7 @@ function init_DataTables() {
         if ($("#datatable-buttons").length) {
             $("#datatable-buttons").DataTable({
                 dom: "Blfrtip",
+                retrieve: true,
                 buttons: [
                     {
                         extend: "copy",

@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\MessageController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\AboutController;
+use App\Http\Controllers\Admin\ReportController;
 /*
 |--------------------------------------------------------------------------
 | Admin Route
@@ -328,5 +329,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     //Shipping Charge
     Route::match(['get', 'post'], 'add-edit-shipping-charge/{id?}', [ShippingChargeController::class, 'addEditCharge'])->name('addEditCharge');
     Route::get('shipping-charges', [ShippingChargeController::class, 'index'])->name('shippingCharges');
+
+    Route::get('/reports/show/{type}', [ReportController::class, 'show_report_pickup_from_merchant'])->name('show-report');
 });
 
