@@ -98,16 +98,9 @@
                     @endif
                     <li>
                         <a><i class="fa mdi mdi-cube-send"></i> Reports <span class="fa fa-paper"></span></a>
-                        <ul class="nav child_menu">
-                            <li><a href="{{ route('show-report',['type'=>'pickup-from-merchant']) }}">Pickup from Merchants</a></li>
-
-                            <li><a href="#">Handover to pick up unit</a></li>
-
-                            <li><a href="#">Internal transit</a></li>
-                            {{-- <li><a href="{{ route('merchant-handover') }}">Return Handover</a></li> --}}
-                            <li><a href="#">Received by delivery unit</a></li>
-                            <li><a href="#">Handover to delivery man</a></li>
-                            
+                        <ul class="nav child_menu" >
+                            <li><a href="{{ route('show-report', ['type' => 'pickup-from-merchant']) }}">Shipment Reports</a></li>
+                            <li><a href="#">Payment Reports</a></li>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-home"></i> Website Management <span

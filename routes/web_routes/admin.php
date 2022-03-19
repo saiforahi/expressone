@@ -331,5 +331,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('shipping-charges', [ShippingChargeController::class, 'index'])->name('shippingCharges');
 
     Route::get('/reports/show/{type}', [ReportController::class, 'show_report_pickup_from_merchant'])->name('show-report');
+    Route::get('/reports/payment', [ReportController::class, 'show_payment_reports'])->name('show-payment-report');
 });
 

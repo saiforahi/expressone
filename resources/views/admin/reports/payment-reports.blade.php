@@ -1,12 +1,12 @@
 @extends('admin.layout.app')
-@section('title', 'Shipments Report')
+@section('title', 'Payment Report')
 @section('content')
     <div class="right_col" role="main">
         <div class="row">
             <div class="x_panel">
                 <div class="page-title">
                     <div class="title_left" style="width:100%">
-                        <h3>Report {{$title}}</h3>
+                        <h3>Payments Report</h3>
                     </div>
                     {{-- <div class="title_right text-right" style="width:80%;">
                         @include('admin.shipment.load.shipment-filter')
