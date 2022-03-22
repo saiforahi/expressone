@@ -6,75 +6,106 @@
             <div class="x_panel">
                 <div class="page-title">
                     <div class="title_left" style="width:100%">
-                        <h3>Report {{$title}}</h3>
+                        <h3>Shipment Movements Report</h3>
                     </div>
                     {{-- <div class="title_right text-right" style="width:80%;">
                         @include('admin.shipment.load.shipment-filter')
                     </div> --}}
                 </div>
-                <div class="row mb-3" style="margin-bottom: 10px !important; margin-top: 10px !important;">
+                {{-- <div class="row mb-3" style="margin-bottom: 10px !important; margin-top: 10px !important;">
                     <div class="col-md-2">
                         <select class="form-control select2" name="area_id" id="area_id" onchange="get_area()">
-                            <option value="">Search By Area/Location</option>
-                            {{-- @foreach($locations as $area)
-                            <option @if(request()->area_id==$area->id)selected @endif value="{{$area->id}}">{{$area->name}}</option>
-                            @endforeach --}}
+                            <option value="">-- Select --</option>
+                            <option>Pickup from Merchants</option>
+                            <option>Handover to pick up unit</option>
+                            <option>Internal transit</option>
+                            <option>Received by delivery unit</option>
+                            <option>Handover to delivery man</option>
+                            
                         </select>
                     </div>
-                </div>
+                </div> --}}
                 <div class="x_content">
                     <div class="table-responsive">
                         <table id="datatable-buttons"
                             class="table table-striped table-bordered dataTable no-footer dtr-inline">
                             <thead>
                                 <tr class="bg-dark">
-                                    <th>Date</th>
+                                    <th>Shipment info</th>
                                     <th>Customer info</th>
-                                    <th>Merchant</th>
-                                    <th>Amount</th>
-                                    <th>Pick up</th>
-                                    <th>Delivery</th>
-                                    <th>Trackings</th>
-                                    <th>Status</th>
-                                    <th class="text-center">Action</th>
+                                    <th>Pickup from Merchants</th>
+                                    <th>Handover to pick up unit</th>
+                                    <th>Internal transit</th>
+                                    <th>Received by delivery unit</th>
+                                    <th>Handover to delivery man</th>
+                                    {{-- <th>Status</th> --}}
+                                    {{-- <th class="text-center">Action</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($shipments as $shipment)
+                                @foreach ($result as $shipment)
                                     <tr>
-                                        <td>{{ date('M d, y', strtotime($shipment->created_at)) }}</td>
-                                        <td>{{ $shipment->recipient['name'] }} - {{ $shipment->recipient['phone'] }}</td>
-                                        <td>{{ $shipment->recipient['name'] }}</td>
                                         <td>
-                                            {{ $shipment->amount }}
+                                            <span>{{ $shipment['shipment']->merchant->name }}</span><br/>
+                                            <span>{{ $shipment['shipment']->tracking_code }}</span><br/>
+                                            <span>{{ date('M d, y', strtotime($shipment['shipment']->created_at)) }}</span>
                                         </td>
-                                        <td> {{ $shipment->pickup_location->name ?? null }} </td>
-                                        <td> {{ $shipment->delivery_location->name ?? null }} </td>
-                                        <td> <a target="_blank"
-                                                href="/tracking?code={{ $shipment->tracking_code }}">{{ $shipment->tracking_code }}
-                                            </a></td>
-                                        <td>@include('admin.shipment.status',['status'=>$shipment->status,'logistic_status'=>$shipment->logistic_status])
+                                        <td>{{ $shipment['shipment']->recipient['name'] }}</td>
+                                        <td>
+                                            <span style="font-weight: bold">{{ $shipment['movements']['pickup_from_merchant']->action_made_by->first_name.' '.$shipment['movements']['pickup_from_merchant']->action_made_by->last_name }}</span><br/>
+                                            <span>{{ str_replace('App\\Models\\', '', $shipment['movements']['pickup_from_merchant']->action_made_by_type ?? '') }}</span><br />
+                                            <span>{{ $shipment['movements']['pickup_from_merchant']->created_at }}</span>
+
                                         </td>
-                                        <td class="text-center">
-                                            {{-- <button class="btn btn-xs btn-warning reset" id="{{$shipment->id}}">Reset</button> --}}
-                                            <button onclick="audit_log(<?php echo $shipment->id; ?>)" class="btn btn-xs btn-warning"
+                                        <td> 
+                                            <span style="font-weight: bold">{{ $shipment['movements']['dropped_at_unit']->action_made_by->first_name.' '.$shipment['movements']['dropped_at_unit']->action_made_by->last_name }} </span><br/>
+                                            <span>{{ str_replace('App\\Models\\', '', $shipment['movements']['dropped_at_unit']->action_made_by_type ?? '') }}</span><br />
+                                            <span>{{ $shipment['movements']['dropped_at_unit']->created_at }}</span>
+                
+                                        </td>
+                                        <td> 
+                                            <span style="font-weight: bold">{{ $shipment['movements']['internal_transit']? $shipment['movements']['internal_transit']->action_made_by->first_name.' '.$shipment['movements']['internal_transit']->action_made_by->last_name : '' }} </span><br/>
+                                            <span>{{ str_replace('App\\Models\\', '', $shipment['movements']['internal_transit']->action_made_by_type ?? '')}}</span><br />
+                                            <span>{{ $shipment['movements']['internal_transit']->created_at ?? null }}</span>
+                                        </td>
+                                        <td> 
+                                            <span style="font-weight: bold">{{ $shipment['movements']['received_delivery_unit']? $shipment['movements']['received_delivery_unit']->action_made_by->first_name.' '.$shipment['movements']['received_delivery_unit']->action_made_by->last_name : '' }} </span><br/>
+                                            <span>{{ str_replace('App\\Models\\', '', $shipment['movements']['received_delivery_unit']->action_made_by_type ?? '')}}</span><br />
+                                            <span>{{ $shipment['movements']['received_delivery_unit']->created_at ?? null }}</span>
+                                        </td>
+                                        <td> 
+                                            <span style="font-weight: bold">{{ $shipment['movements']['courier_assigned_to_deliver']? $shipment['movements']['courier_assigned_to_deliver']->action_made_by->first_name.' '.$shipment['movements']['courier_assigned_to_deliver']->action_made_by->last_name : '' }} </span><br/>
+                                            <span>{{ str_replace('App\\Models\\', '', $shipment['movements']['courier_assigned_to_deliver']->action_made_by_type ?? '')}}</span><br />
+                                            <span>{{ $shipment['movements']['courier_assigned_to_deliver']->created_at ?? null }}</span>
+                                        </td>
+                                        {{-- <td> <a target="_blank"
+                                                href="/tracking?code={{ $shipment['shipment']->tracking_code }}">{{ $shipment['shipment']->tracking_code }}
+                                            </a></td> --}}
+                                        {{-- <td>@include('admin.shipment.status', [
+                                            'status' => $shipment['shipment']->status,
+                                            'logistic_status' => $shipment['shipment']->logistic_status,
+                                        ])
+                                        </td> --}}
+                                        {{-- <td class="text-center">
+                                            
+                                            <button onclick="audit_log(<?php echo $shipment['shipment']->id; ?>)" class="btn btn-xs btn-warning"
                                                 data-toggle="modal" data-target="#logModal">Audit log
                                             </button>
-                                            <a href="/admin/shipment-details/{{ $shipment->id }}" target="_blank"
-                                                class="btn btn-xs btn-info">View</a>
-                                        </td>
+                                            <a href="/admin/shipment-details/{{ $shipment['shipment']->id }}"
+                                                target="_blank" class="btn btn-xs btn-info">View</a>
+                                        </td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    
+
 @endsection
 @push('style')
     <link href="{{ asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
@@ -86,6 +117,7 @@
         select {
             padding: 4.1px
         }
+
     </style>
 @endpush
 @push('scripts')
@@ -104,7 +136,7 @@
     <script src="{{ asset('vendors/jszip/dist/jszip.min.js') }}"></script>
     <script src="{{ asset('vendors/pdfmake/build/pdfmake.min.js') }}"></script>
     <script src="{{ asset('vendors/pdfmake/build/vfs_fonts.js') }}"></script>
-    
+
     <script>
         function audit_log(shipment_id) {
             $('.audit-result').html('Loading...');
@@ -116,6 +148,7 @@
                 }
             });
         }
+
         function get_area() {
             let url = window.location.href;
             let area_id = $('#area_id').val();
@@ -130,8 +163,7 @@
             }
         }
         $(function() {
-            
+
         })
     </script>
-    
 @endpush

@@ -509,9 +509,11 @@ class ShipmentController extends Controller
             // Shipment::where('id',$shipment['id'])->update(['logistic_status'=>7]);
             if($shipment->pickup_location->point->unit->id == $shipment->delivery_location->point->unit->id){
                 Shipment::where('id',$shipment['id'])->update(['logistic_status'=>8]);
+                event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','delivery-unit-received')->first(),Auth::guard('admin')->user()));
             }
             else{
                 Shipment::where('id',$shipment['id'])->update(['logistic_status'=>7]);
+                event(new ShipmentMovementEvent($shipment,LogisticStep::where('slug','in-transit')->first(),Auth::guard('admin')->user()));
             }
         }
         return 'Data has been sorted to dispatch & sent SMS to customer mobile!';

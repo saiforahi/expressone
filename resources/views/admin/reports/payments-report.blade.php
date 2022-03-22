@@ -12,16 +12,14 @@
                         @include('admin.shipment.load.shipment-filter')
                     </div> --}}
                 </div>
-                <div class="row mb-3" style="margin-bottom: 10px !important; margin-top: 10px !important;">
+                {{-- <div class="row mb-3" style="margin-bottom: 10px !important; margin-top: 10px !important;">
                     <div class="col-md-2">
                         <select class="form-control select2" name="area_id" id="area_id" onchange="get_area()">
                             <option value="">Search By Area/Location</option>
-                            {{-- @foreach($locations as $area)
-                            <option @if(request()->area_id==$area->id)selected @endif value="{{$area->id}}">{{$area->name}}</option>
-                            @endforeach --}}
+                            
                         </select>
                     </div>
-                </div>
+                </div> --}}
                 <div class="x_content">
                     <div class="table-responsive">
                         <table id="datatable-buttons"
@@ -40,7 +38,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($shipments as $shipment)
+                                @foreach ($result as $shipment)
                                     <tr>
                                         <td>{{ date('M d, y', strtotime($shipment->created_at)) }}</td>
                                         <td>{{ $shipment->recipient['name'] }} - {{ $shipment->recipient['phone'] }}</td>
