@@ -7,7 +7,7 @@
     <div class="col-md-4">
         <div class="row">
             <div class="col-md-12">
-                <select class="form-control select2" name="hub_id" id="hub_id" onchange="get_hub()">
+                <select class="form-control select2" name="unit_id" id="unit_id" onchange="filter_unit()">
                     <option value="">Search By Unit</option>
                     @foreach($units as $hub)
                     <option @if(request()->hub_id==$hub->id)selected @endif value="{{$hub->id}}">{{$hub->name}}</option>

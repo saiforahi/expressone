@@ -35,45 +35,45 @@ class ReportController extends Controller
         // dd($result[0]['shipment']->recipient['name']);
         return view('admin.reports.show',compact(['title','result']));
     }
-    public function pickup_shipments_report(){
+    public function pickup_shipments_report($data){
         try{
             $statuses=LogisticStep::where('slug','to-pick-up')->orWhere('slug','picked-up')->orWhere('slug','dropped-at-pickup-unit')->orWhere('slug','unit-received')->pluck('id')->toArray();
             $shipment_with_movements = ShipmentMovement::whereIn('logistic_step_id',$statuses)->get(['shipment_id']);
             $shipments=Shipment::whereIn('logistic_status',$statuses)->get();
-            // foreach($shipment_with_movements as $item){
-            //     array_push($shipments,Shipment::find($item['shipment_id']));
-            // }
+            
             return $shipments;
         }
         catch(Exception $e){
 
         }
     }
-    public function delivery_shipments_report(){
+    public function delivery_shipments_report($data){
         try{
             $statuses=LogisticStep::where('slug','to-pick-up')->orWhere('slug','picked-up')->orWhere('slug','dropped-at-pickup-unit')->orWhere('slug','unit-received')->pluck('id')->toArray();
             $shipment_with_movements = ShipmentMovement::whereIn('logistic_step_id',$statuses)->get(['shipment_id']);
-            $shipments=Shipment::whereBetween('logistic_status',[7,10])->get();
-            // foreach($shipment_with_movements as $item){
-            //     array_push($shipments,Shipment::find($item['shipment_id']));
-            // }
+            $shipments=Shipment::deliverycousins()->whereBetween('shipments.logistic_status',[7,10])->get();
+            
             return $shipments;
         }
         catch(Exception $e){
 
         }
     }
-    public function show_shipment_reports($type){
+    public function show_shipment_reports(Request $req,$type){
         $shipments=array();
         switch($type){
             case 'pickup':
-                $shipments=$this->pickup_shipments_report();
+                $shipments=$this->pickup_shipments_report($req->all());
                 break;
             
         case 'delivery':
-            $shipments=$this->delivery_shipments_report();
+            $shipments=$this->delivery_shipments_report($req->all());
             break;
         }
+        if(isset($req->unit_id)){
+            $shipments=$shipments->where('unit_id','=',$req->unit_id)->toArray();
+        }
+        dd($shipments);
         $title="";
         $result=$shipments;
         $locations=Location::all();

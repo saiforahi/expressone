@@ -97,11 +97,12 @@
                         </li>
                     @endif
                     <li>
-                        <a><i class="fa mdi mdi-cube-send"></i> Reports <span class="fa fa-paper"></span></a>
+                        <a><i class="fa mdi mdi-cube-send"></i> Reports <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu" >
                             <li><a href="{{ route('show-shipment-report', ['type' => 'pickup']) }}">Shipment Reports</a></li>
                             <li><a href="{{ route('show-report') }}">Shipment Movement Reports</a></li>
                             <li><a href="{{ route('show-payment-report') }}">Payment Reports</a></li>
+                            <li><a href="{{ route('show-incentive-report') }}">Incentive Reports</a></li>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-home"></i> Website Management <span

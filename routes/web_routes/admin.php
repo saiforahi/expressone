@@ -333,5 +333,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/reports/shipment-movements-report/', [ReportController::class, 'show_report_pickup_from_merchant'])->name('show-report');
     Route::get('/reports/payment', [ReportController::class, 'show_payment_reports'])->name('show-payment-report');
     Route::get('/reports/shipments/{type}', [ReportController::class, 'show_shipment_reports'])->name('show-shipment-report');
+    Route::get('/reports/incentive', [ReportController::class, 'show_incentive_reports'])->name('show-incentive-report');
 });
 

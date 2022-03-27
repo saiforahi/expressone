@@ -20,5 +20,9 @@ class ShipmentPayment extends Model
     function admin(){
         return $this->belongsTo(Admin::class);
     }
+    public function collected_by()
+    {
+        return $this->morphTo();
+    }
 
 }

@@ -41,21 +41,21 @@
                                 <tbody>
                                     @foreach ($result as $shipment)
                                         <tr>
-                                            <td>{{ date('M d, y', strtotime($shipment->created_at)) }}</td>
-                                            <td>{{ $shipment->recipient['name'] }} - {{ $shipment->recipient['phone'] }}</td>
-                                            <td>{{ $shipment->recipient['name'] }}</td>
+                                            <td>{{ date('M d, y', strtotime($shipment['created_at'])) }}</td>
+                                            <td>{{ $shipment['recipient']['name'] }} - {{ $shipment['recipient']['phone'] }}</td>
+                                            <td>{{ $shipment['recipient']['name'] }}</td>
                                             <td>
-                                                {{ $shipment->amount }}
+                                                {{ $shipment['amount'] }}
                                             </td>
                                             <td> {{ $shipment->pickup_location->name ?? null }} </td>
                                             <td> {{ $shipment->delivery_location->name ?? null }} </td>
                                             <td> <a target="_blank"
-                                                    href="/tracking?code={{ $shipment->tracking_code }}">{{ $shipment->tracking_code }}
+                                                    href="/tracking?code={{ $shipment['tracking_code'] }}">{{ $shipment['tracking_code'] }}
                                                 </a></td>
-                                            <td>@include('admin.shipment.status',['status'=>$shipment->status,'logistic_status'=>$shipment->logistic_status])
+                                            <td>@include('admin.shipment.status',['status'=>$shipment['status'],'logistic_status'=>$shipment['logistic_status']])
                                             </td>
                                             {{-- <td class="text-center">
-                                                <button onclick="audit_log(<?php echo $shipment->id; ?>)" class="btn btn-xs btn-warning"
+                                                <button onclick="audit_log(<?php echo $shipment['id']; ?>)" class="btn btn-xs btn-warning"
                                                     data-toggle="modal" data-target="#logModal">Audit log
                                                 </button>
                                                 <a href="/admin/shipment-details/{{ $shipment->id }}" target="_blank"
@@ -129,6 +129,19 @@
             //     url.searchParams.append('area_id', area_id);
             //     window.location.replace(url.href);
             // }
+        }
+        function filter_unit() {
+            let url = window.location.href;
+            let unit_id = $('#unit_id').val();
+
+            url = new URL(url);
+            if (window.location.href.indexOf("unit_id") > -1) {
+                url.searchParams.set('unit_id', unit_id);
+                window.location.replace(url.href);
+            } else {
+                url.searchParams.append('unit_id', unit_id);
+                window.location.replace(url.href);
+            }
         }
         $(function() {
             
