@@ -51,8 +51,11 @@ class ReportController extends Controller
         try{
             $statuses=LogisticStep::where('slug','to-pick-up')->orWhere('slug','picked-up')->orWhere('slug','dropped-at-pickup-unit')->orWhere('slug','unit-received')->pluck('id')->toArray();
             $shipment_with_movements = ShipmentMovement::whereIn('logistic_step_id',$statuses)->get(['shipment_id']);
-            $shipments=Shipment::deliverycousins()->whereBetween('shipments.logistic_status',[7,10])->get();
+            $shipments=Shipment::deliverycousins()->whereBetween('shipments.logistic_status',[7,10])->select('shipments.*','locations.name as delivery_location_name','units.name as delivery_unit_name','units.id as unit_id')->get();
             
+            if(isset($data['area_id'])){
+                $shipments->where('delivery_localtion_id',$data['area_id']);
+            }
             return $shipments;
         }
         catch(Exception $e){
@@ -71,11 +74,20 @@ class ReportController extends Controller
             break;
         }
         if(isset($req->unit_id)){
-            $shipments=$shipments->where('unit_id','=',$req->unit_id)->toArray();
+            $shipments=$shipments->where('unit_id','=',$req->unit_id);
         }
-        dd($shipments);
+        if(isset($req->merchant_id)){
+            $shipments=$shipments->where('merchant_id','=',$req->merchant_id);
+        }
+        
+        if ($req->from_date && $req->to_date) {
+            $from_date = date('Y-m-d', strtotime($req->from_date));
+            $to_date = date('Y-m-d', strtotime($req->to_date));
+            $shipments =  $shipments->whereBetween('created_at', [$from_date . " 00:00:00", $to_date . " 23:59:59"]);
+        }
+        // dd($shipments);
         $title="";
-        $result=$shipments;
+        $result=$shipments->toArray();
         $locations=Location::all();
         $units=Unit::all();
         $users=User::all();

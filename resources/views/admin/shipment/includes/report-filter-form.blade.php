@@ -10,14 +10,14 @@
                 <select class="form-control select2" name="unit_id" id="unit_id" onchange="filter_unit()">
                     <option value="">Search By Unit</option>
                     @foreach($units as $hub)
-                    <option @if(request()->hub_id==$hub->id)selected @endif value="{{$hub->id}}">{{$hub->name}}</option>
+                    <option @if(request()->unit_id==$hub->id)selected @endif value="{{$hub->id}}">{{$hub->name}}</option>
                     @endforeach
                 </select>
             </div>
         </div>
         <div class="row" style="margin-top: 10px !important">
             <div class="col-md-12">
-                <select class="form-control select2" name="area_id" id="area_id" onchange="get_area()">
+                <select class="form-control select2" name="area_id" id="area_id" onchange="filter_area()">
                     <option value="">Search By Area/Location</option>
                     @foreach($locations as $area)
                     <option @if(request()->area_id==$area->id)selected @endif value="{{$area->id}}">{{$area->name}}</option>
@@ -25,11 +25,11 @@
                 </select>
             </div>
         </div>
-        <div class="row" style="margin-top: 10px !important">
+        {{-- <div class="row" style="margin-top: 10px !important">
             <div class="col-md-12">
                 <input style="padding:18px;" type="text" class="form-control" id="invoice_id" name="invoice_id" placeholder="Type Invoice ID/s" value="{{request()->invoice_id}}" >
             </div>
-        </div>
+        </div> --}}
     </div>
     <div class="col-md-4">
         <div class="row">
@@ -39,7 +39,7 @@
         </div>
         <div class="row" style="margin-top: 10px !important">
             <div class="col-md-12">
-                <select class="form-control select2" name="merchant_id" id="merchant_id" onchange="get_merchant()">
+                <select class="form-control select2" name="merchant_id" id="merchant_id" onchange="filter_merchant()">
                     <option value="">Search By merchant</option>
                     @foreach($users as $user)
                     <option @if(request()->merchant_id==$user->id)selected @endif value="{{$user->id}}">{{$user->first_name}} {{$user->last_name}}</option>
@@ -74,15 +74,15 @@
         <div class="row">
             <div class="col-md-6">
                 <label>From</label>
-                <input class="form-control" type="date" name="date1" placeholder="date from" id="datepicker" value="{{request()->date1}}">
+                <input class="form-control" type="date" name="date1" placeholder="date from" id="datepicker" value="{{request()->from_date}}">
             </div>
             <div class="col-md-6">
                 <label>To</label>
-                <input  class="form-control" type="date" name="date2" placeholder="date to" onchange="get_dates()"
-                value="{{request()->date2}}">
+                <input  class="form-control" type="date" name="date2" placeholder="date to" onchange="filter_from_date()"
+                value="{{request()->to_date}}">
             </div>
         </div>
     </div>
 </div>
 <br/>
- <br/>
+<br/>

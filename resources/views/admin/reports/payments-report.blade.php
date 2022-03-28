@@ -12,67 +12,170 @@
                         @include('admin.shipment.load.shipment-filter')
                     </div> --}}
                 </div>
-                {{-- <div class="row mb-3" style="margin-bottom: 10px !important; margin-top: 10px !important;">
+                <div class="row mb-3" style="margin-bottom: 10px !important; margin-top: 10px !important;">
                     <div class="col-md-2">
-                        <select class="form-control select2" name="area_id" id="area_id" onchange="get_area()">
-                            <option value="">Search By Area/Location</option>
-                            
+                        <select class="form-control select2" name="type_id" id="type_id" onchange="on_type_change()">
+                            <option value="">-- Select Type --</option>
+                            <option value="merchant-wise">Merchant wise</option>
+                            <option value="shipment-wise">Shipment wise</option>
+                            <option value="unit-wise">Unit wise</option>
                         </select>
                     </div>
-                </div> --}}
-                <div class="x_content">
-                    <div class="table-responsive">
-                        <table id="datatable-buttons"
-                            class="table table-striped table-bordered dataTable no-footer dtr-inline">
-                            <thead>
-                                <tr class="bg-dark">
-                                    <th>Date</th>
-                                    <th>Customer info</th>
-                                    <th>Merchant</th>
-                                    <th>Amount</th>
-                                    <th>Pick up</th>
-                                    <th>Delivery</th>
-                                    <th>Trackings</th>
-                                    <th>Status</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($result as $shipment)
-                                    <tr>
-                                        <td>{{ date('M d, y', strtotime($shipment->created_at)) }}</td>
-                                        <td>{{ $shipment->recipient['name'] }} - {{ $shipment->recipient['phone'] }}</td>
-                                        <td>{{ $shipment->recipient['name'] }}</td>
-                                        <td>
-                                            {{ $shipment->amount }}
-                                        </td>
-                                        <td> {{ $shipment->pickup_location->name ?? null }} </td>
-                                        <td> {{ $shipment->delivery_location->name ?? null }} </td>
-                                        <td> <a target="_blank"
-                                                href="/tracking?code={{ $shipment->tracking_code }}">{{ $shipment->tracking_code }}
-                                            </a></td>
-                                        <td>@include('admin.shipment.status',['status'=>$shipment->status,'logistic_status'=>$shipment->logistic_status])
-                                        </td>
-                                        <td class="text-center">
-                                            {{-- <button class="btn btn-xs btn-warning reset" id="{{$shipment->id}}">Reset</button> --}}
-                                            <button onclick="audit_log(<?php echo $shipment->id; ?>)" class="btn btn-xs btn-warning"
-                                                data-toggle="modal" data-target="#logModal">Audit log
-                                            </button>
-                                            <a href="/admin/shipment-details/{{ $shipment->id }}" target="_blank"
-                                                class="btn btn-xs btn-info">View</a>
-                                        </td>
+                </div>
+                <div class="row" id="unit_wise_row" style="display: none">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="table-responsive">
+                            <table id="datatable-buttons"
+                                class="table table-striped table-bordered dataTable no-footer dtr-inline">
+                                <thead>
+                                    <tr class="bg-dark">
+                                        <th>Unit Info</th>
+                                        <th>Total Shipments</th>
+                                        <th>Payments Collected</th>
+                                        
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        
+                                </thead>
+                                <tbody>
+                                    @foreach ($result as $shipment)
+                                        <tr>
+                                            <td>{{ date('M d, y', strtotime($shipment->created_at)) }}</td>
+                                            <td>{{ $shipment->recipient['name'] }} - {{ $shipment->recipient['phone'] }}
+                                            </td>
+                                            <td>{{ $shipment->recipient['name'] }}</td>
+                                            <td>
+                                                {{ $shipment->amount }}
+                                            </td>
+                                            <td> {{ $shipment->pickup_location->name ?? null }} </td>
+                                            <td> {{ $shipment->delivery_location->name ?? null }} </td>
+                                            <td> <a target="_blank"
+                                                    href="/tracking?code={{ $shipment->tracking_code }}">{{ $shipment->tracking_code }}
+                                                </a></td>
+                                            <td>@include('admin.shipment.status', [
+                                                'status' => $shipment->status,
+                                                'logistic_status' => $shipment->logistic_status,
+                                            ])
+                                            </td>
+                                            
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="merchant_wise_row" style="display: block">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="table-responsive">
+                            <table id="datatable-buttons"
+                                class="table table-striped table-bordered dataTable no-footer dtr-inline">
+                                <thead>
+                                    <tr class="bg-dark">
+                                        <th>Merchant Info</th>
+                                        <th>Total S</th>
+                                        <th>Merchant</th>
+                                        <th>Amount</th>
+                                        <th>Pick up</th>
+                                        <th>Delivery</th>
+                                        <th>Trackings</th>
+                                        <th>Status</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($result as $shipment)
+                                        <tr>
+                                            <td>{{ date('M d, y', strtotime($shipment->created_at)) }}</td>
+                                            <td>{{ $shipment->recipient['name'] }} -
+                                                {{ $shipment->recipient['phone'] }}</td>
+                                            <td>{{ $shipment->recipient['name'] }}</td>
+                                            <td>
+                                                {{ $shipment->amount }}
+                                            </td>
+                                            <td> {{ $shipment->pickup_location->name ?? null }} </td>
+                                            <td> {{ $shipment->delivery_location->name ?? null }} </td>
+                                            <td> <a target="_blank"
+                                                    href="/tracking?code={{ $shipment->tracking_code }}">{{ $shipment->tracking_code }}
+                                                </a></td>
+                                            <td>@include('admin.shipment.status', [
+                                                'status' => $shipment->status,
+                                                'logistic_status' => $shipment->logistic_status,
+                                            ])
+                                            </td>
+                                            <td class="text-center">
+                                                {{-- <button class="btn btn-xs btn-warning reset" id="{{$shipment->id}}">Reset</button> --}}
+                                                <button onclick="audit_log(<?php echo $shipment->id; ?>)"
+                                                    class="btn btn-xs btn-warning" data-toggle="modal"
+                                                    data-target="#logModal">Audit log
+                                                </button>
+                                                <a href="/admin/shipment-details/{{ $shipment->id }}" target="_blank"
+                                                    class="btn btn-xs btn-info">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="shipment_wise_row" style="display: none">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="table-responsive">
+                            <table id="datatable-buttons"
+                                class="table table-striped table-bordered dataTable no-footer dtr-inline">
+                                <thead>
+                                    <tr class="bg-dark">
+                                        <th>Date</th>
+                                        <th>Customer info</th>
+                                        <th>Merchant</th>
+                                        <th>Amount</th>
+                                        <th>Pick up</th>
+                                        <th>Delivery</th>
+                                        <th>Trackings</th>
+                                        <th>Status</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($result as $shipment)
+                                        <tr>
+                                            <td>{{ date('M d, y', strtotime($shipment->created_at)) }}</td>
+                                            <td>{{ $shipment->recipient['name'] }} -
+                                                {{ $shipment->recipient['phone'] }}</td>
+                                            <td>{{ $shipment->recipient['name'] }}</td>
+                                            <td>
+                                                {{ $shipment->amount }}
+                                            </td>
+                                            <td> {{ $shipment->pickup_location->name ?? null }} </td>
+                                            <td> {{ $shipment->delivery_location->name ?? null }} </td>
+                                            <td> <a target="_blank"
+                                                    href="/tracking?code={{ $shipment->tracking_code }}">{{ $shipment->tracking_code }}
+                                                </a></td>
+                                            <td>@include('admin.shipment.status', [
+                                                'status' => $shipment->status,
+                                                'logistic_status' => $shipment->logistic_status,
+                                            ])
+                                            </td>
+                                            <td class="text-center">
+                                                {{-- <button class="btn btn-xs btn-warning reset" id="{{$shipment->id}}">Reset</button> --}}
+                                                <button onclick="audit_log(<?php echo $shipment->id; ?>)"
+                                                    class="btn btn-xs btn-warning" data-toggle="modal"
+                                                    data-target="#logModal">Audit log
+                                                </button>
+                                                <a href="/admin/shipment-details/{{ $shipment->id }}" target="_blank"
+                                                    class="btn btn-xs btn-info">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    
+
 @endsection
 @push('style')
     <link href="{{ asset('vendors/datatables.net-bs/css/dataTables.bootstrap.min.css') }}" rel="stylesheet">
@@ -84,6 +187,7 @@
         select {
             padding: 4.1px
         }
+
     </style>
 @endpush
 @push('scripts')
@@ -102,7 +206,7 @@
     <script src="{{ asset('vendors/jszip/dist/jszip.min.js') }}"></script>
     <script src="{{ asset('vendors/pdfmake/build/pdfmake.min.js') }}"></script>
     <script src="{{ asset('vendors/pdfmake/build/vfs_fonts.js') }}"></script>
-    
+
     <script>
         function audit_log(shipment_id) {
             $('.audit-result').html('Loading...');
@@ -114,22 +218,21 @@
                 }
             });
         }
-        function get_area() {
-            let url = window.location.href;
-            let area_id = $('#area_id').val();
 
-            url = new URL(url);
-            if (window.location.href.indexOf("area_id") > -1) {
-                url.searchParams.set('area_id', area_id);
-                window.location.replace(url.href);
-            } else {
-                url.searchParams.append('area_id', area_id);
-                window.location.replace(url.href);
+        function on_type_change() {
+            let type = $('#type_id').val();
+
+            if(type == 'merchant-wise'){
+                document.getElementById('merchant_wise_row').style.display='block'
+                document.getElementById('unit_wise_row').style.display='none'
+            }
+            else if(type == 'unit-wise'){
+                document.getElementById('unit_wise_row').style.display='block'
+                document.getElementById('merchant_wise_row').style.display='none'
             }
         }
         $(function() {
-            
+
         })
     </script>
-    
 @endpush

@@ -30,6 +30,9 @@ class User extends Authenticatable implements HasMedia
     public function shipments(){
         return $this->morphMany(Shipment::class, 'added_by');
     }
+    public function full_name(){
+        return $this->first_name.' '.$this->last_name;
+    }
     public function guard__name(){
         return $this->guard_name;
     }
