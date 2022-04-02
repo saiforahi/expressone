@@ -33,8 +33,9 @@
                                     <tbody class="delivery-result">
                                     @foreach($shipments as $shipment)
                                         <tr class="even pointer">
-                                            <td><input type="checkbox" value="{{$shipment->id}}" class="checkbox"
-                                                       name="ids[]"></td>
+                                            <td>
+                                                <input type="checkbox" value="{{$shipment->id}}" class="checkbox" @if(total_paid($shipment) >= ($shipment->payment_detail->weight_charge+$shipment->payment_detail->delivery_charge)) disabled @endif name="ids[]">
+                                            </td>
                                             <td style="width:25%">
                                                 Parcel ID: {{$shipment->id}}<br>
                                                 Invoice ID: {{$shipment->invoice_id}}<br>
@@ -61,6 +62,9 @@
                                                 <strong>Payable by expressone {{abs(payable_amount($shipment))}}</strong>
                                                 @elseif(payable_amount($shipment) < 0)
                                                 <strong>Payable by merchant {{abs(payable_amount($shipment))}}</strong>
+                                                @endif
+                                                @if(total_paid($shipment) >= ($shipment->payment_detail->weight_charge+$shipment->payment_detail->delivery_charge))
+                                                <span class="btn-success">Paid</span>
                                                 @endif
                                             </td>
                                             <td>

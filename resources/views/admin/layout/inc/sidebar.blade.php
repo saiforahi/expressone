@@ -96,6 +96,7 @@
                             </ul>
                         </li>
                     @endif
+                    @if (Auth::guard('admin')->user()->hasRole('super-admin'))
                     <li>
                         <a><i class="fa mdi mdi-cube-send"></i> Reports <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu" >
@@ -105,6 +106,7 @@
                             <li><a href="{{ route('show-incentive-report') }}">Incentive Reports</a></li>
                         </ul>
                     </li>
+                    @endif
                     <li><a><i class="fa fa-home"></i> Website Management <span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">

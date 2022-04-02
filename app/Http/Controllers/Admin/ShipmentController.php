@@ -883,7 +883,12 @@ class ShipmentController extends Controller
         }
     }
     public function delivery_shipments(Request $request){
-        $shipments = Shipment::whereBetween('logistic_status',[8,11])->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->get('shipments.*');
+        if(Auth::user()->hasRole('super-admin')){
+            $shipments = Shipment::whereBetween('logistic_status',[8,11])->deliverycousins()->get('shipments.*');
+        }
+        else{
+            $shipments = Shipment::whereBetween('logistic_status',[8,11])->deliverycousins()->where('units.admin_id',Auth::guard('admin')->user()->id)->get('shipments.*');
+        }
         $users = User::where(['status'=>1,'is_verified'=>1])->get();
         $units= Unit::all();
         $locations = Location::all();
@@ -1055,6 +1060,7 @@ class ShipmentController extends Controller
 
     function deliveryPaymentsForMerchant($shipment_ids)
     {
+        // dd($shipment_ids);
         $allshipments = Shipment::whereIn('id', explode(',', $shipment_ids))->whereIn('logistic_status',LogisticStep::where('slug','delivered')->orWhere('slug','delivery-confirmed')->pluck('id')->toArray())->get();   
         $shipments=array();
         foreach($allshipments as $item){
@@ -1069,7 +1075,8 @@ class ShipmentController extends Controller
     {
         // dd($request->all());
         foreach ($request->shipment_ids as $key => $shipment_id) {
-            ShipmentPayment::where('shipment_id',$shipment_id)->update(['status'=>'paid','paid_amount'=>$request->amount[$key]]);
+            $new_paid_amount = MerchantPayment::where('shipment_id',$shipment_id)->sum('amount')+$request->amount[$key];
+            ShipmentPayment::where('shipment_id',$shipment_id)->update(['status'=>'paid','paid_amount'=>$new_paid_amount]);
             $new_payment=MerchantPayment::create([
                 'shipment_id'=>$shipment_id,
                 'merchant_id'=> Shipment::find($shipment_id)->merchant->id,

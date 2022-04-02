@@ -42,12 +42,10 @@
                                 @foreach ($result as $shipment)
                                     <tr>
                                         <td>
-                                            <span>Created at:
-                                                {{ date('M d, y', strtotime($shipment['created_at'])) }}</span><br />
-                                            <button onclick="audit_log(<?php echo $shipment['id']; ?>)" class="btn btn-xs btn-warning"
-                                                data-toggle="modal" data-target="#logModal">Audit log
-                                            </button>
-
+                                            <span><strong>Pickup Unit : </strong>{{ \App\Models\Shipment::find($shipment['id'])->pickup_location->point->unit->name }}</span><br/>
+                                            <span><strong>Delivery Unit : </strong>{{ \App\Models\Shipment::find($shipment['id'])->delivery_location->point->unit->name }}</span><br/>
+                                            <span>Tracking No : {{ \App\Models\Shipment::find($shipment['id'])->tracking_code }}</span><br/>
+                                            <span>Created at : {{ date('M d, y', strtotime($shipment['created_at'])) }}</span><br />
                                         </td>
                                         <td>
                                             <span><strong>Name :

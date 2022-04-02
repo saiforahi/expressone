@@ -43,4 +43,5 @@ Route::group(['middleware' => 'auth:courier', 'namespace' => 'Courier', 'prefix'
     Route::post('return-shipment-delivery', [ShipmentController::class,'return_delivery_report'])->name('return-shipment-delivery');
     Route::post('confirm-otp', [ShipmentController::class,'otp_confirmation'])->name('confirm-opt');
     Route::get('return-shipment/{shipment_id}', [ShipmentController::class,'return_shipment'])->name('return-shipment');
+    Route::get('collections', [ShipmentController::class,'collections'])->name('collections');
 });

@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Location;
 use App\Models\LogisticStep;
+use App\Models\MerchantPayment;
 use Illuminate\Http\Request;
 use App\Models\Shipment;
 use App\Models\ShipmentMovement;
 use App\Models\Unit;
 use App\Models\User;
 use Exception;
+use DB;
 
 class ReportController extends Controller
 {
@@ -93,11 +95,40 @@ class ReportController extends Controller
         $users=User::all();
         return view('admin.reports.shipments-report',compact(['type','title','result','locations','units','users']));
     }
-
+    public function unit_wise_payment_report(){
+        $units = DB::table('shipments')->join('shipment_payments','shipment_payments.shipment_id','=','shipments.id')
+        ->join('locations','locations.id','=','shipments.delivery_location_id')->join('points','points.id','=','locations.point_id')->join('units','units.id','=','points.unit_id')->select('units.*')->get();
+        
+        return $units;
+    }
+    public function merchant_wise_payment_report(){
+        $merchants =array();
+        foreach(User::all() as $user){
+            $total_paid=0;
+            $total_due=0;
+            $total_shipments=Shipment::where('merchant_id','=',$user->id)->count();
+            foreach(Shipment::where('merchant_id','=',$user->id)->get() as $shipment){
+                $total_paid += $shipment->payment_detail->paid_amount;
+                $amount_to_be_paid = $shipment->payment_detail->cod_amount - ($shipment->payment_detail->delivery_charge+$shipment->payment_detail->weight_charge);
+                $total_due+= $amount_to_be_paid - $shipment->payment_detail->paid_amount;
+            }
+            array_push($merchants,array('user'=>$user,'total_paid'=>$total_paid,'total_due'=>$total_due,'total_shipments'=>$total_shipments));
+        }
+        // dd($merchants);
+        return $merchants;
+    }
     public function show_payment_reports(){
         $title="";
+        $units=$this->unit_wise_payment_report();
+        $merchants=$this->merchant_wise_payment_report();
+        // dd($unit_payments);
         $result=array();
-        $type="";
-        return view('admin.reports.payments-report',compact(['type','title','result']));
+        return view('admin.reports.payments-report',compact(['title','units','result','merchants']));
+    }
+
+    public function show_incentive_reports(){
+        $returned_deliveries=Shipment::whereBetween('logistic_status',[14,18])->get();
+        $successfull_deliveries=Shipment::whereBetween('logistic_status',[10,11])->get();
+        return view('admin.reports.incentive-report',compact('returned_deliveries','successfull_deliveries'));
     }
 }

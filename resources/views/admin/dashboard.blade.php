@@ -75,7 +75,7 @@
                 <div class="tile-stats">
                     <div class="icon"><i class="fa fa-money"></i>
                     </div>
-                    <div class="count">{{ sprintf('%02d', total_delivered_shipments(auth()->guard('admin')->user())) }}</div>
+                    <div class="count">{{ sprintf('%02d', total_cod_outstanding(auth()->guard('admin')->user())) }}</div>
 
                     <h3>Total COD Outstanding</h3>
                     {{-- <p><a href="/admin/shipping-list/">All Delivered shipments from the scratch</a></p> --}}

@@ -17,50 +17,9 @@
                         <select class="form-control select2" name="type_id" id="type_id" onchange="on_type_change()">
                             <option value="">-- Select Type --</option>
                             <option value="merchant-wise">Merchant wise</option>
-                            <option value="shipment-wise">Shipment wise</option>
+                            {{-- <option value="shipment-wise">Shipment wise</option> --}}
                             <option value="unit-wise">Unit wise</option>
                         </select>
-                    </div>
-                </div>
-                <div class="row" id="unit_wise_row" style="display: none">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="table-responsive">
-                            <table id="datatable-buttons"
-                                class="table table-striped table-bordered dataTable no-footer dtr-inline">
-                                <thead>
-                                    <tr class="bg-dark">
-                                        <th>Unit Info</th>
-                                        <th>Total Shipments</th>
-                                        <th>Payments Collected</th>
-                                        
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($result as $shipment)
-                                        <tr>
-                                            <td>{{ date('M d, y', strtotime($shipment->created_at)) }}</td>
-                                            <td>{{ $shipment->recipient['name'] }} - {{ $shipment->recipient['phone'] }}
-                                            </td>
-                                            <td>{{ $shipment->recipient['name'] }}</td>
-                                            <td>
-                                                {{ $shipment->amount }}
-                                            </td>
-                                            <td> {{ $shipment->pickup_location->name ?? null }} </td>
-                                            <td> {{ $shipment->delivery_location->name ?? null }} </td>
-                                            <td> <a target="_blank"
-                                                    href="/tracking?code={{ $shipment->tracking_code }}">{{ $shipment->tracking_code }}
-                                                </a></td>
-                                            <td>@include('admin.shipment.status', [
-                                                'status' => $shipment->status,
-                                                'logistic_status' => $shipment->logistic_status,
-                                            ])
-                                            </td>
-                                            
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
                 <div class="row" id="merchant_wise_row" style="display: block">
@@ -70,23 +29,71 @@
                                 class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>
                                     <tr class="bg-dark">
-                                        <th>Merchant Info</th>
-                                        <th>Total S</th>
-                                        <th>Merchant</th>
-                                        <th>Amount</th>
-                                        <th>Pick up</th>
-                                        <th>Delivery</th>
-                                        <th>Trackings</th>
-                                        <th>Status</th>
-                                        <th class="text-center">Action</th>
+                                        <th class="text-center">Merchant Info</th>
+                                        <th class="text-center">Total Shipments</th>
+                                        <th class="text-center">Total Paid</th>
+                                        <th class="text-center">Total Due</th>
+                                        {{-- <th class="text-center">Action</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($result as $shipment)
+                                    @foreach ($merchants as $merchant)
                                         <tr>
-                                            <td>{{ date('M d, y', strtotime($shipment->created_at)) }}</td>
-                                            <td>{{ $shipment->recipient['name'] }} -
-                                                {{ $shipment->recipient['phone'] }}</td>
+                                            <td>
+                                                <span><strong>Name : </strong>{{$merchant['user']->first_name.' '.$merchant['user']->last_name}}</span><br/>
+                                                <span><strong>Phone : </strong>{{$merchant['user']->phone}}</span><br/>
+                                                <span><strong>Unit : </strong>{{$merchant['user']->unit->name}}</span><br/>
+                                                <span><strong>Address : </strong>{{$merchant['user']->address}}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span>{{$merchant['total_shipments']}}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span>{{$merchant['total_paid']}}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span>{{$merchant['total_due']}}</span>
+                                            </td>
+                                            
+                                            
+                                            {{-- <td class="text-center">
+                                                
+                                                <button onclick="audit_log(<?php echo $shipment->id; ?>)"
+                                                    class="btn btn-xs btn-warning" data-toggle="modal"
+                                                    data-target="#logModal">Audit log
+                                                </button>
+                                                <a href="/admin/shipment-details/{{ $shipment->id }}" target="_blank"
+                                                    class="btn btn-xs btn-info">View</a>
+                                            </td> --}}
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" id="unit_wise_row" style="display: none">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="table-responsive">
+                            <table id="datatable-buttons" class="table table-striped table-bordered dataTable no-footer dtr-inline">
+                                <thead>
+                                    <tr class="bg-dark">
+                                        <th>Unit Info</th>
+                                        <th>Total Collected</th>
+                                        <th>Total Paid</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($units as $unit)
+                                        <tr>
+                                            <td>
+                                                <span>{{ $unit->name }}</span><br/>
+                                                <span>Admin : </span>
+                                            </td>
+                                            <td>{{ unit_collected_cod_amount($unit->id) }}</td>
+                                            <td>{{ unit_paid_amount($unit->id) }}</td>
+                                            {{-- <td>{{ $shipment->recipient['name'] }} - {{ $shipment->recipient['phone'] }}
+                                            </td>
                                             <td>{{ $shipment->recipient['name'] }}</td>
                                             <td>
                                                 {{ $shipment->amount }}
@@ -100,16 +107,8 @@
                                                 'status' => $shipment->status,
                                                 'logistic_status' => $shipment->logistic_status,
                                             ])
-                                            </td>
-                                            <td class="text-center">
-                                                {{-- <button class="btn btn-xs btn-warning reset" id="{{$shipment->id}}">Reset</button> --}}
-                                                <button onclick="audit_log(<?php echo $shipment->id; ?>)"
-                                                    class="btn btn-xs btn-warning" data-toggle="modal"
-                                                    data-target="#logModal">Audit log
-                                                </button>
-                                                <a href="/admin/shipment-details/{{ $shipment->id }}" target="_blank"
-                                                    class="btn btn-xs btn-info">View</a>
-                                            </td>
+                                            </td> --}}
+                                            
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -117,6 +116,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="row" id="shipment_wise_row" style="display: none">
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <div class="table-responsive">

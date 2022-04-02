@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                         </div> <br>
-                        <table id="datatable" class="table table-striped table-bordered no-footer dtr-inline">
+                        <table id="datatable" class="table table-striped table-bordered no-footer dtr-inline dataTable">
                             <thead>
                                 <tr class="bg-dark">
                                     <th>Date</th>

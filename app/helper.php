@@ -335,10 +335,52 @@ if (!function_exists('total_cod_outstanding')) {
     {
         $statuses=LogisticStep::where('slug','delivery-confirmed')->pluck('id')->toArray();
         if($admin->hasRole('super-admin')){
-            return Shipment::whereIn('logistic_status',$statuses)->count();
+            $total_cod=Shipment::whereIn('logistic_status',$statuses)
+            ->join('shipment_payments','shipment_payments.shipment_id','=','shipments.id')->sum('shipment_payments.cod_amount');
+            
+            $total_paid=Shipment::whereIn('logistic_status',$statuses)
+            ->join('merchant_payments','merchant_payments.shipment_id','=','shipments.id')->sum('merchant_payments.amount');
+            
+            return $total_cod-$total_paid;
+            // return Shipment::whereIn('logistic_status',$statuses)->count();
         }
         else{
-            return Shipment::whereIn('logistic_status',$statuses)->deliverycousins()->where('units.admin_id',$admin->id)->count();
+            $total_cod=Shipment::whereIn('logistic_status',$statuses)->deliverycousins()->where('units.admin_id',$admin->id)
+            ->join('shipment_payments','shipment_payments.shipment_id','=','shipments.id')->sum('shipment_payments.cod_amount');
+            
+            $total_paid=Shipment::whereIn('logistic_status',$statuses)->deliverycousins()->where('units.admin_id',$admin->id)
+            ->join('merchant_payments','merchant_payments.shipment_id','=','shipments.id')->sum('merchant_payments.amount');
+            
+            return $total_cod-$total_paid;
         }
+    }
+}
+
+if (!function_exists('unit_collected_cod_amount')) {
+    function unit_collected_cod_amount($unit_id)
+    {
+        $total_collected = DB::table('shipments')
+        ->join('shipment_payments','shipment_payments.shipment_id','=','shipments.id')
+        ->join('locations','locations.id','=','shipments.delivery_location_id')
+        ->join('points','points.id','=','locations.point_id')
+        ->join('units','units.id','=','points.unit_id')
+        ->where('shipment_payments.collected_by_id','!=','null')
+        ->where('units.id','=',$unit_id)->sum('shipment_payments.cod_amount');
+        return $total_collected;
+    }
+}
+
+if (!function_exists('unit_paid_amount')) {
+    function unit_paid_amount($unit_id)
+    {
+        $total_paid = DB::table('shipments')
+        ->join('shipment_payments','shipment_payments.shipment_id','=','shipments.id')
+        ->join('locations','locations.id','=','shipments.delivery_location_id')
+        ->join('points','points.id','=','locations.point_id')
+        ->join('units','units.id','=','points.unit_id')
+        ->where('shipment_payments.collected_by_id','!=','null')
+        ->where('shipment_payments.paid_amount','!=','null')
+        ->where('units.id','=',$unit_id)->sum('shipment_payments.paid_amount');
+        return $total_paid;
     }
 }

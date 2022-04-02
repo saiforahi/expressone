@@ -46,11 +46,17 @@
                                 @foreach ($result as $shipment)
                                     <tr>
                                         <td>
-                                            <span>{{ $shipment['shipment']->merchant->name }}</span><br/>
+                                            <span><strong>Merchant : </strong>{{ $shipment['shipment']->merchant->first_name }}</span><br/>
+                                            <span><strong>Pickup Unit : </strong>{{ $shipment['shipment']->pickup_location->point->unit->name }}</span><br/>
+                                            <span><strong>Delivery Unit : </strong>{{ $shipment['shipment']->delivery_location->point->unit->name }}</span><br/>
                                             <span>{{ $shipment['shipment']->tracking_code }}</span><br/>
                                             <span>{{ date('M d, y', strtotime($shipment['shipment']->created_at)) }}</span>
                                         </td>
-                                        <td>{{ $shipment['shipment']->recipient['name'] }}</td>
+                                        <td>
+                                            <span><strong>Name : </strong>{{ $shipment['shipment']->recipient['name'] }}</span><br/>
+                                            <span><strong>Phone : </strong>{{ $shipment['shipment']->recipient['phone'] }}</span><br/>
+                                            <span><strong>Address : </strong>{{ $shipment['shipment']->recipient['address'] }}</span>
+                                        </td>
                                         <td>
                                             <span style="font-weight: bold">{{ $shipment['movements']['pickup_from_merchant']->action_made_by->first_name.' '.$shipment['movements']['pickup_from_merchant']->action_made_by->last_name }}</span><br/>
                                             <span>{{ str_replace('App\\Models\\', '', $shipment['movements']['pickup_from_merchant']->action_made_by_type ?? '') }}</span><br />
