@@ -30,6 +30,7 @@
                                 <th>Customer Details</th>
                                 <th>COD Amount</th>
                                 <th>Delivery Charge</th>
+                                <th>Weight Charge</th>
                                 <th>Weight</th>
                                 <th>Merchante note</th>
                                 <th>Created At</th>
@@ -48,6 +49,9 @@
                                 <td>{{ $shipment->amount }}</td>
                                 <td>
                                     {{ $shipment->payment_detail->delivery_charge }}
+                                </td>
+                                <td>
+                                    {{ $shipment->payment_detail->weight_charge }}
                                 </td>
                                 <td>
                                     {{ $shipment->weight }}

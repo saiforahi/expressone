@@ -141,8 +141,8 @@ class ShipmentController extends Controller
     function shipmentConsNote(Shipment $shipment)
     {
         $zone = Location::find($shipment->pickup_location_id);
-        $price = $shipment->delivery_charge;
-        $total_price = $shipment->cod_amount;
+        $price = $shipment->payment_detail->delivery_charge+$shipment->payment_detail->weight_charge;
+        $total_price = $shipment->payment_detail->cod_amount;
         return view('dashboard.shipmentCNote', compact('shipment', 'zone', 'price', 'total_price'));
     }
 
@@ -276,7 +276,7 @@ class ShipmentController extends Controller
                 return $price;
             })
             ->addColumn('amount', function ($shipment) {
-                $price = (int)$shipment->payment_detail->cod_amount - (int) $shipment->payment_detail->delivery_charge;
+                $price = (int)$shipment->payment_detail->cod_amount - (int) ($shipment->payment_detail->delivery_charge+$shipment->payment_detail->weight_charge);
                 return '<span class="text-danger">' . $price . ' Tk</span>';
             })
             ->rawColumns(['id', 'tracking_code', 'invoice_no', 'payment_by', 'amount', 'action'])->make(true);

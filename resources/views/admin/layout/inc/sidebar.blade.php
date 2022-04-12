@@ -106,6 +106,8 @@
                             <li><a href="{{ route('show-incentive-report') }}">Incentive Reports</a></li>
                         </ul>
                     </li>
+                    <li><a href="{{ route('show-buisness-settings') }}"><i class="fa mdi mdi-cash"></i>Buisness Settings</a>
+                    </li>
                     @endif
                     <li><a><i class="fa fa-home"></i> Website Management <span
                                 class="fa fa-chevron-down"></span></a>

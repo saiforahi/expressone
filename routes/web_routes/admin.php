@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\BuisnessController;
 /*
 |--------------------------------------------------------------------------
 | Admin Route
@@ -334,5 +335,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/reports/payment', [ReportController::class, 'show_payment_reports'])->name('show-payment-report');
     Route::get('/reports/shipments/{type}', [ReportController::class, 'show_shipment_reports'])->name('show-shipment-report');
     Route::get('/reports/incentive', [ReportController::class, 'show_incentive_reports'])->name('show-incentive-report');
+    Route::get('/buisness-settings', [BuisnessController::class, 'show'])->name('show-buisness-settings');
 });
 
