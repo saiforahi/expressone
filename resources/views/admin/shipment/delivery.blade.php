@@ -145,7 +145,15 @@
                                                         
                                                         <select class="form-control" name="courier_id" required="">
                                                             <option value="">Choose Courier</option>
-                                                            <?php $couriers = \App\Models\Courier::latest()->get();?>
+                                                            <?php 
+                                                                if(auth()->user()->hasRole('super-admin')){
+                                                                    $couriers = \App\Models\Courier::latest()->get();
+                                                                }
+                                                                else{
+                                                                    $units=\App\Models\Unit::where('admin_id',auth()->user()->id)->pluck('id')->toArray();
+                                                                    $couriers = \App\Models\Courier::whereIn('unit_id',$units)->get();
+                                                                }
+                                                            ?>
                                                             @foreach ($couriers as $courier)
                                                                 <option value="{{ $courier->id }}">{{ $courier->first_name . ' ' . $courier->last_name }} ({{ $courier->phone }})
                                                                 </option>

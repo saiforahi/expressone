@@ -204,6 +204,19 @@
                 window.location.replace(url.href);
             }
         }
+        function filter_courier() {
+            let url = window.location.href;
+            let courier_id = $('#courier_id').val();
+
+            url = new URL(url);
+            if (window.location.href.indexOf("courier_id") > -1) {
+                url.searchParams.set('courier_id', courier_id);
+                window.location.replace(url.href);
+            } else {
+                url.searchParams.append('courier_id', courier_id);
+                window.location.replace(url.href);
+            }
+        }
 
         function filter_from_date() {
             if ($("[name=date1]").val() == '') {

@@ -12,33 +12,63 @@
                 </div>
             @endif
         </div>
-        <div class="row mb-3" style="margin-bottom: 10px !important; margin-top: 10px !important;">
+        <div class="row mb-3" style="margin-bottom: 10px !important; margin-top: 30px !important;">
             <div class="col-md-4">
+                <label>Select Type</label>
                 <select class="form-control select2" name="type_id" id="type_id" onchange="on_type_change()">
                     <option value="">-- Select Delivery Type --</option>
-                    <option value="successfull">Successfull</option>
+                    <option value="successfull" selected>Successfull</option>
                     {{-- <option value="shipment-wise">Shipment wise</option> --}}
                     <option value="returned">Returned</option>
                 </select>
             </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>From</label>
+                        <input class="form-control" type="date" name="date1" placeholder="date from" id="datepicker" value="{{request()->from_date}}">
+                    </div>
+                    <div class="col-md-6">
+                        <label>To</label>
+                        <input  class="form-control" type="date" name="date2" placeholder="date to" onchange="filter_from_date()"
+                        value="{{request()->to_date}}">
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row" id="successfull" style="display: block">
+        <div class="row" id="successfull" style="display: block; margin-top:60px !important">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="table-responsive">
                     <table id="datatable-buttons"
                         class="table table-striped table-bordered dataTable no-footer dtr-inline">
                         <thead>
                             <tr class="bg-dark">
-                                <th class="text-center">Shipment Info</th>
-                                <th class="text-center">Customer Info</th>
-                                <th class="text-center">Merchant Info</th>
                                 <th class="text-center">Courier Info</th>
-                                <th class="text-center">Payment Info</th>
+                                <th class="text-center">Total Delivered</th>
+                                <th class="text-center">Incentive<br/>( x {{\App\Models\GeneralSettings::first()->incentive_val}})</th>
                                 {{-- <th class="text-center">Action</th> --}}
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($successfull_deliveries as $shipment)
+                            @foreach ($results['successfull_result'] as $result)
+                            <tr>
+                                <td>
+                                    <span><strong>Name : </strong>{{ $result['courier']->first_name }}</span><br/>
+                                    <span><strong>Phone : </strong>{{ $result['courier']->phone }}</span><br/>
+                                    <span><strong>Unit : </strong>{{ $result['courier']->unit->name }}</span><br/>
+                                    
+                                </td>
+                                <td class="text-center">
+                                    <span>{{$result['total_delivered']}}</span>
+                                    
+                                </td>
+                                <td class="text-center">
+                                    <span>{{$result['total_incentive']}}</span>
+                                    
+                                </td>
+                            </tr>
+                            @endforeach
+                            {{-- @foreach ($successfull_deliveries as $shipment)
                                 <tr>
                                     <td>
                                         <span><strong>Pickup Unit : </strong>{{ $shipment->pickup_location->point->unit->name }}</span><br/>
@@ -60,55 +90,42 @@
                                     <td class="text-center">
                                         
                                     </td>
-                                    
-                                    
-                                    {{-- <td class="text-center">
-                                        
-                                        <button onclick="audit_log(<?php echo $shipment->id; ?>)"
-                                            class="btn btn-xs btn-warning" data-toggle="modal"
-                                            data-target="#logModal">Audit log
-                                        </button>
-                                        <a href="/admin/shipment-details/{{ $shipment->id }}" target="_blank"
-                                            class="btn btn-xs btn-info">View</a>
-                                    </td> --}}
                                 </tr>
-                            @endforeach
+                            @endforeach --}}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <div class="row" id="returned" style="display: none">
+        <div class="row" id="returned" style="display: none; margin-top:60px !important">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="table-responsive">
                     <table id="datatable-buttons"
                         class="table table-striped table-bordered dataTable no-footer dtr-inline">
                         <thead>
                             <tr class="bg-dark">
-                                <th class="text-center">Shipment Info</th>
-                                <th class="text-center">Customer Info</th>
-                                <th class="text-center">Merchant Info</th>
-                                <th class="text-center">Payment Info</th>
+                                <th class="text-center">Courier Info</th>
+                                <th class="text-center">Total Returned</th>
+                                <th class="text-center">Incentive<br/>( x {{\App\Models\GeneralSettings::first()->incentive_val}})</th>
                                 {{-- <th class="text-center">Action</th> --}}
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($returned_deliveries as $merchant)
+                            @foreach ($results['return_result'] as $result)
                                 <tr>
                                     <td>
-                                        <span><strong>Name : </strong>{{$merchant['user']->first_name.' '.$merchant['user']->last_name}}</span><br/>
-                                        <span><strong>Phone : </strong>{{$merchant['user']->phone}}</span><br/>
-                                        <span><strong>Unit : </strong>{{$merchant['user']->unit->name}}</span><br/>
-                                        <span><strong>Address : </strong>{{$merchant['user']->address}}</span>
+                                        <span><strong>Name : </strong>{{ $result['courier']->first_name }}</span><br/>
+                                        <span><strong>Phone : </strong>{{ $result['courier']->phone }}</span><br/>
+                                        <span><strong>Unit : </strong>{{ $result['courier']->unit->name }}</span><br/>
+                                        
                                     </td>
                                     <td class="text-center">
-                                        <span>{{$merchant['total_shipments']}}</span>
+                                        <span>{{$result['total_returned']}}</span>
+                                        
                                     </td>
                                     <td class="text-center">
-                                        <span>{{$merchant['total_paid']}}</span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span>{{$merchant['total_due']}}</span>
+                                        <span>{{$result['total_incentive']}}</span>
+                                        
                                     </td>
                                     
                                     

@@ -24,5 +24,9 @@ class ShipmentPayment extends Model
     {
         return $this->morphTo();
     }
+    public function paid_by()
+    {
+        return $this->morphTo();
+    }
 
 }

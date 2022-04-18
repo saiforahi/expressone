@@ -26,7 +26,9 @@ class CreateShipmentPaymentsTable extends Migration
             $table->float('outstanding_amount',8,2)->nullable();
             $table->enum('status',['paid','due'])->nullable();
             $table->nullableMorphs('collected_by');
+            $table->float('collected_amount',8,2)->nullable()->comment('amount paid to merchant');
             $table->float('paid_amount',8,2)->nullable()->comment('amount paid to merchant');
+            $table->nullableMorphs('paid_by');
 
             $table->foreign('shipment_id')->references('id')->on('shipments');
             // $table->foreign('admin_id')->references('id')->on('admins');

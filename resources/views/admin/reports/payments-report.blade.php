@@ -12,14 +12,33 @@
                         @include('admin.shipment.load.shipment-filter')
                     </div> --}}
                 </div>
-                <div class="row mb-3" style="margin-bottom: 10px !important; margin-top: 10px !important;">
+                <div class="row" style="margin-bottom: 20px !important; margin-top: 10px !important;">
                     <div class="col-md-2">
-                        <select class="form-control select2" name="type_id" id="type_id" onchange="on_type_change()">
-                            <option value="">-- Select Type --</option>
-                            <option value="merchant-wise">Merchant wise</option>
-                            {{-- <option value="shipment-wise">Shipment wise</option> --}}
-                            <option value="unit-wise">Unit wise</option>
-                        </select>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Select Type</label>
+                                <select class="form-control select2" name="type_id" id="type_id" onchange="on_type_change()">
+                                    <option value="">-- Select Type --</option>
+                                    <option value="merchant-wise" selected>Merchant wise</option>
+                                    {{-- <option value="shipment-wise">Shipment wise</option> --}}
+                                    <option value="unit-wise">Unit wise</option>
+                                    <option value="shipment-wise">Shipment wise</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>From</label>
+                                <input class="form-control" type="date" name="date1" placeholder="date from" id="datepicker" value="{{request()->from_date}}">
+                            </div>
+                            <div class="col-md-6">
+                                <label>To</label>
+                                <input  class="form-control" type="date" name="date2" placeholder="date to" onchange="filter_from_date()"
+                                value="{{request()->to_date}}">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row" id="merchant_wise_row" style="display: block">
@@ -87,11 +106,11 @@
                                     @foreach ($units as $unit)
                                         <tr>
                                             <td>
-                                                <span>{{ $unit->name }}</span><br/>
+                                                <span>{{ $unit['unit']->name }}</span><br/>
                                                 <span>Admin : </span>
                                             </td>
-                                            <td>{{ unit_collected_cod_amount($unit->id) }}</td>
-                                            <td>{{ unit_paid_amount($unit->id) }}</td>
+                                            <td>{{ $unit['total_collected'] }}</td>
+                                            <td>{{ $unit['total_paid'] }}</td>
                                             {{-- <td>{{ $shipment->recipient['name'] }} - {{ $shipment->recipient['phone'] }}
                                             </td>
                                             <td>{{ $shipment->recipient['name'] }}</td>
@@ -124,46 +143,49 @@
                                 class="table table-striped table-bordered dataTable no-footer dtr-inline">
                                 <thead>
                                     <tr class="bg-dark">
-                                        <th>Date</th>
+                                        <th>Shipment Info</th>
                                         <th>Customer info</th>
                                         <th>Merchant</th>
-                                        <th>Amount</th>
-                                        <th>Pick up</th>
-                                        <th>Delivery</th>
-                                        <th>Trackings</th>
-                                        <th>Status</th>
-                                        <th class="text-center">Action</th>
+                                        <th>Paid Amount</th>
+                                        <th>Due</th>
+                                        
+                                        {{-- <th class="text-center">Action</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($result as $shipment)
+                                    @foreach ($shipments as $shipment)
                                         <tr>
-                                            <td>{{ date('M d, y', strtotime($shipment->created_at)) }}</td>
+                                            <td>
+                                                <span><strong>Pickup Unit : </strong>{{ $shipment->pickup_location->point->unit->name }}</span><br/>
+                                                <span><strong>Delivery Unit : </strong>{{ $shipment->delivery_location->point->unit->name }}</span><br/>
+                                                <span>Tracking No : {{ $shipment->tracking_code }}</span><br/>
+                                                <span>Created at : {{ date('M d, y', strtotime($shipment->created_at)) }}</span><br />
+                                            </td>
                                             <td>{{ $shipment->recipient['name'] }} -
                                                 {{ $shipment->recipient['phone'] }}</td>
                                             <td>{{ $shipment->recipient['name'] }}</td>
                                             <td>
-                                                {{ $shipment->amount }}
+                                                {{ $shipment->payment_detail->paid_amount }}
                                             </td>
-                                            <td> {{ $shipment->pickup_location->name ?? null }} </td>
-                                            <td> {{ $shipment->delivery_location->name ?? null }} </td>
-                                            <td> <a target="_blank"
-                                                    href="/tracking?code={{ $shipment->tracking_code }}">{{ $shipment->tracking_code }}
-                                                </a></td>
-                                            <td>@include('admin.shipment.status', [
+                                            <td> {{ $shipment->payment_detail->paid_amount- ($shipment->payment_detail->cod_amount - ($shipment->payment_detail->delivery_charge+$shipment->payment_detail->weight_charge)) }} </td>
+                                            
+                                            {{-- <td>
+                                                <a target="_blank" href="/tracking?code={{ $shipment->tracking_code }}">{{ $shipment->tracking_code }}</a>
+                                            </td> --}}
+                                            {{-- <td>@include('admin.shipment.status', [
                                                 'status' => $shipment->status,
                                                 'logistic_status' => $shipment->logistic_status,
                                             ])
-                                            </td>
-                                            <td class="text-center">
-                                                {{-- <button class="btn btn-xs btn-warning reset" id="{{$shipment->id}}">Reset</button> --}}
+                                            </td> --}}
+                                            {{-- <td class="text-center">
+                                                
                                                 <button onclick="audit_log(<?php echo $shipment->id; ?>)"
                                                     class="btn btn-xs btn-warning" data-toggle="modal"
                                                     data-target="#logModal">Audit log
                                                 </button>
                                                 <a href="/admin/shipment-details/{{ $shipment->id }}" target="_blank"
                                                     class="btn btn-xs btn-info">View</a>
-                                            </td>
+                                            </td> --}}
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -218,17 +240,52 @@
                 }
             });
         }
+        function filter_from_date() {
+            if ($("[name=date1]").val() == '') {
+                alert('Please select a starting date first!!');
+                $("[name=date2]").val('');
+                return false;
+            }
+            let date1 = $("[name=date1]").val();
+            let date2 = $("[name=date2]").val();
 
+            let url = window.location.href;
+
+            url = new URL(url);
+            if (window.location.href.indexOf("from_date") > -1) {
+                url.searchParams.set('from_date', date1);
+                window.location.replace(url.href);
+            } else {
+                url.searchParams.append('from_date', date1);
+                window.location.replace(url.href);
+            }
+
+            if (window.location.href.indexOf("to_date") > -1) {
+                url.searchParams.set('to_date', date2);
+                window.location.replace(url.href);
+            } else {
+                url.searchParams.append('to_date', date2);
+                window.location.replace(url.href);
+            }
+
+        }
         function on_type_change() {
             let type = $('#type_id').val();
 
             if(type == 'merchant-wise'){
                 document.getElementById('merchant_wise_row').style.display='block'
                 document.getElementById('unit_wise_row').style.display='none'
+                document.getElementById('shipment_wise_row').style.display='none'
             }
             else if(type == 'unit-wise'){
                 document.getElementById('unit_wise_row').style.display='block'
                 document.getElementById('merchant_wise_row').style.display='none'
+                document.getElementById('shipment_wise_row').style.display='none'
+            }
+            else if(type == 'shipment-wise'){
+                document.getElementById('unit_wise_row').style.display='none'
+                document.getElementById('merchant_wise_row').style.display='none'
+                document.getElementById('shipment_wise_row').style.display='block'
             }
         }
         $(function() {

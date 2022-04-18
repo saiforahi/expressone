@@ -12,6 +12,7 @@ use App\Events\ShipmentMovement;
 use App\Events\ShipmentMovementEvent;
 use App\Http\Controllers\Controller;
 use App\Models\LogisticStep;
+use App\Models\ShipmentPayment;
 use App\Models\UnitShipment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -136,11 +137,15 @@ class ShipmentController extends Controller
         try{
             // dd($req->all());
             $shipment = Shipment::find(CourierShipment::find($req->id)->shipment_id);
+            $shipment_payment = ShipmentPayment::where('shipment_id',CourierShipment::find($req->id)->shipment_id)->first();
             // dd($shipment);
             switch($req->status){
                 case 'delivered':
                     $shipment->logistic_status = LogisticStep::where('slug','delivered')->first()->id;
                     $shipment->save();
+                    $shipment_payment->collected_amount = $req->price;
+                    $shipment_payment->collected_by()->associate(Auth::guard('courier')->user());
+                    $shipment_payment->save();
                     CourierShipment::where('id',$req->id)->update(['status'=>'delivered']);
                     ShipmentOTP::create([
                         'shipment_id'=>$shipment->id,
