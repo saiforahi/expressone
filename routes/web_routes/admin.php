@@ -336,5 +336,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin', 'namespace' => 
     Route::get('/reports/shipments/{type}', [ReportController::class, 'show_shipment_reports'])->name('show-shipment-report');
     Route::get('/reports/incentive', [ReportController::class, 'show_incentive_reports'])->name('show-incentive-report');
     Route::get('/buisness-settings', [BuisnessController::class, 'show'])->name('show-buisness-settings');
+    Route::post('/buisness-settings/update', [BuisnessController::class, 'update'])->name('update-buisness-settings');
 });
 

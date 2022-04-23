@@ -20,12 +20,17 @@ use DB;
 class ReportController extends Controller
 {
     //
-    public function show_report_pickup_from_merchant(){
+    public function show_report_pickup_from_merchant(Request $req){
         $title="";
         $result=array();
         $shipments=Shipment::all();
+        if ($req->from_date && $req->to_date) {
+            $from_date = date('Y-m-d', strtotime($req->from_date));
+            $to_date = date('Y-m-d', strtotime($req->to_date));
+            $shipments =  $shipments->whereBetween('created_at', [$from_date . " 00:00:00", $to_date . " 23:59:59"]);
+        }
         foreach($shipments as $shipment){
-            $audit_logs = ShipmentMovement::where('shipment_id', $shipment->id)->orderBy('updated_at','ASC')->get();
+            $audit_logs = ShipmentMovement::where('shipment_id', $shipment->id)->orderBy('updated_at','DESC')->get();
             $movements = [
                 'pickup_from_merchant'=> ShipmentMovement::where(['shipment_id'=>$shipment->id,'logistic_step_id'=>LogisticStep::where('slug','picked-up')->first()->id])->first(),
                 'dropped_at_unit'=> ShipmentMovement::where(['shipment_id'=>$shipment->id,'logistic_step_id'=>LogisticStep::where('slug','dropped-at-pickup-unit')->first()->id])->first(),
@@ -131,6 +136,7 @@ class ReportController extends Controller
         foreach(User::all() as $user){
             $total_paid=0;
             $total_due=0;
+            $total_due_to_ex1=0;
             $total_shipments=Shipment::where('merchant_id','=',$user->id);
             if ($req->from_date && $req->to_date) {
                 $total_shipments =  $total_shipments->whereBetween('created_at', [$req->from_date . " 00:00:00", $req->to_date . " 23:59:59"]);
@@ -139,8 +145,13 @@ class ReportController extends Controller
                 $total_paid += $shipment->payment_detail->paid_amount;
                 $amount_to_be_paid = $shipment->payment_detail->cod_amount - ($shipment->payment_detail->delivery_charge+$shipment->payment_detail->weight_charge);
                 $total_due+= $amount_to_be_paid - $shipment->payment_detail->paid_amount;
+                //due to ex1
+                
+                if($amount_to_be_paid<0){
+                    $total_due_to_ex1+=$amount_to_be_paid;
+                }
             }
-            array_push($merchants,array('user'=>$user,'total_paid'=>$total_paid,'total_due'=>$total_due,'total_shipments'=>$total_shipments->count()));
+            array_push($merchants,array('user'=>$user,'total_paid'=>$total_paid,'total_due'=>$total_due,'total_due_to_ex'=>$total_due_to_ex1,'total_shipments'=>$total_shipments->count()));
         }
         // dd($merchants);
         return $merchants;
@@ -161,7 +172,7 @@ class ReportController extends Controller
         foreach(Courier::all() as $courier){
             $courier_shipments=CourierShipment::where('type','delivery')->where('courier_id',$courier->id)->where('courier_shipment.status','delivered');
             if($req->from_date && $req->to_date){
-                $courier_shipments=$courier_shipments->whereBetween('created_at', [$req->from_date . " 00:00:00", $req->to_date . " 23:59:59"]);
+                $courier_shipments=$courier_shipments->whereBetween('courier_shipment.created_at', [$req->from_date . " 00:00:00", $req->to_date . " 23:59:59"]);
             }
             $total_delivered=$courier_shipments->join('shipment_payments','shipment_payments.shipment_id','courier_shipment.shipment_id')->count();
             $total_incentive=  $total_delivered * GeneralSettings::first()->incentive_val;
@@ -172,7 +183,7 @@ class ReportController extends Controller
         foreach(Courier::all() as $courier){
             $courier_shipments=CourierShipment::where('type','return')->where('courier_id',$courier->id)->where('courier_shipment.status','delivered');
             if($req->from_date && $req->to_date){
-                $courier_shipments=$courier_shipments->whereBetween('created_at', [$req->from_date . " 00:00:00", $req->to_date . " 23:59:59"]);
+                $courier_shipments=$courier_shipments->whereBetween('courier_shipment.created_at', [$req->from_date . " 00:00:00", $req->to_date . " 23:59:59"]);
             }
             $total_returned=$courier_shipments->join('shipment_payments','shipment_payments.shipment_id','courier_shipment.shipment_id')->count();
             $total_incentive=  $total_returned * GeneralSettings::first()->incentive_val;

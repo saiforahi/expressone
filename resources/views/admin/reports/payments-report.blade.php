@@ -52,6 +52,7 @@
                                         <th class="text-center">Total Shipments</th>
                                         <th class="text-center">Total Paid</th>
                                         <th class="text-center">Total Due</th>
+                                        <th class="text-center">Total Due to Expressone</th>
                                         {{-- <th class="text-center">Action</th> --}}
                                     </tr>
                                 </thead>
@@ -72,6 +73,9 @@
                                             </td>
                                             <td class="text-center">
                                                 <span>{{$merchant['total_due']}}</span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span>{{$merchant['total_due_to_ex']}}</span>
                                             </td>
                                             
                                             

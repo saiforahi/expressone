@@ -25,6 +25,29 @@
                         </select>
                     </div>
                 </div> --}}
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5>Select Shipments</h5>
+                    </div>
+                </div>
+                <div class="row" style="border-block-end-color: black">
+                    
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>From</label>
+                                <input class="form-control" type="date" name="date1" placeholder="date from" id="datepicker" value="{{request()->from_date}}">
+                            </div>
+                            <div class="col-md-6">
+                                <label>To</label>
+                                <input  class="form-control" type="date" name="date2" placeholder="date to" onchange="filter_from_date()"
+                                value="{{request()->to_date}}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
                 <div class="x_content">
                     <div class="table-responsive">
                         <table id="datatable-buttons"
@@ -154,7 +177,35 @@
                 }
             });
         }
+        function filter_from_date() {
+            if ($("[name=date1]").val() == '') {
+                alert('Please select a starting date first!!');
+                $("[name=date2]").val('');
+                return false;
+            }
+            let date1 = $("[name=date1]").val();
+            let date2 = $("[name=date2]").val();
 
+            let url = window.location.href;
+
+            url = new URL(url);
+            if (window.location.href.indexOf("from_date") > -1) {
+                url.searchParams.set('from_date', date1);
+                window.location.replace(url.href);
+            } else {
+                url.searchParams.append('from_date', date1);
+                window.location.replace(url.href);
+            }
+
+            if (window.location.href.indexOf("to_date") > -1) {
+                url.searchParams.set('to_date', date2);
+                window.location.replace(url.href);
+            } else {
+                url.searchParams.append('to_date', date2);
+                window.location.replace(url.href);
+            }
+
+        }
         function get_area() {
             let url = window.location.href;
             let area_id = $('#area_id').val();
