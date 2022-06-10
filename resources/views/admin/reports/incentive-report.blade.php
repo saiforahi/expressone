@@ -189,7 +189,35 @@
                 }
             });
         }
+        function filter_from_date() {
+            if ($("[name=date1]").val() == '') {
+                alert('Please select a starting date first!!');
+                $("[name=date2]").val('');
+                return false;
+            }
+            let date1 = $("[name=date1]").val();
+            let date2 = $("[name=date2]").val();
 
+            let url = window.location.href;
+
+            url = new URL(url);
+            if (window.location.href.indexOf("from_date") > -1) {
+                url.searchParams.set('from_date', date1);
+                window.location.replace(url.href);
+            } else {
+                url.searchParams.append('from_date', date1);
+                window.location.replace(url.href);
+            }
+
+            if (window.location.href.indexOf("to_date") > -1) {
+                url.searchParams.set('to_date', date2);
+                window.location.replace(url.href);
+            } else {
+                url.searchParams.append('to_date', date2);
+                window.location.replace(url.href);
+            }
+
+        }
         function on_type_change() {
             let type = $('#type_id').val();
 

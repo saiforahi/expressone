@@ -15,12 +15,12 @@
                 </div>
                 <div class="x_content">
                     <br>
-                    <form id="demo-form2" method="post" class="form-horizontal form-label-left" novalidate="">
+                    <form id="demo-form2" method="post" class="form-horizontal form-label-left" novalidate="" action="{{route('update-buisness-settings')}}">
                         @csrf
                         <div class="item form-group">
                             <label for="middle-name" class="col-form-label col-md-3 col-sm-3 label-align">Incentive (%)</label>
                             <div class="col-md-6 col-sm-6 ">
-                               <input type="text" class="form-control" name="send_email" value="{{$info->incentive_val}}">
+                               <input type="text" class="form-control" name="incentive_val" value="{{$info->incentive_val}}">
                             </div>
                         </div>
                         <div class="item form-group">
