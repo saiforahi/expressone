@@ -87,7 +87,7 @@
                                 <div class="col cod_target text-left">
                                     <label for="weight_charge">Weight (kg)</label>
                                     <input type="number" class="form-control" data-key="{{ $key }}"
-                                        name="weight[]" id="weight{{ $key }}" value="0"
+                                        name="weight[]" id="weight{{ $key }}" value="{{ $line['weight'] }}"
                                         >
                                 </div>
                             </div>

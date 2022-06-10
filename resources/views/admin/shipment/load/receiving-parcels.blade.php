@@ -38,8 +38,8 @@
                         (<b class="text-info">{{$shipment->created_at->diffForHumans()}}</b>)</small></td>
                 <td></td>
                 <td>
-                    <a href="{{route('shipment-print',$shipment->id)}}" class="btnPrint" target="_blank"><i
-                            class="fa fa-print"></i> Print</a> &nbsp;
+                    <a href="{{route('shipment-print',$shipment->id)}}" class="btnPrint" target="_blank"><i class="fa fa-print"></i> Print</a> 
+                    &nbsp;
                     <button disabled class="btn btn-xs btn-default"><i class="fa fa-undo"></i> Return</button>
                     <input type="hidden" id="merchant_id{{$key}}" value="{{$shipment->merchant_id}}">
                     <input type="hidden" id="hub_id{{$key}}" value="{{$shipment->pickup_location_id}}">

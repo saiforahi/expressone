@@ -52,10 +52,11 @@ class CSVController extends Controller
                             'recipient_address' => $cells[4]->getValue(),
                             'upazila_district'=> $cells[5]->getValue(),
                             'delivery_type'=> $cells[6]->getValue(),
-                            'amount' => $cells[7]->getValue(),
-                            'delivery_charge' => $cells[8]->getValue(),
-                            'weight_charge'=> $cells[9]->getValue(),
-                            'note'=> $cells[10]->getValue()??null
+                            'weight'=> $cells[7]->getValue(),
+                            'amount' => $cells[8]->getValue(),
+                            'delivery_charge' => $cells[9]->getValue(),
+                            'weight_charge'=> $cells[10]->getValue(),
+                            'note'=> $cells[11]->getValue()??null
                         );
                     }
                 }
